@@ -1,6 +1,8 @@
 import { STAT_KEYS, STAT_NAME, grade, GRADE_COLOR, PRACTICES, OTHER_CMDS, TRAITS, ITEMS } from './data.js';
 import * as G from './growth.js';
 import { frame, showHome, playMatch } from './match.js';
+import { unlock, sfx } from './audio.js';
+addEventListener('pointerdown', unlock, { once: false });
 import { buildField } from './scene.js';
 buildField();
 
@@ -45,8 +47,9 @@ function createScreen() {
   el.querySelector('#go').onclick = () => { P = G.newPlayer(el.querySelector('#nm').value.trim() || '신인', sel); G.save(P); homeScreen(); };
 }
 
+let lastDiff = {};
 function statsHtml() {
-  return `<div class="stats">${STAT_KEYS.map((k) => `<div class="st"><span>${STAT_NAME[k]}</span><span><b style="color:${barColor(P[k])}">${grade(P[k])}</b> ${P[k]}</span></div>`).join('')}</div>`;
+  return `<div class="stats">${STAT_KEYS.map((k) => `<div class="st"><span>${STAT_NAME[k]}</span><span><b style="color:${barColor(P[k])}">${grade(P[k])}</b> ${P[k]}${lastDiff[k] ? `<small style="color:${lastDiff[k] > 0 ? '#3bd16f' : '#ff6b6b'};font-weight:900"> ${lastDiff[k] > 0 ? '+' : ''}${lastDiff[k]}</small>` : ''}</span></div>`).join('')}</div>`;
 }
 function topHtml() {
   const c = G.cal(P.week); const [cl, cc] = G.condLabel(P.cond);
@@ -74,7 +77,7 @@ function homeScreen(msgs) {
   const inj = !!P.injury;
   for (const pr of PRACTICES) {
     const lv = G.level(P, pr.id);
-    const b = $(`<button class="cmd ${inj ? 'dis' : ''}"><span class="ic">${pr.icon}</span>${pr.name}<small>${pr.desc}</small>${P.cnt[pr.id] ? `<span class="lv">Lv${lv}</span>` : ''}</button>`);
+    const b = $(`<button class="cmd ${inj ? 'dis' : ''}"><span class="ic">${pr.icon}</span>${pr.name}<small>${pr.desc}</small>${riskBadge(pr)}${P.cnt[pr.id] ? `<span class="lv">Lv${lv}</span>` : ''}</button>`);
     b.onclick = () => runWeek(pr.id); box.appendChild(b);
   }
   for (const o of OTHER_CMDS) {
@@ -86,6 +89,7 @@ function homeScreen(msgs) {
   el.querySelector('#menu').onclick = menuModal;
 }
 
+function riskBadge(pr) { if (!pr.risk) return ''; const r = Math.round(pr.risk * (1.6 - P.cond / 100) * (1 - P.tough * 0.005) * (P.cond < 25 ? 2 : 1) * 100); return r >= 3 ? `<small style="color:${r >= 6 ? '#ff6b6b' : '#ffd23f'}">부상 ${r}%</small>` : ''; }
 function detailModal() {
   const m = show($(`<div class="modal"><div class="panel"><h2>${P.name}의 상세</h2>
     <table class="mini">${STAT_KEYS.map((k) => `<tr><td>${STAT_NAME[k]}</td><td><b style="color:${barColor(P[k])}">${grade(P[k])}</b> ${P[k]}</td><td style="width:50%"><div class="bar"><i style="width:${P[k]}%;background:${barColor(P[k])}"></i></div></td></tr>`).join('')}
@@ -112,8 +116,11 @@ function shopModal() {
 }
 
 function runWeek(id) {
+  const before = Object.fromEntries(STAT_KEYS.map((k) => [k, P[k]]));
   let msgs = G.doCommand(P, id === 'hospital' ? 'x' : id);
   const m = G.matchOfWeek(P);
+  lastDiff = Object.fromEntries(STAT_KEYS.map((k) => [k, P[k] - before[k]]));
+  sfx.ui();
   const finishAfter = () => { const e = G.endWeek(P); msgs = msgs.concat(e); afterWeekEvent(msgs); };
   if (m && !P.injury) matchPrompt(m, msgs, finishAfter); else finishAfter();
 }
@@ -145,6 +152,8 @@ async function startMatch(m) {
     setScore: (i, a, b) => hud.querySelector('#sc').textContent = `${i}회  ${a} : ${b}`,
     setCount: (c) => hud.querySelector('#cnt').innerHTML = `B ${[0, 1, 2, 3].map((i) => `<span class="dot b ${i < c.b ? 'on' : ''}"></span>`).join('')} S ${[0, 1, 2].map((i) => `<span class="dot s ${i < c.s ? 'on' : ''}"></span>`).join('')}`,
     setPitch: (t) => hud.querySelector('#pi').textContent = t,
+    flash: () => { const f = $(`<div style="position:absolute;inset:0;background:#fff;opacity:.55;pointer-events:none;transition:opacity .25s"></div>`); ui.appendChild(f); requestAnimationFrame(() => f.style.opacity = 0); setTimeout(() => f.remove(), 300); },
+    small: (t) => { const e = $(`<div style="position:absolute;left:0;right:0;top:24%;text-align:center;font-size:22px;font-weight:900;color:#ffd23f;text-shadow:0 2px 0 #000;pointer-events:none">${t}</div>`); ui.appendChild(e); setTimeout(() => e.remove(), 900); },
     banner: (t, ms) => { bn.innerHTML = `<div class="banner">${t}</div>`; clearTimeout(api._t); api._t = setTimeout(() => bn.innerHTML = '', ms); },
     onSwing: (f) => { swFn = f; }, offSwing: () => { swFn = null; },
   };

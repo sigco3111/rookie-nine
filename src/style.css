@@ -49,3 +49,8 @@ table.mini{width:100%;border-collapse:collapse;font-size:13px}table.mini td{padd
 .build{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .build button{background:#22345f;border:3px solid transparent;border-radius:12px;color:#fff;padding:10px;font-family:inherit;font-size:14px;text-align:left}
 .build button.sel{border-color:var(--yellow);background:#2c4580}
+
+.cmds{grid-template-columns:repeat(4,1fr);gap:5px}
+.cmd{padding:6px 2px;font-size:12px;border-radius:10px}.cmd .ic{font-size:21px}.cmd small{font-size:9.5px;line-height:1.15;text-align:center}
+.screen{padding:8px 10px;gap:6px}
+@media (max-height:700px){.cmd small{display:none}}

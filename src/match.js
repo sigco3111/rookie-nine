@@ -1,6 +1,7 @@
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow } from './scene.js';
 import { cal, oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
+import { sfx } from './audio.js';
 
 const ZW = 0.45, ZH = 0.4, ZY = 0.9;
 const PITCHES = [{ n: '직구', Tm: 1, c: 0, drop: 0 }, { n: '커브', Tm: 1.38, c: 0.55, drop: 0.35 }, { n: '슬라이더', Tm: 1.12, c: -0.5, drop: 0.1 }, { n: '체인지업', Tm: 1.28, c: 0.05, drop: 0.2 }];
@@ -15,7 +16,7 @@ export function frame() { const n = performance.now(); const dt = Math.min(0.05,
 function ensureG() {
   if (G) return G;
   const g = new THREE.Group();
-  const batter = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, bat: true }); batter.position.set(-1.0, 0, 0.5); batter.rotation.y = Math.PI / 2; addShadow(batter); setBatterPose(batter, 0); g.add(batter);
+  const batter = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, bat: true }); batter.position.set(-1.35, 0, 0.3); batter.scale.setScalar(0.8); batter.rotation.y = Math.PI / 2; addShadow(batter); setBatterPose(batter, 0); g.add(batter);
   const pitcher = makeChibi({ shirt: 0xc53030, cap: 0x742a2a, glove: true }); pitcher.position.set(0, 0.35, -18.44); pitcher.scale.setScalar(1.3); g.add(pitcher);
   const ball = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); ball.visible = false; g.add(ball);
   const seam = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.012, 6, 16), new THREE.MeshBasicMaterial({ color: 0xd33 })); ball.add(seam);
@@ -23,7 +24,10 @@ function ensureG() {
   const ret = new THREE.Mesh(new THREE.RingGeometry(0.17, 0.2, 28), new THREE.MeshBasicMaterial({ color: 0xffd23f, side: THREE.DoubleSide, depthTest: false })); ret.position.set(0, ZY, 0.05); ret.renderOrder = 10; g.add(ret);
   const dot = new THREE.Mesh(new THREE.CircleGeometry(0.018, 8), new THREE.MeshBasicMaterial({ color: 0xffd23f, depthTest: false })); dot.renderOrder = 10; ret.add(dot);
   const catcher = makeChibi({ shirt: 0x444444, cap: 0x222222, glove: true }); catcher.position.set(0, 0, 1.3); catcher.rotation.y = Math.PI; catcher.scale.setScalar(0.0001); g.add(catcher);
-  scene.add(g); G = { g, batter, pitcher, ball, zone, ret };
+  const fielders = [[-24, -34], [0, -42], [24, -34], [-52, -62], [0, -72], [52, -62], [-14, -24], [14, -24]].map(([x, z], i) => { const f = makeChibi({ shirt: 0xc53030, cap: 0x742a2a, glove: true }); f.position.set(x, 0, z); f.scale.setScalar(2.2); f.rotation.y = Math.atan2(-x, 0 - z) ; f.userData.home = [x, z]; addShadow(f); g.add(f); return f; });
+  
+  const runner = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d }); runner.visible = false; runner.scale.setScalar(1.6); g.add(runner);
+  scene.add(g); G = { g, batter, pitcher, ball, zone, ret, fielders, runner };
   return G;
 }
 export function showHome() { // 홈 화면 배경: 선수가 천천히 스윙 연습
@@ -58,7 +62,7 @@ export async function playMatch(p, m, hud) {
   setRet(0, ZY);
   let swingReq = null; // 투구 시작 후 스윙 시각
   let pitching = null;
-  const doSwing = () => { if (pitching && pitching.swingT == null) { pitching.swingT = pitching.t; pitching.swingAnim = 0.0001; } };
+  const doSwing = () => { if (pitching && pitching.swingT == null) { pitching.swingT = pitching.t; pitching.swingAnim = 0.0001; sfx.swing(); } };
   hud.onSwing(doSwing);
   const key = (e) => { if (e.code === 'Space') { e.preventDefault(); doSwing(); } }; window.addEventListener('keydown', key);
 
@@ -90,20 +94,21 @@ export async function playMatch(p, m, hud) {
     };
     const finalize = () => {
       pitching = null; o.ball.visible = false; setBatterPose(o.batter, st.swingT != null ? 1 : 0);
-      if (st.swingT == null) { res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
+      if (st.swingT == null) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
       const err = st.swingT - T;
       const w = 0.07 + p.meet * 0.0009 + (traits.includes('avg') ? 0.02 : 0) + (count.s === 2 && traits.includes('grit') ? 0.02 : 0);
       const r = 0.18 + p.meet * 0.0015 + (traits.includes('walk') ? 0.02 : 0);
       const ballPos = o.ball.position; // 도달 위치 보정
       const dist = Math.hypot(cx - bx, cy - by);
-      if (Math.abs(err) > w * 1.5 || dist > r * 1.6) { res({ kind: 'whiff' }); return; }
-      if (Math.abs(err) > w || dist > r) { res({ kind: 'foul' }); return; }
+      const tm = Math.abs(err) < w * 0.3 ? 'PERFECT' : err < 0 ? '빠름' : '늦음';
+      if (Math.abs(err) > w * 1.5 || dist > r * 1.6) { sfx.mitt(); res({ kind: 'whiff', tm: Math.abs(err) > w * 1.5 ? tm : '위치' }); return; }
+      if (Math.abs(err) > w || dist > r) { sfx.crack(0.3); res({ kind: 'foul', tm }); return; }
       const q = 1 - (Math.abs(err) / w * 0.5 + dist / r * 0.5);
       const angle = -err / w * 38 + rnd(-6, 6) + (cx - bx) * 20;
       const launch = 11 + (by - cy) * 70 + rnd(-6, 6);
       const v = 28 + q * 14 + p.power * 0.2 + (traits.includes('pwr') ? 5 : 0) + rnd(-2, 2);
       const dst = v * v * Math.sin(2 * Math.max(0.05, launch * Math.PI / 180)) / 9.8 * 0.52;
-      res({ kind: 'hit', q, angle, launch, v, dst: Math.max(5, dst), hr: 0 });
+      sfx.crack(q); hud.flash(); res({ kind: 'hit', tm, q, angle, launch, v, dst: Math.max(5, dst), hr: 0 });
     };
     tickers.add(f);
   });
@@ -113,15 +118,19 @@ export async function playMatch(p, m, hud) {
     const a = h.angle * Math.PI / 180; const dir = new THREE.Vector3(Math.sin(a), 0, -Math.cos(a));
     const dur = Math.max(0.9, Math.min(2.6, h.dst / 38 + 0.6)); const peak = Math.max(0.3, Math.min(30, h.dst * Math.tan(Math.max(0, h.launch) * Math.PI / 180) * 0.28));
     o.ball.visible = true; let t = 0;
+    const land = [dir.x * h.dst, dir.z * h.dst + 0.3];
+    let near = null, nd = 1e9; for (const fd of o.fielders) { const dd = Math.hypot(fd.userData.home[0] - land[0], fd.userData.home[1] - land[1]); if (dd < nd) { nd = dd; near = fd; } }
     const f = (dt) => {
+      if (near) { const hx = near.userData.home[0], hz = near.userData.home[1]; const k2 = Math.min(1, t / dur); near.position.x = hx + (land[0] - hx) * Math.min(1, k2 * 1.15); near.position.z = hz + (land[1] - hz) * Math.min(1, k2 * 1.15); near.rotation.y = Math.atan2(land[0] - hx, land[1] - hz); }
       t += dt; const k = Math.min(1, t / dur);
       const d = h.dst * k; let y = 1 + 4 * peak * k * (1 - k) - (h.launch < 8 ? 0.9 * k : 0);
       if (h.launch < 8) y = 0.15 + Math.abs(Math.sin(k * Math.PI * 4)) * 0.5 * (1 - k);
       o.ball.position.set(dir.x * d, Math.max(0.1, y), dir.z * d + 0.3);
       const tgt = o.ball.position; camera.position.lerp(new THREE.Vector3(tgt.x * 0.25, 2.6 + k * 4, 5 + Math.max(0, -tgt.z) * 0.18), 0.06); camera.lookAt(tgt.x * 0.6, 1 + k * 3, tgt.z * 0.65 - 3);
-      if (k >= 1) { delTicker(f); setTimeout(() => { o.ball.visible = false; res(); }, 250); }
+      if (k >= 1) { delTicker(f); setTimeout(() => { o.ball.visible = false; for (const fd of o.fielders) fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); res(); }, 250); }
     }; tickers.add(f);
   });
+  const resetFielders = () => { for (const fd of o.fielders) fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); };
   const resetCam = () => { camera.position.set(0.2, 1.7, 5.2); camera.lookAt(0, 0.95, -9); setBatterPose(o.batter, 0); };
 
   // 타석
@@ -132,12 +141,13 @@ export async function playMatch(p, m, hud) {
     while (guard++ < 30) {
       await wait(450);
       const r = await pitchOnce(c);
+      if (r.tm) hud.small(r.tm);
       if (r.kind === 'ball') { c.b++; hud.banner('볼', 600); }
       else if (r.kind === 'strike') { c.s++; hud.banner('스트라이크', 600); }
       else if (r.kind === 'whiff') { c.s++; hud.banner('헛스윙!', 700); }
       else if (r.kind === 'foul') { if (c.s < 2) c.s++; hud.banner('파울', 600); }
       else {
-        const h = r; const ang = Math.abs(h.angle);
+        const h = r; const ang = Math.abs(h.angle); if (h.tm) hud.small(h.tm + (h.q > 0.75 ? ' · 완벽한 타구' : ''));
         let res_ = 'out', label = '';
         if (ang > 46) { if (c.s < 2) c.s++; await flight({ ...h, angle: h.angle > 0 ? 55 : -55, dst: Math.min(h.dst, 60) }); hud.banner('파울', 600); hud.setCount(c); continue; }
         const L = h.launch;
@@ -170,6 +180,7 @@ export async function playMatch(p, m, hud) {
       else if (r.res === 'single') { s.hits++; if (runner && chance(40)) { sc = 1; s.rbi++; } }
       if (r.res === 'walk') { sc = 0; }
       my += sc;
+      if (r.res === 'hr') sfx.cheer(2); else if (sc || r.res === 'single' || r.res === 'double') sfx.cheer(1); else if (r.res === 'k' || r.res === 'out') sfx.out();
       hud.banner(r.label + (sc ? ` (+${sc}점)` : ''), 1500); hud.setScore(inn, my, oppRuns); await wait(1700);
       // 출루 후 득점
       if (['single', 'double', 'walk'].includes(r.res) && chance(35 + p.speed * 0.2)) { s.runs++; my++; hud.banner('후속 안타로 홈인!', 1100); hud.setScore(inn, my, oppRuns); await wait(1200); }
