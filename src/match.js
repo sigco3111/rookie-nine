@@ -16,7 +16,7 @@ export function frame() { const n = performance.now(); const dt = Math.min(0.05,
 function ensureG() {
   if (G) return G;
   const g = new THREE.Group();
-  const batter = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, bat: true }); batter.position.set(-1.35, 0, 0.3); batter.scale.setScalar(0.8); batter.rotation.y = Math.PI / 2; addShadow(batter); setBatterPose(batter, 0); g.add(batter);
+  const batter = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, bat: true }); batter.position.set(-1.0, 0, 0.2); batter.scale.setScalar(0.72); batter.rotation.y = Math.PI / 2; addShadow(batter); setBatterPose(batter, 0); g.add(batter);
   const pitcher = makeChibi({ shirt: 0xc53030, cap: 0x742a2a, glove: true }); pitcher.position.set(0, 0.35, -18.44); pitcher.scale.setScalar(1.3); g.add(pitcher);
   const ball = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); ball.visible = false; g.add(ball);
   const seam = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.012, 6, 16), new THREE.MeshBasicMaterial({ color: 0xd33 })); ball.add(seam);
@@ -55,7 +55,7 @@ export function showHome() { // 홈 화면 배경: 선수가 대기/훈련 모�
 }
 
 export async function playMatch(p, m, hud) {
-  const o = ensureG(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); o.batter.position.set(-1.35, 0, 0.3); o.batter.rotation.y = Math.PI / 2; o.batter.scale.setScalar(0.8); o.batter.userData.head.rotation.x = 0;
+  const o = ensureG(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); o.batter.position.set(-1.0, 0, 0.2); o.batter.rotation.y = Math.PI / 2; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
   const opp = TEAMS[Math.floor(Math.random() * TEAMS.length)];
   const regular = isRegular(p);
   const strength = oppStrength(p);
@@ -64,7 +64,7 @@ export async function playMatch(p, m, hud) {
   let my = 0, oppRuns = 0;
   const pas = regular ? [1, 3, 5] : [4];
   const innings = 5;
-  camera.position.set(0.2, 1.7, 5.2); camera.lookAt(0, 0.95, -9);
+  camera.position.set(0.45, 1.7, 5.4); camera.lookAt(0.1, 0.95, -9);
   setPitcherPose(o.pitcher, 0);
   hud.setTitle(`${m.name} vs ${opp}${regular ? '' : ' (대타 출전)'}`);
   const ret = o.ret;
@@ -148,7 +148,7 @@ export async function playMatch(p, m, hud) {
     }; tickers.add(f);
   });
   const resetFielders = () => { for (const fd of o.fielders) fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); };
-  const resetCam = () => { camera.position.set(0.2, 1.7, 5.2); camera.lookAt(0, 0.95, -9); setBatterPose(o.batter, 0); };
+  const resetCam = () => { camera.position.set(0.45, 1.7, 5.4); camera.lookAt(0.1, 0.95, -9); setBatterPose(o.batter, 0); };
 
   // 타석
   const plateAppearance = async (inn, base) => {

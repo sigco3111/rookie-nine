@@ -37,6 +37,11 @@ export function buildField() {
   // 관중석 띠
   const stand = new THREE.Mesh(new THREE.CylinderGeometry(112, 100, 14, 64, 1, true, Math.PI * 0.75, Math.PI * 0.5), M(0x4d6bb3, { side: THREE.DoubleSide }));
   stand.position.set(0, 7, 0); g.add(stand);
+  // 관중: 색 점 인스턴스
+  const cm = new THREE.InstancedMesh(new THREE.BoxGeometry(1.2, 1.6, 0.6), new THREE.MeshLambertMaterial({ color: 0xffffff }), 700);
+  const dm = new THREE.Object3D(); const cols = [0xff6b6b, 0xffd23f, 0x4dabf7, 0xffffff, 0x69db7c, 0xf783ac];
+  for (let i = 0; i < 700; i++) { const a = Math.PI * 0.75 + Math.random() * Math.PI * 0.5; const r = 101 + Math.random() * 9; const y = 1 + (r - 101) * 1.4; dm.position.set(Math.cos(a) * r, y, Math.sin(a) * r); dm.lookAt(0, y, 0); dm.updateMatrix(); cm.setMatrixAt(i, dm.matrix); cm.setColorAt(i, new THREE.Color(cols[i % cols.length])); }
+  g.add(cm);
   // 백네트
   const net = new THREE.Mesh(new THREE.PlaneGeometry(14, 7), new THREE.MeshBasicMaterial({ color: 0x223, transparent: true, opacity: 0.18, side: THREE.DoubleSide })); net.position.set(0, 3.5, 9); g.add(net);
   scene.add(g); return g;
