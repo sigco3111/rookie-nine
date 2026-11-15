@@ -63,8 +63,9 @@ export function makeChibi({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, 
 }
 
 // 타자 포즈
-export function setBatterPose(c, swing) { // swing 0..1
+export function setBatterPose(c, swing) { // swing 0..1, -1=중립
   const u = c.userData;
+  if (swing < 0) { u.armR.rotation.set(0, 0, 0.1); u.armL.rotation.set(0, 0, -0.1); u.body.rotation.y = 0; u.head.rotation.y = 0; if (u.bat) { u.bat.rotation.set(0.4, 0, 0); u.bat.position.set(0.0, -0.3, 0.1); } return; }
   if (swing <= 0) { u.armR.rotation.set(-2.3, 0.2, 0.5); u.armL.rotation.set(-2.2, 0.1, -0.2); c.rotation.y = -Math.PI / 2 * 0.0; u.body.rotation.y = 0; u.head.rotation.y = 0.8; if (u.bat) { u.bat.rotation.set(0.4, 0, 0); u.bat.position.set(0, 0.35, 0.1); } return; }
   const s = Math.min(1, swing);
   c.userData.body.rotation.y = 0.8 - s * 2.0;

@@ -1,7 +1,8 @@
 import { STAT_KEYS, STAT_NAME, grade, GRADE_COLOR, PRACTICES, OTHER_CMDS, TRAITS, ITEMS } from './data.js';
 import * as G from './growth.js';
-import { frame, showHome, playMatch } from './match.js';
+import { frame, showHome, playMatch, playTrainingAnim } from './match.js';
 import { unlock, sfx } from './audio.js';
+import { ic } from './icons.js';
 addEventListener('pointerdown', unlock, { once: false });
 import { buildField } from './scene.js';
 buildField();
@@ -18,7 +19,7 @@ function titleScreen() {
   clear(); showHome();
   const sv = G.load();
   const h = G.hof();
-  const el = show($(`<div class="screen"><div class="title">⚾ 루키나인<div style="font-size:15px;font-weight:700;margin-top:4px">3년의 고교야구, 한 명의 선수를 키우자</div></div><div class="spacer"></div>
+  const el = show($(`<div class="screen"><div class="title">${ic('ball')} 루키나인<div style="font-size:15px;font-weight:700;margin-top:4px">3년의 고교야구, 한 명의 선수를 키우자</div></div><div class="spacer"></div>
     <div class="sub">3D 야구 · 주간 훈련 · 성장 모드</div>
     ${sv && !sv.done ? `<button class="btn big" id="cont">이어하기 (${sv.name} · ${G.cal(sv.week).year}학년 ${G.cal(sv.week).month}월)</button>` : ''}
     <button class="btn big alt" id="new">새 선수 만들기</button>
@@ -30,13 +31,13 @@ function titleScreen() {
 
 function hofScreen() {
   const h = G.hof().slice().reverse();
-  const m = show($(`<div class="modal"><div class="panel"><h2>🏆 명예의 전당</h2>${h.length ? h.map((e) => `<div class="panel" style="margin:6px 0"><b>${e.name}</b> · 종합 ${e.ovr} · ${e.rank ? e.rank + '순위 ' + e.team : '미지명'}<br><small>${e.stats.join('/')} · 홈런 ${e.hr} · ${e.traits.map((t) => TRAITS[t].name).join(', ') || '특능 없음'}</small></div>`).join('') : '아직 졸업한 선수가 없습니다.'}<br><button class="btn" style="width:100%" id="x">닫기</button></div></div>`));
+  const m = show($(`<div class="modal"><div class="panel"><h2>${ic('trophy')} 명예의 전당</h2>${h.length ? h.map((e) => `<div class="panel" style="margin:6px 0"><b>${e.name}</b> · 종합 ${e.ovr} · ${e.rank ? e.rank + '순위 ' + e.team : '미지명'}<br><small>${e.stats.join('/')} · 홈런 ${e.hr} · ${e.traits.map((t) => TRAITS[t].name).join(', ') || '특능 없음'}</small></div>`).join('') : '아직 졸업한 선수가 없습니다.'}<br><button class="btn" style="width:100%" id="x">닫기</button></div></div>`));
   m.querySelector('#x').onclick = () => m.remove();
 }
 
 function createScreen() {
   clear();
-  const builds = [['contact', '🎯 교타형', '미트가 높다. 안타 장인'], ['slugger', '💥 장타형', '파워가 높다. 한 방'], ['runner', '⚡ 준족형', '주력·수비가 높다'], ['allround', '⭐ 만능형', '고르게 높다']];
+  const builds = [['contact', '교타형', '미트가 높다. 안타 장인'], ['slugger', '장타형', '파워가 높다. 한 방'], ['runner', '준족형', '주력·수비가 높다'], ['allround', '만능형', '고르게 높다']];
   let sel = 'contact';
   const el = show($(`<div class="screen"><div class="title" style="margin-top:3vh;font-size:26px">선수 만들기</div>
     <div class="panel"><div style="font-size:13px;margin-bottom:6px">이름</div><input class="input" id="nm" maxlength="8" value="신인" /></div>
@@ -53,7 +54,7 @@ function statsHtml() {
 }
 function topHtml() {
   const c = G.cal(P.week); const [cl, cc] = G.condLabel(P.cond);
-  return `<div class="top"><span class="chip">${c.year}학년 ${c.month}월 ${c.wk}주</span><span class="chip">💴 ${P.money}</span><span class="chip" style="background:${cc}">${cl} ${P.cond}</span></div>`;
+  return `<div class="top"><span class="chip">${c.year}학년 ${c.month}월 ${c.wk}주</span><span class="chip">${ic('coin')} ${P.money}</span><span class="chip" style="background:${cc}">${cl} ${P.cond}</span></div>`;
 }
 function evHtml() {
   return `<div class="row" style="gap:6px">${Object.keys(evName).map((k) => `<div style="font-size:11px;text-align:center">${evName[k]}<div class="bar"><i style="width:${P.ev[k]}%;background:${P.ev[k] > 60 ? '#3bd16f' : P.ev[k] > 35 ? '#ffd23f' : '#e5484d'}"></i></div></div>`).join('')}</div>`;
@@ -65,26 +66,26 @@ function homeScreen(msgs) {
   const m = G.matchOfWeek(P);
   const c = G.cal(P.week);
   const el = show($(`<div class="screen">${topHtml()}
-    <div class="panel"><div class="top"><span>⚾ ${P.name} <small>종합 ${G.ovr(P)}</small></span><span style="font-size:12px">${G.isRegular(P) ? '🟢 레귤러' : '⚪ 후보'}</span></div>${statsHtml()}
+    <div class="panel"><div class="top"><span>${ic('cap')} ${P.name} <small>종합 ${G.ovr(P)}</small></span><span style="font-size:12px">${G.isRegular(P) ? '● 레귤러' : '○ 후보'}</span></div>${statsHtml()}
       <div style="margin-top:6px">${evHtml()}</div>
-      <div class="ev" style="margin-top:6px">${P.traits.map((t) => `<span class="tr ${TRAITS[t].good ? '' : 'bad'}">${TRAITS[t].name}</span>`).join('') || '<small style="opacity:.7">특수능력 없음</small>'}${P.banWeeks ? `<span class="tr bad">연습 금지 ${P.banWeeks}주</span>` : ''}${P.injury ? `<span class="tr bad">🏥 ${P.injury.name} ${P.injury.weeks}주</span>` : ''}</div></div>
+      <div class="ev" style="margin-top:6px">${P.traits.map((t) => `<span class="tr ${TRAITS[t].good ? '' : 'bad'}">${TRAITS[t].name}</span>`).join('') || '<small style="opacity:.7">특수능력 없음</small>'}${P.banWeeks ? `<span class="tr bad">연습 금지 ${P.banWeeks}주</span>` : ''}${P.injury ? `<span class="tr bad">입원 ${P.injury.name} ${P.injury.weeks}주</span>` : ''}</div></div>
     <div class="spacer"></div>
     ${msgs ? `<div class="panel log">${msgs.map((x) => '· ' + x).join('<br>')}</div>` : `<div class="panel log">${P.log.slice(0, 2).map((x) => '· ' + x).join('<br>')}</div>`}
-    ${m ? `<div class="panel" style="border-color:#ffd23f"><b>⚾ 이번 주 시합: ${m.name}</b></div>` : ''}
+    ${m ? `<div class="panel" style="border-color:#ffd23f"><b>${ic('ball')} 이번 주 시합: ${m.name}</b></div>` : ''}
     <div class="cmds" id="cmds"></div>
     <div class="row"><button class="btn gray" id="menu">메뉴</button><button class="btn alt" id="stat">상세 능력</button></div></div>`));
   const box = el.querySelector('#cmds');
   const inj = !!P.injury;
   for (const pr of PRACTICES) {
     const lv = G.level(P, pr.id);
-    const b = $(`<button class="cmd ${inj ? 'dis' : ''}"><span class="ic">${pr.icon}</span>${pr.name}<small>${pr.desc}</small>${riskBadge(pr)}${P.cnt[pr.id] ? `<span class="lv">Lv${lv}</span>` : ''}</button>`);
+    const b = $(`<button class="cmd ${inj ? 'dis' : ''}"><span class="ic">${ic(pr.id)}</span>${pr.name}<small>${pr.desc}</small>${riskBadge(pr)}${P.cnt[pr.id] ? `<span class="lv">Lv${lv}</span>` : ''}</button>`);
     b.onclick = () => runWeek(pr.id); box.appendChild(b);
   }
   for (const o of OTHER_CMDS) {
-    const b = $(`<button class="cmd ${inj ? 'dis' : ''}" style="background:#2c4580"><span class="ic">${o.icon}</span>${o.name}<small>${o.desc}</small></button>`);
+    const b = $(`<button class="cmd ${inj ? 'dis' : ''}" style="background:#2c4580"><span class="ic">${ic(o.id)}</span>${o.name}<small>${o.desc}</small></button>`);
     b.onclick = () => o.id === 'shop' ? shopModal() : runWeek(o.id); box.appendChild(b);
   }
-  if (inj) { const b = $(`<button class="cmd" style="grid-column:1/-1;background:#c92a2a"><span class="ic">🏥</span>입원 중: 한 주 쉬며 치료하기</button>`); b.onclick = () => runWeek('hospital'); box.prepend(b); }
+  if (inj) { const b = $(`<button class="cmd" style="grid-column:1/-1;background:#c92a2a"><span class="ic">${ic('hospital')}</span>입원 중: 한 주 쉬며 치료하기</button>`); b.onclick = () => runWeek('hospital'); box.prepend(b); }
   el.querySelector('#stat').onclick = detailModal;
   el.querySelector('#menu').onclick = menuModal;
 }
@@ -108,7 +109,7 @@ function menuModal() {
 }
 function shopModal() {
   const draw = (note) => {
-    const m = show($(`<div class="modal"><div class="panel"><h2>🛍️ 쇼핑 (💴 ${P.money})</h2>${note ? `<div class="log" style="color:#ffd23f">${note}</div>` : ''}<div style="display:grid;gap:6px">${ITEMS.map((i) => `<button class="btn alt" data-i="${i.id}" style="text-align:left;display:flex;justify-content:space-between"><span>${i.name}<br><small>${i.desc}</small></span><span>${i.price}</span></button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn gray" id="x">그만 사기</button><button class="btn" id="end">쇼핑 끝 (한 주 소비)</button></div></div></div>`));
+    const m = show($(`<div class="modal"><div class="panel"><h2> 쇼핑 (${ic('coin')} ${P.money})</h2>${note ? `<div class="log" style="color:#ffd23f">${note}</div>` : ''}<div style="display:grid;gap:6px">${ITEMS.map((i) => `<button class="btn alt" data-i="${i.id}" style="text-align:left;display:flex;justify-content:space-between"><span>${i.name}<br><small>${i.desc}</small></span><span>${i.price}</span></button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn gray" id="x">그만 사기</button><button class="btn" id="end">쇼핑 끝 (한 주 소비)</button></div></div></div>`));
     m.querySelectorAll('[data-i]').forEach((b) => b.onclick = () => { const r = G.buy(P, b.dataset.i); m.remove(); draw(r); });
     m.querySelector('#x').onclick = () => { m.remove(); G.save(P); homeScreen(); };
     m.querySelector('#end').onclick = () => { m.remove(); runWeek('shop'); };
@@ -119,6 +120,7 @@ function runWeek(id) {
   const before = Object.fromEntries(STAT_KEYS.map((k) => [k, P[k]]));
   let msgs = G.doCommand(P, id === 'hospital' ? 'x' : id);
   const m = G.matchOfWeek(P);
+  playTrainingAnim(id);
   lastDiff = Object.fromEntries(STAT_KEYS.map((k) => [k, P[k] - before[k]]));
   sfx.ui();
   const finishAfter = () => { const e = G.endWeek(P); msgs = msgs.concat(e); afterWeekEvent(msgs); };
@@ -129,12 +131,12 @@ function afterWeekEvent(msgs) {
   if (P.done) { G.save(P); return homeScreen(); }
   const ev = G.randomEvent(P);
   if (!ev) return homeScreen(msgs);
-  const mod = show($(`<div class="modal"><div class="panel"><h2>📣 ${ev.title}</h2><p>${ev.text}</p><div style="display:grid;gap:8px">${ev.choices.map((c, i) => `<button class="btn alt" data-c="${i}">${c.label} <small>(성공률 ${c.chance}%)</small></button>`).join('')}</div></div></div>`));
-  mod.querySelectorAll('[data-c]').forEach((b) => b.onclick = () => { const r = G.resolveEvent(P, ev, +b.dataset.c); mod.remove(); homeScreen(msgs.concat([`[이벤트] ${r.success ? '✔' : '✖'} ${r.msg}`])); });
+  const mod = show($(`<div class="modal"><div class="panel"><h2>${ev.title}</h2><p>${ev.text}</p><div style="display:grid;gap:8px">${ev.choices.map((c, i) => `<button class="btn alt" data-c="${i}">${c.label} <small>(성공률 ${c.chance}%)</small></button>`).join('')}</div></div></div>`));
+  mod.querySelectorAll('[data-c]').forEach((b) => b.onclick = () => { const r = G.resolveEvent(P, ev, +b.dataset.c); mod.remove(); homeScreen(msgs.concat([`[이벤트] ${r.success ? '' : ''} ${r.msg}`])); });
 }
 
 function matchPrompt(m, msgs, cont) {
-  const mod = show($(`<div class="modal"><div class="panel"><h2>⚾ ${m.name}</h2><p>${G.isRegular(P) ? '레귤러로 출전합니다. 타석 3번을 직접 칠 수 있어요.' : '아직 후보입니다. 대타로 1타석만 기회가 옵니다.'}</p><div style="display:grid;gap:8px"><button class="btn big" id="play">🎮 직접 플레이</button><button class="btn gray" id="auto">⏩ 자동 진행</button></div></div></div>`));
+  const mod = show($(`<div class="modal"><div class="panel"><h2>${ic('ball')} ${m.name}</h2><p>${G.isRegular(P) ? '레귤러로 출전합니다. 타석 3번을 직접 칠 수 있어요.' : '아직 후보입니다. 대타로 1타석만 기회가 옵니다.'}</p><div style="display:grid;gap:8px"><button class="btn big" id="play">직접 플레이</button><button class="btn gray" id="auto">자동 진행</button></div></div></div>`));
   mod.querySelector('#auto').onclick = () => { mod.remove(); const r = G.simulateMatch(P, m); resultModal(r, msgs, cont); };
   mod.querySelector('#play').onclick = async () => { mod.remove(); const r = await startMatch(m); resultModal(r, msgs, cont); };
 }
@@ -163,14 +165,14 @@ async function startMatch(m) {
 
 function resultModal(r, msgs, cont) {
   clear(); showHome();
-  const mod = show($(`<div class="modal"><div class="panel"><h2>${r.win ? '🎉 승리!' : '😢 패배'}</h2><div style="font-size:30px;font-weight:900;text-align:center">${r.my} : ${r.opp}</div><p style="text-align:center">${r.ab}타수 ${r.hits}안타 ${r.hr}홈런 ${r.rbi}타점</p><div class="log">감독·팀메이트·스카우트 평가가 갱신되었습니다.</div><br><button class="btn big" id="ok">다음</button></div></div>`));
+  const mod = show($(`<div class="modal"><div class="panel"><h2>${r.win ? '승리!' : '패배'}</h2><div style="font-size:30px;font-weight:900;text-align:center">${r.my} : ${r.opp}</div><p style="text-align:center">${r.ab}타수 ${r.hits}안타 ${r.hr}홈런 ${r.rbi}타점</p><div class="log">감독·팀메이트·스카우트 평가가 갱신되었습니다.</div><br><button class="btn big" id="ok">다음</button></div></div>`));
   mod.querySelector('#ok').onclick = () => { mod.remove(); G.save(P); cont(); };
 }
 
 function endingScreen() {
   clear(); showHome();
   const r = P.result;
-  const el = show($(`<div class="screen"><div class="title" style="font-size:28px">🎓 졸업 · 드래프트</div><div class="panel" style="text-align:center"><div style="font-size:22px;font-weight:900">${r.text}</div>${r.rank ? `<div>${r.team}</div>` : ''}<div style="margin-top:8px">종합 ${r.ovr} · 평가점수 ${r.score}</div><div>${P.wins}승 ${P.losses}패 · 홈런 ${P.hr}</div></div>
+  const el = show($(`<div class="screen"><div class="title" style="font-size:28px">졸업 · 드래프트</div><div class="panel" style="text-align:center"><div style="font-size:22px;font-weight:900">${r.text}</div>${r.rank ? `<div>${r.team}</div>` : ''}<div style="margin-top:8px">종합 ${r.ovr} · 평가점수 ${r.score}</div><div>${P.wins}승 ${P.losses}패 · 홈런 ${P.hr}</div></div>
     <div class="panel">${statsHtml()}<div class="ev" style="margin-top:6px">${P.traits.filter((t) => TRAITS[t].good).map((t) => `<span class="tr">${TRAITS[t].name}</span>`).join('')}</div></div>
     <div class="spacer"></div><div class="panel log">선수는 명예의 전당에 저장되었습니다.</div><button class="btn big" id="again">새 선수로 다시 시작</button><button class="btn gray" id="hof">명예의 전당</button></div>`));
   el.querySelector('#again').onclick = () => { G.clearSave(); createScreen(); };

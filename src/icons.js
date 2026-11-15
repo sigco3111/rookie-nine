@@ -1,0 +1,23 @@
+const S = (d, fill) => `<svg viewBox="0 0 24 24" width="1em" height="1em" fill="${fill ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.12em">${d}</svg>`;
+export const ICON = {
+  chore: S('<path d="M5 20 L10 8 M10 8 L18 4 M8 14 L16 10 M10 17 L19 12"/>'),
+  basic: S('<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>'),
+  power: S('<path d="M3 9v6M6 7v10M18 7v10M21 9v6M6 12h12"/>'),
+  bat: S('<path d="M4 20 L14 10"/><path d="M14 10 L20 4 L20 4"/><circle cx="18" cy="18" r="2.5" fill="currentColor"/>'),
+  defense: S('<path d="M6 14c0-5 2-9 5-9s3 3 3 5l2-2c1-1 3 0 2 2l-1 8c-1 3-4 4-7 4s-4-3-4-8z"/>'),
+  run: S('<path d="M3 17h14l4-4-5-3-3 2-3-3-4 3z"/><path d="M3 20h18"/>'),
+  arm: S('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor"/>'),
+  cond: S('<path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z"/>'),
+  mental: S('<path d="M12 3c3 3 3 7 0 10-3-3-3-7 0-10z"/><path d="M4 12c4 0 6 3 8 6 2-3 4-6 8-6-1 5-4 8-8 8s-7-3-8-8z"/>'),
+  refresh: S('<path d="M4 12h16v3a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M8 8c0-2 2-2 2-4M13 8c0-2 2-2 2-4"/>'),
+  rest: S('<path d="M5 6h6L5 12h6M13 12h5l-5 6h5"/>'),
+  alba: S('<circle cx="12" cy="12" r="8"/><path d="M12 7v10M9.5 9.5c0-1.5 5-1.5 5 0s-5 2-5 3.5 5 1.5 5 0"/>'),
+  study: S('<path d="M4 5h7a2 2 0 0 1 2 2v13a3 3 0 0 0-3-3H4zM20 5h-7a2 2 0 0 0-2 2"/><path d="M20 5v12h-6"/>'),
+  shop: S('<path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>'),
+  hospital: S('<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/>'),
+  ball: S('<circle cx="12" cy="12" r="8"/><path d="M6 6c3 3 3 9 0 12M18 6c-3 3-3 9 0 12"/>'),
+  coin: S('<circle cx="12" cy="12" r="8"/><path d="M12 7v10"/>'),
+  trophy: S('<path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4c0 3 1 4 4 4M16 6h4c0 3-1 4-4 4M12 13v4M8 20h8"/>'),
+  cap: S('<path d="M4 15a8 8 0 0 1 16 0z"/><path d="M4 15h16l2 2H2z"/>'),
+};
+export const ic = (k) => ICON[k] || '';

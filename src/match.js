@@ -30,15 +30,32 @@ function ensureG() {
   scene.add(g); G = { g, batter, pitcher, ball, zone, ret, fielders, runner };
   return G;
 }
-export function showHome() { // 홈 화면 배경: 선수가 천천히 스윙 연습
+let homeAnim = null;
+export function playTrainingAnim(kind) { homeAnim = { kind, t: 0 }; }
+export function showHome() { // 홈 화면 배경: 선수가 대기/훈련 모션
   const o = ensureG(); o.g.visible = true; o.ret.visible = false; o.zone.visible = false; o.ball.visible = false;
-  camera.position.set(2.6, 1.7, 4.2); camera.lookAt(-0.6, 1.0, 0);
-  const f = (dt, t) => { const c = (t % 3.2) / 3.2; setBatterPose(o.batter, c > 0.6 ? Math.min(1, (c - 0.6) / 0.12) : 0); setPitcherPose(o.pitcher, 0); camera.position.x = 2.6 + Math.sin(t * 0.3) * 0.6; camera.lookAt(-0.6, 1.0, 0); };
+  o.batter.position.set(-0.6, 0, 0.3); o.batter.rotation.y = Math.PI / 2 - 0.5; o.batter.scale.setScalar(1.15);
+  for (const fd of o.fielders) fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]);
+  const u = o.batter.userData;
+  const f = (dt, t) => {
+    const T = homeAnim; if (T) T.t += dt;
+    const k = T ? T.kind : 'idle';
+    u.legL.rotation.x = u.legR.rotation.x = 0; o.batter.position.y = 0; o.batter.position.x = -0.6;
+    if (k === 'bat' || k === 'power' || (T && !['run', 'cond', 'defense', 'arm', 'refresh', 'rest', 'study', 'alba', 'chore', 'mental'].includes(k))) { const c = (T.t * 1.6) % 1; setBatterPose(o.batter, c > 0.45 ? Math.min(1, (c - 0.45) / 0.15) : 0); if (k === 'power') o.batter.position.y = Math.abs(Math.sin(T.t * 6)) * 0.08; }
+    else if (k === 'run') { setBatterPose(o.batter, -1); u.armR.rotation.x = Math.sin(T.t * 14) * 1.1; u.armL.rotation.x = -Math.sin(T.t * 14) * 1.1; u.legL.rotation.x = Math.sin(T.t * 14) * 0.9; u.legR.rotation.x = -Math.sin(T.t * 14) * 0.9; o.batter.position.y = Math.abs(Math.sin(T.t * 14)) * 0.07; }
+    else if (k === 'cond' || k === 'chore') { setBatterPose(o.batter, -1); u.armR.rotation.x = u.armL.rotation.x = -3.0 + Math.sin(T.t * 8) * 0.4; o.batter.position.y = Math.abs(Math.sin(T.t * 4)) * 0.1; }
+    else if (k === 'defense' || k === 'arm') { setBatterPose(o.batter, -1); u.armL.rotation.x = -1.4; u.armR.rotation.x = -Math.PI * (0.5 + Math.sin(T.t * 7) * 0.5); }
+    else if (k === 'rest' || k === 'refresh' || k === 'study' || k === 'alba' || k === 'mental') { setBatterPose(o.batter, -1); u.armR.rotation.set(0, 0, 0.2); u.armL.rotation.set(0, 0, -0.2); u.head.rotation.x = 0.35 + Math.sin(T.t * 2) * 0.05; }
+    else { const c = (t % 3.4) / 3.4; setBatterPose(o.batter, c > 0.7 ? Math.min(1, (c - 0.7) / 0.1) : 0); u.head.rotation.x = 0; }
+    if (T && T.t > 1.4) { homeAnim = null; u.head.rotation.x = 0; }
+    setPitcherPose(o.pitcher, 0);
+    camera.position.set(1.4 + Math.sin(t * 0.3) * 0.25, 1.1, 5.4); camera.lookAt(-0.3, 0.55, 0);
+  };
   tickers.clear(); tickers.add(f);
 }
 
 export async function playMatch(p, m, hud) {
-  const o = ensureG(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear();
+  const o = ensureG(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); o.batter.position.set(-1.35, 0, 0.3); o.batter.rotation.y = Math.PI / 2; o.batter.scale.setScalar(0.8); o.batter.userData.head.rotation.x = 0;
   const opp = TEAMS[Math.floor(Math.random() * TEAMS.length)];
   const regular = isRegular(p);
   const strength = oppStrength(p);

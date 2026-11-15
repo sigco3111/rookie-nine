@@ -87,16 +87,16 @@ export function doCommand(p, id, arg) {
       if (pr.risk > 0 && Math.random() < risk) {
         const idx = Math.min(INJURIES.length - 1, Math.floor(Math.pow(Math.random(), 2.2) * 6 + (p.cond < 25 ? 1 : 0)));
         const inj = INJURIES[idx]; const wk = p.insured ? Math.ceil(inj.weeks / 2) : inj.weeks; p.insured = false;
-        p.injury = { name: inj.name, weeks: wk }; addEv(p, 'coach', -4); out.push(`💥 ${inj.name} 부상! ${wk}주 입원`);
+        p.injury = { name: inj.name, weeks: wk }; addEv(p, 'coach', -4); out.push(`${inj.name} 부상! ${wk}주 입원`);
       }
     }
   }
   // 나쁜 상태 발생
-  if (p.cond < 20 && chance(18) && !p.traits.includes('cold')) { p.traits.push('cold'); out.push('⚠ 감기에 걸렸다.'); }
-  if (p.cnt.arm > 8 && p.cond < 40 && chance(8) && !p.traits.includes('bomb')) { p.traits.push('bomb'); out.push('⚠ 어깨에 폭탄이 생겼다.'); }
-  if (id === 'rest' && (p.cnt.rest = (p.cnt.rest || 0) + 1) > 12 && chance(10) && !p.traits.includes('lazy')) { p.traits.push('lazy'); out.push('⚠ 게을러졌다.'); }
+  if (p.cond < 20 && chance(18) && !p.traits.includes('cold')) { p.traits.push('cold'); out.push('감기에 걸렸다.'); }
+  if (p.cnt.arm > 8 && p.cond < 40 && chance(8) && !p.traits.includes('bomb')) { p.traits.push('bomb'); out.push('어깨에 폭탄이 생겼다.'); }
+  if (id === 'rest' && (p.cnt.rest = (p.cnt.rest || 0) + 1) > 12 && chance(10) && !p.traits.includes('lazy')) { p.traits.push('lazy'); out.push('게을러졌다.'); }
   // 특수능력 획득
-  for (const t in TRAITS) { const T = TRAITS[t]; if (T.test && !p.traits.includes(t) && T.test(p) && chance(35)) { p.traits.push(t); out.push(`✨ 특수능력 획득: ${T.name}`); } }
+  for (const t in TRAITS) { const T = TRAITS[t]; if (T.test && !p.traits.includes(t) && T.test(p) && chance(35)) { p.traits.push(t); out.push(`특수능력 획득: ${T.name}`); } }
   return out;
 }
 
@@ -114,8 +114,8 @@ export function endWeek(p) {
   p.week++;
   const c = cal(p.week);
   if (c.wk === 1 && [6, 12].includes(c.month)) { // 학기말 시험
-    if (p.study < 30 + (c.year - 1) * 4) { p.banWeeks = 3; out.push('📉 시험 성적 부진! 3주간 연습 금지'); addEv(p, 'coach', -5); }
-    else { out.push('📈 시험 통과'); }
+    if (p.study < 30 + (c.year - 1) * 4) { p.banWeeks = 3; out.push('시험 성적 부진! 3주간 연습 금지'); addEv(p, 'coach', -5); }
+    else { out.push('시험 통과'); }
     p.study = clamp(p.study - 12);
   }
   if (p.week >= 144) { finish(p); out.push('졸업식이다. 드래프트가 열린다!'); }

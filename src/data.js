@@ -6,22 +6,22 @@ export const GRADE_COLOR = { S: '#ff5a5f', A: '#ff8a3d', B: '#f4c20d', C: '#7bd2
 
 // 연습 10종. gain: 주 능력치 증가량 기준, cost: 컨디션 소모, risk: 부상 위험
 export const PRACTICES = [
-  { id: 'chore', name: '잡무', icon: '🧹', desc: '평가와 용돈. 능력치 소폭', cost: 6, risk: 0.01, gain: { stamina: 1 }, eval: { coach: 3, team: 2 }, money: 8 },
-  { id: 'basic', name: '기초훈련', icon: '🏃', desc: '전 능력 골고루. 안전', cost: 10, risk: 0.015, gain: { meet: 1, power: 1, speed: 1, arm: 1, field: 1, stamina: 1 }, eval: { coach: 2 } },
-  { id: 'power', name: '파워훈련', icon: '🏋️', desc: '파워 중심', cost: 16, risk: 0.04, gain: { power: 4, stamina: 1 }, eval: { captain: 1 } },
-  { id: 'bat', name: '배팅연습', icon: '🏏', desc: '미트 중심', cost: 14, risk: 0.03, gain: { meet: 4, power: 1 }, eval: { coach: 2 } },
-  { id: 'defense', name: '수비연습', icon: '🧤', desc: '수비·송구', cost: 14, risk: 0.03, gain: { field: 4, arm: 1 }, eval: { coach: 2, team: 1 } },
-  { id: 'run', name: '주루연습', icon: '👟', desc: '주력', cost: 14, risk: 0.04, gain: { speed: 4, stamina: 1 }, eval: { captain: 1 } },
-  { id: 'arm', name: '송구연습', icon: '🎯', desc: '송구', cost: 14, risk: 0.04, gain: { arm: 4 }, eval: { team: 1 } },
-  { id: 'cond', name: '체력훈련', icon: '💪', desc: '체력과 터프도', cost: 18, risk: 0.03, gain: { stamina: 4 }, tough: 2, eval: { captain: 2 } },
-  { id: 'mental', name: '멘탈훈련', icon: '🧘', desc: '의지와 특능 습득', cost: 8, risk: 0.005, gain: { meet: 1 }, will: 6, eval: { scout: 1 } },
-  { id: 'refresh', name: '리프레쉬', icon: '🛁', desc: '컨디션 회복', cost: -28, risk: 0, gain: {}, cureBad: true },
+  { id: 'chore', name: '잡무', icon: '', desc: '평가와 용돈. 능력치 소폭', cost: 6, risk: 0.01, gain: { stamina: 1 }, eval: { coach: 3, team: 2 }, money: 8 },
+  { id: 'basic', name: '기초훈련', icon: '', desc: '전 능력 골고루. 안전', cost: 10, risk: 0.015, gain: { meet: 1, power: 1, speed: 1, arm: 1, field: 1, stamina: 1 }, eval: { coach: 2 } },
+  { id: 'power', name: '파워훈련', icon: '', desc: '파워 중심', cost: 16, risk: 0.04, gain: { power: 4, stamina: 1 }, eval: { captain: 1 } },
+  { id: 'bat', name: '배팅연습', icon: '', desc: '미트 중심', cost: 14, risk: 0.03, gain: { meet: 4, power: 1 }, eval: { coach: 2 } },
+  { id: 'defense', name: '수비연습', icon: '', desc: '수비·송구', cost: 14, risk: 0.03, gain: { field: 4, arm: 1 }, eval: { coach: 2, team: 1 } },
+  { id: 'run', name: '주루연습', icon: '', desc: '주력', cost: 14, risk: 0.04, gain: { speed: 4, stamina: 1 }, eval: { captain: 1 } },
+  { id: 'arm', name: '송구연습', icon: '', desc: '송구', cost: 14, risk: 0.04, gain: { arm: 4 }, eval: { team: 1 } },
+  { id: 'cond', name: '체력훈련', icon: '', desc: '체력과 터프도', cost: 18, risk: 0.03, gain: { stamina: 4 }, tough: 2, eval: { captain: 2 } },
+  { id: 'mental', name: '멘탈훈련', icon: '', desc: '의지와 특능 습득', cost: 8, risk: 0.005, gain: { meet: 1 }, will: 6, eval: { scout: 1 } },
+  { id: 'refresh', name: '리프레쉬', icon: '', desc: '컨디션 회복', cost: -28, risk: 0, gain: {}, cureBad: true },
 ];
 export const OTHER_CMDS = [
-  { id: 'rest', name: '휴식', icon: '😴', desc: '컨디션 크게 회복' },
-  { id: 'alba', name: '알바', icon: '💴', desc: '돈 +, 컨디션 -' },
-  { id: 'study', name: '공부', icon: '📚', desc: '학업 +. 시험 대비' },
-  { id: 'shop', name: '쇼핑', icon: '🛍️', desc: '장비·음료 구입' },
+  { id: 'rest', name: '휴식', icon: '', desc: '컨디션 크게 회복' },
+  { id: 'alba', name: '알바', icon: '', desc: '돈 +, 컨디션 -' },
+  { id: 'study', name: '공부', icon: '', desc: '학업 +. 시험 대비' },
+  { id: 'shop', name: '쇼핑', icon: '', desc: '장비·음료 구입' },
 ];
 
 export const TRAITS = {
