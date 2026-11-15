@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 export const canvas = document.getElementById('gl');
 export const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 export const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x8fd0ff);
@@ -9,7 +10,7 @@ export const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 400);
 const mats = {};
 const M = (c, o = {}) => new THREE.MeshLambertMaterial({ color: c, ...o });
 scene.add(new THREE.HemisphereLight(0xffffff, 0x6aa84f, 1.0));
-const sun = new THREE.DirectionalLight(0xffffff, 1.2); sun.position.set(-20, 40, 25); scene.add(sun);
+const sun = new THREE.DirectionalLight(0xffffff, 1.2); sun.position.set(-20, 40, 25); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048); { const c = sun.shadow.camera; c.left = -45; c.right = 45; c.top = 45; c.bottom = -45; c.near = 1; c.far = 120; } sun.target.position.set(0, 0, -20); scene.add(sun.target); scene.add(sun);
 
 function resize() { const w = window.innerWidth, h = window.innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.fov = w / h < 0.8 ? 62 : 50; camera.updateProjectionMatrix(); }
 window.addEventListener('resize', resize); resize();
@@ -17,13 +18,13 @@ window.addEventListener('resize', resize); resize();
 // ---- 구장 ----
 export function buildField() {
   const g = new THREE.Group();
-  const grass = new THREE.Mesh(new THREE.CircleGeometry(150, 48), M(0x5cb85c)); grass.rotation.x = -Math.PI / 2; g.add(grass);
+  const grass = new THREE.Mesh(new THREE.CircleGeometry(150, 48), M(0x5cb85c)); grass.rotation.x = -Math.PI / 2; grass.receiveShadow = true; g.add(grass);
   // 외야 잔디 줄무늬
   for (let i = 0; i < 8; i++) { const s = new THREE.Mesh(new THREE.RingGeometry(30 + i * 8, 34 + i * 8, 48, 1, Math.PI * 0.25 * 0 + 0, Math.PI * 2), M(i % 2 ? 0x56ae56 : 0x63c063)); s.rotation.x = -Math.PI / 2; s.position.y = 0.01; s.position.z = 0; g.add(s); }
   // 홈 중심 부채꼴은 방향 문제를 피하려고 두 원으로 구성
-  const dirt = new THREE.Mesh(new THREE.CircleGeometry(7, 32), M(0xc99a63)); dirt.rotation.x = -Math.PI / 2; dirt.position.set(0, 0.04, 0); g.add(dirt);
-  const dirtDiamond = new THREE.Mesh(new THREE.PlaneGeometry(27.4, 27.4), M(0xc99a63)); dirtDiamond.rotation.x = -Math.PI / 2; dirtDiamond.rotation.z = Math.PI / 4; dirtDiamond.position.set(0, 0.035, -19.4); g.add(dirtDiamond);
-  const inGrass = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), M(0x63c063)); inGrass.rotation.x = -Math.PI / 2; inGrass.rotation.z = Math.PI / 4; inGrass.position.set(0, 0.045, -19.4); g.add(inGrass);
+  const dirt = new THREE.Mesh(new THREE.CircleGeometry(7, 32), M(0xc99a63)); dirt.rotation.x = -Math.PI / 2; dirt.position.set(0, 0.04, 0); dirt.receiveShadow = true; g.add(dirt);
+  const dirtDiamond = new THREE.Mesh(new THREE.PlaneGeometry(27.4, 27.4), M(0xc99a63)); dirtDiamond.rotation.x = -Math.PI / 2; dirtDiamond.rotation.z = Math.PI / 4; dirtDiamond.position.set(0, 0.035, -19.4); dirtDiamond.receiveShadow = true; g.add(dirtDiamond);
+  const inGrass = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), M(0x63c063)); inGrass.rotation.x = -Math.PI / 2; inGrass.rotation.z = Math.PI / 4; inGrass.position.set(0, 0.045, -19.4); inGrass.receiveShadow = true; g.add(inGrass);
   const mound = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 3, 0.35, 24), M(0xc99a63)); mound.position.set(0, 0.17, -18.44); g.add(mound);
   const rubber = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.06, 0.15), M(0xffffff)); rubber.position.set(0, 0.37, -18.44); g.add(rubber);
   const plate = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.05, 5), M(0xffffff)); plate.position.set(0, 0.08, 0); plate.rotation.y = Math.PI; g.add(plate);
@@ -63,6 +64,7 @@ export function makeChibi({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, 
   let batMesh = null;
   if (bat) { batMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.065, 0.95, 8), M(0xdeb887)); batMesh.position.set(0, -0.4, 0.0); batMesh.rotation.x = 0; armR.add(batMesh); batMesh.position.set(0, 0.05, 0.1); }
   if (glove) { const gm = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), M(0x7b4a1e)); gm.position.set(0, -0.42, 0.05); armL.add(gm); }
+  g.traverse((o) => { if (o.isMesh) o.castShadow = true; });
   g.userData = { head, armL, armR, legL, legR, body, bat: batMesh };
   return g;
 }

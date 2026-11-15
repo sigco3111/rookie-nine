@@ -8,10 +8,11 @@ const PITCHES = [{ n: '직구', Tm: 1, c: 0, drop: 0 }, { n: '커브', Tm: 1.38,
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 let G = null; // 현재 씬 요소
 const tickers = new Set();
+const permanent = new Set();
 export const addTicker = (f) => tickers.add(f);
 export const delTicker = (f) => tickers.delete(f);
 let last = performance.now();
-export function frame() { const n = performance.now(); const dt = Math.min(0.05, (n - last) / 1000); last = n; for (const f of [...tickers]) f(dt, n / 1000); renderer.render(scene, camera); requestAnimationFrame(frame); }
+export function frame() { const n = performance.now(); const dt = Math.min(0.05, (n - last) / 1000); last = n; for (const f of [...tickers]) f(dt, n / 1000); for (const f of permanent) f(dt); renderer.render(scene, camera); requestAnimationFrame(frame); }
 
 function ensureG() {
   if (G) return G;
@@ -19,6 +20,7 @@ function ensureG() {
   const batter = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, bat: true }); batter.position.set(-1.0, 0, 0.2); batter.scale.setScalar(0.72); batter.rotation.y = Math.PI / 2; addShadow(batter); setBatterPose(batter, 0); g.add(batter);
   const pitcher = makeChibi({ shirt: 0xc53030, cap: 0x742a2a, glove: true }); pitcher.position.set(0, 0.35, -18.44); pitcher.scale.setScalar(1.3); g.add(pitcher);
   const ball = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); ball.visible = false; g.add(ball);
+  const bshadow = new THREE.Mesh(new THREE.CircleGeometry(0.12, 12), new THREE.MeshBasicMaterial({ color: 0, transparent: true, opacity: 0.35 })); bshadow.rotation.x = -Math.PI / 2; bshadow.position.y = 0.07; bshadow.renderOrder = 2; g.add(bshadow);
   const seam = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.012, 6, 16), new THREE.MeshBasicMaterial({ color: 0xd33 })); ball.add(seam);
   const zone = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(ZW * 2, ZH * 2)), new THREE.LineBasicMaterial({ color: 0xffffff })); zone.position.set(0, ZY, 0); g.add(zone);
   const ret = new THREE.Mesh(new THREE.RingGeometry(0.17, 0.2, 28), new THREE.MeshBasicMaterial({ color: 0xffd23f, side: THREE.DoubleSide, depthTest: false })); ret.position.set(0, ZY, 0.05); ret.renderOrder = 10; g.add(ret);
@@ -27,7 +29,7 @@ function ensureG() {
   const fielders = [[-24, -34], [0, -42], [24, -34], [-52, -62], [0, -72], [52, -62], [-14, -24], [14, -24]].map(([x, z], i) => { const f = makeChibi({ shirt: 0xc53030, cap: 0x742a2a, glove: true }); f.position.set(x, 0, z); f.scale.setScalar(2.2); f.rotation.y = Math.atan2(-x, 0 - z) ; f.userData.home = [x, z]; addShadow(f); g.add(f); return f; });
   
   const runner = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d }); runner.visible = false; runner.scale.setScalar(1.6); g.add(runner);
-  scene.add(g); G = { g, batter, pitcher, ball, zone, ret, fielders, runner };
+  scene.add(g); G = { g, batter, pitcher, ball, zone, ret, fielders, runner, bshadow }; permanent.add((dt) => { const b = G.ball; G.bshadow.visible = b.visible; G.bshadow.position.x = b.position.x; G.bshadow.position.z = b.position.z; const sc2 = Math.max(0.5, 1.4 - b.position.y * 0.1); G.bshadow.scale.setScalar(sc2); });
   return G;
 }
 let homeAnim = null;
@@ -64,7 +66,7 @@ export async function playMatch(p, m, hud) {
   let my = 0, oppRuns = 0;
   const pas = regular ? [1, 3, 5] : [4];
   const innings = 5;
-  camera.position.set(0.45, 1.7, 5.4); camera.lookAt(0.1, 0.95, -9);
+  camera.position.set(0.45, 1.8, 5.4); camera.lookAt(0.1, 0.35, -9);
   setPitcherPose(o.pitcher, 0);
   hud.setTitle(`${m.name} vs ${opp}${regular ? '' : ' (대타 출전)'}`);
   const ret = o.ret;
@@ -147,8 +149,17 @@ export async function playMatch(p, m, hud) {
       if (k >= 1) { delTicker(f); setTimeout(() => { o.ball.visible = false; for (const fd of o.fielders) fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); res(); }, 250); }
     }; tickers.add(f);
   });
+  const runBases = (kind) => new Promise((res) => {
+    const pts = { single: [[0, 0], [19.4, -19.4]], double: [[0, 0], [19.4, -19.4], [0, -38.8]], hr: [[0, 0], [19.4, -19.4], [0, -38.8], [-19.4, -19.4], [0, 0]] }[kind] || [[0, 0], [19.4, -19.4]];
+    const rn = o.runner; rn.visible = true; o.batter.visible = false; let t = 0; const dur = 0.9 * (pts.length - 1);
+    camera.position.set(0, 14, 16); camera.lookAt(0, 0, -18);
+    const f = (dt) => { t += dt; const k = Math.min(0.9999, t / dur) * (pts.length - 1); const i = Math.floor(k), fr = k - i; const a = pts[i], b = pts[i + 1];
+      rn.position.set(a[0] + (b[0] - a[0]) * fr, Math.abs(Math.sin(t * 14)) * 0.15, a[1] + (b[1] - a[1]) * fr); rn.rotation.y = Math.atan2(b[0] - a[0], b[1] - a[1]); rn.userData.legL.rotation.x = Math.sin(t * 14); rn.userData.legR.rotation.x = -Math.sin(t * 14);
+      if (t >= dur) { delTicker(f); setTimeout(() => { rn.visible = false; o.batter.visible = true; res(); }, 300); } };
+    tickers.add(f);
+  });
   const resetFielders = () => { for (const fd of o.fielders) fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); };
-  const resetCam = () => { camera.position.set(0.45, 1.7, 5.4); camera.lookAt(0.1, 0.95, -9); setBatterPose(o.batter, 0); };
+  const resetCam = () => { camera.position.set(0.45, 1.8, 5.4); camera.lookAt(0.1, 0.35, -9); setBatterPose(o.batter, 0); };
 
   // 타석
   const plateAppearance = async (inn, base) => {
@@ -174,6 +185,7 @@ export async function playMatch(p, m, hud) {
         else if (L <= 50) { if (h.dst > 70 && chance(h.q * 55 + 15)) { res_ = 'double'; label = '2루타!'; } else { label = '뜬공 아웃'; } }
         else label = '내야 플라이 아웃';
         await flight(h);
+        if (res_ !== 'out') await runBases(res_);
         resetCam();
         return { res: res_, label };
       }

@@ -84,6 +84,26 @@ export const EVENTS = [
   { id: 'rival', title: '라이벌의 도발', text: '다른 학교 에이스가 "다음엔 삼진이다"라고 한다.', min: 18, choices: [
     { label: '받아친다', chance: 65, ok: { will: 8, meet: 2, msg: '투지가 불타오른다!' }, ng: { will: -3, cond: -10, msg: '괜히 흥분했다.' } },
     { label: '웃어넘긴다', chance: 100, ok: { will: 2, msg: '여유가 있다.' } } ] },
+  { id: 'camp', title: '여름 합숙 제안', text: '감독이 방학 합숙 훈련 참가자를 모집한다.', min: 20, choices: [
+    { label: '참가한다', chance: 75, ok: { power: 2, stamina: 2, meet: 1, cond: -20, coach: 6, msg: '지옥 같았지만 한 단계 성장했다.' }, ng: { cond: -30, coach: 2, msg: '탈진해서 중간에 쓰러졌다.' } },
+    { label: '사양한다', chance: 100, ok: { coach: -3, cond: 8, msg: '조용히 쉬었다.' } } ] },
+  { id: 'slump', title: '슬럼프가 왔다', text: '배트가 맞지 않는다. 어떻게 극복할까?', min: 16, choices: [
+    { label: '영상 분석', chance: 70, ok: { meet: 3, will: 3, msg: '문제점을 찾았다.' }, ng: { will: -3, msg: '답이 보이지 않는다.' } },
+    { label: '무작정 휘두른다', chance: 45, ok: { meet: 4, power: 2, cond: -15, msg: '감이 돌아왔다!' }, ng: { cond: -25, meet: -2, msg: '몸만 지쳤다.' } },
+    { label: '쉰다', chance: 100, ok: { cond: 25, msg: '머리가 맑아졌다.' } } ] },
+  { id: 'teacher', title: '선생님의 면담', text: '성적이 걱정된다며 보충 수업을 권한다.', min: 6, choices: [
+    { label: '받는다', chance: 100, ok: { study: 12, cond: -8, coach: 2, msg: '공부 감각이 돌아왔다.' } },
+    { label: '야구가 먼저입니다', chance: 60, ok: { will: 4, coach: 2, msg: '의지를 보였다.' }, ng: { study: -6, coach: -3, msg: '선생님이 한숨을 쉬었다.' } } ] },
+  { id: 'glove', title: '글러브 손질', text: '낡은 글러브를 손질해 줄 선배가 있다.', min: 0, choices: [
+    { label: '맡긴다', chance: 100, ok: { field: 2, team: 3, msg: '포구가 편해졌다.' } } ] },
+  { id: 'fan', title: '후배의 동경', text: '신입 후배가 사인을 부탁한다.', min: 24, choices: [
+    { label: '웃으며 해준다', chance: 100, ok: { team: 4, will: 2, msg: '팀 분위기가 좋아졌다.' } },
+    { label: '지금은 바쁘다', chance: 100, ok: { cond: 4, msg: '연습에 집중했다.' } } ] },
+  { id: 'night', title: '야간 러닝', text: '밤 운동장을 혼자 달리는 캡틴을 봤다.', min: 0, choices: [
+    { label: '같이 뛴다', chance: 65, ok: { speed: 2, stamina: 2, captain: 8, cond: -14, msg: '캡틴과 가까워졌다.' }, ng: { cond: -26, captain: 2, msg: '따라가다 지쳤다.' } },
+    { label: '지켜본다', chance: 100, ok: { will: 2, msg: '자극을 받았다.' } } ] },
+  { id: 'proscout', title: '프로 스카우트의 쪽지', text: '관심 있다는 짧은 쪽지가 도착했다.', min: 60, choices: [
+    { label: '더 노력한다', chance: 100, ok: { will: 5, scout: 6, msg: '목표가 선명해졌다.' } } ] },
 ];
 
 export const TEAMS = ['청룡고', '백호고', '한성고', '대양고', '북산고', '제일고', '동명고', '서해고'];
