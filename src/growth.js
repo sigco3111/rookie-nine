@@ -136,8 +136,11 @@ export function resolveEvent(p, ev, ci) {
   const ch = ev.choices[ci]; p.cnt['ev_' + ev.id] = (p.cnt['ev_' + ev.id] || 0) + 1;
   const success = chance(ch.chance);
   const fx = success ? ch.ok : (ch.ng || ch.ok);
+  // 결과 칩은 상한/하한과 포지션 필터가 적용된 실제 변화만 표시한다.
+  const before = Object.fromEntries(Object.keys(fx).filter((k) => k !== 'msg').map((k) => [k, ['coach', 'captain', 'team', 'scout'].includes(k) ? p.ev[k] : p[k]]));
   applyFx(p, fx);
-  return { success, msg: fx.msg || '', fx };
+  const actual = Object.fromEntries(Object.entries(before).filter(([, v]) => typeof v === 'number').map(([k, v]) => [k, (['coach', 'captain', 'team', 'scout'].includes(k) ? p.ev[k] : p[k]) - v]));
+  return { success, msg: fx.msg || '', fx: actual };
 }
 
 // 시합 후 결과 반영
