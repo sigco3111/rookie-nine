@@ -13,7 +13,7 @@ const permanent = new Set();
 export const addTicker = (f) => tickers.add(f);
 export const delTicker = (f) => tickers.delete(f);
 let last = performance.now();
-export function frame() { const n = performance.now(); const dt = Math.min(0.05, (n - last) / 1000); last = n; for (const f of [...tickers]) f(dt, n / 1000); for (const f of permanent) f(dt); renderer.render(scene, camera); requestAnimationFrame(frame); }
+export function frame() { const n = performance.now(); const dt = window.__dt || Math.min(0.05, (n - last) / 1000); last = n; for (const f of [...tickers]) f(dt, n / 1000); for (const f of permanent) f(dt); renderer.render(scene, camera); requestAnimationFrame(frame); }
 
 function ensureG() {
   if (G) return G;

@@ -230,7 +230,11 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
     for (const S of ['L', 'R']) { const foot = B['Foot' + S], e = wp(legEnd[S]); foot.position.copy(foot.parent.worldToLocal(e.clone())); foot.position.y = Math.max(foot.position.y, 0);
       const heading = Math.atan2(J['to' + S].x - J['an' + S].x, J['to' + S].z - J['an' + S].z); const W = Q(new THREE.Euler(0, heading, 0)).multiply(RQ['Foot' + S]); setW(foot, W, invG); }
     if (u.batAnchor) { const gq = g.getWorldQuaternion(new THREE.Quaternion());
-      const dir = sub('wrR', 'elR').add(sub('wrL', 'elL')).normalize().add(new THREE.Vector3(0, m.batUp ?? 0.35, 0)).normalize();
+      const fa = sub('wrR', 'elR').add(sub('wrL', 'elL')).normalize();
+      const d0 = fa.clone().add(new THREE.Vector3(0, m.batUp ?? 0.35, 0)).normalize();
+      const hz = new THREE.Vector3(fa.x, 0, fa.z); if (hz.lengthSq() < 1e-4) hz.set(0, 0, 1); hz.normalize();
+      const d1 = hz.clone().add(new THREE.Vector3(0, m.batUp2 ?? 0.1, 0)).normalize();
+      const dir = d0.clone().lerp(d1, m.batBlend ?? 0).normalize();
       // 윗손(R)을 배트 손잡이 위쪽으로 2본 IK
       const Sw = wp(B.UpperArmR), Ew = wp(B.LowerArmR), Fw = wp(B.FistR), Lf = wp(B.FistL);
       const l1 = Ew.distanceTo(Sw), l2 = Fw.distanceTo(Ew), hl = wp(B.UpperArmL).distanceTo(wp(B.LowerArmL));
@@ -262,7 +266,7 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
       const pq = par.getWorldQuaternion(new THREE.Quaternion()).premultiply(invG);
       o.bone.quaternion.copy(pq.invert().multiply(W));
     }
-    if (u.batAnchor) { const hand = u.batAnchor.userData.hand; hand.updateWorldMatrix(true, false); const hq = hand.getWorldQuaternion(new THREE.Quaternion()).premultiply(invG);
+    if (u.batAnchor && !u.mocap) { const hand = u.batAnchor.userData.hand; hand.updateWorldMatrix(true, false); const hq = hand.getWorldQuaternion(new THREE.Quaternion()).premultiply(invG);
       const yaw = Q(new THREE.Euler(0, u.body.rotation.y, 0)); const target = yaw.multiply(Q(u.bat.rotation));
       u.batAnchor.quaternion.copy(hq.invert().multiply(target)); }
   };
@@ -279,7 +283,8 @@ const seg = (x, pts) => { for (let i = 1; i < pts.length; i++) if (x <= pts[i][0
 function mcBatter(c, swing) { const u = c.userData;
   const s = swing < 0 ? 0 : swing; // -1 중립도 스탠스
   const f = swing <= 0 ? 16 : seg(s, [[0, 24], [0.34, 35], [1, 56]]); // swing.json은 프레임 50에서 시작: 16=스탠스(66), 24=74 시작, 40=90, 76=126
-  u.mocap = { clip: 'swing', f, mirror: false, yaw: 0, travel: 0.4 };
+  const bl = Math.max(0, Math.min(1, (s - 0.08) / 0.2)); // 컨택트 직전에 배트를 수평으로
+  u.mocap = { clip: 'swing', f, mirror: false, yaw: 0, travel: 0.4, batBlend: swing <= 0 ? 0 : bl * (s > 0.7 ? Math.max(0, 1 - (s - 0.7) / 0.3) : 1), batUp2: 0.1 };
 }
 function mcPitcher(c, t) { const u = c.userData;
   const f = t <= 0 ? 0 : seg(t, [[0, 10], [0.5, 66], [0.65, 84], [1, 110], [1.2, 125]]);
