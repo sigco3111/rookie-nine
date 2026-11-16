@@ -55,7 +55,7 @@ export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배
   for (const fd of o.fielders) { fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); fd.visible = !pit; }
   o.batter.visible = !pit; o.pitcher.visible = true; o.pitcher.position.set(pit ? -0.6 : 0, pit ? 0 : 0.35, pit ? 0.3 : -18.44); o.pitcher.rotation.y = pit ? Math.PI / 2 - 0.9 : 0; o.pitcher.scale.setScalar(pit ? 0.5 : 1.3);
   if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; }
-  const pu = o.pitcher.userData; applyLook(pit ? o.pitcher : o.batter, pl);
+  const pu = o.pitcher.userData; applyLook(pit ? o.pitcher : o.batter, pl); if (pl) { setUniform(o.batter, cal(pl.week).year); if (pit) setUniform(o.pitcher, cal(pl.week).year); else setShirt(o.pitcher, 0xc53030); }
   const u = o.batter.userData;
   const f = (dt, t) => {
     const T = homeAnim; if (T) T.t += dt;

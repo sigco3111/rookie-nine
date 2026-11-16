@@ -4,7 +4,7 @@ const fontB64 = fs.readFileSync('node_modules/@fontsource/noto-sans-kr/files/not
 const css = `@font-face{font-family:TKR;src:url(data:font/woff2;base64,${fontB64}) format('woff2');font-weight:100 900}*{font-family:TKR,sans-serif!important}`;
 const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 const p = await b.newPage(); await p.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
-const errs = []; p.on('pageerror', (e) => errs.push(e.message));
+const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.text().includes('UNI')) errs.push(m.text()); });
 await p.evaluateOnNewDocument((c) => { document.addEventListener('DOMContentLoaded', () => { const st = document.createElement('style'); st.textContent = c; document.head.appendChild(st); }); }, css);
 await p.goto('http://localhost:8123/'); await new Promise(r => setTimeout(r, 1500));
 await p.evaluate(() => document.querySelector('#new').click()); await new Promise(r => setTimeout(r, 300));
