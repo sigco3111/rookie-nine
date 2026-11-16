@@ -26,7 +26,7 @@ function titleScreen() {
     <button class="btn big alt" id="new">새 선수 만들기</button>
     <button class="btn gray" id="hof">명예의 전당 (${h.length})</button></div>`));
   el.querySelector('#new').onclick = createScreen;
-  if (sv && !sv.done) el.querySelector('#cont').onclick = () => { P = sv; homeScreen(); };
+  if (sv && !sv.done) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else homeScreen(); };
   el.querySelector('#hof').onclick = hofScreen;
 }
 
@@ -146,15 +146,17 @@ function runWeek(id) {
   playTrainingAnim(id);
   lastDiff = Object.fromEntries(keysOf(P).map((k) => [k, P[k] - before[k]]));
   sfx.ui();
-  const finishAfter = () => {
-    const e = G.endWeek(P); msgs = msgs.concat(e);
+  if (m && !P.injury) matchPrompt(m, msgs, previousTraits, () => finishWeek(msgs, previousTraits)); else finishWeek(msgs, previousTraits);
+}
+
+function finishWeek(msgs, previousTraits) {
+  P.pendingResult = null;
+    const e = G.endWeek(P); msgs = msgs.concat(e); G.save(P);
     const learned = P.traits.filter(t => !previousTraits.has(t) && TRAITS[t]?.good);
     if (!learned.length) return afterWeekEvent(msgs);
     G.save(P); sfx.good();
     const m = show($(`<div class="modal"><div class="panel"><h2 style="color:#ffd23f">특수능력 습득!</h2><p>꾸준한 훈련이 새로운 강점이 됐다.</p><div style="max-height:50vh;overflow:auto">${learned.map(t=>`<div style="padding:14px;background:#20375e;border-radius:10px;margin:8px 0"><b style="font-size:22px;color:#ffd23f">${TRAITS[t].name}</b><p style="margin:6px 0 0">${TRAITS[t].desc}</p></div>`).join('')}</div><button class="btn" id="oklearned" style="width:100%;margin-top:10px">계속</button></div></div>`));
     m.querySelector('#oklearned').onclick=()=>{m.remove();afterWeekEvent(msgs);};
-  };
-  if (m && !P.injury) matchPrompt(m, msgs, finishAfter); else finishAfter();
 }
 
 function afterWeekEvent(msgs) {
@@ -173,10 +175,12 @@ function afterWeekEvent(msgs) {
     rm.querySelector('#okev').onclick = () => { rm.remove(); homeScreen(msgs.concat([`[이벤트] ${r.msg}`])); }; });
 }
 
-function matchPrompt(m, msgs, cont) {
+function matchPrompt(m, msgs, previousTraits, cont) {
   const before = { ...P.ev, cond: P.cond };
   const report = (r) => {
     r.growthDelta = Object.fromEntries([...Object.keys(P.ev), 'cond'].map(k => [k, (k === 'cond' ? P.cond : P.ev[k]) - before[k]]));
+    P.pendingResult = { result: r, msgs, previousTraits: [...previousTraits] };
+    G.save(P);
     resultModal(r, msgs, cont);
   };
   const mod = show($(`<div class="modal"><div class="panel"><h2>${ic('ball')} ${m.name}</h2><p>${P.pos === 'pit' ? (G.isRegular(P) ? '선발로 등판합니다. 3이닝을 직접 던집니다.' : '아직 후보입니다. 구원으로 1이닝만 던집니다.') : (G.isRegular(P) ? '레귤러로 출전합니다. 타석 3번을 직접 칠 수 있어요.' : '아직 후보입니다. 대타로 1타석만 기회가 옵니다.')}</p><div style="display:grid;gap:8px"><button class="btn big" id="play">직접 플레이</button><button class="btn gray" id="auto">자동 진행</button></div></div></div>`));
