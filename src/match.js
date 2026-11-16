@@ -44,6 +44,12 @@ function applyLook(a, p) {
   u.star.visible = n >= 1; u.star.scale.setScalar(0.8 + Math.min(n, 4) * 0.35);
   if (!u.band) { u.band = new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.025, 6, 12), new THREE.MeshBasicMaterial({ color: 0xff5a5a })); u.band.rotation.x = Math.PI / 2; u.band.position.y = -0.3; u.armR.add(u.band); }
   u.band.visible = p.will >= 50;
+  const gr = p.gear || {};
+  if (u.bat) u.bat.material.color.set(gr.bat ? 0xf2c94c : 0xdeb887);
+  const gl = u.armL.children.find((c) => c.geometry && c.geometry.type === 'SphereGeometry' && c.position.y < -0.38 && c.material.color.getHex() !== 0xffd3a6);
+  if (gl) { gl.material.color.set(gr.glove ? 0xf2c94c : 0x7b4a1e); gl.scale.setScalar(gr.glove ? 1.25 : 1); }
+  if (!u.shoes) { u.shoes = []; for (const x of [-0.13, 0.13]) { const s = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.09, 0.32), new THREE.MeshLambertMaterial({ color: 0xe53935 })); s.position.set(x, 0.05, 0.06); a.add(s); u.shoes.push(s); } }
+  for (const s of u.shoes) s.visible = !!gr.shoes;
 }
 export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배경: 선수가 대기/훈련 모션
   const o = ensureG(); o.g.visible = true; o.ret.visible = false; o.zone.visible = false; o.ball.visible = false;

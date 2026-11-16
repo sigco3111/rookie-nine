@@ -14,6 +14,6 @@ await p.evaluate(() => [...document.querySelectorAll('button')].find(b => b.id =
 await new Promise(r => setTimeout(r, 300));
 await p.evaluate(() => document.querySelector('#go').click()); await new Promise(r => setTimeout(r, 800));
 await p.screenshot({ path: '/tmp/a_home.png' });
-await p.evaluate(() => { const g = window.__game; g.P.power = 90; g.P.stamina = 85; g.P.will = 80; g.P.traits.push('pwr', 'avg'); g.G.save(g.P); window.__game.skipWeeks(0); });
+await p.evaluate(() => { const g = window.__game; g.P.power = 90; g.P.stamina = 85; g.P.will = 80; g.P.traits.push('pwr', 'avg'); g.P.gear = { bat: true, shoes: true, glove: true }; g.G.save(g.P); window.__game.skipWeeks(0); });
 await new Promise(r => setTimeout(r, 800)); await p.screenshot({ path: '/tmp/g_home.png' });
 console.log(errs.slice(0,5).join('\n') || 'no errors'); await b.close();

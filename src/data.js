@@ -51,9 +51,9 @@ export const TRAITS = {
 
 export const ITEMS = [
   { id: 'drink', name: '스포츠음료', price: 20, desc: '컨디션 +25', fx: (p) => { p.cond = Math.min(99, p.cond + 25); } },
-  { id: 'bat', name: '새 배트', price: 80, desc: '미트 +2', fx: (p) => { p.meet = Math.min(99, p.meet + 2); } },
-  { id: 'glove', name: '새 글러브', price: 80, desc: '수비 +2', fx: (p) => { p.field = Math.min(99, p.field + 2); } },
-  { id: 'shoes', name: '러닝화', price: 80, desc: '주력 +2', fx: (p) => { p.speed = Math.min(99, p.speed + 2); } },
+  { id: 'bat', name: '새 배트', price: 80, desc: '미트 +2', fx: (p) => { p.meet = Math.min(99, p.meet + 2); (p.gear = p.gear || {}).bat = true; } },
+  { id: 'glove', name: '새 글러브', price: 80, desc: '수비 +2', fx: (p) => { p.field = Math.min(99, p.field + 2); (p.gear = p.gear || {}).glove = true; } },
+  { id: 'shoes', name: '러닝화', price: 80, desc: '주력 +2', fx: (p) => { p.speed = Math.min(99, p.speed + 2); (p.gear = p.gear || {}).shoes = true; } },
   { id: 'meal', name: '단백질 식단', price: 60, desc: '파워 +1, 체력 +1', fx: (p) => { p.power = Math.min(99, p.power + 1); p.stamina = Math.min(99, p.stamina + 1); } },
   { id: 'insure', name: '부상 보험', price: 120, desc: '다음 부상 입원 기간 반감', fx: (p) => { p.insured = true; } },
   { id: 'cure', name: '종합 감기약', price: 40, desc: '나쁜 상태 하나 치료', fx: (p) => { const b = p.traits.find((t) => !TRAITS[t].good); if (b) p.traits = p.traits.filter((t) => t !== b); } },
