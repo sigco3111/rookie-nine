@@ -105,9 +105,17 @@ function detailModal() {
     <h2 style="margin-top:10px">전적</h2>${P.wins}승 ${P.losses}패 · ${P.hits}/${P.ab} · 홈런 ${P.hr} · 타점 ${P.rbi}
     <h2 style="margin-top:10px">특수능력</h2>${P.traits.map((t) => `<div><b>${TRAITS[t].name}</b> <small>${TRAITS[t].desc}</small></div>`).join('') || '없음'}
     <button class="btn alt" id="goals" style="width:100%;margin-top:10px">특수능력 성장 목표</button>
+    <button class="btn alt" id="evhistory" style="width:100%;margin-top:8px">선택의 기록</button>
     <h2 style="margin-top:10px">기록</h2><div class="log">${P.log.slice(0, 8).map((x) => '· ' + x).join('<br>')}</div><br><button class="btn" style="width:100%" id="x">닫기</button></div></div>`));
+  m.querySelector('#evhistory').onclick = () => { m.remove(); eventHistoryModal(); };
   m.querySelector('#goals').onclick = () => { m.remove(); goalsModal(); };
   m.querySelector('#x').onclick = () => m.remove();
+}
+function eventHistoryModal() {
+  const names = {...STAT_NAME, will:'의지', tough:'근성', cond:'컨디션', money:'용돈', study:'학업', ...evName};
+  const rows = (P.eventHistory || []).slice(0, 12);
+  const m=show($(`<div class="modal"><div class="panel"><h2>선택의 기록</h2><small>최근 12개 · 새로 겪은 이벤트부터 기록됩니다.</small><div style="max-height:58vh;overflow:auto;margin:12px 0">${rows.map(e=>`<div style="background:#20375e;border-radius:10px;padding:10px;margin-bottom:8px"><small>${e.year}학년 ${e.month}월 ${e.wk}주</small><div><b>${e.title}</b></div><p style="margin:6px 0;color:#ffd23f">${e.choice}</p><small>${e.msg}</small><div class="chips">${Object.entries(e.fx).filter(([,v])=>v).map(([k,v])=>`<span class="chip ${v>0?'up':'dn'}">${names[k]||k} ${v>0?'+':''}${v}</span>`).join('')}</div></div>`).join('')||'<p>아직 기록된 선택이 없습니다.<br>이벤트를 겪으면 선택과 결과가 남습니다.</p>'}</div><button class="btn" id="backhistory" style="width:100%">상세 능력으로</button></div></div>`));
+  m.querySelector('#backhistory').onclick=()=>{m.remove();detailModal();};
 }
 function goalsModal() {
   const names = { ...STAT_NAME, will: '의지', 'cnt.bat': '배팅연습', 'cnt.power': '파워훈련', 'cnt.run': '주루연습', 'cnt.arm': '송구연습', 'cnt.defense': '수비연습', 'cnt.mental': '멘탈훈련', 'cnt.velo': '구속훈련', 'cnt.ctrl': '제구훈련', 'cnt.brk': '변화구훈련' };

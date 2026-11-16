@@ -150,6 +150,10 @@ export function resolveEvent(p, ev, ci) {
   const before = Object.fromEntries(Object.keys(fx).filter((k) => k !== 'msg').map((k) => [k, ['coach', 'captain', 'team', 'scout'].includes(k) ? p.ev[k] : p[k]]));
   applyFx(p, fx);
   const actual = Object.fromEntries(Object.entries(before).filter(([, v]) => typeof v === 'number').map(([k, v]) => [k, (['coach', 'captain', 'team', 'scout'].includes(k) ? p.ev[k] : p[k]) - v]));
+  const c = cal(p.week);
+  p.eventHistory = [{ title: ev.title, choice: ch.label, success, msg: fx.msg || '', fx: actual, year: c.year, month: c.month, wk: c.wk }, ...(p.eventHistory || [])].slice(0, 30);
+  p.log.unshift(`[${ev.title}] ${ch.label}: ${fx.msg || (success ? '성공' : '실패')}`);
+  p.log = p.log.slice(0, 80);
   return { success, msg: fx.msg || '', fx: actual };
 }
 
