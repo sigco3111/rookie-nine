@@ -151,7 +151,7 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
   const skinC = 0xd9a87c, hairC = 0x2a1c10;
   const B = {}; q.traverse((b) => { if (b.isBone) B[b.name] = b; if (b.isMesh) { b.frustumCulled = false; b.castShadow = true;
     const list = (Array.isArray(b.material) ? b.material : [b.material]).map((m) => { const n = new THREE.MeshLambertMaterial({ color: 0xffffff }); const nm = m.name;
-      n.color.set(nm === 'Skin' ? skinC : nm === 'Shirt' ? shirt : nm === 'Pants' ? (pants === 0xf2f2f2 ? 0xeeeeee : pants) : nm === 'Hair' ? hairC : nm === 'Belt' ? 0x222222 : nm === 'Face' ? 0xfff3dc : m.color); return n; });
+      n.color.set(nm === 'Skin' ? skinC : nm === 'Shirt' ? (n.userData.isShirt = true, shirt) : nm === 'Pants' ? (pants === 0xf2f2f2 ? 0xeeeeee : pants) : nm === 'Hair' ? hairC : nm === 'Belt' ? 0x222222 : nm === 'Face' ? 0xfff3dc : m.color); return n; });
     b.material = list.length === 1 ? list[0] : list; } });
   Object.assign(B, { Spine: B.Abdomen, LeftArm: B.UpperArmL, RightArm: B.UpperArmR, LeftHand: B.FistL, RightHand: B.FistR, LeftForeArm: B.LowerArmL, RightForeArm: B.LowerArmR, LeftUpLeg: B.UpperLegL, RightUpLeg: B.UpperLegR });
   const H = 1.9; { const bb = new THREE.Box3().setFromObject(q); q.scale.multiplyScalar(H / (bb.max.y - bb.min.y)); }
@@ -326,3 +326,7 @@ export function setPitcherPose(c, t) { // 0 대기, 0..1 와인드업→릴리�
 export function addShadow(g) { const s = new THREE.Mesh(new THREE.CircleGeometry(0.4, 16), new THREE.MeshBasicMaterial({ color: 0, transparent: true, opacity: 0.25 })); s.rotation.x = -Math.PI / 2; s.position.y = 0.05; g.add(s); }
 export const THREEX = THREE;
 window.__rk = { THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose };
+
+// 학년별 유니폼: 셔츠 색만 교체 (1학년 파랑 / 2학년 청록 / 3학년 주황)
+export const UNIFORMS = [0x2b6cb0, 0x1f8a70, 0xd98a1f];
+export function setUniform(ch, year) { const c = UNIFORMS[Math.max(0, Math.min(2, year - 1))]; ch.traverse((b) => { if (b.isMesh) (Array.isArray(b.material) ? b.material : [b.material]).forEach((m) => { if (b.material && m && m.color && m.userData.isShirt) m.color.set(c); }); }); }

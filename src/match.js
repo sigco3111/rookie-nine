@@ -1,5 +1,5 @@
 import { TRAITS } from './data.js';
-import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow } from './scene.js';
+import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform } from './scene.js';
 import { cal, oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
 import { sfx } from './audio.js';
@@ -85,7 +85,7 @@ export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배
 }
 
 export async function playMatch(p, m, hud) {
-  const o = ensureG(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.5, 0, 0.2); o.batter.rotation.y = Math.PI / 2 - 1.4; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
+  const o = ensureG(); { const P = window.__game && window.__game.P; if (P) { const y = cal(P.week).year; setUniform(o.batter, y); if (o.runner) setUniform(o.runner, y); } } o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.5, 0, 0.2); o.batter.rotation.y = Math.PI / 2 - 1.4; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
   const opp = TEAMS[Math.floor(Math.random() * TEAMS.length)];
   const regular = isRegular(p);
   const strength = oppStrength(p);
