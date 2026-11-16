@@ -115,6 +115,7 @@ export async function playMatch(p, m, hud) {
 
   // 한 번의 투구
   const pitchOnce = (count) => new Promise(async (res) => {
+    o.zone.visible = true; o.ret.visible = true;
     const pt_ = PITCHES[Math.floor(Math.random() * (strength > 50 ? 4 : strength > 42 ? 3 : 2))];
     const T = Math.max(0.78, Math.min(1.5, (1.5 - (strength - 35) * 0.012) * pt_.Tm));
     const inZone = chance(62);
@@ -164,6 +165,7 @@ export async function playMatch(p, m, hud) {
 
   // 타구 연출 후 결과 판정
   const flight = (h) => new Promise((res) => {
+    o.zone.visible = false; o.ret.visible = false;
     const a = h.angle * Math.PI / 180; const dir = new THREE.Vector3(Math.sin(a), 0, -Math.cos(a));
     const dur = Math.max(0.9, Math.min(2.6, h.dst / 38 + 0.6)); const peak = Math.max(0.3, Math.min(30, h.dst * Math.tan(Math.max(0, h.launch) * Math.PI / 180) * 0.28));
     o.ball.visible = true; let t = 0;
