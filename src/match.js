@@ -51,7 +51,7 @@ function applyLook(a, p) {
 }
 export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배경: 선수가 대기/훈련 모션
   const o = ensureG(); o.g.visible = true; o.ret.visible = false; o.zone.visible = false; o.ball.visible = false;
-  o.batter.position.set(-0.6, 0, 0.3); o.batter.rotation.y = Math.PI / 2 - 0.5; o.batter.scale.setScalar(0.5);
+  o.batter.position.set(-0.6, 0, 0.3); o.batter.rotation.y = Math.PI / 2 - 0.5; o.batter.scale.setScalar(0.44);
   for (const fd of o.fielders) { fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); fd.visible = !pit; }
   o.batter.visible = !pit; o.pitcher.visible = true; o.pitcher.position.set(pit ? -0.6 : 0, pit ? 0 : 0.35, pit ? 0.3 : -18.44); o.pitcher.rotation.y = pit ? Math.PI / 2 - 0.9 : 0; o.pitcher.scale.setScalar(pit ? 0.5 : 1.3);
   if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; }
@@ -68,7 +68,7 @@ export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배
       else if (T) { pu.armR.rotation.set(0, 0, 0.2); pu.armL.rotation.set(0, 0, -0.2); pu.head.rotation.x = 0.35; }
       else { const c = (t % 3.6) / 3.6; setPitcherPose(o.pitcher, c > 0.75 ? (c - 0.75) / 0.25 * 0.9 : 0); }
       if (T && T.t > 1.4) homeAnim = null;
-      camera.position.set(1.2 + Math.sin(t * 0.3) * 0.2, 1.0, 4.6); camera.lookAt(-0.35, -0.2, 0); return;
+      camera.position.set(1.2 + Math.sin(t * 0.3) * 0.2, 1.0, 4.6); camera.lookAt(-0.35, -0.5, 0); return;
     }
     u.legL.rotation.x = u.legR.rotation.x = 0; o.batter.position.y = 0; o.batter.position.x = -0.6;
     if (k === 'bat' || k === 'power' || (T && !['run', 'cond', 'defense', 'arm', 'refresh', 'rest', 'study', 'alba', 'chore', 'mental'].includes(k))) { const c = (T.t * 1.6) % 1; setBatterPose(o.batter, c > 0.45 ? Math.min(1, (c - 0.45) / 0.15) : 0); if (k === 'power') o.batter.position.y = Math.abs(Math.sin(T.t * 6)) * 0.08; }
@@ -79,7 +79,7 @@ export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배
     else { const c = (t % 3.4) / 3.4; setBatterPose(o.batter, c > 0.7 ? Math.min(1, (c - 0.7) / 0.1) : 0); u.head.rotation.x = 0; }
     if (T && T.t > 1.4) { homeAnim = null; u.head.rotation.x = 0; }
     setPitcherPose(o.pitcher, 0);
-    camera.position.set(1.2 + Math.sin(t * 0.3) * 0.2, 1.0, 4.6); camera.lookAt(-0.35, -0.2, 0);
+    camera.position.set(1.2 + Math.sin(t * 0.3) * 0.2, 1.0, 4.6); camera.lookAt(-0.35, -0.5, 0);
   };
   tickers.clear(); tickers.add(f);
 }
