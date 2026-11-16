@@ -54,6 +54,11 @@ export function buildField() {
   const hd = new THREE.Object3D(); const hcol = [0xff6b6b, 0xffd23f, 0x4dabf7, 0xffffff, 0x69db7c, 0xf783ac];
   for (let i = 0; i < 600; i++) { const row = i % 4; hd.position.set((Math.random() - 0.5) * 100, 6.2 + row * 4, 22.5 + row * 1.5); hd.updateMatrix(); hc.setMatrixAt(i, hd.matrix); hc.setColorAt(i, new THREE.Color(hcol[i % 6])); }
   g.add(hc);
+  // 전광판 + 조명탑
+  const sb = new THREE.Mesh(new THREE.BoxGeometry(30, 11, 1.5), M(0x161a24)); sb.position.set(0, 20, -112); g.add(sb);
+  const sbp = new THREE.Mesh(new THREE.BoxGeometry(27, 8, 0.2), new THREE.MeshBasicMaterial({ color: 0x1b5e3a })); sbp.position.set(0, 20, -111.2); g.add(sbp);
+  for (let i = 0; i < 9; i++) { const d = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.4, 0.1), new THREE.MeshBasicMaterial({ color: i < 4 ? 0xffd23f : 0xff6b6b })); d.position.set(-9 + i * 2.25, 20, -111.05); g.add(d); }
+  for (const a of [-1.0, -0.55, 0.55, 1.0]) { const x = Math.sin(a) * 118, z = -Math.cos(a) * 118; const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.9, 38, 8), M(0x8a909c)); pole.position.set(x, 19, z); g.add(pole); const head = new THREE.Mesh(new THREE.BoxGeometry(9, 5, 1.2), new THREE.MeshBasicMaterial({ color: 0xfff6c8 })); head.position.set(x, 40, z); head.lookAt(0, 20, 0); g.add(head); }
   scene.add(g); return g;
 }
 
