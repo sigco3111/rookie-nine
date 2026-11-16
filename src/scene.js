@@ -152,15 +152,16 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
   g.updateMatrixWorld(true);
   const wq = (b) => b.getWorldQuaternion(new THREE.Quaternion());
   const wp = (b) => b.getWorldPosition(new THREE.Vector3());
-  const arms = [['LeftArm', 'LeftHand'], ['RightArm', 'RightHand']].map(([a, h]) => ({ bone: B[a], hand: B[h], sign: Math.sign(wp(B[h]).x - wp(B[a]).x) }));
+  const arms = [['LeftArm', 'LeftHand', 'LeftForeArm'], ['RightArm', 'RightHand', 'RightForeArm']].map(([a, h, f]) => ({ bone: B[a], hand: B[h], fore: B[f], sign: Math.sign(wp(B[h]).x - wp(B[a]).x) }));
   const armPlus = arms.find((a) => a.sign > 0), armMinus = arms.find((a) => a.sign < 0); // +x쪽 = 칩비 armR
   const legs = [['LeftUpLeg'], ['RightUpLeg']].map(([n]) => ({ bone: B[n], x: wp(B[n]).x }));
   const legPlus = legs.find((l) => l.x > 0).bone, legMinus = legs.find((l) => l.x <= 0).bone;
-  const rest = {}; for (const n of ['Spine', 'Head', 'LeftArm', 'RightArm', 'LeftUpLeg', 'RightUpLeg']) rest[n] = wq(B[n]);
+  const rest = {}; for (const n of ['Spine', 'Head', 'LeftArm', 'RightArm', 'LeftUpLeg', 'RightUpLeg', 'LeftForeArm', 'RightForeArm']) rest[n] = wq(B[n]);
   const down = (sgn) => Q(new THREE.Euler(0, 0, -sgn * 1.4));
   const Dplus = down(1), Dminus = down(-1);
   const proxy = () => new THREE.Group();
   const u = { head: proxy(), armL: proxy(), armR: proxy(), legL: proxy(), legR: proxy(), body: proxy() };
+  u.armL.rotation.order = u.armR.rotation.order = 'YXZ'; u.armL.elbow = u.armR.elbow = 0;
   // 부착물 앵커 (머리: 바인드 방향 상쇄, 손: 팔을 내린 자세 기준 상쇄)
   const anchor = (bone, cancelQ, sc = 1) => { const gr = new THREE.Group(); gr.quaternion.copy(cancelQ.clone().invert()); const ws = bone.getWorldScale(new THREE.Vector3()).x; const wrap = new THREE.Group(); wrap.scale.setScalar(sc / ws); wrap.add(gr); bone.add(wrap); return gr; };
   const mt = (c) => new THREE.MeshLambertMaterial({ color: c });
@@ -173,8 +174,8 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
     u.hat = a; }
   const gold = { bat: false };
   u.bat = new THREE.Group(); u.bat.material = { color: { set() {} } }; u.glove = null; u.shoes = [{ material: { color: { set() {} } } }, { material: { color: { set() {} } } }];
-  const mkBat = () => { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.05, 0.85, 10), mt(0xdeb887)); const a = anchor(armPlus.hand, Dplus.clone().multiply(rest[armPlus.bone.name === 'LeftArm' ? 'LeftArm' : 'RightArm']), H / 1.7); b.position.set(0, 0.38 * 1.7 / H * H / 1.7, 0.02); b.rotation.x = 0.35; a.add(b); b.castShadow = true; return b; };
-  if (bat) { const b = mkBat(); u.bat = new THREE.Group(); u.bat.material = b.material; u.batMesh = b; }
+  const mkBat = () => { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.05, 0.85, 10), mt(0xdeb887)); const a = anchor(armPlus.hand, Dplus.clone().multiply(rest[armPlus.bone.name === 'LeftArm' ? 'LeftArm' : 'RightArm']), H / 1.7); b.position.set(0, 0.38, 0.02); a.add(b); a.userData.hand = armPlus.hand; b.castShadow = true; return b; };
+  if (bat) { const b = mkBat(); u.bat = new THREE.Group(); u.bat.material = b.material; u.batMesh = b; u.batAnchor = b.parent; u.bat.rotation.set(-0.5, 0, 0); }
   if (glove) { const a = anchor(armMinus.hand, Dminus.clone().multiply(rest[armMinus.bone.name]), H / 1.7); const gl = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 10), mt(0x7b4a1e)); gl.scale.set(1, 1.15, 0.6); gl.position.set(0, -0.06, 0.08); a.add(gl); gl.castShadow = true; u.glove = gl; }
   // 장식(별/띠)은 부착 대상으로 리다이렉트
   { const hA = u.hat; u.head.add = (o) => { o.position.y += 0.2; hA.add(o); return u.head; }; u.armR.add = () => u.armR; }
@@ -182,6 +183,7 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
   const order = [
     { bone: B.Spine, rest: rest.Spine, src: u.body, kind: 'spine' }, { bone: B.Head, rest: rest.Head, src: u.head, kind: 'head' },
     { bone: armPlus.bone, rest: rest[armPlus.bone.name], D: Dplus, src: u.armR, kind: 'arm' }, { bone: armMinus.bone, rest: rest[armMinus.bone.name], D: Dminus, src: u.armL, kind: 'arm' },
+    { bone: armPlus.fore, rest: rest[armPlus.fore.name], D: Dplus, src: u.armR, kind: 'fore' }, { bone: armMinus.fore, rest: rest[armMinus.fore.name], D: Dminus, src: u.armL, kind: 'fore' },
     { bone: legPlus, rest: rest[legPlus.name], src: u.legR, kind: 'leg' }, { bone: legMinus, rest: rest[legMinus.name], src: u.legL, kind: 'leg' },
   ];
   g.userData = u; g.userData.isKenney = true;
@@ -189,16 +191,21 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
     g.updateWorldMatrix(true, true);
     const invG = g.getWorldQuaternion(new THREE.Quaternion()).invert();
     inner.scale.set(u.body.scale.x, 1, u.body.scale.z);
+    u.sync_after = true;
     for (const o of order) {
       const d = Q(o.src.rotation); let W = d.clone();
       if (o.kind === 'spine') W = Q(new THREE.Euler(u.body.rotation.x, u.body.rotation.y, 0, 'YXZ')).multiply(o.rest);
       else if (o.kind === 'head') W = d.multiply(o.rest);
       else if (o.kind === 'arm') W = d.multiply(o.D).multiply(o.rest);
+      else if (o.kind === 'fore') W = Q(new THREE.Euler(-(o.src.elbow || 0), 0, 0)).multiply(d).multiply(o.D).multiply(o.rest);
       else W = d.multiply(o.rest);
       const par = o.bone.parent; par.updateWorldMatrix(true, false);
       const pq = par.getWorldQuaternion(new THREE.Quaternion()).premultiply(invG);
       o.bone.quaternion.copy(pq.invert().multiply(W));
     }
+    if (u.batAnchor) { const hand = u.batAnchor.userData.hand; hand.updateWorldMatrix(true, false); const hq = hand.getWorldQuaternion(new THREE.Quaternion()).premultiply(invG);
+      const yaw = Q(new THREE.Euler(0, u.body.rotation.y, 0)); const target = yaw.multiply(Q(u.bat.rotation));
+      u.batAnchor.quaternion.copy(hq.invert().multiply(target)); }
   };
   g.userData.sync = sync; kAll.push(g); sync();
   return g;
@@ -208,8 +215,17 @@ renderer.render = (s, c) => { for (const g of kAll) { if (g.visible && g.parent)
 export function makeChibi(o = {}) { return kBase ? makeKenney(o) : makeChibiProc(o); }
 
 // 타자 포즈
+const lerp = (a, b, t) => a + (b - a) * t;
+function kBatter(c, swing) { const u = c.userData;
+  u.armR.rotation.order = u.armL.rotation.order = 'YXZ';
+  if (swing < 0) { u.armR.rotation.set(-0.3, 0, -0.15); u.armL.rotation.set(-0.3, 0, 0.15); u.armR.elbow = u.armL.elbow = 0.7; u.body.rotation.set(0, 0, 0); u.head.rotation.y = 0; u.bat.rotation.set(-0.9, 0, -0.2); return; }
+  if (swing <= 0) { u.armR.rotation.set(-0.55, 0, -0.35); u.armL.rotation.set(-0.55, 0, 0.35); u.armR.elbow = u.armL.elbow = 1.75; u.body.rotation.set(0.05, 0.8, 0); u.head.rotation.y = 0.8; u.bat.rotation.set(-1.0, 0, -0.1); return; }
+  const s = Math.min(1, swing), yaw = 0.8 - s * 2.0;
+  u.body.rotation.set(0.05, yaw, 0); u.head.rotation.y = 0.8 - s * 0.3;
+  u.armR.rotation.set(-1.35, yaw, -0.05); u.armL.rotation.set(-1.35, yaw, 0.05); u.armR.elbow = u.armL.elbow = lerp(1.7, 0.25, Math.min(1, s * 1.6)); u.bat.rotation.set(lerp(-0.5, Math.PI / 2, Math.min(1, s * 2.2)), 0, 0);
+}
 export function setBatterPose(c, swing) { // swing 0..1, -1=중립
-  const u = c.userData;
+  const u = c.userData; if (u.isKenney) return kBatter(c, swing);
   if (swing < 0) { u.armR.rotation.set(0, 0, 0.1); u.armL.rotation.set(0, 0, -0.1); u.body.rotation.y = 0; u.head.rotation.y = 0; if (u.bat) { u.bat.rotation.set(0.4, 0, 0); u.bat.position.set(0.0, -0.3, 0.1); } return; }
   if (swing <= 0) { u.armR.rotation.set(-2.3, 0.2, 0.5); u.armL.rotation.set(-2.2, 0.1, -0.2); c.rotation.y = -Math.PI / 2 * 0.0; u.body.rotation.y = 0; u.head.rotation.y = 0.8; if (u.bat) { u.bat.rotation.set(0.4, 0, 0); u.bat.position.set(0, 0.35, 0.1); } return; }
   const s = Math.min(1, swing);
@@ -218,10 +234,18 @@ export function setBatterPose(c, swing) { // swing 0..1, -1=중립
   if (u.bat) { u.bat.rotation.set(Math.PI / 2, 0, 0); u.bat.position.set(0, -0.05, 0.55); }
   u.head.rotation.y = 0.8 - s * 0.3;
 }
+function kPitcher(c, t) { const u = c.userData; u.armR.rotation.order = u.armL.rotation.order = 'YXZ';
+  if (t <= 0) { u.armR.rotation.set(-0.5, 0, -0.1); u.armL.rotation.set(-0.7, 0, 0.1); u.armR.elbow = 1.6; u.armL.elbow = 1.6; u.body.rotation.set(0.05, 0, 0); u.legL.rotation.x = u.legR.rotation.x = 0; u.head.rotation.x = 0; return; }
+  const k = Math.min(1.2, t);
+  if (k < 0.4) { const a = k / 0.4; u.armR.rotation.set(lerp(-0.5, 0.9, a), 0, -0.1); u.armL.rotation.set(lerp(-0.7, -1.5, a), 0, 0.1); u.armR.elbow = lerp(1.6, 0.6, a); u.armL.elbow = lerp(1.6, 0.5, a); u.body.rotation.set(lerp(0.05, -0.2, a), 0, 0); u.legL.rotation.x = lerp(0, -1.3, a); u.legR.rotation.x = 0; }
+  else if (k < 0.75) { const a = (k - 0.4) / 0.35; u.armR.rotation.set(lerp(0.9, 2.7, a), 0, -0.2); u.armL.rotation.set(-1.5, 0, 0.3); u.armR.elbow = lerp(0.6, 1.5, a); u.armL.elbow = 0.6; u.body.rotation.set(lerp(-0.2, -0.35, a), 0, 0); u.legL.rotation.x = lerp(-1.3, -0.5, a); u.legR.rotation.x = lerp(0, 0.3, a); }
+  else { const a = Math.min(1, (k - 0.75) / 0.25); u.armR.rotation.set(lerp(2.7, -1.6, a), 0, -0.1); u.armL.rotation.set(lerp(-1.5, -0.2, a), 0, 0.5); u.armR.elbow = lerp(1.5, 0.15, a); u.armL.elbow = 1.2; u.body.rotation.set(lerp(-0.35, 0.55, a), 0, 0); u.legL.rotation.x = lerp(-0.5, -0.2, a); u.legR.rotation.x = lerp(0.3, 0.1, a); }
+}
 export function setPitcherPose(c, t) { // 0 대기, 0..1 와인드업→릴리스
-  const u = c.userData; u.body.rotation.x = t > 0 ? Math.sin(Math.min(1, t) * Math.PI) * 0.25 : 0;
+  const u = c.userData; if (u.isKenney) return kPitcher(c, t); u.body.rotation.x = t > 0 ? Math.sin(Math.min(1, t) * Math.PI) * 0.25 : 0;
   if (t <= 0) { u.armR.rotation.set(0, 0, 0); u.armL.rotation.set(-1.2, 0, 0.3); return; }
   u.armR.rotation.x = -Math.PI * 2 * Math.min(1, t) + (t > 0.7 ? 0 : -0); u.armL.rotation.x = -1.2 + t * 0.5;
 }
 export function addShadow(g) { const s = new THREE.Mesh(new THREE.CircleGeometry(0.4, 16), new THREE.MeshBasicMaterial({ color: 0, transparent: true, opacity: 0.25 })); s.rotation.x = -Math.PI / 2; s.position.y = 0.05; g.add(s); }
 export const THREEX = THREE;
+window.__rk = { THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose };
