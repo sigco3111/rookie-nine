@@ -1,4 +1,5 @@
-import { STAT_KEYS, STAT_NAME, grade, GRADE_COLOR, PRACTICES, OTHER_CMDS, TRAITS, ITEMS } from './data.js';
+import { STAT_NAME, grade, GRADE_COLOR, practicesFor, OTHER_CMDS, TRAITS, ITEMS, keysOf } from './data.js';
+import { playPitching } from './pitching.js';
 import * as G from './growth.js';
 import { frame, showHome, playMatch, playTrainingAnim } from './match.js';
 import { unlock, sfx } from './audio.js';
@@ -37,20 +38,24 @@ function hofScreen() {
 
 function createScreen() {
   clear();
-  const builds = [['contact', '교타형', '미트가 높다. 안타 장인'], ['slugger', '장타형', '파워가 높다. 한 방'], ['runner', '준족형', '주력·수비가 높다'], ['allround', '만능형', '고르게 높다']];
-  let sel = 'contact';
+  const BUILDS = { bat: [['contact', '교타형', '미트가 높다. 안타 장인'], ['slugger', '장타형', '파워가 높다. 한 방'], ['runner', '준족형', '주력·수비가 높다'], ['allround', '만능형', '고르게 높다']],
+    pit: [['power', '강속구형', '구속이 높다. 힘으로 승부'], ['contact', '제구형', '컨트롤이 높다. 코너 공략'], ['runner', '변화구형', '변화구 위력이 높다'], ['allround', '만능형', '고르게 높다']] };
+  let pos = 'bat'; let builds = BUILDS.bat; let sel = 'contact';
   const el = show($(`<div class="screen"><div class="title" style="margin-top:3vh;font-size:26px">선수 만들기</div>
     <div class="panel"><div style="font-size:13px;margin-bottom:6px">이름</div><input class="input" id="nm" maxlength="8" value="신인" /></div>
-    <div class="panel"><div style="font-size:13px;margin-bottom:6px">타입</div><div class="build">${builds.map((b) => `<button data-b="${b[0]}" class="${b[0] === sel ? 'sel' : ''}"><b>${b[1]}</b><br><small>${b[2]}</small></button>`).join('')}</div></div>
+    <div class="panel"><div style="font-size:13px;margin-bottom:6px">포지션</div><div class="build" id="pos"><button data-p="bat" class="sel"><b>타자</b><br><small>직접 타격, 미트/파워가 핵심</small></button><button data-p="pit"><b>투수</b><br><small>직접 투구, 구속/제구/변화구</small></button></div></div>
+    <div class="panel"><div style="font-size:13px;margin-bottom:6px">타입</div><div class="build" id="bd"></div></div>
     <div class="spacer"></div><button class="btn big" id="go">입학하기</button><button class="btn gray" id="bk">뒤로</button></div>`));
-  el.querySelectorAll('.build button').forEach((b) => b.onclick = () => { sel = b.dataset.b; el.querySelectorAll('.build button').forEach((x) => x.classList.toggle('sel', x === b)); });
+  const drawB = () => { const bd = el.querySelector('#bd'); bd.innerHTML = builds.map((b) => `<button data-b="${b[0]}" class="${b[0] === sel ? 'sel' : ''}"><b>${b[1]}</b><br><small>${b[2]}</small></button>`).join(''); bd.querySelectorAll('button').forEach((b) => b.onclick = () => { sel = b.dataset.b; drawB(); }); };
+  drawB();
+  el.querySelectorAll('#pos button').forEach((b) => b.onclick = () => { pos = b.dataset.p; builds = BUILDS[pos]; sel = 'contact'; el.querySelectorAll('#pos button').forEach((x) => x.classList.toggle('sel', x === b)); drawB(); });
   el.querySelector('#bk').onclick = titleScreen;
-  el.querySelector('#go').onclick = () => { P = G.newPlayer(el.querySelector('#nm').value.trim() || '신인', sel); G.save(P); homeScreen(); };
+  el.querySelector('#go').onclick = () => { P = G.newPlayer(el.querySelector('#nm').value.trim() || '신인', sel, pos); G.save(P); homeScreen(); };
 }
 
 let lastDiff = {};
 function statsHtml() {
-  return `<div class="stats">${STAT_KEYS.map((k) => `<div class="st"><span>${STAT_NAME[k]}</span><span><b style="color:${barColor(P[k])}">${grade(P[k])}</b> ${P[k]}${lastDiff[k] ? `<small style="color:${lastDiff[k] > 0 ? '#3bd16f' : '#ff6b6b'};font-weight:900"> ${lastDiff[k] > 0 ? '+' : ''}${lastDiff[k]}</small>` : ''}</span></div>`).join('')}</div>`;
+  return `<div class="stats">${keysOf(P).map((k) => `<div class="st"><span>${STAT_NAME[k]}</span><span><b style="color:${barColor(P[k])}">${grade(P[k])}</b> ${P[k]}${lastDiff[k] ? `<small style="color:${lastDiff[k] > 0 ? '#3bd16f' : '#ff6b6b'};font-weight:900"> ${lastDiff[k] > 0 ? '+' : ''}${lastDiff[k]}</small>` : ''}</span></div>`).join('')}</div>`;
 }
 function topHtml() {
   const c = G.cal(P.week); const [cl, cc] = G.condLabel(P.cond);
@@ -66,8 +71,8 @@ function homeScreen(msgs) {
   const m = G.matchOfWeek(P);
   const c = G.cal(P.week);
   const el = show($(`<div class="screen">${topHtml()}
-    <div class="panel"><div class="top"><span>${ic('cap')} ${P.name} <small>종합 ${G.ovr(P)}</small></span><span style="font-size:12px">${G.isRegular(P) ? '● 레귤러' : '○ 후보'}</span></div>${statsHtml()}
-      <div style="margin-top:6px">${evHtml()}</div>
+    <div class="panel homepanel"><div class="top"><span>${ic("cap")} ${P.name} <small>종합 ${G.ovr(P)}</small></span><span style="font-size:12px">${G.isRegular(P) ? '● 레귤러' : '○ 후보'}</span></div>${statsHtml()}
+      <div style="margin-top:4px">${evHtml()}</div>
       <div class="ev" style="margin-top:6px">${P.traits.map((t) => `<span class="tr ${TRAITS[t].good ? '' : 'bad'}">${TRAITS[t].name}</span>`).join('') || '<small style="opacity:.7">특수능력 없음</small>'}${P.banWeeks ? `<span class="tr bad">연습 금지 ${P.banWeeks}주</span>` : ''}${P.injury ? `<span class="tr bad">입원 ${P.injury.name} ${P.injury.weeks}주</span>` : ''}</div></div>
     <div class="spacer"></div>
     ${msgs ? `<div class="panel log">${msgs.map((x) => '· ' + x).join('<br>')}</div>` : `<div class="panel log">${P.log.slice(0, 2).map((x) => '· ' + x).join('<br>')}</div>`}
@@ -76,7 +81,7 @@ function homeScreen(msgs) {
     <div class="row"><button class="btn gray" id="menu">메뉴</button><button class="btn alt" id="stat">상세 능력</button></div></div>`));
   const box = el.querySelector('#cmds');
   const inj = !!P.injury;
-  for (const pr of PRACTICES) {
+  for (const pr of practicesFor(P)) {
     const lv = G.level(P, pr.id);
     const b = $(`<button class="cmd ${inj ? 'dis' : ''}"><span class="ic">${ic(pr.id)}</span>${pr.name}<small>${pr.desc}</small>${riskBadge(pr)}${P.cnt[pr.id] ? `<span class="lv">Lv${lv}</span>` : ''}</button>`);
     b.onclick = () => runWeek(pr.id); box.appendChild(b);
@@ -93,7 +98,7 @@ function homeScreen(msgs) {
 function riskBadge(pr) { if (!pr.risk) return ''; const r = Math.round(pr.risk * (1.6 - P.cond / 100) * (1 - P.tough * 0.005) * (P.cond < 25 ? 2 : 1) * 100); return r >= 3 ? `<small style="color:${r >= 6 ? '#ff6b6b' : '#ffd23f'}">부상 ${r}%</small>` : ''; }
 function detailModal() {
   const m = show($(`<div class="modal"><div class="panel"><h2>${P.name}의 상세</h2>
-    <table class="mini">${STAT_KEYS.map((k) => `<tr><td>${STAT_NAME[k]}</td><td><b style="color:${barColor(P[k])}">${grade(P[k])}</b> ${P[k]}</td><td style="width:50%"><div class="bar"><i style="width:${P[k]}%;background:${barColor(P[k])}"></i></div></td></tr>`).join('')}
+    <table class="mini">${keysOf(P).map((k) => `<tr><td>${STAT_NAME[k]}</td><td><b style="color:${barColor(P[k])}">${grade(P[k])}</b> ${P[k]}</td><td style="width:50%"><div class="bar"><i style="width:${P[k]}%;background:${barColor(P[k])}"></i></div></td></tr>`).join('')}
     <tr><td>의지</td><td>${P.will}</td><td></td></tr><tr><td>터프도</td><td>${P.tough}</td><td></td></tr><tr><td>학업</td><td>${P.study}</td><td></td></tr></table>
     <h2 style="margin-top:10px">평가</h2>${Object.keys(evName).map((k) => `${evName[k]} ${P.ev[k]}`).join(' / ')}
     <h2 style="margin-top:10px">전적</h2>${P.wins}승 ${P.losses}패 · ${P.hits}/${P.ab} · 홈런 ${P.hr} · 타점 ${P.rbi}
@@ -117,11 +122,11 @@ function shopModal() {
 }
 
 function runWeek(id) {
-  const before = Object.fromEntries(STAT_KEYS.map((k) => [k, P[k]]));
+  const before = Object.fromEntries(keysOf(P).map((k) => [k, P[k]]));
   let msgs = G.doCommand(P, id === 'hospital' ? 'x' : id);
   const m = G.matchOfWeek(P);
   playTrainingAnim(id);
-  lastDiff = Object.fromEntries(STAT_KEYS.map((k) => [k, P[k] - before[k]]));
+  lastDiff = Object.fromEntries(keysOf(P).map((k) => [k, P[k] - before[k]]));
   sfx.ui();
   const finishAfter = () => { const e = G.endWeek(P); msgs = msgs.concat(e); afterWeekEvent(msgs); };
   if (m && !P.injury) matchPrompt(m, msgs, finishAfter); else finishAfter();
@@ -136,7 +141,7 @@ function afterWeekEvent(msgs) {
 }
 
 function matchPrompt(m, msgs, cont) {
-  const mod = show($(`<div class="modal"><div class="panel"><h2>${ic('ball')} ${m.name}</h2><p>${G.isRegular(P) ? '레귤러로 출전합니다. 타석 3번을 직접 칠 수 있어요.' : '아직 후보입니다. 대타로 1타석만 기회가 옵니다.'}</p><div style="display:grid;gap:8px"><button class="btn big" id="play">직접 플레이</button><button class="btn gray" id="auto">자동 진행</button></div></div></div>`));
+  const mod = show($(`<div class="modal"><div class="panel"><h2>${ic('ball')} ${m.name}</h2><p>${P.pos === 'pit' ? (G.isRegular(P) ? '선발로 등판합니다. 3이닝을 직접 던집니다.' : '아직 후보입니다. 구원으로 1이닝만 던집니다.') : (G.isRegular(P) ? '레귤러로 출전합니다. 타석 3번을 직접 칠 수 있어요.' : '아직 후보입니다. 대타로 1타석만 기회가 옵니다.')}</p><div style="display:grid;gap:8px"><button class="btn big" id="play">직접 플레이</button><button class="btn gray" id="auto">자동 진행</button></div></div></div>`));
   mod.querySelector('#auto').onclick = () => { mod.remove(); const r = G.simulateMatch(P, m); resultModal(r, msgs, cont); };
   mod.querySelector('#play').onclick = async () => { mod.remove(); const r = await startMatch(m); resultModal(r, msgs, cont); };
 }
@@ -159,13 +164,26 @@ async function startMatch(m) {
     banner: (t, ms) => { bn.innerHTML = `<div class="banner">${t}</div>`; clearTimeout(api._t); api._t = setTimeout(() => bn.innerHTML = '', ms); },
     onSwing: (f) => { swFn = f; }, offSwing: () => { swFn = null; },
   };
+  api.setCount = (c, outs) => hud.querySelector('#cnt').innerHTML = `B ${[0, 1, 2, 3].map((i) => `<span class="dot b ${i < c.b ? 'on' : ''}"></span>`).join('')} S ${[0, 1, 2].map((i) => `<span class="dot s ${i < c.s ? 'on' : ''}"></span>`).join('')}${outs != null ? ` O ${[0, 1, 2].map((i) => `<span class="dot s ${i < outs ? 'on' : ''}" style="background:${i < outs ? '#e5484d' : ''}"></span>`).join('')}` : ''}`;
+  if (P.pos === 'pit') {
+    sw.remove(); ui.querySelectorAll('.hint').forEach((h) => h.remove());
+    let picker = null;
+    api.pitchPicker = (types, onSel, onThrow) => {
+      picker = $(`<div style="position:absolute;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));display:flex;gap:6px;align-items:stretch"><div id="pt" style="display:flex;gap:6px;flex:1;flex-wrap:wrap"></div><button class="btn warn" id="throw" style="flex:0 0 120px;font-size:20px">던지기</button></div>`);
+      const box = picker.querySelector('#pt'); const mk = () => { box.innerHTML = types.map((t, i) => `<button class="btn alt" data-t="${t.id}" style="flex:1 1 40%;padding:10px 4px;font-size:14px;${i === 0 ? 'outline:3px solid #ffd23f' : ''}">${t.n}</button>`).join(''); box.querySelectorAll('button').forEach((b) => b.onclick = () => { onSel(b.dataset.t); box.querySelectorAll('button').forEach((x) => x.style.outline = x === b ? '3px solid #ffd23f' : ''); }); }; mk();
+      picker.querySelector('#throw').addEventListener('pointerdown', (e) => { e.preventDefault(); onThrow(); }); ui.appendChild(picker);
+      ui.appendChild($(`<div class="hint" style="bottom:calc(86px + env(safe-area-inset-bottom));max-width:90%">구종을 고르고 화면을 드래그해 목표 위치를 정한 뒤 던지기! 제구가 낮으면 목표에서 빗나갑니다.</div>`));
+    };
+    api.removePicker = () => { if (picker) picker.remove(); ui.querySelectorAll('.hint').forEach((h) => h.remove()); };
+    return await playPitching(P, m, api);
+  }
   const r = await playMatch(P, m, api);
   return r;
 }
 
 function resultModal(r, msgs, cont) {
   clear(); showHome();
-  const mod = show($(`<div class="modal"><div class="panel"><h2>${r.win ? '승리!' : '패배'}</h2><div style="font-size:30px;font-weight:900;text-align:center">${r.my} : ${r.opp}</div><p style="text-align:center">${r.ab}타수 ${r.hits}안타 ${r.hr}홈런 ${r.rbi}타점</p><div class="log">감독·팀메이트·스카우트 평가가 갱신되었습니다.</div><br><button class="btn big" id="ok">다음</button></div></div>`));
+  const mod = show($(`<div class="modal"><div class="panel"><h2>${r.win ? '승리!' : '패배'}</h2><div style="font-size:30px;font-weight:900;text-align:center">${r.my} : ${r.opp}</div><p style="text-align:center">${P.pos === 'pit' ? `${r.ip}이닝 ${r.hitsAllowed}피안타 ${r.so}탈삼진 ${r.er}실점` : `${r.ab}타수 ${r.hits}안타 ${r.hr}홈런 ${r.rbi}타점`}</p><div class="log">감독·팀메이트·스카우트 평가가 갱신되었습니다.</div><br><button class="btn big" id="ok">다음</button></div></div>`));
   mod.querySelector('#ok').onclick = () => { mod.remove(); G.save(P); cont(); };
 }
 

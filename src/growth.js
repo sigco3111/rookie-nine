@@ -1,18 +1,18 @@
-import { STAT_KEYS, PRACTICES, TRAITS, INJURIES, EVENTS, ITEMS, TEAMS, PRO } from './data.js';
+import { STAT_KEYS, PRACTICES, keysOf, STAT_NAME, practicesFor, TRAITS, INJURIES, EVENTS, ITEMS, TEAMS, PRO } from './data.js';
 const clamp = (v, a = 0, b = 99) => Math.max(a, Math.min(b, Math.round(v)));
 export const rnd = (a, b) => a + Math.random() * (b - a);
 export const chance = (p) => Math.random() * 100 < p;
 const KEY = 'rookie9.save.v1', HOF = 'rookie9.hof.v1';
 
-export function newPlayer(name, build) {
-  const base = { meet: 30, power: 30, speed: 30, arm: 30, field: 30, stamina: 30 };
-  const bonus = { contact: { meet: 12, speed: 4 }, slugger: { power: 12, arm: 4 }, runner: { speed: 12, field: 4 }, allround: { meet: 5, power: 5, speed: 5, field: 5, arm: 3 } }[build];
+export function newPlayer(name, build, pos = 'bat') {
+  const base = pos === 'pit' ? { velo: 30, ctrl: 30, brk: 30, speed: 30, field: 30, stamina: 30 } : { meet: 30, power: 30, speed: 30, arm: 30, field: 30, stamina: 30 };
+  const bonus = (pos === 'pit' ? { power: { velo: 12, stamina: 4 }, contact: { ctrl: 12, brk: 4 }, runner: { brk: 12, ctrl: 4 }, allround: { velo: 5, ctrl: 5, brk: 5, stamina: 5 } } : { contact: { meet: 12, speed: 4 }, slugger: { power: 12, arm: 4 }, runner: { speed: 12, field: 4 }, allround: { meet: 5, power: 5, speed: 5, field: 5, arm: 3 } })[build];
   for (const k in bonus) base[k] += bonus[k];
-  return { name, build, ...base, cond: 70, will: 30, tough: 20, money: 50, study: 40, week: 0, traits: [],
+  return { name, build, pos, so: 0, ...base, cond: 70, will: 30, tough: 20, money: 50, study: 40, week: 0, traits: [],
     ev: { coach: 30, captain: 30, team: 30, scout: 15 }, cnt: {}, injury: null, banWeeks: 0, insured: false,
     wins: 0, losses: 0, hits: 0, ab: 0, hr: 0, rbi: 0, tour: [], log: ['입학했다. 3년 뒤 프로 지명을 목표로!'], pendingMatch: null, done: false, result: null };
 }
-export const ovr = (p) => Math.round((p.meet * 1.4 + p.power * 1.2 + p.speed + p.arm * 0.7 + p.field * 0.9 + p.stamina * 0.8) / 6);
+export const ovr = (p) => p.pos === 'pit' ? Math.round((p.velo * 1.3 + p.ctrl * 1.3 + p.brk + p.stamina + p.field * 0.5 + p.speed * 0.3) / 5.4) : Math.round((p.meet * 1.4 + p.power * 1.2 + p.speed + p.arm * 0.7 + p.field * 0.9 + p.stamina * 0.8) / 6);
 export const cal = (w) => { const y = 1 + Math.floor(w / 48); const m = ((Math.floor(w / 4) + 3) % 12) + 1; return { year: y, month: m, wk: (w % 4) + 1 }; };
 export const condLabel = (c) => c >= 80 ? ['절호조', '#ff5a5f'] : c >= 60 ? ['호조', '#ff8a3d'] : c >= 40 ? ['보통', '#f4c20d'] : c >= 20 ? ['부진', '#3aa0e8'] : ['절부진', '#6b7280'];
 
@@ -63,14 +63,14 @@ export function doCommand(p, id, arg) {
   else if (id === 'study') { p.study = clamp(p.study + 10 + rnd(0, 4)); p.cond = clamp(p.cond - 3); out.push('공부했다. 학업 상승.'); }
   else if (id === 'shop') { /* 구매는 별도 처리 */ out.push('쇼핑을 즐겼다.'); }
   else {
-    const pr = PRACTICES.find((x) => x.id === id);
+    const pr0 = PRACTICES.find((x) => x.id === id); const pr = id === 'basic' ? { ...pr0, gain: Object.fromEntries(keysOf(p).map((k) => [k, 1])) } : pr0;
     const lv = level(p, id);
     if (p.banWeeks > 0 && id !== 'refresh') { out.push('시험 성적 탓에 연습 금지! 효과 없음.'); p.cond = clamp(p.cond - 3); }
     else {
       const cmul = 0.6 + p.cond / 100 * 0.7; // 컨디션이 좋을수록 효율
       let mul = 0.5 * LV_MUL[lv] * cmul * (bad('lazy') ? 0.7 : 1) * rnd(0.85, 1.2);
       const gained = [];
-      for (const k in pr.gain) { const g = Math.max(pr.gain[k] > 0 && Math.random() < 0.6 ? 1 : 0, Math.round(pr.gain[k] * mul * (p[k] > 60 ? 0.5 : 1))); if (g) { p[k] = clamp(p[k] + g); gained.push(`${k === 'meet' ? '미트' : k === 'power' ? '파워' : k === 'speed' ? '주력' : k === 'arm' ? '송구' : k === 'field' ? '수비' : '체력'} +${g}`); } }
+      for (const k in pr.gain) { const g = Math.max(pr.gain[k] > 0 && Math.random() < 0.6 ? 1 : 0, Math.round(pr.gain[k] * mul * (p[k] > 60 ? 0.5 : 1))); if (g) { p[k] = clamp(p[k] + g); gained.push(`${STAT_NAME[k]} +${g}`); } }
       if (pr.will) { p.will = clamp(p.will + Math.round(pr.will * mul)); gained.push('의지 상승'); }
       if (pr.tough) p.tough = clamp(p.tough + pr.tough);
       if (pr.money) p.money += pr.money;
@@ -82,7 +82,7 @@ export function doCommand(p, id, arg) {
       const nl = level(p, id); if (nl > lv) out.push(`${pr.name} Lv${nl} 달성! 효율 상승`);
       out.push(`${pr.name}: ${gained.join(', ') || '컨디션 회복'}`);
       // 부상 판정
-      let risk = pr.risk * (1.6 - p.cond / 100) * (1 - p.tough * 0.005) * (id === 'arm' && bad('bomb') ? 2 : 1);
+      let risk = pr.risk * (1.6 - p.cond / 100) * (1 - p.tough * 0.005) * ((id === 'arm' || id === 'velo') && bad('bomb') ? 2 : 1);
       if (p.cond < 25) risk *= 2;
       if (pr.risk > 0 && Math.random() < risk) {
         const idx = Math.min(INJURIES.length - 1, Math.floor(Math.pow(Math.random(), 2.2) * 6 + (p.cond < 25 ? 1 : 0)));
@@ -93,7 +93,7 @@ export function doCommand(p, id, arg) {
   }
   // 나쁜 상태 발생
   if (p.cond < 20 && chance(18) && !p.traits.includes('cold')) { p.traits.push('cold'); out.push('감기에 걸렸다.'); }
-  if (p.cnt.arm > 8 && p.cond < 40 && chance(8) && !p.traits.includes('bomb')) { p.traits.push('bomb'); out.push('어깨에 폭탄이 생겼다.'); }
+  if (((p.cnt.arm || 0) + (p.cnt.velo || 0)) > 8 && p.cond < 40 && chance(8) && !p.traits.includes('bomb')) { p.traits.push('bomb'); out.push('어깨에 폭탄이 생겼다.'); }
   if (id === 'rest' && (p.cnt.rest = (p.cnt.rest || 0) + 1) > 12 && chance(10) && !p.traits.includes('lazy')) { p.traits.push('lazy'); out.push('게을러졌다.'); }
   // 특수능력 획득
   for (const t in TRAITS) { const T = TRAITS[t]; if (T.test && !p.traits.includes(t) && T.test(p) && chance(35)) { p.traits.push(t); out.push(`특수능력 획득: ${T.name}`); } }
@@ -138,6 +138,15 @@ export function resolveEvent(p, ev, ci) {
 
 // 시합 후 결과 반영
 export function applyMatchResult(p, r) {
+  if (p.pos === 'pit') {
+    p.so += r.so || 0; p.hits += r.hitsAllowed || 0; p.ab += r.ip || 0;
+    if (r.win) p.wins++; else p.losses++;
+    const perf = (r.so || 0) * 3 + (r.ip || 0) * 2 - (r.er || 0) * 4 - (r.hitsAllowed || 0);
+    addEv(p, 'coach', Math.round(perf * 0.5) + (r.win ? 3 : 0)); addEv(p, 'captain', r.win ? 4 : 1); addEv(p, 'team', r.win ? 4 : -1);
+    addEv(p, 'scout', Math.round(perf * 0.6) + (r.kind === 'tour' ? 4 : 0)); p.cond = clamp(p.cond - 10);
+    const k0 = cal(p.week); if (r.kind === 'tour' && !r.win) p.tour.push(k0.year + ':sum:out');
+    p.log.unshift(`${r.title}: ${r.win ? '승' : '패'} ${r.my}-${r.opp} / ${r.ip}이닝 ${r.so}K 실점 ${r.er}`); return;
+  }
   p.ab += r.ab; p.hits += r.hits; p.hr += r.hr; p.rbi += r.rbi;
   if (r.win) p.wins++; else p.losses++;
   const perf = r.hits * 6 + r.hr * 4 + r.rbi * 3 - (r.ab - r.hits) * 1;
@@ -153,6 +162,12 @@ export function applyMatchResult(p, r) {
 
 // 자동 진행: 능력치로 타석 시뮬
 export function simulateMatch(p, m) {
+  if (p.pos === 'pit') {
+    const ip = isRegular(p) ? 5 : 1; const q = (p.velo * 1.1 + p.ctrl * 1.1 + p.brk * 0.8) / 3 + (p.traits.includes('aura') ? 4 : 0); const st = oppStrength(p);
+    let er = 0, so = 0, ha = 0; for (let i = 0; i < ip * 3; i++) { const e = (st - 40) * 0.006 - (q - 50) * 0.004; if (Math.random() < 0.26 + e) { ha++; if (Math.random() < 0.45) er++; } if (Math.random() < 0.18 + (q - 40) * 0.004) so++; }
+    const my = Math.max(0, Math.round(rnd(0, 3) + (teamStrength(p) - 40) / 12 + rnd(-1, 2))); let win = my > er; if (my === er) win = Math.random() < 0.5;
+    const r = { ip, so, er, hitsAllowed: ha, my: my + (win && my === er ? 1 : 0), opp: er, win, kind: m.kind, title: m.name, ab: 0, hits: 0, hr: 0, rbi: 0 }; applyMatchResult(p, r); return r;
+  }
   const pa = isRegular(p) ? 3 : 1;
   let hits = 0, hr = 0, rbi = 0, ab = 0;
   const avg = 0.16 + p.meet * 0.0029 + (p.traits.includes('avg') ? 0.03 : 0);
@@ -179,5 +194,5 @@ function finish(p) {
   else { rank = 0; text = '지명받지 못했다. 사회인 야구에서 도전을 이어간다.'; }
   team = rank ? PRO[Math.floor(Math.random() * PRO.length)] : '-';
   p.result = { rank, team, text, score: Math.round(score), ovr: ovr(p) };
-  pushHof({ name: p.name, build: p.build, ovr: ovr(p), rank, team, stats: STAT_KEYS.map((k) => p[k]), traits: p.traits.filter((t) => TRAITS[t].good), hr: p.hr, wins: p.wins, date: Date.now() });
+  pushHof({ name: p.name, build: p.build, ovr: ovr(p), rank, team, pos: p.pos, stats: keysOf(p).map((k) => p[k]), traits: p.traits.filter((t) => TRAITS[t].good), hr: p.hr, wins: p.wins, date: Date.now() });
 }

@@ -57,7 +57,7 @@ export function showHome() { // 홈 화면 배경: 선수가 대기/훈련 모�
 }
 
 export async function playMatch(p, m, hud) {
-  const o = ensureG(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); o.batter.position.set(-1.0, 0, 0.2); o.batter.rotation.y = Math.PI / 2; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
+  const o = ensureG(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.batter.position.set(-1.0, 0, 0.2); o.batter.rotation.y = Math.PI / 2; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
   const opp = TEAMS[Math.floor(Math.random() * TEAMS.length)];
   const regular = isRegular(p);
   const strength = oppStrength(p);
@@ -228,3 +228,5 @@ export async function playMatch(p, m, hud) {
   applyMatchResult(p, r);
   return r;
 }
+
+export const internals = () => ({ o: ensureG(), tickers, delTicker, wait });

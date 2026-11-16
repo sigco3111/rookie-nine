@@ -54,3 +54,8 @@ table.mini{width:100%;border-collapse:collapse;font-size:13px}table.mini td{padd
 .cmd{padding:6px 2px;font-size:12px;border-radius:10px}.cmd .ic{font-size:21px}.cmd small{font-size:9.5px;line-height:1.15;text-align:center}
 .screen{padding:8px 10px;gap:6px}
 @media (max-height:700px){.cmd small{display:none}}
+.stats{grid-template-columns:repeat(6,1fr);gap:4px}
+.st{flex-direction:column;padding:3px 2px;gap:0;font-size:11px;text-align:center;justify-content:center}
+.st b{font-size:17px;line-height:1}
+.st span:last-child{display:flex;flex-direction:column;align-items:center}
+.homepanel{padding:6px 8px!important}

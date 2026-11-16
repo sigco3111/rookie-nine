@@ -44,7 +44,7 @@ export function buildField() {
   for (let i = 0; i < 700; i++) { const a = Math.PI * 0.75 + Math.random() * Math.PI * 0.5; const r = 101 + Math.random() * 9; const y = 1 + (r - 101) * 1.4; dm.position.set(Math.cos(a) * r, y, Math.sin(a) * r); dm.lookAt(0, y, 0); dm.updateMatrix(); cm.setMatrixAt(i, dm.matrix); cm.setColorAt(i, new THREE.Color(cols[i % cols.length])); }
   g.add(cm);
   // 백네트
-  const net = new THREE.Mesh(new THREE.PlaneGeometry(14, 7), new THREE.MeshBasicMaterial({ color: 0x223, transparent: true, opacity: 0.18, side: THREE.DoubleSide })); net.position.set(0, 3.5, 9); g.add(net);
+  const net = new THREE.Mesh(new THREE.PlaneGeometry(14, 7), new THREE.MeshBasicMaterial({ color: 0x223, transparent: true, opacity: 0.18, side: THREE.DoubleSide })); net.position.set(0, 3.5, 9); net.name = 'net'; g.add(net);
   scene.add(g); return g;
 }
 

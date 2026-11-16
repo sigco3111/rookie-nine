@@ -1,6 +1,8 @@
 // 시스템 구조만 참고한 독자 구현 데이터
 export const STAT_KEYS = ['meet', 'power', 'speed', 'arm', 'field', 'stamina'];
-export const STAT_NAME = { meet: '미트', power: '파워', speed: '주력', arm: '송구', field: '수비', stamina: '체력' };
+export const PIT_KEYS = ['velo', 'ctrl', 'brk', 'speed', 'field', 'stamina'];
+export const keysOf = (p) => (p.pos === 'pit' ? PIT_KEYS : STAT_KEYS);
+export const STAT_NAME = { meet: '미트', power: '파워', speed: '주력', arm: '송구', field: '수비', stamina: '체력', velo: '구속', ctrl: '제구', brk: '변화구' };
 export const grade = (v) => v >= 90 ? 'S' : v >= 80 ? 'A' : v >= 70 ? 'B' : v >= 60 ? 'C' : v >= 50 ? 'D' : v >= 40 ? 'E' : v >= 25 ? 'F' : 'G';
 export const GRADE_COLOR = { S: '#ff5a5f', A: '#ff8a3d', B: '#f4c20d', C: '#7bd23f', D: '#36c2a3', E: '#3aa0e8', F: '#8a94a6', G: '#6b7280' };
 
@@ -8,15 +10,19 @@ export const GRADE_COLOR = { S: '#ff5a5f', A: '#ff8a3d', B: '#f4c20d', C: '#7bd2
 export const PRACTICES = [
   { id: 'chore', name: '잡무', icon: '', desc: '평가와 용돈. 능력치 소폭', cost: 6, risk: 0.01, gain: { stamina: 1 }, eval: { coach: 3, team: 2 }, money: 8 },
   { id: 'basic', name: '기초훈련', icon: '', desc: '전 능력 골고루. 안전', cost: 10, risk: 0.015, gain: { meet: 1, power: 1, speed: 1, arm: 1, field: 1, stamina: 1 }, eval: { coach: 2 } },
-  { id: 'power', name: '파워훈련', icon: '', desc: '파워 중심', cost: 16, risk: 0.04, gain: { power: 4, stamina: 1 }, eval: { captain: 1 } },
-  { id: 'bat', name: '배팅연습', icon: '', desc: '미트 중심', cost: 14, risk: 0.03, gain: { meet: 4, power: 1 }, eval: { coach: 2 } },
+  { id: 'power', pos: 'bat', name: '파워훈련', icon: '', desc: '파워 중심', cost: 16, risk: 0.04, gain: { power: 4, stamina: 1 }, eval: { captain: 1 } },
+  { id: 'bat', pos: 'bat', name: '배팅연습', icon: '', desc: '미트 중심', cost: 14, risk: 0.03, gain: { meet: 4, power: 1 }, eval: { coach: 2 } },
+  { id: 'velo', pos: 'pit', name: '구속업', icon: '', desc: '직구 구속', cost: 16, risk: 0.045, gain: { velo: 4, stamina: 1 }, eval: { captain: 1 } },
+  { id: 'ctrl', pos: 'pit', name: '제구연습', icon: '', desc: '컨트롤', cost: 13, risk: 0.025, gain: { ctrl: 4 }, eval: { coach: 2 } },
+  { id: 'brk', pos: 'pit', name: '변화구연습', icon: '', desc: '변화구 위력', cost: 14, risk: 0.035, gain: { brk: 4, ctrl: 1 }, eval: { coach: 2 } },
   { id: 'defense', name: '수비연습', icon: '', desc: '수비·송구', cost: 14, risk: 0.03, gain: { field: 4, arm: 1 }, eval: { coach: 2, team: 1 } },
   { id: 'run', name: '주루연습', icon: '', desc: '주력', cost: 14, risk: 0.04, gain: { speed: 4, stamina: 1 }, eval: { captain: 1 } },
-  { id: 'arm', name: '송구연습', icon: '', desc: '송구', cost: 14, risk: 0.04, gain: { arm: 4 }, eval: { team: 1 } },
+  { id: 'arm', pos: 'bat', name: '송구연습', icon: '', desc: '송구', cost: 14, risk: 0.04, gain: { arm: 4 }, eval: { team: 1 } },
   { id: 'cond', name: '체력훈련', icon: '', desc: '체력과 터프도', cost: 18, risk: 0.03, gain: { stamina: 4 }, tough: 2, eval: { captain: 2 } },
   { id: 'mental', name: '멘탈훈련', icon: '', desc: '의지와 특능 습득', cost: 8, risk: 0.005, gain: { meet: 1 }, will: 6, eval: { scout: 1 } },
   { id: 'refresh', name: '리프레쉬', icon: '', desc: '컨디션 회복', cost: -28, risk: 0, gain: {}, cureBad: true },
 ];
+export const practicesFor = (p) => PRACTICES.filter((x) => !x.pos || x.pos === (p.pos || 'bat'));
 export const OTHER_CMDS = [
   { id: 'rest', name: '휴식', icon: '', desc: '컨디션 크게 회복' },
   { id: 'alba', name: '알바', icon: '', desc: '돈 +, 컨디션 -' },
@@ -33,6 +39,10 @@ export const TRAITS = {
   clutch: { name: '찬스', good: true, desc: '득점권 컨택 상승', test: (p) => p.will >= 60 && p.cnt.mental >= 5 },
   grit: { name: '역경', good: true, desc: '2스트라이크 후 컨택 유지', test: (p) => p.will >= 75 && p.cnt.mental >= 9 },
   walk: { name: '선구안', good: true, desc: '볼 구분이 쉬움(스트라이크존 확대 표시)', test: (p) => p.meet >= 55 && p.will >= 50 && p.cnt.mental >= 3 },
+  fast: { name: '전력투구', good: true, desc: '직구 위력 상승', test: (p) => p.velo >= 65 && p.cnt.velo >= 6 },
+  cmd: { name: '안정', good: true, desc: '제구 흔들림 감소', test: (p) => p.ctrl >= 65 && p.cnt.ctrl >= 6 },
+  aura: { name: '위압감', good: true, desc: '타자의 컨택 하락', test: (p) => p.velo >= 70 && p.will >= 55 },
+  bender: { name: '변화구', good: true, desc: '변화구 위력 상승', test: (p) => p.brk >= 65 && p.cnt.brk >= 6 },
   cold: { name: '감기', good: false, desc: '컨디션 회복이 느림', test: null },
   sleep: { name: '불면증', good: false, desc: '컨디션 소모 증가', test: null },
   bomb: { name: '어깨 폭탄', good: false, desc: '송구 연습 시 부상 위험 상승', test: null },
