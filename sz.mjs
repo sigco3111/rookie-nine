@@ -1,0 +1,5 @@
+import puppeteer from 'puppeteer-core';
+const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const p = await b.newPage(); await p.goto('http://localhost:8123/'); await new Promise(r => setTimeout(r, 2000));
+console.log(await p.evaluate(() => { const { THREE, scene, makeChibi, setBatterPose } = window.__rk; const o = []; const c = makeChibi({ bat: true }); scene.add(c); for (const sw of [-1, 0.2, 0.5, 0.85, 1]) { setBatterPose(c, sw); window.__rk.renderer.render(scene, window.__rk.camera); let H, T; c.traverse(b => { if (b.name === 'Head') H = b; if (b.name === 'Torso') T = b; }); const hs = H.getWorldScale(new THREE.Vector3()), ts = T.getWorldScale(new THREE.Vector3()), hp = H.getWorldPosition(new THREE.Vector3()); o.push(sw + ': headscale ' + hs.x.toFixed(4) + ',' + hs.y.toFixed(4) + ' torsoscale ' + ts.x.toFixed(4) + ' headpos ' + hp.x.toFixed(2) + ',' + hp.y.toFixed(2) + ',' + hp.z.toFixed(2) + ' local ' + H.scale.x.toFixed(3)); } return o.join('\n'); }));
+await b.close();

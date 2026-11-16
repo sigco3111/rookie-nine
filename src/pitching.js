@@ -61,7 +61,7 @@ export async function playPitching(p, m, hud) {
       o.ball.position.set(bx * ss + pit.c * Math.sin(Math.PI * Math.min(1, ss)) * 0.6, 1.7 + (by - 1.7) * ss + pit.drop * 0.5 * ss * ss, -17.8 + 17.8 * ss); o.ball.rotation.z += dt * 20;
       setPitcherPose(o.pitcher, Math.min(1, 0.65 + t * 2));
       if (willSwing && !bat.swing && s > 0.86) { bat.swing = true; bat.at = 0.0001; sfx.swing(); }
-      if (bat.swing) { bat.at += dt / 0.16; setBatterPose(o.batter, bat.at); }
+      if (bat.swing) { bat.at += dt / 0.22; setBatterPose(o.batter, bat.at); }
       if (t >= T + 0.15) { done = true; delTicker(f); fin(); }
     };
     const fly = (kind, r, after) => { const dist = kind === 'out' ? 16 + Math.random() * 12 : kind === 'foul' ? 12 : [0, 26, 42, 58, 125][r.t]; const hi = kind === 'out' ? 7 : r && r.t === 4 ? 32 : 5 + (r ? r.t * 2 : 0); const dx = (Math.random() - 0.5) * (r && r.t === 4 ? 40 : 30); const dur = 0.9 + dist / 70;

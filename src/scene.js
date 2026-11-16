@@ -214,7 +214,7 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
     setW(B.Body, qPel.clone().multiply(RQ.Body), invG);
     setW(B.Abdomen, frameQ(spineUp.clone().lerp(upper, 0.5), hipSide.clone().lerp(shSide, 0.5)).multiply(RQ.Abdomen), invG);
     setW(B.Torso, qSh.clone().multiply(RQ.Torso), invG);
-    setW(B.Head, frameQ(sub('head', 'neck'), shSide).multiply(RQ.Head), invG);
+    setW(B.Head, frameQ(sub('head', 'neck').normalize().lerp(upper.clone().normalize(), 0.55), shSide).multiply(RQ.Head), invG);
     const lim = (a, b, n) => new THREE.Quaternion().setFromUnitVectors(RD[n], sub(a, b).normalize()).multiply(RQ[n]);
     for (const S of ['L', 'R']) {
       setW(B['UpperArm' + S], lim('el' + S, 'sh' + S, 'UpperArm' + S), invG);
@@ -228,8 +228,20 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
     const lift = (restFootY - minY); inner.position.y = lift; g.updateWorldMatrix(true, true);
     for (const S of ['L', 'R']) { const foot = B['Foot' + S], e = wp(legEnd[S]); foot.position.copy(foot.parent.worldToLocal(e.clone())); foot.position.y = Math.max(foot.position.y, 0);
       const heading = Math.atan2(J['to' + S].x - J['an' + S].x, J['to' + S].z - J['an' + S].z); const W = Q(new THREE.Euler(0, heading, 0)).multiply(RQ['Foot' + S]); setW(foot, W, invG); }
-    if (u.batAnchor) { const hand = u.batAnchor.userData.hand; hand.updateWorldMatrix(true, false); const hq = hand.getWorldQuaternion(new THREE.Quaternion()).premultiply(invG);
+    if (u.batAnchor) { const gq = g.getWorldQuaternion(new THREE.Quaternion());
       const dir = sub('wrR', 'elR').add(sub('wrL', 'elL')).normalize().add(new THREE.Vector3(0, m.batUp ?? 0.35, 0)).normalize();
+      // 윗손(R)을 배트 손잡이 위쪽으로 2본 IK
+      const Sw = wp(B.UpperArmR), Ew = wp(B.LowerArmR), Fw = wp(B.FistR), Lf = wp(B.FistL);
+      const l1 = Ew.distanceTo(Sw), l2 = Fw.distanceTo(Ew), hl = wp(B.UpperArmL).distanceTo(wp(B.LowerArmL));
+      const T = Lf.clone().add(dir.clone().applyQuaternion(gq).multiplyScalar(hl * 0.55));
+      const a = T.clone().sub(Sw); let dist = Math.min(a.length(), l1 + l2 - 1e-3); a.normalize();
+      const x = (l1 * l1 - l2 * l2 + dist * dist) / (2 * dist), hh = Math.sqrt(Math.max(0, l1 * l1 - x * x));
+      const pole = Ew.clone().sub(Sw).normalize(); const perp = pole.sub(a.clone().multiplyScalar(pole.dot(a))).normalize();
+      const E2 = Sw.clone().add(a.clone().multiplyScalar(x)).add(perp.multiplyScalar(hh)), T2 = Sw.clone().add(a.clone().multiplyScalar(dist));
+      const toL = (v) => v.clone().normalize().applyQuaternion(invG);
+      setW(B.UpperArmR, new THREE.Quaternion().setFromUnitVectors(RD.UpperArmR, toL(E2.clone().sub(Sw))).multiply(RQ.UpperArmR), invG);
+      setW(B.LowerArmR, new THREE.Quaternion().setFromUnitVectors(RD.LowerArmR, toL(T2.clone().sub(E2))).multiply(RQ.LowerArmR), invG);
+      const hand = u.batAnchor.userData.hand; g.updateWorldMatrix(true, true); const hq = hand.getWorldQuaternion(new THREE.Quaternion()).premultiply(invG);
       const target = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir); u.batAnchor.quaternion.copy(hq.invert().multiply(target)); }
   };
   const sync = () => {
@@ -265,7 +277,7 @@ const MC = !/nomocap=1/.test(location.search);
 const seg = (x, pts) => { for (let i = 1; i < pts.length; i++) if (x <= pts[i][0]) { const [a, fa] = pts[i - 1], [b, fb] = pts[i]; return fa + (fb - fa) * (x - a) / (b - a); } return pts[pts.length - 1][1]; };
 function mcBatter(c, swing) { const u = c.userData;
   const s = swing < 0 ? 0 : swing; // -1 중립도 스탠스
-  const f = swing <= 0 ? 16 : seg(s, [[0, 24], [0.5, 40], [1, 76]]); // swing.json은 프레임 50에서 시작: 16=스탠스(66), 24=74 시작, 40=90, 76=126
+  const f = swing <= 0 ? 16 : seg(s, [[0, 24], [0.4, 35], [1, 56]]); // swing.json은 프레임 50에서 시작: 16=스탠스(66), 24=74 시작, 40=90, 76=126
   u.mocap = { clip: 'swing', f, mirror: false, yaw: 0, travel: 0.4 };
 }
 function mcPitcher(c, t) { const u = c.userData;
