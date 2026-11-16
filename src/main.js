@@ -135,6 +135,10 @@ function runWeek(id) {
 
 function afterWeekEvent(msgs) {
   if (P.done) { G.save(P); return homeScreen(); }
+  if (P.review) { const rv = P.review; P.review = null; const NM = { ...STAT_NAME, will: '의지', tough: '근성' };
+    const chips = rv.diffs.filter(([, d]) => d).map(([k, d]) => `<span class="chip ${d > 0 ? 'up' : 'dn'}">${NM[k] || k} ${d > 0 ? '+' : ''}${d}</span>`).join('') || '<span class="chip" style="background:#556">비교 데이터 없음</span>';
+    const rmod = show($(`<div class="modal"><div class="panel"><h2>${rv.year}학년 결산</h2><p>종합 ${rv.ovr}${rv.prevOvr != null ? ` (작년 ${rv.prevOvr}, ${rv.ovr - rv.prevOvr >= 0 ? '+' : ''}${rv.ovr - rv.prevOvr})` : ''}</p><div class="chips">${chips}</div><button class="btn" id="okrv" style="margin-top:12px;width:100%">다음 학년으로</button></div></div>`));
+    rmod.querySelector('#okrv').onclick = () => { rmod.remove(); sfx.ui(); afterWeekEvent(msgs); }; return; }
   const ev = G.randomEvent(P);
   if (!ev) return homeScreen(msgs);
   const mod = show($(`<div class="modal"><div class="panel"><h2>${ev.title}</h2><p>${ev.text}</p><div style="display:grid;gap:8px">${ev.choices.map((c, i) => `<button class="btn alt" data-c="${i}">${c.label} <small>(성공률 ${c.chance}%)</small></button>`).join('')}</div></div></div>`));

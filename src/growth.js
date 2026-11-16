@@ -109,6 +109,7 @@ export function buy(p, id) {
 // 주 종료 처리: 월말 시험, 달력 진행
 export function endWeek(p) {
   const out = [];
+  if (!p.snap) { p.snap = Object.fromEntries([...keysOf(p), 'will', 'tough'].map((k) => [k, p[k]])); p.snapOvr = ovr(p); }
   if (p.banWeeks > 0) p.banWeeks--;
   p.cond = clamp(p.cond + 3);
   p.week++;
@@ -118,6 +119,9 @@ export function endWeek(p) {
     else { out.push('시험 통과'); }
     p.study = clamp(p.study - 12);
   }
+  if (p.week % 48 === 0 && p.week < 144) { // 연말 결산: 지난 1년 성장 비교
+    const prev = p.snap || Object.fromEntries([...keysOf(p), 'will', 'tough'].map((k) => [k, k === 'will' ? 30 : k === 'tough' ? 20 : p[k] - 0])); const nowS = Object.fromEntries([...keysOf(p), 'will', 'tough'].map((k) => [k, p[k]]));
+    const base = p.snap0 || null; p.review = { year: c.year - 1, ovr: ovr(p), prevOvr: p.snapOvr ?? null, diffs: Object.keys(nowS).map((k) => [k, p.snap ? nowS[k] - prev[k] : null]) }; p.snap = nowS; p.snapOvr = ovr(p); }
   if (p.week >= 144) { finish(p); out.push('졸업식이다. 드래프트가 열린다!'); }
   return out;
 }

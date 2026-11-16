@@ -18,3 +18,6 @@
 
 ## 16:50
 - Done: event result modal with stat chips. Next: equipment on player, fielder detail, growth-choice consequences.
+
+## 17:35
+- Done: yearly review modal (stat deltas vs last year). Next: equipment on player, fielder detail, more scenario events.
