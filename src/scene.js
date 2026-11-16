@@ -45,6 +45,15 @@ export function buildField() {
   g.add(cm);
   // 백네트
   const net = new THREE.Mesh(new THREE.PlaneGeometry(14, 7), new THREE.MeshBasicMaterial({ color: 0x223, transparent: true, opacity: 0.18, side: THREE.DoubleSide })); net.position.set(0, 3.5, 9); net.name = 'net'; g.add(net);
+  // 백스톱 벽 + 홈 뒤 스탠드(투구 시점에서 빈 하늘을 덮는다)
+  const wall = new THREE.Mesh(new THREE.BoxGeometry(46, 5, 1), M(0x1f5f3a)); wall.position.set(0, 2.5, 15); g.add(wall);
+  const band = new THREE.Mesh(new THREE.BoxGeometry(46, 0.8, 1.05), M(0xf2c94c)); band.position.set(0, 3.6, 15); g.add(band);
+  const back = new THREE.Mesh(new THREE.BoxGeometry(110, 22, 2), M(0x35508f)); back.position.set(0, 11, 30); g.add(back);
+  for (let r = 0; r < 4; r++) { const t = new THREE.Mesh(new THREE.BoxGeometry(110, 1.2, 8), M(r % 2 ? 0x44609f : 0x3a5594)); t.position.set(0, 5 + r * 4, 25 + r * 1.5); g.add(t); }
+  const hc = new THREE.InstancedMesh(new THREE.BoxGeometry(0.9, 1.1, 0.5), new THREE.MeshLambertMaterial({ color: 0xffffff }), 600);
+  const hd = new THREE.Object3D(); const hcol = [0xff6b6b, 0xffd23f, 0x4dabf7, 0xffffff, 0x69db7c, 0xf783ac];
+  for (let i = 0; i < 600; i++) { const row = i % 4; hd.position.set((Math.random() - 0.5) * 100, 6.2 + row * 4, 22.5 + row * 1.5); hd.updateMatrix(); hc.setMatrixAt(i, hd.matrix); hc.setColorAt(i, new THREE.Color(hcol[i % 6])); }
+  g.add(hc);
   scene.add(g); return g;
 }
 
@@ -81,7 +90,7 @@ export function setBatterPose(c, swing) { // swing 0..1, -1=중립
   u.head.rotation.y = 0.8 - s * 0.3;
 }
 export function setPitcherPose(c, t) { // 0 대기, 0..1 와인드업→릴리스
-  const u = c.userData;
+  const u = c.userData; u.body.rotation.x = t > 0 ? Math.sin(Math.min(1, t) * Math.PI) * 0.25 : 0;
   if (t <= 0) { u.armR.rotation.set(0, 0, 0); u.armL.rotation.set(-1.2, 0, 0.3); return; }
   u.armR.rotation.x = -Math.PI * 2 * Math.min(1, t) + (t > 0.7 ? 0 : -0); u.armL.rotation.x = -1.2 + t * 0.5;
 }

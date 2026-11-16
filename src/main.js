@@ -17,7 +17,7 @@ const barColor = (v) => GRADE_COLOR[grade(v)];
 const evName = { coach: '감독', captain: '캡틴', team: '팀메이트', scout: '스카우트' };
 
 function titleScreen() {
-  clear(); showHome();
+  clear(); showHome(typeof P !== 'undefined' && P ? P.pos : 'bat');
   const sv = G.load();
   const h = G.hof();
   const el = show($(`<div class="screen"><div class="title">${ic('ball')} 루키나인<div style="font-size:15px;font-weight:700;margin-top:4px">3년의 고교야구, 한 명의 선수를 키우자</div></div><div class="spacer"></div>
@@ -66,7 +66,7 @@ function evHtml() {
 }
 
 function homeScreen(msgs) {
-  clear(); showHome(); G.save(P);
+  clear(); showHome(typeof P !== 'undefined' && P ? P.pos : 'bat'); G.save(P);
   if (P.done) return endingScreen();
   const m = G.matchOfWeek(P);
   const c = G.cal(P.week);
@@ -182,13 +182,13 @@ async function startMatch(m) {
 }
 
 function resultModal(r, msgs, cont) {
-  clear(); showHome();
+  clear(); showHome(typeof P !== 'undefined' && P ? P.pos : 'bat');
   const mod = show($(`<div class="modal"><div class="panel"><h2>${r.win ? '승리!' : '패배'}</h2><div style="font-size:30px;font-weight:900;text-align:center">${r.my} : ${r.opp}</div><p style="text-align:center">${P.pos === 'pit' ? `${r.ip}이닝 ${r.hitsAllowed}피안타 ${r.so}탈삼진 ${r.er}실점` : `${r.ab}타수 ${r.hits}안타 ${r.hr}홈런 ${r.rbi}타점`}</p><div class="log">감독·팀메이트·스카우트 평가가 갱신되었습니다.</div><br><button class="btn big" id="ok">다음</button></div></div>`));
   mod.querySelector('#ok').onclick = () => { mod.remove(); G.save(P); cont(); };
 }
 
 function endingScreen() {
-  clear(); showHome();
+  clear(); showHome(typeof P !== 'undefined' && P ? P.pos : 'bat');
   const r = P.result;
   const el = show($(`<div class="screen"><div class="title" style="font-size:28px">졸업 · 드래프트</div><div class="panel" style="text-align:center"><div style="font-size:22px;font-weight:900">${r.text}</div>${r.rank ? `<div>${r.team}</div>` : ''}<div style="margin-top:8px">종합 ${r.ovr} · 평가점수 ${r.score}</div><div>${P.wins}승 ${P.losses}패 · 홈런 ${P.hr}</div></div>
     <div class="panel">${statsHtml()}<div class="ev" style="margin-top:6px">${P.traits.filter((t) => TRAITS[t].good).map((t) => `<span class="tr">${TRAITS[t].name}</span>`).join('')}</div></div>

@@ -1,4 +1,4 @@
-import { THREEX as THREE, scene, camera, renderer, setBatterPose, setPitcherPose } from './scene.js';
+import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose } from './scene.js';
 import { internals } from './match.js';
 import { oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
@@ -22,9 +22,12 @@ export async function playPitching(p, m, hud) {
   let my = 0;
   // 장면: 마운드 뒤에서 타석을 본다. 타자는 상대(붉은 팀), 투수는 사용자
   o.batter.position.set(-1.0, 0, 0.1); o.batter.rotation.y = Math.PI / 2; o.batter.scale.setScalar(1.0); o.batter.visible = true; o.batter.userData.head.rotation.x = 0;
-  o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.1); o.pitcher.visible = true;
+  o.pitcher.position.set(0.7, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(0.85); o.pitcher.visible = true;
   for (const fd of o.fielders) fd.visible = true;
-  const cam = () => { camera.position.set(1.2, 2.3, -22.5); camera.fov = 24; camera.updateProjectionMatrix(); camera.lookAt(-0.35, 0.95, 0); { const n = scene.getObjectByName('net'); if (n) n.visible = false; } };
+  if (!o.catcher) { o.catcher = makeChibi({ shirt: 0x333a44, pants: 0x333a44, cap: 0x222222, glove: true }); o.catcher.rotation.y = Math.PI; o.catcher.position.set(0, 0, 1.6); o.catcher.scale.set(1.0, 0.8, 1.0); o.catcher.userData.armL.rotation.set(-1.4, 0, 0.2); o.g.add(o.catcher);
+    o.ump = makeChibi({ shirt: 0x111111, pants: 0x555555, cap: 0x111111 }); o.ump.rotation.y = Math.PI; o.ump.position.set(0.7, 0, 3.0); o.ump.scale.setScalar(1.0); o.g.add(o.ump); }
+  o.catcher.visible = true; o.ump.visible = true; o.pitcher.userData.armL.rotation.set(-1.2, 0, 0.3);
+  const cam = () => { camera.position.set(0.1, 3.1, -24.8); camera.fov = 46; camera.updateProjectionMatrix(); camera.lookAt(-0.05, 0.95, 0); { const n = scene.getObjectByName('net'); if (n) n.visible = false; } };
   cam();
   hud.setTitle(`${m.name} vs ${opp} (선발 투수)`);
   let cx = 0, cy = ZY; const ray = new THREE.Raycaster(); const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
