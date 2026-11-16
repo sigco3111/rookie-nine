@@ -16,7 +16,7 @@ export const ovr = (p) => p.pos === 'pit' ? Math.round((p.velo * 1.3 + p.ctrl * 
 export const cal = (w) => { const y = 1 + Math.floor(w / 48); const m = ((Math.floor(w / 4) + 3) % 12) + 1; return { year: y, month: m, wk: (w % 4) + 1 }; };
 export const condLabel = (c) => c >= 80 ? ['절호조', '#ff5a5f'] : c >= 60 ? ['호조', '#ff8a3d'] : c >= 40 ? ['보통', '#f4c20d'] : c >= 20 ? ['부진', '#3aa0e8'] : ['절부진', '#6b7280'];
 
-export function save(p) { try { localStorage.setItem(KEY, JSON.stringify(p)); } catch (e) {} }
+export function save(p) { ensureGrowthBaseline(p); try { localStorage.setItem(KEY, JSON.stringify(p)); } catch (e) {} }
 export function load() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
 export function clearSave() { try { localStorage.removeItem(KEY); } catch (e) {} }
 export function hof() { try { return JSON.parse(localStorage.getItem(HOF)) || []; } catch (e) { return []; } }
@@ -50,6 +50,7 @@ export function applyFx(p, fx) {
 
 // 한 주 진행. 결과 메시지 배열 반환
 export function doCommand(p, id, arg) {
+  ensureGrowthBaseline(p);
   const out = [];
   const bad = (t) => p.traits.includes(t);
   if (p.injury) {
@@ -101,15 +102,21 @@ export function doCommand(p, id, arg) {
 }
 
 export function buy(p, id) {
+  ensureGrowthBaseline(p);
   const it = ITEMS.find((i) => i.id === id);
   if (p.money < it.price) return `돈이 부족하다 (${it.price}원)`;
   p.money -= it.price; it.fx(p); return `${it.name} 구입! ${it.desc}`;
 }
 
+const growthSnapshot = (p) => Object.fromEntries([...keysOf(p), 'will', 'tough'].map((k) => [k, p[k]]));
+function ensureGrowthBaseline(p) {
+  if (!p.snap) { p.snap = growthSnapshot(p); p.snapOvr = ovr(p); }
+}
+
 // 주 종료 처리: 월말 시험, 달력 진행
 export function endWeek(p) {
   const out = [];
-  if (!p.snap) { p.snap = Object.fromEntries([...keysOf(p), 'will', 'tough'].map((k) => [k, p[k]])); p.snapOvr = ovr(p); }
+  ensureGrowthBaseline(p);
   if (p.banWeeks > 0) p.banWeeks--;
   p.cond = clamp(p.cond + 3);
   p.week++;
@@ -120,8 +127,10 @@ export function endWeek(p) {
     p.study = clamp(p.study - 12);
   }
   if (p.week % 48 === 0 && p.week < 144) { // 연말 결산: 지난 1년 성장 비교
-    const prev = p.snap || Object.fromEntries([...keysOf(p), 'will', 'tough'].map((k) => [k, k === 'will' ? 30 : k === 'tough' ? 20 : p[k] - 0])); const nowS = Object.fromEntries([...keysOf(p), 'will', 'tough'].map((k) => [k, p[k]]));
-    const base = p.snap0 || null; p.review = { year: c.year - 1, ovr: ovr(p), prevOvr: p.snapOvr ?? null, diffs: Object.keys(nowS).map((k) => [k, p.snap ? nowS[k] - prev[k] : null]) }; p.snap = nowS; p.snapOvr = ovr(p); }
+    const nowS = growthSnapshot(p);
+    p.review = { year: c.year - 1, ovr: ovr(p), prevOvr: p.snapOvr, diffs: Object.keys(nowS).map((k) => [k, nowS[k] - p.snap[k]]) };
+    p.snap = nowS; p.snapOvr = ovr(p);
+  }
   if (p.week >= 144) { finish(p); out.push('졸업식이다. 드래프트가 열린다!'); }
   return out;
 }
@@ -133,6 +142,7 @@ export function randomEvent(p) {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 export function resolveEvent(p, ev, ci) {
+  ensureGrowthBaseline(p);
   const ch = ev.choices[ci]; p.cnt['ev_' + ev.id] = (p.cnt['ev_' + ev.id] || 0) + 1;
   const success = chance(ch.chance);
   const fx = success ? ch.ok : (ch.ng || ch.ok);

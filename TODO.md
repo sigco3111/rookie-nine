@@ -57,3 +57,8 @@
 
 ## 22:42
 - Done: 2 chained events (e_scout_visit after e_scoutcall, e_rival_match after e_rival_gift). 42 events total. Build + event flow ran without errors; new event screens not captured.
+
+## 23:45
+- Event chips now show actual clamped changes, not nominal rewards (731de71). Live event screenshot verified.
+- Annual review baseline captured before first action/save rather than after first training. Removed unused fallback variables. Batter/pitcher deterministic two-year checks passed; normal weekly path 47 -> 48 review -> year 2 date passed. Existing saves without snapshot begin comparison at next capture; prior missing growth cannot be reconstructed.
+- Open: middle-flight ball visual proof, glancing contact, pitcher follow-through direction, balance/device QA.
