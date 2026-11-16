@@ -49,6 +49,19 @@ export const TRAITS = {
   lazy: { name: '게으름', good: false, desc: '연습 효율 감소', test: null },
 };
 
+// 습득 조건과 진행 표시는 같은 정의를 사용한다.
+export const TRAIT_REQUIREMENTS = {
+ avg: [['meet',65],['cnt.bat',6]], pwr: [['power',65],['cnt.power',6]], run: [['speed',65],['cnt.run',6]],
+ gun: [['arm',65],['cnt.arm',5]], glove: [['field',65],['cnt.defense',6]],
+ clutch: [['will',60],['cnt.mental',5]], grit: [['will',75],['cnt.mental',9]], walk: [['meet',55],['will',50],['cnt.mental',3]],
+ fast: [['velo',65],['cnt.velo',6]], cmd: [['ctrl',65],['cnt.ctrl',6]], aura: [['velo',70],['will',55]], bender: [['brk',65],['cnt.brk',6]],
+};
+export const requirementValue = (p, key) => key.startsWith('cnt.') ? (p.cnt[key.slice(4)] || 0) : (p[key] || 0);
+for (const [id, req] of Object.entries(TRAIT_REQUIREMENTS)) TRAITS[id].test = (p) => req.every(([k,n]) => requirementValue(p,k) >= n);
+export function traitGoals(p) {
+ return Object.entries(TRAIT_REQUIREMENTS).filter(([id,req]) => !p.traits.includes(id) && req.every(([k]) => k.startsWith('cnt.') || k in p)).map(([id,req]) => ({id,req,progress:req.reduce((v,[k,n])=>v+Math.min(1,requirementValue(p,k)/n),0)/req.length})).sort((a,b)=>b.progress-a.progress);
+}
+
 export const ITEMS = [
   { id: 'drink', name: '스포츠음료', price: 20, desc: '컨디션 +25', fx: (p) => { p.cond = Math.min(99, p.cond + 25); } },
   { id: 'bat', name: '새 배트', price: 80, desc: '미트 +2', fx: (p) => { p.meet = Math.min(99, p.meet + 2); (p.gear = p.gear || {}).bat = true; } },

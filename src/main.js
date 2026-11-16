@@ -1,4 +1,4 @@
-import { STAT_NAME, grade, GRADE_COLOR, practicesFor, OTHER_CMDS, TRAITS, ITEMS, keysOf } from './data.js';
+import { STAT_NAME, grade, GRADE_COLOR, practicesFor, OTHER_CMDS, TRAITS, ITEMS, keysOf, traitGoals, requirementValue } from './data.js';
 import { playPitching } from './pitching.js';
 import * as G from './growth.js';
 import { frame, showHome, playMatch, playTrainingAnim } from './match.js';
@@ -104,8 +104,16 @@ function detailModal() {
     <h2 style="margin-top:10px">평가</h2>${Object.keys(evName).map((k) => `${evName[k]} ${P.ev[k]}`).join(' / ')}
     <h2 style="margin-top:10px">전적</h2>${P.wins}승 ${P.losses}패 · ${P.hits}/${P.ab} · 홈런 ${P.hr} · 타점 ${P.rbi}
     <h2 style="margin-top:10px">특수능력</h2>${P.traits.map((t) => `<div><b>${TRAITS[t].name}</b> <small>${TRAITS[t].desc}</small></div>`).join('') || '없음'}
+    <button class="btn alt" id="goals" style="width:100%;margin-top:10px">특수능력 성장 목표</button>
     <h2 style="margin-top:10px">기록</h2><div class="log">${P.log.slice(0, 8).map((x) => '· ' + x).join('<br>')}</div><br><button class="btn" style="width:100%" id="x">닫기</button></div></div>`));
+  m.querySelector('#goals').onclick = () => { m.remove(); goalsModal(); };
   m.querySelector('#x').onclick = () => m.remove();
+}
+function goalsModal() {
+  const names = { ...STAT_NAME, will: '의지', 'cnt.bat': '배팅연습', 'cnt.power': '파워훈련', 'cnt.run': '주루연습', 'cnt.arm': '송구연습', 'cnt.defense': '수비연습', 'cnt.mental': '멘탈훈련', 'cnt.velo': '구속훈련', 'cnt.ctrl': '제구훈련', 'cnt.brk': '변화구훈련' };
+  const goals = traitGoals(P).slice(0,3);
+  const m = show($(`<div class="modal"><div class="panel"><h2>다음 성장 목표</h2><p style="font-size:13px">가장 가까운 미습득 특수능력 3개<br>조건을 채우면 주간 명령 후 각각 35% 확률로 습득합니다.</p>${goals.map(({id,req,progress})=>`<div style="margin:12px 0;padding:10px;background:#20375e;border-radius:10px"><b>${TRAITS[id].name}</b><small style="display:block;margin:4px 0">${TRAITS[id].desc}</small><div class="bar"><i style="width:${Math.round(progress*100)}%;background:#ffd23f"></i></div>${req.map(([k,n])=>`<small style="display:block;color:${requirementValue(P,k)>=n?'#8ce99a':'#fff'}">${names[k]||k} ${requirementValue(P,k)}/${n}${k.startsWith('cnt.')?'회':''}${requirementValue(P,k)>=n?' · 달성':''}</small>`).join('')}</div>`).join('')||'<p>모든 성장 목표를 달성했습니다.</p>'}<button class="btn" id="backgoal" style="width:100%">상세 능력으로</button></div></div>`));
+  m.querySelector('#backgoal').onclick=()=>{m.remove();detailModal();};
 }
 function menuModal() {
   const m = show($(`<div class="modal"><div class="panel"><h2>메뉴</h2><div style="display:grid;gap:8px"><button class="btn" id="x">계속하기</button><button class="btn alt" id="t">타이틀로</button><button class="btn warn" id="r">이 선수 포기하고 초기화</button></div></div></div>`));
