@@ -33,15 +33,15 @@ export function buildField() {
   const line = (a, b) => { const len = Math.hypot(b[0] - a[0], b[1] - a[1]); const l = new THREE.Mesh(new THREE.PlaneGeometry(0.15, len), M(0xffffff)); l.rotation.x = -Math.PI / 2; l.rotation.z = -Math.atan2(b[0] - a[0], -(b[1] - a[1])) + 0; l.position.set((a[0] + b[0]) / 2, 0.06, (a[1] + b[1]) / 2); g.add(l); };
   line([0, 0], [-80, -80]); line([0, 0], [80, -80]);
   // 외야 펜스
-  const fence = new THREE.Mesh(new THREE.CylinderGeometry(95, 95, 3, 64, 1, true, Math.PI * 0.75, Math.PI * 0.5), M(0x1f6f3a, { side: THREE.DoubleSide }));
+  const fence = new THREE.Mesh(new THREE.CylinderGeometry(95, 95, 3, 64, 1, true, Math.PI * 0.3, Math.PI * 1.4), M(0x1f6f3a, { side: THREE.DoubleSide }));
   fence.position.set(0, 1.5, 0); fence.rotation.y = 0; g.add(fence);
   // 관중석 띠
-  const stand = new THREE.Mesh(new THREE.CylinderGeometry(112, 100, 14, 64, 1, true, Math.PI * 0.75, Math.PI * 0.5), M(0x4d6bb3, { side: THREE.DoubleSide }));
+  const stand = new THREE.Mesh(new THREE.CylinderGeometry(112, 100, 14, 64, 1, true, Math.PI * 0.3, Math.PI * 1.4), M(0x4d6bb3, { side: THREE.DoubleSide }));
   stand.position.set(0, 7, 0); g.add(stand);
   // 관중: 색 점 인스턴스
-  const cm = new THREE.InstancedMesh(new THREE.BoxGeometry(1.2, 1.6, 0.6), new THREE.MeshLambertMaterial({ color: 0xffffff }), 700);
+  const cm = new THREE.InstancedMesh(new THREE.BoxGeometry(1.2, 1.6, 0.6), new THREE.MeshLambertMaterial({ color: 0xffffff }), 2200);
   const dm = new THREE.Object3D(); const cols = [0xff6b6b, 0xffd23f, 0x4dabf7, 0xffffff, 0x69db7c, 0xf783ac];
-  for (let i = 0; i < 700; i++) { const a = Math.PI * 0.75 + Math.random() * Math.PI * 0.5; const r = 101 + Math.random() * 9; const y = 1 + (r - 101) * 1.4; dm.position.set(Math.cos(a) * r, y, Math.sin(a) * r); dm.lookAt(0, y, 0); dm.updateMatrix(); cm.setMatrixAt(i, dm.matrix); cm.setColorAt(i, new THREE.Color(cols[i % cols.length])); }
+  for (let i = 0; i < 2200; i++) { const a = Math.PI * 0.3 + Math.random() * Math.PI * 1.4; const r = 101 + Math.random() * 9; const y = 1 + (r - 101) * 1.4; dm.position.set(Math.sin(a) * r, y, Math.cos(a) * r); dm.lookAt(0, y, 0); dm.updateMatrix(); cm.setMatrixAt(i, dm.matrix); cm.setColorAt(i, new THREE.Color(cols[i % cols.length])); }
   g.add(cm);
   // 백네트
   const net = new THREE.Mesh(new THREE.PlaneGeometry(14, 7), new THREE.MeshBasicMaterial({ color: 0x223, transparent: true, opacity: 0.18, side: THREE.DoubleSide })); net.position.set(0, 3.5, 9); net.name = 'net'; g.add(net);
