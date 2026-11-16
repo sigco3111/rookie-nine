@@ -27,3 +27,6 @@
 
 ## 18:15
 - Done: +4 scenario events (rain, scout call, part-time, rival gift). Next: fielder detail; reports paused until 06:00 KST.
+
+## 18:35
+- Done: opponent shirt color per team (8 palettes). Next: fielder size/detail, hit-result animation check, partial-contact check.

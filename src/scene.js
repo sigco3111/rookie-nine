@@ -330,3 +330,5 @@ window.__rk = { THREE, scene, camera, renderer, makeChibi, setBatterPose, setPit
 // 학년별 유니폼: 셔츠 색만 교체 (1학년 파랑 / 2학년 청록 / 3학년 주황)
 export const UNIFORMS = [0x2b6cb0, 0x1f8a70, 0xd98a1f];
 export function setUniform(ch, year) { const c = UNIFORMS[Math.max(0, Math.min(2, year - 1))]; ch.traverse((b) => { if (b.isMesh) (Array.isArray(b.material) ? b.material : [b.material]).forEach((m) => { if (b.material && m && m.color && m.userData.isShirt) m.color.set(c); }); }); }
+export function setShirt(ch, c) { ch.traverse((b) => { if (b.isMesh) (Array.isArray(b.material) ? b.material : [b.material]).forEach((m) => { if (m && m.userData && m.userData.isShirt) m.color.set(c); }); }); }
+export const OPP_COLORS = [0xc53030, 0x7b3fa0, 0x9aa3ad, 0x2f2f38, 0x3a8f3a, 0xb5486a, 0x8a5a2b, 0x2a9fb5];
