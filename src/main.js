@@ -96,7 +96,7 @@ function homeScreen(msgs) {
   el.querySelector('#menu').onclick = menuModal;
 }
 
-function riskBadge(pr) { if (!pr.risk) return ''; const r = Math.round(pr.risk * (1.6 - P.cond / 100) * (1 - P.tough * 0.005) * (P.cond < 25 ? 2 : 1) * 100); return r >= 3 ? `<small style="color:${r >= 6 ? '#ff6b6b' : '#ffd23f'}">부상 ${r}%</small>` : ''; }
+function riskBadge(pr) { const r = Math.round(G.trainingRisk(P, pr) * 100); return r >= 3 ? `<small style="color:${r >= 6 ? '#ff6b6b' : '#ffd23f'}">부상 약 ${r}%</small>` : ''; }
 function detailModal() {
   const m = show($(`<div class="modal"><div class="panel"><h2>${P.name}의 상세</h2>
     <table class="mini">${keysOf(P).map((k) => `<tr><td>${STAT_NAME[k]}</td><td><b style="color:${barColor(P[k])}">${grade(P[k])}</b> ${P[k]}</td><td style="width:50%"><div class="bar"><i style="width:${P[k]}%;background:${barColor(P[k])}"></i></div></td></tr>`).join('')}

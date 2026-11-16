@@ -53,6 +53,14 @@ export function applyFx(p, fx) {
   }
 }
 
+export function trainingRisk(p, pr, preview = true) {
+  if (!pr.risk || p.injury || (p.banWeeks > 0 && pr.id !== 'refresh')) return 0;
+  const cost = pr.cost > 0 ? pr.cost * (p.traits.includes('sleep') ? 1.3 : 1) : pr.cost;
+  const cond = preview ? clamp(p.cond - cost) : p.cond;
+  const tough = preview ? p.tough + (pr.tough || 0) : p.tough;
+  return pr.risk * (1.6 - cond / 100) * (1 - tough * 0.005) * (['arm','velo'].includes(pr.id) && p.traits.includes('bomb') ? 2 : 1) * (cond < 25 ? 2 : 1);
+}
+
 // 한 주 진행. 결과 메시지 배열 반환
 export function doCommand(p, id, arg) {
   ensureGrowthBaseline(p);
@@ -88,8 +96,7 @@ export function doCommand(p, id, arg) {
       const nl = level(p, id); if (nl > lv) out.push(`${pr.name} Lv${nl} 달성! 효율 상승`);
       out.push(`${pr.name}: ${gained.join(', ') || (pr.cost < 0 ? '컨디션 회복' : '능력 변화 없음')}`);
       // 부상 판정
-      let risk = pr.risk * (1.6 - p.cond / 100) * (1 - p.tough * 0.005) * ((id === 'arm' || id === 'velo') && bad('bomb') ? 2 : 1);
-      if (p.cond < 25) risk *= 2;
+      const risk = trainingRisk(p, pr, false);
       if (pr.risk > 0 && Math.random() < risk) {
         const idx = Math.min(INJURIES.length - 1, Math.floor(Math.pow(Math.random(), 2.2) * 6 + (p.cond < 25 ? 1 : 0)));
         const inj = INJURIES[idx]; const wk = p.insured ? Math.ceil(inj.weeks / 2) : inj.weeks; p.insured = false;
