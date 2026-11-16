@@ -183,6 +183,12 @@ export const EVENTS = [
   { id: 'e_rival_gift', title: '라이벌의 선물', text: '다른 학교 에이스가 새 장갑을 건네며 "다음 대회에서 보자"고 했다.', min: 60, choices: [
     { label: '받는다', chance: 100, ok: { will: 6, field: 1, msg: '묘한 승부욕이 생겼다.' } },
     { label: '돌려준다', chance: 60, ok: { will: 8, team: 2, msg: '"실력으로 이기겠다"고 말했다.' }, ng: { will: -3, msg: '어색한 분위기가 남았다.' } } ] },
+  { id: 'e_scout_visit', req: 'e_scoutcall', title: '스카우트의 방문', text: '전화를 주었던 스카우트가 연습을 직접 보러 왔다. 감독도 옆에서 지켜본다.', min: 50, choices: [
+    { label: '평소처럼 한다', chance: 80, ok: { scout: 10, coach: 3, msg: '"기본기가 좋다"는 메모를 남기고 갔다.' }, ng: { scout: 2, will: -3, msg: '긴장해서 실수가 이어졌다.' } },
+    { label: '무리해서 보여준다', chance: 45, ok: { scout: 16, will: 5, msg: '인상적인 장면을 만들었다!' }, ng: { cond: -15, scout: -3, coach: -2, msg: '무리하다 몸이 무거워졌다.' } } ] },
+  { id: 'e_rival_match', req: 'e_rival_gift', title: '에이스와의 재회', text: '선물을 건넸던 라이벌이 연습경기에서 다시 마주쳤다. 눈빛이 달라져 있다.', min: 70, choices: [
+    { label: '정면 승부', chance: 55, ok: { will: 10, meet: 2, team: 4, msg: '졌지만 서로를 인정했다. 한 단계 성장했다.' }, ng: { will: 3, cond: -8, msg: '크게 졌지만 다음엔 다르리라 다짐했다.' } },
+    { label: '데이터를 모아 분석', chance: 85, ok: { study: 4, ctrl: 2, meet: 1, msg: '약점을 찾아냈다.' }, ng: { msg: '자료만 쌓였을 뿐이다.' } } ] },
 ];
 
 export const TEAMS = ['청룡고', '백호고', '한성고', '대양고', '북산고', '제일고', '동명고', '서해고'];
