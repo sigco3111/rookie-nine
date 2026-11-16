@@ -282,7 +282,7 @@ function mcBatter(c, swing) { const u = c.userData;
   u.mocap = { clip: 'swing', f, mirror: false, yaw: 0, travel: 0.4 };
 }
 function mcPitcher(c, t) { const u = c.userData;
-  const f = t <= 0 ? 0 : seg(t, [[0, 10], [0.65, 70], [1, 105], [1.2, 120]]);
+  const f = t <= 0 ? 0 : seg(t, [[0, 10], [0.5, 66], [0.65, 84], [1, 110], [1.2, 125]]);
   u.mocap = { clip: 'pitch', f, mirror: true, yaw: 0.8, travel: 1, lean: 0.55 };
 }
 export function clearMocap(c) { c.userData.mocap = null; }
