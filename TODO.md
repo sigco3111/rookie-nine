@@ -21,3 +21,6 @@
 
 ## 17:35
 - Done: yearly review modal (stat deltas vs last year). Next: equipment on player, fielder detail, more scenario events.
+
+## 17:52
+- Done: purchased gear (bat/shoes) shown on batter in match. Next: fielder detail, more scenario events.
