@@ -18,7 +18,7 @@ export function frame() { const n = performance.now(); const dt = Math.min(0.05,
 function ensureG() {
   if (G) return G;
   const g = new THREE.Group();
-  const batter = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, bat: true, helmet: true, num: 9 }); batter.position.set(-0.4, 0, 0.2); batter.scale.setScalar(0.72); batter.rotation.y = Math.PI / 2 - 1.05; addShadow(batter); setBatterPose(batter, 0); g.add(batter);
+  const batter = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, bat: true, helmet: true, num: 9 }); batter.position.set(-0.5, 0, 0.2); batter.scale.setScalar(0.72); batter.rotation.y = Math.PI / 2 - 1.4; addShadow(batter); setBatterPose(batter, 0); g.add(batter);
   const pitcher = makeChibi({ shirt: 0xc53030, cap: 0x742a2a, glove: true }); pitcher.position.set(0, 0.35, -18.44); pitcher.scale.setScalar(1.3); g.add(pitcher);
   const ball = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); ball.visible = false; g.add(ball);
   const bshadow = new THREE.Mesh(new THREE.CircleGeometry(0.12, 12), new THREE.MeshBasicMaterial({ color: 0, transparent: true, opacity: 0.35 })); bshadow.rotation.x = -Math.PI / 2; bshadow.position.y = 0.07; bshadow.renderOrder = 2; g.add(bshadow);
@@ -85,7 +85,7 @@ export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배
 }
 
 export async function playMatch(p, m, hud) {
-  const o = ensureG(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.4, 0, 0.2); o.batter.rotation.y = Math.PI / 2 - 1.05; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
+  const o = ensureG(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.5, 0, 0.2); o.batter.rotation.y = Math.PI / 2 - 1.4; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
   const opp = TEAMS[Math.floor(Math.random() * TEAMS.length)];
   const regular = isRegular(p);
   const strength = oppStrength(p);
