@@ -123,21 +123,22 @@ function makeChibiProc({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, ski
 }
 
 
-// ---- Kenney Animated Characters Protagonists (CC0) 기반 선수 ----
+// ---- Quaternius Ultimate Animated Character Pack (CC0) 기반 선수 ----
 let kBase = null, kImg = null; const kTex = {};
 const USE_PROC = new URLSearchParams(location.search).has('proc');
 if (!USE_PROC) { try {
   const base = import.meta.env.BASE_URL || './';
-  const [buf, img] = await Promise.all([fetch(base + 'models/player.fbx').then((r) => r.arrayBuffer()), new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = base + 'models/player_skin.png'; })]);
-  kBase = new FBXLoader().parse(buf, './'); kImg = img;
+  const buf = await fetch(base + 'models/player.fbx').then((r) => r.arrayBuffer());
+  kBase = new FBXLoader().parse(buf, './');
 } catch (e) { console.warn('player model load failed', e); kBase = null; } }
 const css = (c) => '#' + new THREE.Color(c).getHexString();
-function kTexture(shirt, pants, trim) {
-  const key = shirt + '|' + pants + '|' + trim; if (kTex[key]) return kTex[key];
+function kTexture(shirt, pants, trim, redShoes) {
+  const key = shirt + '|' + pants + '|' + trim + '|' + (redShoes ? 1 : 0); if (kTex[key]) return kTex[key];
   const cv = document.createElement('canvas'); cv.width = cv.height = 1024; const x = cv.getContext('2d'); x.drawImage(kImg, 0, 0);
   x.fillStyle = shirt; x.fillRect(150, 490, 345, 534); x.fillStyle = trim; x.fillRect(150, 490, 345, 22); x.fillRect(150, 1000, 345, 24); x.fillRect(150, 490, 10, 534); x.fillRect(485, 490, 10, 534);
   x.fillStyle = shirt; x.fillRect(42, 490, 72, 534); x.fillRect(528, 490, 70, 534); x.fillStyle = '#ffffff'; x.fillRect(300, 780, 80, 90);
   x.fillStyle = pants; x.fillRect(611, 764, 413, 260); x.fillStyle = '#111'; x.fillRect(611, 895, 413, 12);
+  if (redShoes) { const id = x.getImageData(639, 134, 185, 390), d = id.data; for (let i = 0; i < d.length; i += 4) { const r = d[i], g = d[i + 1], b = d[i + 2]; if (g > r + 40 && g > b + 10) { d[i] = 229; d[i + 1] = 57; d[i + 2] = 53; } } x.putImageData(id, 639, 134); }
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; kTex[key] = t; return t;
 }
 const kAll = [];
@@ -145,19 +146,23 @@ const Q = (e) => new THREE.Quaternion().setFromEuler(e);
 function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = false, glove = false, helmet = false } = {}) {
   const g = new THREE.Group(); const inner = new THREE.Group(); g.add(inner);
   const q = skClone(kBase); inner.add(q);
-  const tex = kTexture(css(shirt), css(pants === 0xf2f2f2 ? 0xe9e9e9 : pants), css(cap));
-  const mat = new THREE.MeshLambertMaterial({ map: tex });
-  const B = {}; q.traverse((b) => { if (b.isBone) B[b.name] = b; if (b.isMesh) { b.material = mat; b.frustumCulled = false; b.castShadow = true; } });
+  const pcss = css(pants === 0xf2f2f2 ? 0xe9e9e9 : pants), scss = css(shirt), ccss = css(cap);
+  const skinC = 0xd9a87c, hairC = 0x2a1c10;
+  const B = {}; q.traverse((b) => { if (b.isBone) B[b.name] = b; if (b.isMesh) { b.frustumCulled = false; b.castShadow = true;
+    const list = (Array.isArray(b.material) ? b.material : [b.material]).map((m) => { const n = new THREE.MeshLambertMaterial({ color: 0xffffff }); const nm = m.name;
+      n.color.set(nm === 'Skin' ? skinC : nm === 'Shirt' ? shirt : nm === 'Pants' ? (pants === 0xf2f2f2 ? 0xeeeeee : pants) : nm === 'Hair' ? hairC : nm === 'Belt' ? 0x222222 : nm === 'Face' ? 0xfff3dc : m.color); return n; });
+    b.material = list.length === 1 ? list[0] : list; } });
+  Object.assign(B, { Spine: B.Abdomen, LeftArm: B.UpperArmL, RightArm: B.UpperArmR, LeftHand: B.FistL, RightHand: B.FistR, LeftForeArm: B.LowerArmL, RightForeArm: B.LowerArmR, LeftUpLeg: B.UpperLegL, RightUpLeg: B.UpperLegR });
   const H = 1.9; { const bb = new THREE.Box3().setFromObject(q); q.scale.multiplyScalar(H / (bb.max.y - bb.min.y)); }
   g.updateMatrixWorld(true);
   const wq = (b) => b.getWorldQuaternion(new THREE.Quaternion());
   const wp = (b) => b.getWorldPosition(new THREE.Vector3());
-  const arms = [['LeftArm', 'LeftHand', 'LeftForeArm'], ['RightArm', 'RightHand', 'RightForeArm']].map(([a, h, f]) => ({ bone: B[a], hand: B[h], fore: B[f], sign: Math.sign(wp(B[h]).x - wp(B[a]).x) }));
+  const arms = [['LeftArm', 'LeftHand', 'LeftForeArm'], ['RightArm', 'RightHand', 'RightForeArm']].map(([a, h, f]) => ({ bone: B[a], hand: B[h], fore: B[f], sign: Math.sign(wp(B[a]).x) }));
   const armPlus = arms.find((a) => a.sign > 0), armMinus = arms.find((a) => a.sign < 0); // +x쪽 = 칩비 armR
   const legs = [['LeftUpLeg'], ['RightUpLeg']].map(([n]) => ({ bone: B[n], x: wp(B[n]).x }));
   const legPlus = legs.find((l) => l.x > 0).bone, legMinus = legs.find((l) => l.x <= 0).bone;
-  const rest = {}; for (const n of ['Spine', 'Head', 'LeftArm', 'RightArm', 'LeftUpLeg', 'RightUpLeg', 'LeftForeArm', 'RightForeArm']) rest[n] = wq(B[n]);
-  const down = (sgn) => Q(new THREE.Euler(0, 0, -sgn * 1.4));
+  const rest = {}; for (const n of ['Spine', 'Head', 'LeftArm', 'RightArm', 'LeftUpLeg', 'RightUpLeg', 'LeftForeArm', 'RightForeArm']) rest[B[n].name] = wq(B[n]); rest.Spine = rest[B.Spine.name]; rest.Head = rest[B.Head.name];
+  const down = () => new THREE.Quaternion();
   const Dplus = down(1), Dminus = down(-1);
   const proxy = () => new THREE.Group();
   const u = { head: proxy(), armL: proxy(), armR: proxy(), legL: proxy(), legR: proxy(), body: proxy() };
@@ -165,20 +170,20 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
   // 부착물 앵커 (머리: 바인드 방향 상쇄, 손: 팔을 내린 자세 기준 상쇄)
   const anchor = (bone, cancelQ, sc = 1) => { const gr = new THREE.Group(); gr.quaternion.copy(cancelQ.clone().invert()); const ws = bone.getWorldScale(new THREE.Vector3()).x; const wrap = new THREE.Group(); wrap.scale.setScalar(sc / ws); wrap.add(gr); bone.add(wrap); return gr; };
   const mt = (c) => new THREE.MeshLambertMaterial({ color: c });
-  { const a = anchor(B.Head, rest.Head, H / 1.7), m = mt(cap); // 모자 또는 헬멧
-    const dome = new THREE.Mesh(new THREE.SphereGeometry(helmet ? 0.27 : 0.25, 18, 12, 0, Math.PI * 2, 0, Math.PI / 2), m); dome.position.set(0, 0.31, 0);
-    const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.02, 16, 1, false, -Math.PI / 2, Math.PI), m); brim.position.set(0, 0.31, 0.2); brim.scale.set(1, 1, helmet ? 0.8 : 1.1);
+  { const a = anchor(B.Head, rest.Head, 1), m = mt(cap); // 모자 또는 헬멧
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(helmet ? 0.34 : 0.325, 18, 12, 0, Math.PI * 2, 0, Math.PI / 2), m); dome.position.set(0, 0.36, 0);
+    const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.29, 0.29, 0.025, 16, 1, false, -Math.PI / 2, Math.PI), m); brim.position.set(0, 0.37, 0.23); brim.scale.set(1, 1, helmet ? 0.8 : 1.1);
     a.add(dome, brim);
-    if (helmet) { const fl = new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 8, 0, Math.PI, 0, Math.PI * 0.8), m); fl.position.set(armPlus.sign * 0.2, 0.2, 0); fl.rotation.y = Math.PI / 2; fl.scale.set(0.6, 1, 1); a.add(fl); }
-    const logo = new THREE.Mesh(new THREE.SphereGeometry(0.035, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff })); logo.position.set(0, 0.5, 0.2); logo.scale.set(1, 1, 0.3); a.add(logo);
+    if (helmet) { const fl = new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 8, 0, Math.PI, 0, Math.PI * 0.8), m); fl.position.set(armPlus.sign * 0.27, 0.22, 0); fl.scale.setScalar(1.3); fl.rotation.y = Math.PI / 2; fl.scale.set(0.6, 1, 1); a.add(fl); }
+    const logo = new THREE.Mesh(new THREE.SphereGeometry(0.035, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff })); logo.position.set(0, 0.68, 0.22); logo.scale.set(1, 1, 0.3); a.add(logo);
     u.hat = a; }
   const gold = { bat: false };
-  u.bat = new THREE.Group(); u.bat.material = { color: { set() {} } }; u.glove = null; u.shoes = [{ material: { color: { set() {} } } }, { material: { color: { set() {} } } }];
-  const mkBat = () => { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.05, 0.85, 10), mt(0xdeb887)); const a = anchor(armPlus.hand, Dplus.clone().multiply(rest[armPlus.bone.name === 'LeftArm' ? 'LeftArm' : 'RightArm']), H / 1.7); b.position.set(0, 0.38, 0.02); a.add(b); a.userData.hand = armPlus.hand; b.castShadow = true; return b; };
+  u.bat = new THREE.Group(); u.bat.material = { color: { set() {} } }; u.glove = null; const shoeMat = mt(0x222222); for (const n of ['FootL', 'FootR']) { const fa2 = anchor(B[n], wq(B[n]), 1); const sh = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.07, 0.25), shoeMat); sh.position.set(0, -0.03, 0.06); sh.castShadow = true; fa2.add(sh); } u.shoes = [{ material: shoeMat }, { material: shoeMat }];
+  const mkBat = () => { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.05, 0.85, 10), mt(0xdeb887)); const a = anchor(armPlus.hand, wq(armPlus.hand), 1); b.position.set(0, 0.34, 0.02); a.add(b); a.userData.hand = armPlus.hand; b.castShadow = true; return b; };
   if (bat) { const b = mkBat(); u.bat = new THREE.Group(); u.bat.material = b.material; u.batMesh = b; u.batAnchor = b.parent; u.bat.rotation.set(-0.5, 0, 0); }
-  if (glove) { const a = anchor(armMinus.hand, Dminus.clone().multiply(rest[armMinus.bone.name]), H / 1.7); const gl = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 10), mt(0x7b4a1e)); gl.scale.set(1, 1.15, 0.6); gl.position.set(0, -0.06, 0.08); a.add(gl); gl.castShadow = true; u.glove = gl; }
+  if (glove) { const a = anchor(armMinus.hand, wq(armMinus.hand), 1); const gl = new THREE.Mesh(new THREE.SphereGeometry(0.15, 12, 10), mt(0x7b4a1e)); gl.scale.set(1, 1.15, 0.6); gl.position.set(0, -0.08, 0.1); a.add(gl); gl.castShadow = true; u.glove = gl; }
   // 장식(별/띠)은 부착 대상으로 리다이렉트
-  { const hA = u.hat; u.head.add = (o) => { o.position.y += 0.2; hA.add(o); return u.head; }; u.armR.add = () => u.armR; }
+  { const hA = u.hat; u.head.add = (o) => { o.position.set(0, 0.72, 0.1); o.scale.setScalar(1.4); hA.add(o); return u.head; }; const fa = anchor(armPlus.fore, wq(armPlus.fore), 1); u.armR.add = (o) => { o.position.set(0, -0.2, 0); fa.add(o); return u.armR; }; }
   const posedBones = [['Spine', null], ['Head', null]];
   const order = [
     { bone: B.Spine, rest: rest.Spine, src: u.body, kind: 'spine' }, { bone: B.Head, rest: rest.Head, src: u.head, kind: 'head' },

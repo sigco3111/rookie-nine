@@ -1,3 +1,3 @@
 # Credits
 
-- Player model and skin: "Animated Characters Protagonists" by Kenney (kenney.nl), CC0. Uniform colors are repainted in code. License: public/models/LICENSE-kenney-animated-characters.txt
+- Player model: "Ultimate Animated Character Pack" by Quaternius (quaternius.com), CC0. Uniform colors are applied in code. Record: public/models/LICENSE-quaternius.txt

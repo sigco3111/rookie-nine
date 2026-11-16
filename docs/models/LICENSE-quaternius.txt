@@ -1,0 +1,10 @@
+LICENSE SOURCE (collector record, not part of the original archive)
+=====================================================================
+Asset: Ultimate Animated Character Pack
+Author: Quaternius (https://quaternius.com)
+Source: https://opengameart.org/content/animated-characters-pack
+License declared on source page: CC0 (Public Domain)
+Collected: 2026-10-29
+Original archive SHA-256: 0295062cbc72da52ee804f39ac38694901a40458011f9b2638fc7ef13ed509da
+Changes: none to asset files; this LICENSE-SOURCE.txt was added by the
+collector because the original archive contained no license file.
