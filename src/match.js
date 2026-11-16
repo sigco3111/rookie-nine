@@ -108,7 +108,7 @@ export async function playMatch(p, m, hud) {
   const cv = renderer.domElement; cv.addEventListener('pointerdown', onD); cv.addEventListener('pointermove', onM); window.addEventListener('pointerup', onU);
   setRet(0, ZY);
   let swingReq = null; // 투구 시작 후 스윙 시각
-  let pitching = null;
+  let pitching = null; const sbOp = (a) => { const b = document.querySelector('.swing'); if (b) { b.style.opacity = a; b.style.transition = 'opacity .2s'; } };
   const doSwing = () => { if (pitching && pitching.swingT == null) { pitching.swingT = pitching.t; pitching.swingAnim = 0.0001; sfx.swing(); } };
   hud.onSwing(doSwing);
   const key = (e) => { if (e.code === 'Space') { e.preventDefault(); doSwing(); } }; window.addEventListener('keydown', key);
@@ -124,7 +124,7 @@ export async function playMatch(p, m, hud) {
     // 와인드업
     for (let t = 0; t < 0.7; t += 0.03) { setPitcherPose(o.pitcher, t / 0.7 * 0.65); await wait(30); }
     o.ball.visible = true;
-    const st = { t: 0, swingT: null, swingAnim: 0 }; pitching = st;
+    const st = { t: 0, swingT: null, swingAnim: 0 }; pitching = st; sbOp(1);
     let done = false;
     const f = (dt) => {
       if (done) return;
@@ -142,7 +142,7 @@ export async function playMatch(p, m, hud) {
       if (st.t >= T + 0.2) { done = true; delTicker(f); finalize(); }
     };
     const finalize = () => {
-      pitching = null; o.ball.visible = false; setBatterPose(o.batter, st.swingT != null ? 1 : 0);
+      pitching = null; sbOp(0.25); o.ball.visible = false; setBatterPose(o.batter, st.swingT != null ? 1 : 0);
       if (st.swingT == null) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
       const FRC = window.__force; const err = FRC ? 0 : st.swingT + 0.075 - T; // 0.075s = 스윙 시작~배트 컨택트 프레임(모캡 85번) 지연
       const w = 0.07 + p.meet * 0.0009 + (traits.includes('avg') ? 0.02 : 0) + (count.s === 2 && traits.includes('grit') ? 0.02 : 0);
