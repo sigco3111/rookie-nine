@@ -208,6 +208,7 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
     const sub = (a, b) => J[a].clone().sub(J[b]);
     const hipSide = sub('hpL', 'hpR'), shSide = sub('shL', 'shR');
     const spineUp = sub('chest', 'hips'), upper = sub('neck', 'chest');
+    if (m.lean != null) { const Y = new THREE.Vector3(0, 1, 0); for (const v of [spineUp, upper]) { const l = v.length(); v.normalize().lerp(Y, m.lean).normalize().multiplyScalar(l); } }
     const qPel = frameQ(spineUp, hipSide), qSh = frameQ(upper, shSide);
     const qMid = qPel.clone().slerp(qSh, 0.5);
     const rq = (n) => RQ[B[n].name] || RQ[n];
@@ -282,7 +283,7 @@ function mcBatter(c, swing) { const u = c.userData;
 }
 function mcPitcher(c, t) { const u = c.userData;
   const f = t <= 0 ? 0 : seg(t, [[0, 10], [0.65, 70], [1, 105], [1.2, 120]]);
-  u.mocap = { clip: 'pitch', f, mirror: true, yaw: 0.8, travel: 1, batUp: 0.35 };
+  u.mocap = { clip: 'pitch', f, mirror: true, yaw: 0.8, travel: 1, lean: 0.55 };
 }
 export function clearMocap(c) { c.userData.mocap = null; }
 // 타자 포즈
