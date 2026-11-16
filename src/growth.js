@@ -147,15 +147,24 @@ export function endWeek(p) {
   return out;
 }
 
+export function eventEligible(p, e) {
+  return p.week >= e.min && (!e.pos || e.pos === p.pos) && (!e.trait || p.traits.includes(e.trait))
+    && (!e.req || (p.cnt['ev_' + e.req] > 0 && !p.cnt['ev_' + e.id]))
+    && (!e.reqChoice || (p.eventChoices?.[e.reqChoice[0]] || []).includes(e.reqChoice[1]));
+}
+
 export function randomEvent(p) {
   if (p.injury || p.week >= 144) return null;
   if (!chance(24)) return null;
-  const pool = EVENTS.filter((e) => p.week >= e.min && (!e.pos || e.pos === p.pos) && (!e.trait || p.traits.includes(e.trait)) && (!e.req || (p.cnt['ev_' + e.req] > 0 && !p.cnt['ev_' + e.id])));
+  const pool = EVENTS.filter((e) => eventEligible(p, e));
   return pool[Math.floor(Math.random() * pool.length)];
 }
 export function resolveEvent(p, ev, ci) {
   ensureGrowthBaseline(p);
   const ch = ev.choices[ci]; p.cnt['ev_' + ev.id] = (p.cnt['ev_' + ev.id] || 0) + 1;
+  p.eventChoices ||= {};
+  const choices = p.eventChoices[ev.id] ||= [];
+  if (!choices.includes(ci)) choices.push(ci);
   const success = chance(ch.chance);
   const fx = success ? ch.ok : (ch.ng || ch.ok);
   // 결과 칩은 상한/하한과 포지션 필터가 적용된 실제 변화만 표시한다.
