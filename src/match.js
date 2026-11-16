@@ -158,7 +158,7 @@ export async function playMatch(p, m, hud) {
       const d = h.dst * k; let y = 1 + 4 * peak * k * (1 - k) - (h.launch < 8 ? 0.9 * k : 0);
       if (h.launch < 8) y = 0.15 + Math.abs(Math.sin(k * Math.PI * 4)) * 0.5 * (1 - k);
       o.ball.position.set(dir.x * d, Math.max(0.1, y), dir.z * d + 0.3);
-      const tgt = o.ball.position; camera.position.lerp(new THREE.Vector3(tgt.x * 0.25, 2.6 + k * 4, 5 + Math.max(0, -tgt.z) * 0.18), 0.06); camera.lookAt(tgt.x * 0.6, 1 + k * 3, tgt.z * 0.65 - 3);
+      const tgt = o.ball.position; camera.position.lerp(new THREE.Vector3(tgt.x * 0.25, 2.6 + k * 2.5, Math.min(11, 5 + Math.max(0, -tgt.z) * 0.06)), 0.06); camera.lookAt(tgt.x * 0.6, 1 + k * 3, tgt.z * 0.65 - 3);
       if (k >= 1) { delTicker(f); setTimeout(() => { o.ball.visible = false; for (const fd of o.fielders) fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); res(); }, 250); }
     }; tickers.add(f);
   });
