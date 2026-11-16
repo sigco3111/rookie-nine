@@ -18,7 +18,7 @@ export function frame() { const n = performance.now(); const dt = Math.min(0.05,
 function ensureG() {
   if (G) return G;
   const g = new THREE.Group();
-  const batter = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, bat: true }); batter.position.set(-1.0, 0, 0.2); batter.scale.setScalar(0.72); batter.rotation.y = Math.PI / 2; addShadow(batter); setBatterPose(batter, 0); g.add(batter);
+  const batter = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, bat: true, helmet: true, num: 9 }); batter.position.set(-1.0, 0, 0.2); batter.scale.setScalar(0.72); batter.rotation.y = Math.PI / 2; addShadow(batter); setBatterPose(batter, 0); g.add(batter);
   const pitcher = makeChibi({ shirt: 0xc53030, cap: 0x742a2a, glove: true }); pitcher.position.set(0, 0.35, -18.44); pitcher.scale.setScalar(1.3); g.add(pitcher);
   const ball = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); ball.visible = false; g.add(ball);
   const bshadow = new THREE.Mesh(new THREE.CircleGeometry(0.12, 12), new THREE.MeshBasicMaterial({ color: 0, transparent: true, opacity: 0.35 })); bshadow.rotation.x = -Math.PI / 2; bshadow.position.y = 0.07; bshadow.renderOrder = 2; g.add(bshadow);
@@ -29,7 +29,7 @@ function ensureG() {
   const catcher = makeChibi({ shirt: 0x444444, cap: 0x222222, glove: true }); catcher.position.set(0, 0, 1.3); catcher.rotation.y = Math.PI; catcher.scale.setScalar(0.0001); g.add(catcher);
   const fielders = [[-24, -34], [0, -42], [24, -34], [-52, -62], [0, -72], [52, -62], [-14, -24], [14, -24]].map(([x, z], i) => { const f = makeChibi({ shirt: 0xc53030, cap: 0x742a2a, glove: true }); f.position.set(x, 0, z); f.scale.setScalar(2.2); f.rotation.y = Math.atan2(-x, 0 - z) ; f.userData.home = [x, z]; addShadow(f); g.add(f); return f; });
   
-  const runner = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d }); runner.visible = false; runner.scale.setScalar(1.6); g.add(runner);
+  const runner = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, helmet: true, num: 9 }); runner.visible = false; runner.scale.setScalar(1.6); g.add(runner);
   scene.add(g); G = { g, batter, pitcher, ball, zone, ret, fielders, runner, bshadow }; permanent.add((dt) => { const b = G.ball; G.bshadow.visible = b.visible; G.bshadow.position.x = b.position.x; G.bshadow.position.z = b.position.z; const sc2 = Math.max(0.5, 1.4 - b.position.y * 0.1); G.bshadow.scale.setScalar(sc2); });
   return G;
 }
@@ -40,16 +40,14 @@ function applyLook(a, p) {
   const w = 0.9 + Math.min(0.4, Math.max(0, (pw - 30) / 140) + Math.max(0, (st - 30) / 300));
   u.body.scale.x = w; u.body.scale.z = w; u.armL.scale.x = u.armR.scale.x = 0.9 + (w - 0.9) * 1.2; u.legL.scale.x = u.legR.scale.x = 0.95 + (w - 0.9) * 0.8;
   const n = p.traits.filter((t) => TRAITS[t] && TRAITS[t].good).length;
-  if (!u.star) { u.star = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffd23f })); u.star.position.set(0, 0.5, 0.42); u.head.add(u.star); }
+  if (!u.star) { u.star = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffd23f })); u.star.position.set(0, 0.29, 0.1); u.head.add(u.star); }
   u.star.visible = n >= 1; u.star.scale.setScalar(0.8 + Math.min(n, 4) * 0.35);
   if (!u.band) { u.band = new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.025, 6, 12), new THREE.MeshBasicMaterial({ color: 0xff5a5a })); u.band.rotation.x = Math.PI / 2; u.band.position.y = -0.3; u.armR.add(u.band); }
   u.band.visible = p.will >= 50;
   const gr = p.gear || {};
   if (u.bat) u.bat.material.color.set(gr.bat ? 0xf2c94c : 0xdeb887);
-  const gl = u.armL.children.find((c) => c.geometry && c.geometry.type === 'SphereGeometry' && c.position.y < -0.38 && c.material.color.getHex() !== 0xffd3a6);
-  if (gl) { gl.material.color.set(gr.glove ? 0xf2c94c : 0x7b4a1e); gl.scale.setScalar(gr.glove ? 1.25 : 1); }
-  if (!u.shoes) { u.shoes = []; for (const x of [-0.13, 0.13]) { const s = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.09, 0.32), new THREE.MeshLambertMaterial({ color: 0xe53935 })); s.position.set(x, 0.05, 0.06); a.add(s); u.shoes.push(s); } }
-  for (const s of u.shoes) s.visible = !!gr.shoes;
+  if (u.glove) { u.glove.material.color.set(gr.glove ? 0xf2c94c : 0x7b4a1e); u.glove.scale.set(gr.glove ? 1.2 : 1, gr.glove ? 1.3 : 1.1, 0.55); }
+  for (const s of u.shoes) s.material.color.set(gr.shoes ? 0xe53935 : 0x222222);
 }
 export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배경: 선수가 대기/훈련 모션
   const o = ensureG(); o.g.visible = true; o.ret.visible = false; o.zone.visible = false; o.ball.visible = false;
