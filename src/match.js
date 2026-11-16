@@ -1,6 +1,6 @@
 import { TRAITS } from './data.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, OPP_COLORS } from './scene.js';
-import { cal, oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
+import { cal, battingAssist, oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
 import { sfx } from './audio.js';
 
@@ -114,7 +114,7 @@ export async function playMatch(p, m, hud) {
   const key = (e) => { if (e.code === 'Space') { e.preventDefault(); doSwing(); } }; window.addEventListener('keydown', key);
 
   // 한 번의 투구
-  const pitchOnce = (count) => new Promise(async (res) => {
+  const pitchOnce = (count, scoringChance = false) => new Promise(async (res) => {
     o.zone.visible = true; o.ret.visible = true;
     const pt_ = PITCHES[Math.floor(Math.random() * (strength > 50 ? 4 : strength > 42 ? 3 : 2))];
     const T = Math.max(0.78, Math.min(1.5, (1.5 - (strength - 35) * 0.012) * pt_.Tm));
@@ -146,8 +146,9 @@ export async function playMatch(p, m, hud) {
       pitching = null; sbOp(0.25); o.ball.visible = false; setBatterPose(o.batter, st.swingT != null ? 1 : 0);
       if (st.swingT == null) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
       const FRC = window.__force; const err = FRC ? 0 : st.swingT + 0.075 - T; // 0.075s = 스윙 시작~배트 컨택트 프레임(모캡 85번) 지연
-      const w = 0.07 + p.meet * 0.0009 + (traits.includes('avg') ? 0.02 : 0) + (count.s === 2 && traits.includes('grit') ? 0.02 : 0);
-      const r = 0.18 + p.meet * 0.0015 + (traits.includes('walk') ? 0.02 : 0);
+      const assist = battingAssist(p, count.s, scoringChance);
+      const w = 0.07 + p.meet * 0.0009 + assist.timing;
+      const r = 0.18 + p.meet * 0.0015 + assist.radius;
       const ballPos = o.ball.position; // 도달 위치 보정
       const dist = FRC ? 0 : Math.hypot(cx - bx, cy - by);
       const tm = Math.abs(err) < w * 0.3 ? 'PERFECT' : err < 0 ? '빠름' : '늦음';
@@ -202,7 +203,7 @@ export async function playMatch(p, m, hud) {
     hud.banner(`${inn}회 ${s.ab + 1}번째 타석`, 1100); await wait(1200);
     while (guard++ < 30) {
       await wait(450);
-      const r = await pitchOnce(c);
+      const r = await pitchOnce(c, !!base);
       if (r.tm && r.kind !== 'hit') hud.small(r.tm);
       if (r.kind === 'ball') { c.b++; hud.banner('볼', 600); }
       else if (r.kind === 'strike') { c.s++; hud.banner('스트라이크', 600); }

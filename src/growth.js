@@ -34,6 +34,11 @@ export function matchOfWeek(p) {
   return null;
 }
 export const oppStrength = (p) => { const c = cal(p.week); return 38 + (c.year - 1) * 9 + (c.month % 4) * 2 + Math.random() * 8; };
+export function battingAssist(p, strikes = 0, scoringChance = false) {
+  const has = (id) => p.traits.includes(id);
+  return { timing: (has('avg') ? 0.02 : 0) + (strikes === 2 && has('grit') ? 0.02 : 0), radius: (has('walk') ? 0.02 : 0) + (scoringChance && has('clutch') ? 0.025 : 0) };
+}
+export const defenseEvaluationBonus = (p) => (p.traits.includes('gun') ? 2 : 0) + (p.traits.includes('glove') ? 2 : 0);
 export const teamStrength = (p) => 34 + ovr(p) * 0.35 + (p.ev.team - 30) * 0.15 + (p.cnt.chore || 0) * 0.02;
 export const isRegular = (p) => { const avg = (p.ev.coach + p.ev.captain + p.ev.team) / 3; const need = [28, 40, 50][cal(p.week).year - 1]; return ovr(p) >= need + 6 || avg >= need + 14; };
 
@@ -159,6 +164,8 @@ export function resolveEvent(p, ev, ci) {
 
 // 시합 후 결과 반영
 export function applyMatchResult(p, r) {
+  const defenseBonus = defenseEvaluationBonus(p);
+  if (defenseBonus) { addEv(p, 'coach', defenseBonus); addEv(p, 'team', defenseBonus); }
   if (p.pos === 'pit') {
     p.so += r.so || 0; p.hits += r.hitsAllowed || 0; p.ab += r.ip || 0;
     if (r.win) p.wins++; else p.losses++;
