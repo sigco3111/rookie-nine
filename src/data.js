@@ -66,6 +66,30 @@ export const INJURIES = [
 
 // 이벤트. chance는 화면에 표시된다.
 export const EVENTS = [
+  { id: 't_avg', trait: 'avg', pos: 'bat', title: '타격 비법 공유 요청', text: '후배들이 "애버리지히터"의 타격 비결을 알려달라며 몰려왔다.', min: 20, choices: [
+    { label: '가르쳐준다', chance: 100, ok: { team: 6, captain: 4, will: 2, msg: '팀 분위기가 한층 좋아졌다.' } },
+    { label: '혼자 연구한다', chance: 70, ok: { meet: 3, cond: -6, msg: '새로운 감을 잡았다.' }, ng: { cond: -10, team: -2, msg: '고립되는 느낌이 들었다.' } } ] },
+  { id: 't_pwr', trait: 'pwr', pos: 'bat', title: '홈런 레이스 초대', text: '이웃 학교 행사에서 홈런 레이스에 초청받았다.', min: 24, choices: [
+    { label: '출전한다', chance: 60, ok: { power: 3, scout: 8, money: 30, msg: '펜스를 넘기며 스카우트의 눈에 띄었다.' }, ng: { cond: -15, will: -2, msg: '힘만 들어가 무너졌다.' } },
+    { label: '사양한다', chance: 100, ok: { cond: 6, msg: '체력을 아꼈다.' } } ] },
+  { id: 't_run', trait: 'run', pos: 'bat', title: '도루왕 대결', text: '육상부가 주력 대결을 제안한다.', min: 18, choices: [
+    { label: '받아들인다', chance: 55, ok: { speed: 3, will: 4, team: 3, msg: '야구부의 자존심을 지켰다.' }, ng: { cond: -14, msg: '근육이 놀랐다.' } },
+    { label: '거절한다', chance: 100, ok: { msg: '조용히 넘겼다.' } } ] },
+  { id: 't_clutch', trait: 'clutch', title: '큰 경기 전날 밤', text: '내일은 중요한 경기다. 잠이 오지 않는다.', min: 22, choices: [
+    { label: '이미지 트레이닝', chance: 80, ok: { will: 6, cond: 5, coach: 3, msg: '마음이 차분해졌다.' }, ng: { cond: -10, msg: '더 긴장됐다.' } },
+    { label: '일찍 잔다', chance: 100, ok: { cond: 15, msg: '푹 잤다.' } } ] },
+  { id: 't_walk', trait: 'walk', pos: 'bat', title: '심판의 눈', text: '심판 선배가 "너 공 잘 보더라"며 말을 건다.', min: 20, choices: [
+    { label: '비결을 묻는다', chance: 100, ok: { meet: 2, will: 3, msg: '존을 보는 법을 배웠다.' } },
+    { label: '인사만 한다', chance: 100, ok: { coach: 2, msg: '예의 바르다는 평가를 받았다.' } } ] },
+  { id: 't_cmd', trait: 'cmd', pos: 'pit', title: '제구 시범', text: '신입생들 앞에서 제구 시범을 보여달라는 요청을 받았다.', min: 20, choices: [
+    { label: '완벽하게 보여준다', chance: 65, ok: { team: 6, ctrl: 2, coach: 3, msg: '박수가 쏟아졌다.' }, ng: { will: -3, msg: '하필 실투가 나왔다.' } },
+    { label: '정중히 사양', chance: 100, ok: { msg: '겸손하다는 말을 들었다.' } } ] },
+  { id: 't_bomb', trait: 'bomb', title: '어깨가 불안하다', text: '송구 후 어깨가 욱신거린다. "어깨 폭탄"이 도졌다.', min: 10, choices: [
+    { label: '재활 스트레칭', chance: 80, ok: { cond: -5, tough: 2, msg: '조금씩 나아지고 있다.' }, ng: { cond: -15, msg: '효과가 없었다.' } },
+    { label: '참고 던진다', chance: 35, ok: { will: 5, msg: '버텨냈다.' }, ng: { cond: -30, tough: -2, msg: '어깨가 크게 상했다.' } } ] },
+  { id: 't_sleep', trait: 'sleep', title: '불면의 밤', text: '"불면증"으로 며칠째 잠을 설치고 있다.', min: 8, choices: [
+    { label: '상담을 받는다', chance: 100, ok: { cond: 10, will: 3, money: -10, msg: '마음이 조금 편해졌다.' } },
+    { label: '야간 러닝', chance: 60, ok: { stamina: 2, cond: 8, msg: '지쳐서 푹 잤다.' }, ng: { cond: -12, msg: '더 말똥말똥해졌다.' } } ] },
   { id: 'rival_duel', req: 'rival', title: '라이벌과의 재회', text: '도발했던 라이벌이 연습 경기 후 다시 찾아왔다. "이번엔 진짜 승부다."', min: 40, choices: [
     { label: '정면 승부', chance: 55, ok: { will: 10, team: 6, coach: 4, msg: '라이벌이 악수를 청했다. 서로 인정했다.' }, ng: { will: -5, cond: -15, msg: '졌다. 하지만 이를 갈았다.' } },
     { label: '다음 대회에서', chance: 100, ok: { will: 3, msg: '무대는 대회장으로 미뤘다.' } } ] },
