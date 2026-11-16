@@ -174,9 +174,14 @@ function afterWeekEvent(msgs) {
 }
 
 function matchPrompt(m, msgs, cont) {
+  const before = { ...P.ev, cond: P.cond };
+  const report = (r) => {
+    r.growthDelta = Object.fromEntries([...Object.keys(P.ev), 'cond'].map(k => [k, (k === 'cond' ? P.cond : P.ev[k]) - before[k]]));
+    resultModal(r, msgs, cont);
+  };
   const mod = show($(`<div class="modal"><div class="panel"><h2>${ic('ball')} ${m.name}</h2><p>${P.pos === 'pit' ? (G.isRegular(P) ? '선발로 등판합니다. 3이닝을 직접 던집니다.' : '아직 후보입니다. 구원으로 1이닝만 던집니다.') : (G.isRegular(P) ? '레귤러로 출전합니다. 타석 3번을 직접 칠 수 있어요.' : '아직 후보입니다. 대타로 1타석만 기회가 옵니다.')}</p><div style="display:grid;gap:8px"><button class="btn big" id="play">직접 플레이</button><button class="btn gray" id="auto">자동 진행</button></div></div></div>`));
-  mod.querySelector('#auto').onclick = () => { mod.remove(); const r = G.simulateMatch(P, m); resultModal(r, msgs, cont); };
-  mod.querySelector('#play').onclick = async () => { mod.remove(); const r = await startMatch(m); resultModal(r, msgs, cont); };
+  mod.querySelector('#auto').onclick = () => { mod.remove(); const r = G.simulateMatch(P, m); report(r); };
+  mod.querySelector('#play').onclick = async () => { mod.remove(); const r = await startMatch(m); report(r); };
 }
 
 async function startMatch(m) {
@@ -216,7 +221,8 @@ async function startMatch(m) {
 
 function resultModal(r, msgs, cont) {
   clear(); showHome(typeof P !== 'undefined' && P ? P.pos : 'bat', typeof P !== 'undefined' ? P : null);
-  const mod = show($(`<div class="modal"><div class="panel"><h2>${r.win ? '승리!' : '패배'}</h2><div style="font-size:30px;font-weight:900;text-align:center">${r.my} : ${r.opp}</div><p style="text-align:center">${P.pos === 'pit' ? `${r.ip}이닝 ${r.hitsAllowed}피안타 ${r.so}탈삼진 ${r.er}실점` : `${r.ab}타수 ${r.hits}안타 ${r.hr}홈런 ${r.rbi}타점`}</p><div class="log">감독·팀메이트·스카우트 평가가 갱신되었습니다.</div><br><button class="btn big" id="ok">다음</button></div></div>`));
+  const delta = Object.entries(r.growthDelta || {}).filter(([,v]) => v).map(([k,v]) => `<span class="chip ${v > 0 ? 'up' : 'dn'}">${evName[k] || '컨디션'} ${v > 0 ? '+' : ''}${v}</span>`).join('');
+  const mod = show($(`<div class="modal"><div class="panel"><h2>${r.win ? '승리!' : '패배'}</h2><div style="font-size:30px;font-weight:900;text-align:center">${r.my} : ${r.opp}</div><p style="text-align:center">${P.pos === 'pit' ? `${r.ip}이닝 ${r.hitsAllowed}피안타 ${r.so}탈삼진 ${r.er}실점` : `${r.ab}타수 ${r.hits}안타 ${r.hr}홈런 ${r.rbi}타점`}</p><h3 style="margin-bottom:8px">경기가 남긴 변화</h3><div class="chips">${delta || '<span class="chip">변화 없음</span>'}</div><p style="font-size:13px;color:#b5c6dd">감독·캡틴·팀메이트 평가는 출전 기회에, 스카우트 평가는 졸업 후 지명에 반영됩니다.</p><br><button class="btn big" id="ok">다음</button></div></div>`));
   mod.querySelector('#ok').onclick = () => { mod.remove(); G.save(P); cont(); };
 }
 
