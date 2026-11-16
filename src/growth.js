@@ -183,6 +183,7 @@ export function resolveEvent(p, ev, ci) {
 // 시합 후 결과 반영
 export function applyMatchResult(p, r) {
   p.lastMatch = { win: !!r.win, week: p.week, title: r.title };
+  p.matchHistory = [{ ...r, pos: p.pos, ...cal(p.week) }, ...(p.matchHistory || [])].slice(0, 20);
   const defenseBonus = defenseEvaluationBonus(p);
   if (defenseBonus) { addEv(p, 'coach', defenseBonus); addEv(p, 'team', defenseBonus); }
   if (p.pos === 'pit') {
