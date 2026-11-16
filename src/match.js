@@ -18,7 +18,7 @@ export function frame() { const n = performance.now(); const dt = Math.min(0.05,
 function ensureG() {
   if (G) return G;
   const g = new THREE.Group();
-  const batter = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, bat: true, helmet: true, num: 9 }); batter.position.set(-0.8, 0, 0.2); batter.scale.setScalar(0.72); batter.rotation.y = Math.PI / 2; addShadow(batter); setBatterPose(batter, 0); g.add(batter);
+  const batter = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, bat: true, helmet: true, num: 9 }); batter.position.set(-0.4, 0, 0.2); batter.scale.setScalar(0.72); batter.rotation.y = Math.PI / 2 - 1.05; addShadow(batter); setBatterPose(batter, 0); g.add(batter);
   const pitcher = makeChibi({ shirt: 0xc53030, cap: 0x742a2a, glove: true }); pitcher.position.set(0, 0.35, -18.44); pitcher.scale.setScalar(1.3); g.add(pitcher);
   const ball = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 12), new THREE.MeshBasicMaterial({ color: 0xffffff })); ball.visible = false; g.add(ball);
   const bshadow = new THREE.Mesh(new THREE.CircleGeometry(0.12, 12), new THREE.MeshBasicMaterial({ color: 0, transparent: true, opacity: 0.35 })); bshadow.rotation.x = -Math.PI / 2; bshadow.position.y = 0.07; bshadow.renderOrder = 2; g.add(bshadow);
@@ -85,7 +85,7 @@ export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배
 }
 
 export async function playMatch(p, m, hud) {
-  const o = ensureG(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.8, 0, 0.2); o.batter.rotation.y = Math.PI / 2; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
+  const o = ensureG(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.4, 0, 0.2); o.batter.rotation.y = Math.PI / 2 - 1.05; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
   const opp = TEAMS[Math.floor(Math.random() * TEAMS.length)];
   const regular = isRegular(p);
   const strength = oppStrength(p);
@@ -118,8 +118,8 @@ export async function playMatch(p, m, hud) {
     const pt_ = PITCHES[Math.floor(Math.random() * (strength > 50 ? 4 : strength > 42 ? 3 : 2))];
     const T = Math.max(0.78, Math.min(1.5, (1.5 - (strength - 35) * 0.012) * pt_.Tm));
     const inZone = chance(62);
-    const bx = inZone ? rnd(-ZW * 0.9, ZW * 0.9) : (chance(50) ? 1 : -1) * rnd(ZW * 1.15, ZW * 1.9);
-    const by = inZone ? ZY + rnd(-ZH * 0.9, ZH * 0.9) : ZY + (chance(50) ? 1 : -1) * rnd(ZH * 1.2, ZH * 2.0);
+    const bx = window.__dbgIn ? 0 : inZone ? rnd(-ZW * 0.9, ZW * 0.9) : (chance(50) ? 1 : -1) * rnd(ZW * 1.15, ZW * 1.9);
+    const by = window.__dbgIn ? ZY : inZone ? ZY + rnd(-ZH * 0.9, ZH * 0.9) : ZY + (chance(50) ? 1 : -1) * rnd(ZH * 1.2, ZH * 2.0);
     hud.setPitch(`${pt_.n} ${Math.round(105 + (1.5 - T) * 60 * (pt_.Tm === 1 ? 1.15 : 0.9))}km/h`);
     // 와인드업
     for (let t = 0; t < 0.7; t += 0.03) { setPitcherPose(o.pitcher, t / 0.7 * 0.65); await wait(30); }
@@ -135,14 +135,16 @@ export async function playMatch(p, m, hud) {
       const x = bx * ss + pt_.c * Math.sin(Math.PI * Math.min(1, ss)) * 0.6 * (1 - ss * 0.2);
       const y = 1.7 + (by - 1.7) * ss - pt_.drop * Math.sin(Math.PI * Math.min(1, ss)) * 0.0 - pt_.drop * ss * ss * 0.5 + 0.0 + (pt_.drop ? pt_.drop * 0.5 * ss * ss * 0 : 0);
       o.ball.position.set(x, y + (pt_.drop * 0.5 * ss * ss) , -17.8 + 17.8 * ss);
+      if (st.t < 0.14) { const pu = o.pitcher.userData; if (pu.throwHand) { pu.sync(); const hp = pu.throwHand.getWorldPosition(new THREE.Vector3()); let k = st.t / 0.14; k = k * k * (3 - 2 * k); o.ball.position.lerp(hp, 1 - k); } } // 릴리스: 투수 손 위치에서 출발
       o.ball.rotation.z += dt * 20;
       if (st.swingAnim > 0) { st.swingAnim += dt / 0.22; setBatterPose(o.batter, st.swingAnim); }
+      if (window.__dbgShot) window.__dbgShot(st, T, o, sN);
       if (st.t >= T + 0.2) { done = true; delTicker(f); finalize(); }
     };
     const finalize = () => {
       pitching = null; o.ball.visible = false; setBatterPose(o.batter, st.swingT != null ? 1 : 0);
       if (st.swingT == null) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
-      const FRC = window.__force; const err = FRC ? 0 : st.swingT - T;
+      const FRC = window.__force; const err = FRC ? 0 : st.swingT + 0.075 - T; // 0.075s = 스윙 시작~배트 컨택트 프레임(모캡 85번) 지연
       const w = 0.07 + p.meet * 0.0009 + (traits.includes('avg') ? 0.02 : 0) + (count.s === 2 && traits.includes('grit') ? 0.02 : 0);
       const r = 0.18 + p.meet * 0.0015 + (traits.includes('walk') ? 0.02 : 0);
       const ballPos = o.ball.position; // 도달 위치 보정
