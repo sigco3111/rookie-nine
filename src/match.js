@@ -79,7 +79,7 @@ export async function playMatch(p, m, hud) {
   let my = 0, oppRuns = 0;
   const pas = regular ? [1, 3, 5] : [4];
   const innings = 5;
-  camera.position.set(0.45, 1.8, 5.4); camera.lookAt(0.1, 0.35, -9);
+  camera.position.set(0.45, 1.8, 5.4); camera.lookAt(0.1, -0.35, -9);
   setPitcherPose(o.pitcher, 0);
   hud.setTitle(`${m.name} vs ${opp}${regular ? '' : ' (대타 출전)'}`);
   const ret = o.ret;
@@ -172,7 +172,7 @@ export async function playMatch(p, m, hud) {
     tickers.add(f);
   });
   const resetFielders = () => { for (const fd of o.fielders) fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); };
-  const resetCam = () => { camera.position.set(0.45, 1.8, 5.4); camera.lookAt(0.1, 0.35, -9); setBatterPose(o.batter, 0); };
+  const resetCam = () => { camera.position.set(0.45, 1.8, 5.4); camera.lookAt(0.1, -0.35, -9); setBatterPose(o.batter, 0); };
 
   // 타석
   const plateAppearance = async (inn, base) => {
@@ -182,7 +182,7 @@ export async function playMatch(p, m, hud) {
     while (guard++ < 30) {
       await wait(450);
       const r = await pitchOnce(c);
-      if (r.tm) hud.small(r.tm);
+      if (r.tm && r.kind !== 'hit') hud.small(r.tm);
       if (r.kind === 'ball') { c.b++; hud.banner('볼', 600); }
       else if (r.kind === 'strike') { c.s++; hud.banner('스트라이크', 600); }
       else if (r.kind === 'whiff') { c.s++; hud.banner('헛스윙!', 700); }
