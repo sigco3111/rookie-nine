@@ -71,8 +71,8 @@ export function doCommand(p, id, arg) {
       const cmul = 0.6 + p.cond / 100 * 0.7; // 컨디션이 좋을수록 효율
       let mul = 0.5 * LV_MUL[lv] * cmul * (bad('lazy') ? 0.7 : 1) * rnd(0.85, 1.2);
       const gained = [];
-      for (const k in pr.gain) { const g = Math.max(pr.gain[k] > 0 && Math.random() < 0.6 ? 1 : 0, Math.round(pr.gain[k] * mul * (p[k] > 60 ? 0.5 : 1))); if (g) { p[k] = clamp(p[k] + g); gained.push(`${STAT_NAME[k]} +${g}`); } }
-      if (pr.will) { p.will = clamp(p.will + Math.round(pr.will * mul)); gained.push('의지 상승'); }
+      for (const k in pr.gain) { if (typeof p[k] !== 'number') continue; const before = p[k]; const g = Math.max(pr.gain[k] > 0 && Math.random() < 0.6 ? 1 : 0, Math.round(pr.gain[k] * mul * (p[k] > 60 ? 0.5 : 1))); if (g) { p[k] = clamp(p[k] + g); const actual = p[k] - before; if (actual) gained.push(`${STAT_NAME[k]} +${actual}`); } }
+      if (pr.will) { const before = p.will; p.will = clamp(p.will + Math.round(pr.will * mul)); if (p.will > before) gained.push(`의지 +${p.will - before}`); }
       if (pr.tough) p.tough = clamp(p.tough + pr.tough);
       if (pr.money) p.money += pr.money;
       for (const k in (pr.eval || {})) addEv(p, k, pr.eval[k]);
@@ -81,7 +81,7 @@ export function doCommand(p, id, arg) {
       if (pr.cureBad) { const b = p.traits.find((t) => !TRAITS[t].good); if (b && chance(60)) { p.traits = p.traits.filter((t) => t !== b); out.push(`${TRAITS[b].name} 치료!`); } }
       p.cnt[id] = (p.cnt[id] || 0) + 1;
       const nl = level(p, id); if (nl > lv) out.push(`${pr.name} Lv${nl} 달성! 효율 상승`);
-      out.push(`${pr.name}: ${gained.join(', ') || '컨디션 회복'}`);
+      out.push(`${pr.name}: ${gained.join(', ') || (pr.cost < 0 ? '컨디션 회복' : '능력 변화 없음')}`);
       // 부상 판정
       let risk = pr.risk * (1.6 - p.cond / 100) * (1 - p.tough * 0.005) * ((id === 'arm' || id === 'velo') && bad('bomb') ? 2 : 1);
       if (p.cond < 25) risk *= 2;
