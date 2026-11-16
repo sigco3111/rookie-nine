@@ -44,7 +44,7 @@ export function applyFx(p, fx) {
     if (k === 'msg') continue;
     if (ev.includes(k)) addEv(p, k, fx[k]);
     else if (k === 'money') p.money = Math.max(0, p.money + fx[k]);
-    else p[k] = clamp(p[k] + fx[k]);
+    else if (typeof p[k] === 'number') p[k] = clamp(p[k] + fx[k]);
   }
 }
 
@@ -125,7 +125,7 @@ export function endWeek(p) {
 export function randomEvent(p) {
   if (p.injury || p.week >= 144) return null;
   if (!chance(24)) return null;
-  const pool = EVENTS.filter((e) => p.week >= e.min);
+  const pool = EVENTS.filter((e) => p.week >= e.min && (!e.pos || e.pos === p.pos) && (!e.trait || p.traits.includes(e.trait)));
   return pool[Math.floor(Math.random() * pool.length)];
 }
 export function resolveEvent(p, ev, ci) {

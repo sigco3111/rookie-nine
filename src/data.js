@@ -66,6 +66,30 @@ export const INJURIES = [
 
 // 이벤트. chance는 화면에 표시된다.
 export const EVENTS = [
+  { id: 'p_bullpen', pos: 'pit', title: '불펜 포수의 부탁', text: '포수가 "공 좀 받아줄 테니 변화구 궤적을 같이 잡아보자"고 한다.', min: 6, choices: [
+    { label: '변화구 집중', chance: 65, ok: { brk: 4, ctrl: 1, cond: -10, coach: 3, msg: '손끝 감각이 살아났다.' }, ng: { brk: -1, cond: -15, msg: '공이 빠져 손가락이 아팠다.' } },
+    { label: '직구 위주', chance: 80, ok: { velo: 3, cond: -8, msg: '직구 위력이 늘었다.' }, ng: { cond: -14, msg: '힘만 들어갔다.' } } ] },
+  { id: 'p_rival_bat', pos: 'pit', title: '강타자 라이벌', text: '지난 대회 홈런을 친 4번 타자가 "다시 붙자"고 한다.', min: 20, choices: [
+    { label: '승부를 받는다', chance: 55, ok: { will: 8, ctrl: 2, team: 4, msg: '삼진으로 설욕했다!' }, ng: { will: -4, cond: -12, team: -2, msg: '큰 타구를 맞았다.' } },
+    { label: '피한다', chance: 100, ok: { will: -1, msg: '다음을 기약했다.' } } ] },
+  { id: 'p_form', pos: 'pit', title: '투구폼 점검', text: '코치가 릴리스 포인트가 낮다고 지적한다.', min: 14, choices: [
+    { label: '폼을 고친다', chance: 60, ok: { ctrl: 5, coach: 4, msg: '제구가 안정됐다.' }, ng: { ctrl: -3, velo: -1, cond: -8, msg: '폼이 꼬였다.' } },
+    { label: '유지한다', chance: 100, ok: { will: 2, msg: '내 공을 믿었다.' } } ] },
+  { id: 'b_machine', pos: 'bat', title: '피칭머신 고장', text: '피칭머신이 제멋대로 빠른 공을 쏜다.', min: 8, choices: [
+    { label: '끝까지 친다', chance: 60, ok: { meet: 3, power: 1, cond: -12, msg: '눈이 빨라졌다.' }, ng: { cond: -18, msg: '헛스윙만 했다.' } },
+    { label: '정비를 기다린다', chance: 100, ok: { cond: 10, msg: '쉬었다.' } } ] },
+  { id: 'b_pinch', pos: 'bat', title: '대타 기회', text: '감독이 "다음 경기 대타 준비해라"고 한다.', min: 10, choices: [
+    { label: '의욕적으로', chance: 70, ok: { will: 5, coach: 6, msg: '감독 눈에 들었다.' }, ng: { will: -2, msg: '긴장해서 체력만 썼다.' } },
+    { label: '담담하게', chance: 100, ok: { coach: 2, msg: '무난했다.' } } ] },
+  { id: 't_fast', trait: 'fast', pos: 'pit', title: '강속구 소문', text: '구속이 소문나 다른 학교 스카우트가 찾아온다.', min: 18, choices: [
+    { label: '구속을 보여준다', chance: 75, ok: { scout: 12, cond: -8, msg: '스피드건에 놀란 표정이다.' }, ng: { scout: 2, cond: -12, msg: '어깨가 뻐근하다.' } },
+    { label: '숨긴다', chance: 100, ok: { will: 2, msg: '비장의 무기로 남겼다.' } } ] },
+  { id: 'injury_scare', title: '무릎이 시큰하다', text: '훈련 중 몸에 위화감이 든다. 어떻게 할까?', min: 14, choices: [
+    { label: '무리해서 계속', chance: 40, ok: { will: 6, msg: '아무 일도 없었다.' }, ng: { cond: -35, tough: -2, msg: '컨디션이 크게 무너졌다.' } },
+    { label: '바로 쉰다', chance: 100, ok: { cond: 12, coach: 2, msg: '빨리 쉰 덕에 괜찮아졌다.' } } ] },
+  { id: 'exam_help', title: '친구의 시험 도움', text: '시험 기간, 반 친구가 노트를 빌려준다고 한다.', min: 8, choices: [
+    { label: '빌려 공부한다', chance: 100, ok: { study: 6, team: 2, msg: '성적이 올랐다.' } },
+    { label: '훈련을 우선한다', chance: 100, ok: { will: 3, study: -3, msg: '야구가 먼저다.' } } ] },
   { id: 'captain', title: '캡틴의 특훈 제안', text: '캡틴이 일요일 밤 특타를 하자고 한다.', min: 0, choices: [
     { label: '따라간다', chance: 70, ok: { meet: 3, captain: 8, cond: -10, msg: '특타 성공! 감이 확 왔다.' }, ng: { cond: -22, captain: 2, msg: '무리해서 몸이 무겁다.' } },
     { label: '거절한다', chance: 100, ok: { captain: -5, msg: '캡틴이 아쉬워했다.' } } ] },
