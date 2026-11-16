@@ -139,13 +139,21 @@ function shopModal() {
 }
 
 function runWeek(id) {
+  const previousTraits = new Set(P.traits);
   const before = Object.fromEntries(keysOf(P).map((k) => [k, P[k]]));
   let msgs = G.doCommand(P, id === 'hospital' ? 'x' : id);
   const m = G.matchOfWeek(P);
   playTrainingAnim(id);
   lastDiff = Object.fromEntries(keysOf(P).map((k) => [k, P[k] - before[k]]));
   sfx.ui();
-  const finishAfter = () => { const e = G.endWeek(P); msgs = msgs.concat(e); afterWeekEvent(msgs); };
+  const finishAfter = () => {
+    const e = G.endWeek(P); msgs = msgs.concat(e);
+    const learned = P.traits.filter(t => !previousTraits.has(t) && TRAITS[t]?.good);
+    if (!learned.length) return afterWeekEvent(msgs);
+    G.save(P); sfx.good();
+    const m = show($(`<div class="modal"><div class="panel"><h2 style="color:#ffd23f">특수능력 습득!</h2><p>꾸준한 훈련이 새로운 강점이 됐다.</p><div style="max-height:50vh;overflow:auto">${learned.map(t=>`<div style="padding:14px;background:#20375e;border-radius:10px;margin:8px 0"><b style="font-size:22px;color:#ffd23f">${TRAITS[t].name}</b><p style="margin:6px 0 0">${TRAITS[t].desc}</p></div>`).join('')}</div><button class="btn" id="oklearned" style="width:100%;margin-top:10px">계속</button></div></div>`));
+    m.querySelector('#oklearned').onclick=()=>{m.remove();afterWeekEvent(msgs);};
+  };
   if (m && !P.injury) matchPrompt(m, msgs, finishAfter); else finishAfter();
 }
 
