@@ -125,11 +125,11 @@ export function endWeek(p) {
 export function randomEvent(p) {
   if (p.injury || p.week >= 144) return null;
   if (!chance(24)) return null;
-  const pool = EVENTS.filter((e) => p.week >= e.min && (!e.pos || e.pos === p.pos) && (!e.trait || p.traits.includes(e.trait)));
+  const pool = EVENTS.filter((e) => p.week >= e.min && (!e.pos || e.pos === p.pos) && (!e.trait || p.traits.includes(e.trait)) && (!e.req || (p.cnt['ev_' + e.req] > 0 && !p.cnt['ev_' + e.id])));
   return pool[Math.floor(Math.random() * pool.length)];
 }
 export function resolveEvent(p, ev, ci) {
-  const ch = ev.choices[ci];
+  const ch = ev.choices[ci]; p.cnt['ev_' + ev.id] = (p.cnt['ev_' + ev.id] || 0) + 1;
   const success = chance(ch.chance);
   const fx = success ? ch.ok : (ch.ng || ch.ok);
   applyFx(p, fx);

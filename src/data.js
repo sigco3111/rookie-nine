@@ -66,6 +66,15 @@ export const INJURIES = [
 
 // 이벤트. chance는 화면에 표시된다.
 export const EVENTS = [
+  { id: 'rival_duel', req: 'rival', title: '라이벌과의 재회', text: '도발했던 라이벌이 연습 경기 후 다시 찾아왔다. "이번엔 진짜 승부다."', min: 40, choices: [
+    { label: '정면 승부', chance: 55, ok: { will: 10, team: 6, coach: 4, msg: '라이벌이 악수를 청했다. 서로 인정했다.' }, ng: { will: -5, cond: -15, msg: '졌다. 하지만 이를 갈았다.' } },
+    { label: '다음 대회에서', chance: 100, ok: { will: 3, msg: '무대는 대회장으로 미뤘다.' } } ] },
+  { id: 'scout_offer', req: 'scout', title: '스카우트의 개인 면담', text: '지난번 그 스카우트가 감독 몰래 면담을 청한다. "드래프트 앞두고 이야기 좀 하죠."', min: 70, choices: [
+    { label: '솔직하게 포부를 밝힌다', chance: 70, ok: { scout: 14, will: 4, msg: '"리스트에 올려두겠다"는 말을 들었다.' }, ng: { scout: 3, coach: -3, msg: '감독 귀에도 들어갔다.' } },
+    { label: '감독님께 먼저 보고', chance: 100, ok: { coach: 6, scout: 4, msg: '감독이 대견하다며 웃었다.' } } ] },
+  { id: 'captain_trust', req: 'captain', title: '캡틴의 고민 상담', text: '특타를 같이 했던 캡틴이 졸업 후 진로를 털어놓는다.', min: 30, choices: [
+    { label: '진지하게 들어준다', chance: 100, ok: { captain: 8, team: 4, will: 3, msg: '캡틴이 "너는 꼭 프로 가라"고 했다.' } },
+    { label: '훈련하자고 돌린다', chance: 100, ok: { captain: -2, msg: '분위기가 어색해졌다.' } } ] },
   { id: 'p_bullpen', pos: 'pit', title: '불펜 포수의 부탁', text: '포수가 "공 좀 받아줄 테니 변화구 궤적을 같이 잡아보자"고 한다.', min: 6, choices: [
     { label: '변화구 집중', chance: 65, ok: { brk: 4, ctrl: 1, cond: -10, coach: 3, msg: '손끝 감각이 살아났다.' }, ng: { brk: -1, cond: -15, msg: '공이 빠져 손가락이 아팠다.' } },
     { label: '직구 위주', chance: 80, ok: { velo: 3, cond: -8, msg: '직구 위력이 늘었다.' }, ng: { cond: -14, msg: '힘만 들어갔다.' } } ] },
