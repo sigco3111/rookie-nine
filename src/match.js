@@ -209,7 +209,7 @@ export async function playMatch(p, m, hud) {
       else {
         const h = r; const ang = Math.abs(h.angle); if (h.tm) hud.small(h.tm + (h.q > 0.75 ? ' · 완벽한 타구' : ''));
         let res_ = 'out', label = '';
-        if (ang > 46) { if (c.s < 2) c.s++; await flight({ ...h, angle: h.angle > 0 ? 55 : -55, dst: Math.min(h.dst, 60) }); hud.banner('파울', 600); hud.setCount(c); continue; }
+        if (ang > 46) { if (c.s < 2) c.s++; await flight({ ...h, angle: h.angle > 0 ? 55 : -55, dst: Math.min(h.dst, 60) }); hud.banner('파울', 600); hud.setCount(c); resetCam(); resetFielders(); continue; }
         const L = h.launch;
         if (L > 22 && L <= 50 && h.dst >= 88) { res_ = 'hr'; label = '홈런!!'; }
         else if (L < 8) { const pr = 0.2 + h.q * 0.4 + p.speed * 0.002 + (traits.includes('run') ? 0.06 : 0); res_ = chance(pr * 100) ? 'single' : 'out'; label = res_ === 'out' ? '땅볼 아웃' : '내야 안타'; }
