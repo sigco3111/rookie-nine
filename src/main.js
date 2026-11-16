@@ -45,12 +45,13 @@ function createScreen() {
     <div class="panel"><div style="font-size:13px;margin-bottom:6px">이름</div><input class="input" id="nm" maxlength="8" value="신인" /></div>
     <div class="panel"><div style="font-size:13px;margin-bottom:6px">포지션</div><div class="build" id="pos"><button data-p="bat" class="sel"><b>타자</b><br><small>직접 타격, 미트/파워가 핵심</small></button><button data-p="pit"><b>투수</b><br><small>직접 투구, 구속/제구/변화구</small></button></div></div>
     <div class="panel"><div style="font-size:13px;margin-bottom:6px">타입</div><div class="build" id="bd"></div></div>
+    ${G.hof().length ? `<div class="panel"><div style="font-size:13px;margin-bottom:6px">선배의 가르침 (명예의 전당 계승)</div><select class="input" id="inh"><option value="">계승 안 함</option>${G.hof().map((e, i) => ({ e, i })).sort((a, b) => b.e.ovr - a.e.ovr).slice(0, 6).map(({ e, i }) => `<option value="${i}">${e.name} (${e.pos === 'pit' ? '투수' : '타자'} 종합 ${e.ovr})</option>`).join('')}</select><small id="inhd" style="opacity:.8">선배의 노하우로 전 능력치 소폭 상승, 같은 포지션이면 특수능력 계승.</small></div>` : ''}
     <div class="spacer"></div><button class="btn big" id="go">입학하기</button><button class="btn gray" id="bk">뒤로</button></div>`));
   const drawB = () => { const bd = el.querySelector('#bd'); bd.innerHTML = builds.map((b) => `<button data-b="${b[0]}" class="${b[0] === sel ? 'sel' : ''}"><b>${b[1]}</b><br><small>${b[2]}</small></button>`).join(''); bd.querySelectorAll('button').forEach((b) => b.onclick = () => { sel = b.dataset.b; drawB(); }); };
   drawB();
   el.querySelectorAll('#pos button').forEach((b) => b.onclick = () => { pos = b.dataset.p; builds = BUILDS[pos]; sel = 'contact'; el.querySelectorAll('#pos button').forEach((x) => x.classList.toggle('sel', x === b)); drawB(); });
   el.querySelector('#bk').onclick = titleScreen;
-  el.querySelector('#go').onclick = () => { P = G.newPlayer(el.querySelector('#nm').value.trim() || '신인', sel, pos); G.save(P); homeScreen(); };
+  el.querySelector('#go').onclick = () => { P = G.newPlayer(el.querySelector('#nm').value.trim() || '신인', sel, pos); { const sv = el.querySelector('#inh'); if (sv && sv.value !== '') { const e = G.hof()[+sv.value]; const b = Math.min(6, 2 + Math.floor(e.ovr / 20)); for (const k of keysOf(P)) P[k] += b; P.will += 5; P.ev.coach += 6; P.log.unshift(`${e.name} 선배의 가르침을 받았다. (능력치 +${b})`); if (e.pos === pos && e.traits && e.traits[0] && !P.traits.includes(e.traits[0])) { P.traits.push(e.traits[0]); P.log.unshift('선배의 특수능력을 이어받았다!'); } } } G.save(P); homeScreen(); };
 }
 
 let lastDiff = {};

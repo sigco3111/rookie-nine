@@ -64,6 +64,9 @@ export async function playPitching(p, m, hud) {
       if (bat.swing) { bat.at += dt / 0.16; setBatterPose(o.batter, bat.at); }
       if (t >= T + 0.15) { done = true; delTicker(f); fin(); }
     };
+    const fly = (kind, r, after) => { const dist = kind === 'out' ? 16 + Math.random() * 12 : kind === 'foul' ? 12 : [0, 26, 42, 58, 125][r.t]; const hi = kind === 'out' ? 7 : r && r.t === 4 ? 32 : 5 + (r ? r.t * 2 : 0); const dx = (Math.random() - 0.5) * (r && r.t === 4 ? 40 : 30); const dur = 0.9 + dist / 70;
+      o.ball.visible = true; let k = 0; const g2 = (dt) => { k += dt / dur; const s = Math.min(1, k); o.ball.position.set(bx + dx * s * 0.5, 1.0 + Math.sin(Math.PI * s) * hi, -dist * s * 0.9); const tg = o.ball.position; camera.lookAt(tg.x * 0.6, Math.max(0.8, tg.y * 0.7), Math.max(tg.z * 0.5, -40) + 4); camera.position.y = 3.1 + Math.min(4, tg.y * 0.1);
+        if (s >= 1) { delTicker(g2); o.ball.visible = false; cam(); after(); } }; tickers.add(g2); };
     const fin = () => {
       o.ball.visible = false; setBatterPose(o.batter, 0); setPitcherPose(o.pitcher, 0);
       if (!willSwing) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
@@ -74,8 +77,8 @@ export async function playPitching(p, m, hud) {
       if (!chance(pc * 100)) { sfx.mitt(); res({ kind: 'whiff' }); return; }
       sfx.crack(0.8); hud.flash();
       const ph = 0.26 + q * 0.006 - (p.velo - 40) * 0.0018 - edge * 0.05; // 인플레이 안타 확률
-      if (chance(Math.max(0.08, ph * 100))) { const r = Math.random(); res({ kind: 'hit', t: r < 0.64 ? 1 : r < 0.88 ? 2 : r < 0.93 ? 3 : 4 }); }
-      else if (chance(32 - (inZone ? 0 : 10))) res({ kind: 'foul' }); else res({ kind: 'out' });
+      if (chance(Math.max(0.08, ph * 100))) { const r = Math.random(); const rr = { kind: 'hit', t: r < 0.64 ? 1 : r < 0.88 ? 2 : r < 0.93 ? 3 : 4 }; if (rr.t === 4) sfx.cheer(1); fly('hit', rr, () => res(rr)); }
+      else if (chance(32 - (inZone ? 0 : 10))) res({ kind: 'foul' }); else fly('out', null, () => res({ kind: 'out' }));
     };
     tickers.add(f);
   });
