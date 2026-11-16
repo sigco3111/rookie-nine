@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { sample as mcSample } from './mocap.js';
 import { clone as skClone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 export const canvas = document.getElementById('gl');
 export const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
@@ -162,6 +163,14 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
   const legs = [['LeftUpLeg'], ['RightUpLeg']].map(([n]) => ({ bone: B[n], x: wp(B[n]).x }));
   const legPlus = legs.find((l) => l.x > 0).bone, legMinus = legs.find((l) => l.x <= 0).bone;
   const rest = {}; for (const n of ['Spine', 'Head', 'LeftArm', 'RightArm', 'LeftUpLeg', 'RightUpLeg', 'LeftForeArm', 'RightForeArm']) rest[B[n].name] = wq(B[n]); rest.Spine = rest[B.Spine.name]; rest.Head = rest[B.Head.name];
+  // --- 모캡 리타깃 준비: 바인드(휴식) 자세의 월드 회전/방향 ---
+  const RQ = {}, RD = {}; for (const n in B) { if (B[n] && B[n].isBone) RQ[n] = wq(B[n]); }
+  const dirTo = (a, b) => wp(b).sub(wp(a)).normalize();
+  const bn = (n) => B[n];
+  Object.assign(RD, { UpperArmL: dirTo(B.UpperArmL, B.LowerArmL), LowerArmL: dirTo(B.LowerArmL, B.FistL), UpperArmR: dirTo(B.UpperArmR, B.LowerArmR), LowerArmR: dirTo(B.LowerArmR, B.FistR),
+    UpperLegL: dirTo(B.UpperLegL, B.LowerLegL), LowerLegL: dirTo(B.LowerLegL, B.LowerLegL.children[0] || B.FootL), UpperLegR: dirTo(B.UpperLegR, B.LowerLegR), LowerLegR: dirTo(B.LowerLegR, B.LowerLegR.children[0] || B.FootR) });
+  const legEnd = { L: B.LowerLegL.children[0], R: B.LowerLegR.children[0] };
+  const restFootY = wp(legEnd.L).y; const restHipY = wp(B.UpperLegL).y; const modelLeg = restHipY - restFootY;
   const down = () => new THREE.Quaternion();
   const Dplus = down(1), Dminus = down(-1);
   const proxy = () => new THREE.Group();
@@ -191,12 +200,44 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
     { bone: armPlus.fore, rest: rest[armPlus.fore.name], D: Dplus, src: u.armR, kind: 'fore' }, { bone: armMinus.fore, rest: rest[armMinus.fore.name], D: Dminus, src: u.armL, kind: 'fore' },
     { bone: legPlus, rest: rest[legPlus.name], src: u.legR, kind: 'leg' }, { bone: legMinus, rest: rest[legMinus.name], src: u.legL, kind: 'leg' },
   ];
-  g.userData = u; g.userData.isKenney = true;
+  g.userData = u; g.userData.isKenney = true; u.hasBat = !!bat; u.hasGlove = !!glove; u.mocap = null;
+  const frameQ = (up, side) => { const y = up.clone().normalize(); const x = side.clone().sub(y.clone().multiplyScalar(side.dot(y))).normalize(); const z = new THREE.Vector3().crossVectors(x, y); return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z)); };
+  const setW = (bone, W, invG) => { const par = bone.parent; par.updateWorldMatrix(true, false); const pq = par.getWorldQuaternion(new THREE.Quaternion()).premultiply(invG); bone.quaternion.copy(pq.invert().multiply(W)); };
+  const mocapSync = () => {
+    const m = u.mocap, J = mcSample(m.clip, m.f, m), invG = g.getWorldQuaternion(new THREE.Quaternion()).invert();
+    const sub = (a, b) => J[a].clone().sub(J[b]);
+    const hipSide = sub('hpL', 'hpR'), shSide = sub('shL', 'shR');
+    const spineUp = sub('chest', 'hips'), upper = sub('neck', 'chest');
+    const qPel = frameQ(spineUp, hipSide), qSh = frameQ(upper, shSide);
+    const qMid = qPel.clone().slerp(qSh, 0.5);
+    const rq = (n) => RQ[B[n].name] || RQ[n];
+    setW(B.Body, qPel.clone().multiply(RQ.Body), invG);
+    setW(B.Abdomen, frameQ(spineUp.clone().lerp(upper, 0.5), hipSide.clone().lerp(shSide, 0.5)).multiply(RQ.Abdomen), invG);
+    setW(B.Torso, qSh.clone().multiply(RQ.Torso), invG);
+    setW(B.Head, frameQ(sub('head', 'neck'), shSide).multiply(RQ.Head), invG);
+    const lim = (a, b, n) => new THREE.Quaternion().setFromUnitVectors(RD[n], sub(a, b).normalize()).multiply(RQ[n]);
+    for (const S of ['L', 'R']) {
+      setW(B['UpperArm' + S], lim('el' + S, 'sh' + S, 'UpperArm' + S), invG);
+      setW(B['LowerArm' + S], lim('wr' + S, 'el' + S, 'LowerArm' + S), invG);
+      setW(B['UpperLeg' + S], lim('kn' + S, 'hp' + S, 'UpperLeg' + S), invG);
+      setW(B['LowerLeg' + S], lim('an' + S, 'kn' + S, 'LowerLeg' + S), invG);
+    }
+    // 뿌리 이동: 모캡 hips를 모델 다리 길이 비율로 축소, 발이 바닥을 뚫지 않게 높이 보정
+    const k = modelLeg / 0.9; inner.position.set(J.hips.x * k * (m.travel ?? 1), 0, J.hips.z * k * (m.travel ?? 1)); g.updateWorldMatrix(true, true);
+    let minY = 1e9; for (const S of ['L', 'R']) minY = Math.min(minY, wp(legEnd[S]).y - g.getWorldPosition(new THREE.Vector3()).y / Math.max(1e-6, g.scale.y));
+    const lift = (restFootY - minY); inner.position.y = lift; g.updateWorldMatrix(true, true);
+    for (const S of ['L', 'R']) { const foot = B['Foot' + S], e = wp(legEnd[S]); foot.position.copy(foot.parent.worldToLocal(e.clone())); foot.position.y = Math.max(foot.position.y, 0);
+      const heading = Math.atan2(J['to' + S].x - J['an' + S].x, J['to' + S].z - J['an' + S].z); const W = Q(new THREE.Euler(0, heading, 0)).multiply(RQ['Foot' + S]); setW(foot, W, invG); }
+    if (u.batAnchor) { const hand = u.batAnchor.userData.hand; hand.updateWorldMatrix(true, false); const hq = hand.getWorldQuaternion(new THREE.Quaternion()).premultiply(invG);
+      const dir = sub('wrR', 'elR').add(sub('wrL', 'elL')).normalize().add(new THREE.Vector3(0, m.batUp ?? 0.35, 0)).normalize();
+      const target = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir); u.batAnchor.quaternion.copy(hq.invert().multiply(target)); }
+  };
   const sync = () => {
     g.updateWorldMatrix(true, true);
     const invG = g.getWorldQuaternion(new THREE.Quaternion()).invert();
-    inner.scale.set(u.body.scale.x, 1, u.body.scale.z);
+    inner.scale.set(u.body.scale.x, 1, u.body.scale.z); if (!u.mocap) inner.position.set(0, 0, 0);
     u.sync_after = true;
+    if (u.mocap) { mocapSync(); } else
     for (const o of order) {
       const d = Q(o.src.rotation); let W = d.clone();
       if (o.kind === 'spine') W = Q(new THREE.Euler(u.body.rotation.x, u.body.rotation.y, 0, 'YXZ')).multiply(o.rest);
@@ -219,6 +260,19 @@ const _render = renderer.render.bind(renderer);
 renderer.render = (s, c) => { for (const g of kAll) { if (g.visible && g.parent) g.userData.sync(); } _render(s, c); };
 export function makeChibi(o = {}) { return kBase ? makeKenney(o) : makeChibiProc(o); }
 
+
+const MC = !/nomocap=1/.test(location.search);
+const seg = (x, pts) => { for (let i = 1; i < pts.length; i++) if (x <= pts[i][0]) { const [a, fa] = pts[i - 1], [b, fb] = pts[i]; return fa + (fb - fa) * (x - a) / (b - a); } return pts[pts.length - 1][1]; };
+function mcBatter(c, swing) { const u = c.userData;
+  const s = swing < 0 ? 0 : swing; // -1 중립도 스탠스
+  const f = swing <= 0 ? 16 : seg(s, [[0, 24], [0.5, 40], [1, 76]]); // swing.json은 프레임 50에서 시작: 16=스탠스(66), 24=74 시작, 40=90, 76=126
+  u.mocap = { clip: 'swing', f, mirror: false, yaw: 0, travel: 0.4 };
+}
+function mcPitcher(c, t) { const u = c.userData;
+  const f = t <= 0 ? 0 : seg(t, [[0, 10], [0.65, 70], [1, 105], [1.2, 120]]);
+  u.mocap = { clip: 'pitch', f, mirror: true, yaw: 0.8, travel: 1, batUp: 0.35 };
+}
+export function clearMocap(c) { c.userData.mocap = null; }
 // 타자 포즈
 const lerp = (a, b, t) => a + (b - a) * t;
 function kBatter(c, swing) { const u = c.userData;
@@ -230,7 +284,7 @@ function kBatter(c, swing) { const u = c.userData;
   u.armR.rotation.set(-1.35, yaw, -0.05); u.armL.rotation.set(-1.35, yaw, 0.05); u.armR.elbow = u.armL.elbow = lerp(1.7, 0.25, Math.min(1, s * 1.6)); u.bat.rotation.set(lerp(-0.5, Math.PI / 2, Math.min(1, s * 2.2)), 0, 0);
 }
 export function setBatterPose(c, swing) { // swing 0..1, -1=중립
-  const u = c.userData; if (u.isKenney) return kBatter(c, swing);
+  const u = c.userData; if (u.isKenney && MC && u.hasBat) return mcBatter(c, swing); if (u.isKenney) { u.mocap = null; return kBatter(c, swing); }
   if (swing < 0) { u.armR.rotation.set(0, 0, 0.1); u.armL.rotation.set(0, 0, -0.1); u.body.rotation.y = 0; u.head.rotation.y = 0; if (u.bat) { u.bat.rotation.set(0.4, 0, 0); u.bat.position.set(0.0, -0.3, 0.1); } return; }
   if (swing <= 0) { u.armR.rotation.set(-2.3, 0.2, 0.5); u.armL.rotation.set(-2.2, 0.1, -0.2); c.rotation.y = -Math.PI / 2 * 0.0; u.body.rotation.y = 0; u.head.rotation.y = 0.8; if (u.bat) { u.bat.rotation.set(0.4, 0, 0); u.bat.position.set(0, 0.35, 0.1); } return; }
   const s = Math.min(1, swing);
@@ -247,7 +301,7 @@ function kPitcher(c, t) { const u = c.userData; u.armR.rotation.order = u.armL.r
   else { const a = Math.min(1, (k - 0.75) / 0.25); u.armR.rotation.set(lerp(2.7, -1.6, a), 0, -0.1); u.armL.rotation.set(lerp(-1.5, -0.2, a), 0, 0.5); u.armR.elbow = lerp(1.5, 0.15, a); u.armL.elbow = 1.2; u.body.rotation.set(lerp(-0.35, 0.55, a), 0, 0); u.legL.rotation.x = lerp(-0.5, -0.2, a); u.legR.rotation.x = lerp(0.3, 0.1, a); }
 }
 export function setPitcherPose(c, t) { // 0 대기, 0..1 와인드업→릴리스
-  const u = c.userData; if (u.isKenney) return kPitcher(c, t); u.body.rotation.x = t > 0 ? Math.sin(Math.min(1, t) * Math.PI) * 0.25 : 0;
+  const u = c.userData; if (u.isKenney && MC && u.hasGlove) return mcPitcher(c, t); if (u.isKenney) { u.mocap = null; return kPitcher(c, t); } u.body.rotation.x = t > 0 ? Math.sin(Math.min(1, t) * Math.PI) * 0.25 : 0;
   if (t <= 0) { u.armR.rotation.set(0, 0, 0); u.armL.rotation.set(-1.2, 0, 0.3); return; }
   u.armR.rotation.x = -Math.PI * 2 * Math.min(1, t) + (t > 0.7 ? 0 : -0); u.armL.rotation.x = -1.2 + t * 0.5;
 }

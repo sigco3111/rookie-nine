@@ -1,0 +1,20 @@
+import puppeteer from 'puppeteer-core';
+const mode = process.argv[2] || 'bat'; const url = process.argv[3] || 'http://localhost:8123/';
+const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--allow-file-access-from-files'] });
+const p = await b.newPage(); await p.setViewport({ width: 1200, height: 420, deviceScaleFactor: 1 });
+const errs = []; p.on('pageerror', (e) => errs.push('PAGEERR ' + e.message)); p.on('console', (m) => { if (m.type() === 'error') errs.push('CONSOLE ' + m.text()); });
+await p.goto(url); await new Promise(r => setTimeout(r, 2500));
+await p.evaluate((mode) => { const { THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose } = window.__rk;
+  scene.children.forEach(o => { if (o.name !== 'x_pose') {} });
+  renderer.setAnimationLoop(null); window.__pt = { mode }; document.body.innerHTML = ''; document.body.appendChild(renderer.domElement); renderer.setSize(1200, 420); renderer.setPixelRatio(1);
+  const hide = []; scene.children.forEach(o => { if (!o.isLight) { hide.push(o); o.visible = false; } }); window.__hide = hide;
+  const N = 8, chars = [];
+  for (let i = 0; i < N; i++) { const c = mode === 'bat' ? makeChibi({ bat: true, helmet: true }) : makeChibi({ glove: true }); c.position.set((i - (N - 1) / 2) * 1.9, 0, 0); scene.add(c); chars.push(c); }
+  window.__chars = chars; window.__cam = new THREE.PerspectiveCamera(14, 1200 / 420, 0.1, 200); window.__cam.position.set(0, 1.1, 35); window.__cam.lookAt(0, 1.0, 0); window.__cam.updateMatrixWorld(true);
+  const bs = mode === 'bat' ? [-1, 0.0, 0.2, 0.35, 0.5, 0.65, 0.85, 1] : [0, 0.15, 0.35, 0.55, 0.7, 0.8, 0.95, 1.15];
+  chars.forEach((c, i) => { c.rotation.y = Math.PI / 2 * (window.__rot ?? 1); (mode === 'bat' ? setBatterPose : setPitcherPose)(c, bs[i]); });
+}, mode);
+await p.evaluate(() => { const { renderer, scene, camera } = window.__rk; renderer.render(scene, window.__cam); });
+console.log(await p.evaluate(()=>window.__chars.map(c=>c.children[0].position.y.toFixed(2)+'/'+c.children[0].position.x.toFixed(2)).join(' ')));
+await p.screenshot({ path: `/tmp/pt_${mode}.png` });
+console.log(errs.slice(0, 8).join('\n') || 'no errors'); await b.close();
