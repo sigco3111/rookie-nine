@@ -172,13 +172,15 @@ export async function playMatch(p, m, hud) {
     const land = [dir.x * h.dst, dir.z * h.dst + 0.3];
     let near = null, nd = 1e9; for (const fd of o.fielders) { const dd = Math.hypot(fd.userData.home[0] - land[0], fd.userData.home[1] - land[1]); if (dd < nd) { nd = dd; near = fd; } }
     const f = (dt) => {
-      if (near) { const hx = near.userData.home[0], hz = near.userData.home[1]; const k2 = Math.min(1, t / dur); near.position.x = hx + (land[0] - hx) * Math.min(1, k2 * 1.15); near.position.z = hz + (land[1] - hz) * Math.min(1, k2 * 1.15); near.rotation.y = Math.atan2(land[0] - hx, land[1] - hz); }
+      if (near) { const hx = near.userData.home[0], hz = near.userData.home[1]; const distance = Math.hypot(land[0] - hx, land[1] - hz); const travel = Math.min(distance, Math.max(0, t - 0.18) * 7); const k2 = distance > 0 ? travel / distance : 0;
+        near.position.x = hx + (land[0] - hx) * k2; near.position.z = hz + (land[1] - hz) * k2; near.rotation.y = Math.atan2(land[0] - hx, land[1] - hz);
+        const stride = travel > 0 && travel < distance ? Math.sin(t * 13) : 0; near.userData.legL.rotation.x = stride * 0.65; near.userData.legR.rotation.x = -stride * 0.65; near.userData.armL.rotation.x = -stride * 0.45; near.userData.armR.rotation.x = stride * 0.45; }
       t += dt; const k = Math.min(1, t / dur);
       const d = h.dst * k; let y = 1 + 4 * peak * k * (1 - k) - (h.launch < 8 ? 0.9 * k : 0);
       if (h.launch < 8) y = 0.15 + Math.abs(Math.sin(k * Math.PI * 4)) * 0.5 * (1 - k);
       o.ball.position.set(dir.x * d, Math.max(0.1, y), dir.z * d + 0.3); o.ball.scale.setScalar(Math.min(5, Math.max(1, camera.position.distanceTo(o.ball.position) / 9))); if (window.__flog) window.__flog(o.ball, camera, k);
       const tgt = o.ball.position; camera.position.lerp(new THREE.Vector3(tgt.x * 0.25, 2.6 + k * 2.5, Math.min(11, 5 + Math.max(0, -tgt.z) * 0.06)), 0.06); camera.lookAt(tgt.x * 0.6, 1 + k * 3, tgt.z * 0.65 - 3);
-      if (k >= 1) { delTicker(f); setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); for (const fd of o.fielders) fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); res(); }, 250); }
+      if (k >= 1) { delTicker(f); setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); resetFielders(); res(); }, 250); }
     }; tickers.add(f);
   });
   const runBases = (kind) => new Promise((res) => {
@@ -190,7 +192,7 @@ export async function playMatch(p, m, hud) {
       if (t >= dur) { delTicker(f); setTimeout(() => { rn.visible = false; o.batter.visible = true; res(); }, 300); } };
     tickers.add(f);
   });
-  const resetFielders = () => { for (const fd of o.fielders) fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); };
+  const resetFielders = () => { for (const fd of o.fielders) { fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); for (const k of ['legL','legR','armL','armR']) fd.userData[k].rotation.x = 0; fd.rotation.y = Math.atan2(-fd.position.x, -fd.position.z); } };
   const resetCam = () => { camera.position.set(-0.15, 1.8, 5.4); camera.lookAt(-0.25, -0.35, -9); setBatterPose(o.batter, 0); };
 
   // 타석
