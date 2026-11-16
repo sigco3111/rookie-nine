@@ -171,6 +171,18 @@ export const EVENTS = [
     { label: '지켜본다', chance: 100, ok: { will: 2, msg: '자극을 받았다.' } } ] },
   { id: 'proscout', title: '프로 스카우트의 쪽지', text: '관심 있다는 짧은 쪽지가 도착했다.', min: 60, choices: [
     { label: '더 노력한다', chance: 100, ok: { will: 5, scout: 6, msg: '목표가 선명해졌다.' } } ] },
+  { id: 'e_rain', title: '장마철 실내 훈련', text: '비가 계속 내려 운동장을 쓸 수 없다. 실내 연습장은 선배들이 차지했다.', min: 12, choices: [
+    { label: '선배들 사이에서 눈치껏 연습한다', chance: 60, ok: { meet: 2, team: 3, msg: '선배들이 자리를 내줬다.' }, ng: { cond: -6, team: -3, msg: '눈치만 보다 하루가 갔다.' } },
+    { label: '복도에서 혼자 맨몸 운동', chance: 100, ok: { stamina: 2, tough: 2, msg: '체력이 조금 붙었다.' } } ] },
+  { id: 'e_scoutcall', title: '스카우트의 전화', text: '프로 구단 스카우트가 경기를 보고 갔다며 연락해 왔다.', min: 40, choices: [
+    { label: '한 번 만나본다', chance: 70, ok: { scout: 8, will: 4, msg: '관심 선수 명단에 이름이 올랐다.' }, ng: { will: -4, coach: -3, msg: '감독이 "운동에 집중하라"고 했다.' } },
+    { label: '지금은 연습에 집중', chance: 100, ok: { coach: 4, tough: 2, msg: '감독이 고개를 끄덕였다.' } } ] },
+  { id: 'e_part', title: '아르바이트 제안', text: '동네 가게 사장님이 주말 일손을 구한다. 용돈이 필요하긴 하다.', min: 8, choices: [
+    { label: '일한다', chance: 100, ok: { money: 40, cond: -12, msg: '용돈은 벌었지만 몸이 무겁다.' } },
+    { label: '정중히 거절', chance: 100, ok: { will: 2, msg: '야구에 더 집중하기로 했다.' } } ] },
+  { id: 'e_rival_gift', title: '라이벌의 선물', text: '다른 학교 에이스가 새 장갑을 건네며 "다음 대회에서 보자"고 했다.', min: 60, choices: [
+    { label: '받는다', chance: 100, ok: { will: 6, field: 1, msg: '묘한 승부욕이 생겼다.' } },
+    { label: '돌려준다', chance: 60, ok: { will: 8, team: 2, msg: '"실력으로 이기겠다"고 말했다.' }, ng: { will: -3, msg: '어색한 분위기가 남았다.' } } ] },
 ];
 
 export const TEAMS = ['청룡고', '백호고', '한성고', '대양고', '북산고', '제일고', '동명고', '서해고'];

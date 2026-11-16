@@ -24,3 +24,6 @@
 
 ## 17:52
 - Done: purchased gear (bat/shoes) shown on batter in match. Next: fielder detail, more scenario events.
+
+## 18:15
+- Done: +4 scenario events (rain, scout call, part-time, rival gift). Next: fielder detail; reports paused until 06:00 KST.
