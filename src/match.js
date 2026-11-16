@@ -1,3 +1,4 @@
+import { TRAITS } from './data.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow } from './scene.js';
 import { cal, oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
@@ -34,13 +35,23 @@ function ensureG() {
 }
 let homeAnim = null;
 export function playTrainingAnim(kind) { homeAnim = { kind, t: 0 }; }
-export function showHome(pos) { const pit = pos === 'pit'; // 홈 화면 배경: 선수가 대기/훈련 모션
+function applyLook(a, p) {
+  if (!p) return; const u = a.userData; const pw = p.pos === 'pit' ? p.velo : p.power; const st = p.stamina || 30;
+  const w = 0.9 + Math.min(0.4, Math.max(0, (pw - 30) / 140) + Math.max(0, (st - 30) / 300));
+  u.body.scale.x = w; u.body.scale.z = w; u.armL.scale.x = u.armR.scale.x = 0.9 + (w - 0.9) * 1.2; u.legL.scale.x = u.legR.scale.x = 0.95 + (w - 0.9) * 0.8;
+  const n = p.traits.filter((t) => TRAITS[t] && TRAITS[t].good).length;
+  if (!u.star) { u.star = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffd23f })); u.star.position.set(0, 0.5, 0.42); u.head.add(u.star); }
+  u.star.visible = n >= 1; u.star.scale.setScalar(0.8 + Math.min(n, 4) * 0.35);
+  if (!u.band) { u.band = new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.025, 6, 12), new THREE.MeshBasicMaterial({ color: 0xff5a5a })); u.band.rotation.x = Math.PI / 2; u.band.position.y = -0.3; u.armR.add(u.band); }
+  u.band.visible = p.will >= 50;
+}
+export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배경: 선수가 대기/훈련 모션
   const o = ensureG(); o.g.visible = true; o.ret.visible = false; o.zone.visible = false; o.ball.visible = false;
   o.batter.position.set(-0.6, 0, 0.3); o.batter.rotation.y = Math.PI / 2 - 0.5; o.batter.scale.setScalar(0.5);
   for (const fd of o.fielders) { fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); fd.visible = !pit; }
   o.batter.visible = !pit; o.pitcher.visible = true; o.pitcher.position.set(pit ? -0.6 : 0, pit ? 0 : 0.35, pit ? 0.3 : -18.44); o.pitcher.rotation.y = pit ? Math.PI / 2 - 0.9 : 0; o.pitcher.scale.setScalar(pit ? 0.5 : 1.3);
   if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; }
-  const pu = o.pitcher.userData;
+  const pu = o.pitcher.userData; applyLook(pit ? o.pitcher : o.batter, pl);
   const u = o.batter.userData;
   const f = (dt, t) => {
     const T = homeAnim; if (T) T.t += dt;
