@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { clone as skClone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 export const canvas = document.getElementById('gl');
 export const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
 renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -63,7 +65,7 @@ export function buildField() {
 }
 
 // ---- 치비 선수 ----
-export function makeChibi({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, skin = 0xffd3a6, bat = false, glove = false, helmet = false, num = 9 } = {}) {
+function makeChibiProc({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, skin = 0xffd3a6, bat = false, glove = false, helmet = false, num = 9 } = {}) {
   const g = new THREE.Group();
   const add = (parent, geo, color, x = 0, y = 0, z = 0) => { const m = new THREE.Mesh(geo, M(color)); m.position.set(x, y, z); parent.add(m); return m; };
   // 다리: 바지 + 스터럽 양말 + 스파이크
@@ -119,6 +121,91 @@ export function makeChibi({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, 
   g.userData = { head, armL, armR, legL, legR, body, bat: batMesh, glove: armGlove, shoes: [shL, shR] };
   return g;
 }
+
+
+// ---- Kenney Animated Characters Protagonists (CC0) 기반 선수 ----
+let kBase = null, kImg = null; const kTex = {};
+const USE_PROC = new URLSearchParams(location.search).has('proc');
+if (!USE_PROC) { try {
+  const base = import.meta.env.BASE_URL || './';
+  const [buf, img] = await Promise.all([fetch(base + 'models/player.fbx').then((r) => r.arrayBuffer()), new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = base + 'models/player_skin.png'; })]);
+  kBase = new FBXLoader().parse(buf, './'); kImg = img;
+} catch (e) { console.warn('player model load failed', e); kBase = null; } }
+const css = (c) => '#' + new THREE.Color(c).getHexString();
+function kTexture(shirt, pants, trim) {
+  const key = shirt + '|' + pants + '|' + trim; if (kTex[key]) return kTex[key];
+  const cv = document.createElement('canvas'); cv.width = cv.height = 1024; const x = cv.getContext('2d'); x.drawImage(kImg, 0, 0);
+  x.fillStyle = shirt; x.fillRect(150, 490, 345, 534); x.fillStyle = trim; x.fillRect(150, 490, 345, 22); x.fillRect(150, 1000, 345, 24); x.fillRect(150, 490, 10, 534); x.fillRect(485, 490, 10, 534);
+  x.fillStyle = shirt; x.fillRect(42, 490, 72, 534); x.fillRect(528, 490, 70, 534); x.fillStyle = '#ffffff'; x.fillRect(300, 780, 80, 90);
+  x.fillStyle = pants; x.fillRect(611, 764, 413, 260); x.fillStyle = '#111'; x.fillRect(611, 895, 413, 12);
+  const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; kTex[key] = t; return t;
+}
+const kAll = [];
+const Q = (e) => new THREE.Quaternion().setFromEuler(e);
+function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = false, glove = false, helmet = false } = {}) {
+  const g = new THREE.Group(); const inner = new THREE.Group(); g.add(inner);
+  const q = skClone(kBase); inner.add(q);
+  const tex = kTexture(css(shirt), css(pants === 0xf2f2f2 ? 0xe9e9e9 : pants), css(cap));
+  const mat = new THREE.MeshLambertMaterial({ map: tex });
+  const B = {}; q.traverse((b) => { if (b.isBone) B[b.name] = b; if (b.isMesh) { b.material = mat; b.frustumCulled = false; b.castShadow = true; } });
+  const H = 1.9; { const bb = new THREE.Box3().setFromObject(q); q.scale.multiplyScalar(H / (bb.max.y - bb.min.y)); }
+  g.updateMatrixWorld(true);
+  const wq = (b) => b.getWorldQuaternion(new THREE.Quaternion());
+  const wp = (b) => b.getWorldPosition(new THREE.Vector3());
+  const arms = [['LeftArm', 'LeftHand'], ['RightArm', 'RightHand']].map(([a, h]) => ({ bone: B[a], hand: B[h], sign: Math.sign(wp(B[h]).x - wp(B[a]).x) }));
+  const armPlus = arms.find((a) => a.sign > 0), armMinus = arms.find((a) => a.sign < 0); // +x쪽 = 칩비 armR
+  const legs = [['LeftUpLeg'], ['RightUpLeg']].map(([n]) => ({ bone: B[n], x: wp(B[n]).x }));
+  const legPlus = legs.find((l) => l.x > 0).bone, legMinus = legs.find((l) => l.x <= 0).bone;
+  const rest = {}; for (const n of ['Spine', 'Head', 'LeftArm', 'RightArm', 'LeftUpLeg', 'RightUpLeg']) rest[n] = wq(B[n]);
+  const down = (sgn) => Q(new THREE.Euler(0, 0, -sgn * 1.4));
+  const Dplus = down(1), Dminus = down(-1);
+  const proxy = () => new THREE.Group();
+  const u = { head: proxy(), armL: proxy(), armR: proxy(), legL: proxy(), legR: proxy(), body: proxy() };
+  // 부착물 앵커 (머리: 바인드 방향 상쇄, 손: 팔을 내린 자세 기준 상쇄)
+  const anchor = (bone, cancelQ, sc = 1) => { const gr = new THREE.Group(); gr.quaternion.copy(cancelQ.clone().invert()); const ws = bone.getWorldScale(new THREE.Vector3()).x; const wrap = new THREE.Group(); wrap.scale.setScalar(sc / ws); wrap.add(gr); bone.add(wrap); return gr; };
+  const mt = (c) => new THREE.MeshLambertMaterial({ color: c });
+  { const a = anchor(B.Head, rest.Head, H / 1.7), m = mt(cap); // 모자 또는 헬멧
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(helmet ? 0.27 : 0.25, 18, 12, 0, Math.PI * 2, 0, Math.PI / 2), m); dome.position.set(0, 0.31, 0);
+    const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.02, 16, 1, false, -Math.PI / 2, Math.PI), m); brim.position.set(0, 0.31, 0.2); brim.scale.set(1, 1, helmet ? 0.8 : 1.1);
+    a.add(dome, brim);
+    if (helmet) { const fl = new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 8, 0, Math.PI, 0, Math.PI * 0.8), m); fl.position.set(armPlus.sign * 0.2, 0.2, 0); fl.rotation.y = Math.PI / 2; fl.scale.set(0.6, 1, 1); a.add(fl); }
+    const logo = new THREE.Mesh(new THREE.SphereGeometry(0.035, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff })); logo.position.set(0, 0.5, 0.2); logo.scale.set(1, 1, 0.3); a.add(logo);
+    u.hat = a; }
+  const gold = { bat: false };
+  u.bat = new THREE.Group(); u.bat.material = { color: { set() {} } }; u.glove = null; u.shoes = [{ material: { color: { set() {} } } }, { material: { color: { set() {} } } }];
+  const mkBat = () => { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.05, 0.85, 10), mt(0xdeb887)); const a = anchor(armPlus.hand, Dplus.clone().multiply(rest[armPlus.bone.name === 'LeftArm' ? 'LeftArm' : 'RightArm']), H / 1.7); b.position.set(0, 0.38 * 1.7 / H * H / 1.7, 0.02); b.rotation.x = 0.35; a.add(b); b.castShadow = true; return b; };
+  if (bat) { const b = mkBat(); u.bat = new THREE.Group(); u.bat.material = b.material; u.batMesh = b; }
+  if (glove) { const a = anchor(armMinus.hand, Dminus.clone().multiply(rest[armMinus.bone.name]), H / 1.7); const gl = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 10), mt(0x7b4a1e)); gl.scale.set(1, 1.15, 0.6); gl.position.set(0, -0.06, 0.08); a.add(gl); gl.castShadow = true; u.glove = gl; }
+  // 장식(별/띠)은 부착 대상으로 리다이렉트
+  { const hA = u.hat; u.head.add = (o) => { o.position.y += 0.2; hA.add(o); return u.head; }; u.armR.add = () => u.armR; }
+  const posedBones = [['Spine', null], ['Head', null]];
+  const order = [
+    { bone: B.Spine, rest: rest.Spine, src: u.body, kind: 'spine' }, { bone: B.Head, rest: rest.Head, src: u.head, kind: 'head' },
+    { bone: armPlus.bone, rest: rest[armPlus.bone.name], D: Dplus, src: u.armR, kind: 'arm' }, { bone: armMinus.bone, rest: rest[armMinus.bone.name], D: Dminus, src: u.armL, kind: 'arm' },
+    { bone: legPlus, rest: rest[legPlus.name], src: u.legR, kind: 'leg' }, { bone: legMinus, rest: rest[legMinus.name], src: u.legL, kind: 'leg' },
+  ];
+  g.userData = u; g.userData.isKenney = true;
+  const sync = () => {
+    g.updateWorldMatrix(true, true);
+    const invG = g.getWorldQuaternion(new THREE.Quaternion()).invert();
+    inner.scale.set(u.body.scale.x, 1, u.body.scale.z);
+    for (const o of order) {
+      const d = Q(o.src.rotation); let W = d.clone();
+      if (o.kind === 'spine') W = Q(new THREE.Euler(u.body.rotation.x, u.body.rotation.y, 0, 'YXZ')).multiply(o.rest);
+      else if (o.kind === 'head') W = d.multiply(o.rest);
+      else if (o.kind === 'arm') W = d.multiply(o.D).multiply(o.rest);
+      else W = d.multiply(o.rest);
+      const par = o.bone.parent; par.updateWorldMatrix(true, false);
+      const pq = par.getWorldQuaternion(new THREE.Quaternion()).premultiply(invG);
+      o.bone.quaternion.copy(pq.invert().multiply(W));
+    }
+  };
+  g.userData.sync = sync; kAll.push(g); sync();
+  return g;
+}
+const _render = renderer.render.bind(renderer);
+renderer.render = (s, c) => { for (const g of kAll) { if (g.visible && g.parent) g.userData.sync(); } _render(s, c); };
+export function makeChibi(o = {}) { return kBase ? makeKenney(o) : makeChibiProc(o); }
 
 // 타자 포즈
 export function setBatterPose(c, swing) { // swing 0..1, -1=중립
