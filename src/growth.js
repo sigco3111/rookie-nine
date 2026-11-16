@@ -148,7 +148,9 @@ export function endWeek(p) {
 }
 
 export function eventEligible(p, e) {
-  return p.week >= e.min && (!e.pos || e.pos === p.pos) && (!e.trait || p.traits.includes(e.trait))
+  return p.week >= e.min && (!e.once || !p.cnt['ev_' + e.id])
+    && (e.afterWin == null || (!!p.lastMatch && p.lastMatch.win === e.afterWin && p.week - p.lastMatch.week <= 4))
+    && (!e.pos || e.pos === p.pos) && (!e.trait || p.traits.includes(e.trait))
     && (!e.req || (p.cnt['ev_' + e.req] > 0 && !p.cnt['ev_' + e.id]))
     && (!e.reqChoice || (p.eventChoices?.[e.reqChoice[0]] || []).includes(e.reqChoice[1]));
 }
@@ -180,6 +182,7 @@ export function resolveEvent(p, ev, ci) {
 
 // 시합 후 결과 반영
 export function applyMatchResult(p, r) {
+  p.lastMatch = { win: !!r.win, week: p.week, title: r.title };
   const defenseBonus = defenseEvaluationBonus(p);
   if (defenseBonus) { addEv(p, 'coach', defenseBonus); addEv(p, 'team', defenseBonus); }
   if (p.pos === 'pit') {

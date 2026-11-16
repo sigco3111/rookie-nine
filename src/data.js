@@ -79,6 +79,12 @@ export const INJURIES = [
 
 // 이벤트. chance는 화면에 표시된다.
 export const EVENTS = [
+  { id: 'after_win_review', once: true, afterWin: true, title: '승리 다음의 선택', text: '최근 경기의 승리를 되짚는 시간. 동료들은 잠깐 쉬자고 하고, 감독은 다음 경기를 준비한다.', min: 1, choices: [
+    { label: '동료들과 승리 장면을 나눈다', chance: 100, ok: { team: 5, captain: 2, cond: 5, msg: '함께 만든 승리라는 마음이 남았다. 몸과 마음도 조금 가벼워졌다.' } },
+    { label: '다음 상대를 분석한다', chance: 100, ok: { coach: 5, will: 3, cond: -5, msg: '감독과 다음 경기의 과제를 정리했다. 쉴 시간은 줄었다.' } } ] },
+  { id: 'after_loss_review', once: true, afterWin: false, title: '패배를 넘는 방법', text: '최근 경기에서 진 뒤 더그아웃이 조용하다. 다음 훈련 전에 무엇부터 바꿀까?', min: 1, choices: [
+    { label: '팀원들과 실수를 되짚는다', chance: 100, ok: { team: 4, coach: 3, will: 2, msg: '누구 탓인지 따지지 않고 다음에 바꿀 플레이를 골랐다.' } },
+    { label: '하루 쉬며 마음을 추스른다', chance: 100, ok: { cond: 15, will: 2, msg: '패배를 잠시 내려놓았다. 다시 훈련할 힘이 돌아왔다.' } } ] },
   { id: 't_avg', trait: 'avg', pos: 'bat', title: '타격 비법 공유 요청', text: '후배들이 "애버리지히터"의 타격 비결을 알려달라며 몰려왔다.', min: 20, choices: [
     { label: '가르쳐준다', chance: 100, ok: { team: 6, captain: 4, will: 2, msg: '팀 분위기가 한층 좋아졌다.' } },
     { label: '혼자 연구한다', chance: 70, ok: { meet: 3, cond: -6, msg: '새로운 감을 잡았다.' }, ng: { cond: -10, team: -2, msg: '고립되는 느낌이 들었다.' } } ] },
