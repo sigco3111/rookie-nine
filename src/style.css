@@ -59,3 +59,5 @@ table.mini{width:100%;border-collapse:collapse;font-size:13px}table.mini td{padd
 .st b{font-size:17px;line-height:1}
 .st span:last-child{display:flex;flex-direction:column;align-items:center}
 .homepanel{padding:6px 8px!important}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.chip{padding:5px 10px;border-radius:999px;font-weight:900;font-size:14px;color:#fff}.chip.up{background:#2f9e44}.chip.dn{background:#d9363e}

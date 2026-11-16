@@ -15,3 +15,6 @@
 
 ## 16:30
 - Done: per-year batter uniform (blue/teal/orange). Next: equipment on player, event result presentation, fielder detail, growth-choice consequences.
+
+## 16:50
+- Done: event result modal with stat chips. Next: equipment on player, fielder detail, growth-choice consequences.

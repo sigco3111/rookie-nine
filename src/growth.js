@@ -133,7 +133,7 @@ export function resolveEvent(p, ev, ci) {
   const success = chance(ch.chance);
   const fx = success ? ch.ok : (ch.ng || ch.ok);
   applyFx(p, fx);
-  return { success, msg: fx.msg || '' };
+  return { success, msg: fx.msg || '', fx };
 }
 
 // 시합 후 결과 반영

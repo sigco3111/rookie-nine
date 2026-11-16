@@ -138,7 +138,11 @@ function afterWeekEvent(msgs) {
   const ev = G.randomEvent(P);
   if (!ev) return homeScreen(msgs);
   const mod = show($(`<div class="modal"><div class="panel"><h2>${ev.title}</h2><p>${ev.text}</p><div style="display:grid;gap:8px">${ev.choices.map((c, i) => `<button class="btn alt" data-c="${i}">${c.label} <small>(성공률 ${c.chance}%)</small></button>`).join('')}</div></div></div>`));
-  mod.querySelectorAll('[data-c]').forEach((b) => b.onclick = () => { const r = G.resolveEvent(P, ev, +b.dataset.c); mod.remove(); homeScreen(msgs.concat([`[이벤트] ${r.success ? '' : ''} ${r.msg}`])); });
+  mod.querySelectorAll('[data-c]').forEach((b) => b.onclick = () => { const r = G.resolveEvent(P, ev, +b.dataset.c); mod.remove(); sfx.ui();
+    const NM = { ...STAT_NAME, cond: '컨디션', will: '의지', money: '용돈', coach: '감독평가', captain: '캡틴평가', team: '팀평가', scout: '스카우트', study: '학업', tough: '근성' };
+    const chips = Object.entries(r.fx).filter(([k, v]) => k !== 'msg' && typeof v === 'number' && v).map(([k, v]) => `<span class="chip ${v > 0 ? 'up' : 'dn'}">${NM[k] || k} ${v > 0 ? '+' : ''}${v}</span>`).join('');
+    const rm = show($(`<div class="modal"><div class="panel"><h2>${r.success ? '성공!' : '아쉽다...'}</h2><p>${r.msg}</p><div class="chips">${chips}</div><button class="btn" id="okev" style="margin-top:12px;width:100%">확인</button></div></div>`));
+    rm.querySelector('#okev').onclick = () => { rm.remove(); homeScreen(msgs.concat([`[이벤트] ${r.msg}`])); }; });
 }
 
 function matchPrompt(m, msgs, cont) {
