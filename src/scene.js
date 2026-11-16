@@ -68,7 +68,7 @@ export function makeChibi({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, 
   const body = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.3, 0.55, 14), M(shirt)); body.position.y = 0.72; g.add(body);
   const legL = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.45, 8), M(pants)); legL.position.set(-0.13, 0.25, 0); g.add(legL);
   const legR = legL.clone(); legR.position.x = 0.13; g.add(legR);
-  const head = new THREE.Group(); head.position.y = 1.35; g.add(head);
+  const head = new THREE.Group(); head.position.y = 1.28; head.scale.setScalar(0.8); g.add(head);
   const face = new THREE.Mesh(new THREE.SphereGeometry(0.46, 20, 16), M(skin)); head.add(face);
   const capM = new THREE.Mesh(new THREE.SphereGeometry(0.48, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.5), M(cap)); capM.position.y = 0.03; head.add(capM);
   const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.04, 16, 1, false, 0, Math.PI), M(cap)); brim.position.set(0, 0.07, 0.34); brim.rotation.y = -Math.PI / 2; head.add(brim);
