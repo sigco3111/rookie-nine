@@ -179,9 +179,14 @@ function selectionModal() {
   m.querySelector('#backselection').onclick = () => { m.remove(); detailModal(); };
 }
 
+function matchGrowthHtml(r) {
+  if(!r.growthDelta)return '<small style="display:block;color:#b5c6dd;margin-top:8px">당시 평가·컨디션 변화 미저장</small>';
+  const names={...evName,cond:'컨디션'},entries=Object.entries(r.growthDelta).filter(([,v])=>v);
+  return `<small style="display:block;color:#b5c6dd;margin-top:10px">경기 직후 변화 · 훈련/주말 회복/이벤트 제외</small><div class="chips" style="margin-top:6px">${entries.map(([k,v])=>`<span class="chip ${v>0?'up':'dn'}">${names[k]} ${v>0?'+':''}${v}</span>`).join('')||'<span class="chip">변화 없음</span>'}</div>`;
+}
 function matchHistoryModal() {
   const rows = (P.matchHistory || []).slice(0, 8);
-  const m = show($(`<div class="modal"><div class="panel"><h2>최근 경기 기록</h2><p style="font-size:13px;color:#b5c6dd">최근 8경기 · 새로 마친 경기부터 기록됩니다.</p><div style="max-height:57vh;overflow:auto">${rows.map(r => `<div style="background:#20375e;border-radius:10px;padding:12px;margin-bottom:8px"><small>${r.year}학년 ${r.month}월 ${r.wk}주 · ${r.title}</small><div style="font-size:22px;font-weight:900;color:${r.win ? '#7aeb99' : '#ff9c9c'};margin:6px 0">${r.win ? '승리' : '패배'} ${r.my} : ${r.opp}</div><div>${r.pos === 'pit' ? `${r.ip}이닝 ${r.so}탈삼진 ${r.hitsAllowed}피안타 ${r.er}실점` : `${r.ab}타수 ${r.hits}안타 ${r.hr}홈런 ${r.rbi}타점`}</div></div>`).join('') || '<p>아직 기록된 경기가 없습니다.</p>'}</div><button class="btn" id="backmatches" style="width:100%;margin-top:10px">상세 능력으로</button></div></div>`));
+  const m = show($(`<div class="modal"><div class="panel"><h2>최근 경기 기록</h2><p style="font-size:13px;color:#b5c6dd">최근 8경기 · 새로 마친 경기부터 기록됩니다.</p><div style="max-height:57vh;overflow:auto">${rows.map(r => `<div style="background:#20375e;border-radius:10px;padding:12px;margin-bottom:8px"><small>${r.year}학년 ${r.month}월 ${r.wk}주 · ${r.title}</small><div style="font-size:22px;font-weight:900;color:${r.win ? '#7aeb99' : '#ff9c9c'};margin:6px 0">${r.win ? '승리' : '패배'} ${r.my} : ${r.opp}</div><div>${r.pos === 'pit' ? `${r.ip}이닝 ${r.so}탈삼진 ${r.hitsAllowed}피안타 ${r.er}실점` : `${r.ab}타수 ${r.hits}안타 ${r.hr}홈런 ${r.rbi}타점`}</div>${matchGrowthHtml(r)}</div>`).join('') || '<p>아직 기록된 경기가 없습니다.</p>'}</div><button class="btn" id="backmatches" style="width:100%;margin-top:10px">상세 능력으로</button></div></div>`));
   m.querySelector('#backmatches').onclick = () => { m.remove(); detailModal(); };
 }
 

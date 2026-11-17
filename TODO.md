@@ -287,3 +287,6 @@
 
 ## 02:38 Nov 18
 - Added2 one-time second-year followups to after_win_review choice from week52: shared celebration memory->team defense/rest, opponent analysis->practice/shared key notes. Exact earlier choice needed; later losses do not erase unlocked story. Existing24% gate unchanged, story pool/low stat+trust+condition tradeoffs expand; pacing/balance deferred. Both-position prerequisites/opposite exclusion/week51-52/once/JSON/effects plus all origin and576 preview comparisons passed. Actual rest->analysis followup->choice/result-reload/history passed, portrait inspected. Synthetic week/prerequisite/RNG not natural3year/device QA, no batting change.
+
+## 02:59 Nov 18
+- Match history now saves and displays exact capped post-match evaluation/condition deltas for new matches, including defense-trait effects, via common applyMatchResult wrapper for direct/auto both positions. Clearly excludes training/weekend/event; absent legacy delta says not saved. Match reward calculation unchanged. Both-position capped/uncapped/defense-trait result-vs-state/history JSON checks and actual auto-game->result-delta=history->confirm/reload->UI passed. Portrait pitching history inspected. Week/RNG injection not natural3year/direct-fullgame/device QA. No batting or reward rebalance.

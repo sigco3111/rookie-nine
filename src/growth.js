@@ -258,6 +258,11 @@ export function resolveEvent(p, ev, ci) {
 
 // 시합 후 결과 반영
 export function applyMatchResult(p, r) {
+  const before={...p.ev,cond:p.cond};executeMatchResult(p,r);
+  r.growthDelta=Object.fromEntries([...Object.keys(p.ev),'cond'].map(k=>[k,(k==='cond'?p.cond:p.ev[k])-before[k]]));
+  p.matchHistory[0].growthDelta={...r.growthDelta};
+}
+function executeMatchResult(p, r) {
   p.lastMatch = { win: !!r.win, week: p.week, title: r.title };
   p.matchHistory = [{ ...r, pos: p.pos, ...cal(p.week) }, ...(p.matchHistory || [])].slice(0, 20);
   const defenseBonus = defenseEvaluationBonus(p);
