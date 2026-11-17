@@ -179,3 +179,6 @@
 
 ## 14:14 Nov 17
 - Identified both repeated match-resource404s: same /favicon.ico requested twice, not two missing game assets in this tested path. Added original SVG baseball browser icon with relative link. Local title->creation->training->direct forced foul->following pitch flow now logs no HTTP>=400/request failures/JS errors. Icon pixels checked at128x128. Scoped smoke only, not all-resource/device QA; no gameplay changes. Glove experiment remains reverted.
+
+## 14:34 Nov 17
+- Position-safe shop: pitcher no longer sees/can purchase batting-only bat. Meal keeps existing stamina+1 for pitcher without writing nonexistent power (previously NaN/null); pitcher text says 체력+1, batter keeps power+1/stamina+1. Prices unchanged, no added pitching stat bonus. Invalid/unavailable item IDs return safely before spending. Both-position item/effect/cost/JSON/finite tests passed; actual pitcher meal purchase->reload stamina31/money40 and batter bat purchase->reload regressions passed. Portrait shop inspected. Existing malformed optional fields in old saves are not migrated; new purchases stop introducing them.

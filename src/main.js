@@ -1,4 +1,4 @@
-import { STAT_NAME, grade, GRADE_COLOR, practicesFor, OTHER_CMDS, TRAITS, ITEMS, keysOf, traitGoals, requirementValue } from './data.js';
+import { STAT_NAME, grade, GRADE_COLOR, practicesFor, OTHER_CMDS, TRAITS, itemsFor, itemDescription, keysOf, traitGoals, requirementValue } from './data.js';
 import { playPitching } from './pitching.js';
 import * as G from './growth.js';
 import { frame, showHome, playMatch, playTrainingAnim } from './match.js';
@@ -154,7 +154,7 @@ function menuModal() {
 }
 function shopModal() {
   const draw = (note) => {
-    const m = show($(`<div class="modal"><div class="panel"><h2> 쇼핑 (${ic('coin')} ${P.money})</h2>${note ? `<div class="log" style="color:#ffd23f">${note}</div>` : ''}<div style="display:grid;gap:6px">${ITEMS.map((i) => `<button class="btn alt" data-i="${i.id}" style="text-align:left;display:flex;justify-content:space-between"><span>${i.name}<br><small>${i.desc}</small></span><span>${i.price}</span></button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn gray" id="x">그만 사기</button><button class="btn" id="end">쇼핑 끝 (한 주 소비)</button></div></div></div>`));
+    const m = show($(`<div class="modal"><div class="panel"><h2> 쇼핑 (${ic('coin')} ${P.money})</h2>${note ? `<div class="log" style="color:#ffd23f">${note}</div>` : ''}<div style="display:grid;gap:6px">${itemsFor(P).map((i) => `<button class="btn alt" data-i="${i.id}" style="text-align:left;display:flex;justify-content:space-between"><span>${i.name}<br><small>${itemDescription(P, i)}</small></span><span>${i.price}</span></button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn gray" id="x">그만 사기</button><button class="btn" id="end">쇼핑 끝 (한 주 소비)</button></div></div></div>`));
     m.querySelectorAll('[data-i]').forEach((b) => b.onclick = () => { const r = G.buy(P, b.dataset.i); G.save(P); m.remove(); draw(r); });
     m.querySelector('#x').onclick = () => { m.remove(); G.save(P); homeScreen(); };
     m.querySelector('#end').onclick = () => { m.remove(); runWeek('shop'); };

@@ -1,4 +1,4 @@
-import { STAT_KEYS, PRACTICES, keysOf, STAT_NAME, practicesFor, TRAITS, INJURIES, EVENTS, ITEMS, TEAMS, PRO } from './data.js';
+import { STAT_KEYS, PRACTICES, keysOf, STAT_NAME, practicesFor, TRAITS, INJURIES, EVENTS, ITEMS, itemsFor, itemDescription, TEAMS, PRO } from './data.js';
 const clamp = (v, a = 0, b = 99) => Math.max(a, Math.min(b, Math.round(v)));
 export const rnd = (a, b) => a + Math.random() * (b - a);
 export const chance = (p) => Math.random() * 100 < p;
@@ -141,9 +141,10 @@ function executeCommand(p, id, arg) {
 
 export function buy(p, id) {
   ensureGrowthBaseline(p);
-  const it = ITEMS.find((i) => i.id === id);
+  const it = itemsFor(p).find((i) => i.id === id);
+  if (!it) return '현재 포지션에서 사용할 수 없는 상품입니다.';
   if (p.money < it.price) return `돈이 부족하다 (${it.price}원)`;
-  p.money -= it.price; it.fx(p); return `${it.name} 구입! ${it.desc}`;
+  p.money -= it.price; it.fx(p); return `${it.name} 구입! ${itemDescription(p, it)}`;
 }
 
 const growthSnapshot = (p) => Object.fromEntries([...keysOf(p), 'will', 'tough'].map((k) => [k, p[k]]));
