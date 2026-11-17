@@ -273,6 +273,13 @@ async function startMatch(m) {
       picker.querySelector('#throw').addEventListener('pointerdown', (e) => { e.preventDefault(); onThrow(); }); ui.appendChild(picker);
       ui.appendChild($(`<div class="hint" style="bottom:calc(86px + env(safe-area-inset-bottom));max-width:90%">구종을 고르고 화면을 드래그해 목표 위치를 정한 뒤 던지기! 제구가 낮으면 목표에서 빗나갑니다.</div>`));
     };
+    api.setPitchingActive = (active, flight = false) => {
+      if (!picker) return;
+      picker.style.display = flight ? 'none' : 'flex';
+      picker.querySelectorAll('button').forEach(b => { b.disabled = !active; b.style.opacity = active ? '1' : '.45'; });
+      picker.querySelector('#throw').textContent = active ? '던지기' : '준비 중';
+      ui.querySelectorAll('.hint').forEach(h => h.style.display = active ? '' : 'none');
+    };
     api.removePicker = () => { if (picker) picker.remove(); ui.querySelectorAll('.hint').forEach((h) => h.remove()); };
     return await playPitching(P, m, api);
   }

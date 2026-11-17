@@ -45,9 +45,11 @@ export async function playPitching(p, m, hud) {
   const types = avail(p);
   hud.pitchPicker(types.map((t) => ({ id: t.id, n: t.n })), (id) => { selPitch = PT.find((x) => x.id === id); }, () => { if (throwNow) throwNow(); });
 
+  hud.setPitchingActive?.(false);
+
   const throwBall = (count) => new Promise(async (res) => {
     const pit = selPitch; hud.setPitch(`${pit.n}  목표를 정하고 던지기!`);
-    await new Promise((r) => { throwNow = () => { throwNow = null; r(); }; });
+    await new Promise((r) => { throwNow = () => { throwNow = null; hud.setPitchingActive?.(false); r(); }; hud.setPitchingActive?.(true); });
     // 실제 위치: 목표 + 제구 흔들림
     const wob = Math.max(0.03, 0.34 - p.ctrl * 0.0032 - (traits.includes('cmd') ? 0.04 : 0) + (pit.brk ? 0.05 * (1 - p.brk * 0.006) : 0));
     const bx = cx + rnd(-wob, wob) * 1.6, by = cy + rnd(-wob, wob);
@@ -70,7 +72,7 @@ export async function playPitching(p, m, hud) {
       if (bat.swing) { bat.at += dt / 0.22; setBatterPose(o.batter, bat.at); }
       if (t >= T + 0.15) { done = true; delTicker(f); fin(); }
     };
-    const fly = (kind, r, after) => { const dist = kind === 'out' ? 16 + Math.random() * 12 : kind === 'foul' ? 12 : [0, 26, 42, 58, 125][r.t]; const hi = kind === 'out' ? 7 : r && r.t === 4 ? 32 : 5 + (r ? r.t * 2 : 0); const dx = (Math.random() - 0.5) * (r && r.t === 4 ? 40 : 30); const dur = 0.9 + dist / 70;
+    const fly = (kind, r, after) => { hud.setPitchingActive?.(false, true); hud.setPitch('타구 비행'); const dist = kind === 'out' ? 16 + Math.random() * 12 : kind === 'foul' ? 12 : [0, 26, 42, 58, 125][r.t]; const hi = kind === 'out' ? 7 : r && r.t === 4 ? 32 : 5 + (r ? r.t * 2 : 0); const dx = (Math.random() - 0.5) * (r && r.t === 4 ? 40 : 30); const dur = 0.9 + dist / 70;
       const chase = defensivePursuit(o.fielders, bx + dx * .5, -dist * .9);
       o.ball.visible = true; let k = 0; const g2 = (dt) => { k += dt / dur; chase(k * dur); const s = Math.min(1, k); o.ball.position.set(bx + dx * s * 0.5, 1.0 + Math.sin(Math.PI * s) * hi, -dist * s * 0.9); const tg = o.ball.position; camera.lookAt(tg.x * 0.6, Math.max(0.8, tg.y * 0.7), Math.max(tg.z * 0.5, -40) + 4); camera.position.y = 3.1 + Math.min(4, tg.y * 0.1);
         if (s >= 1) { delTicker(g2); o.ball.visible = false; resetDefense(o.fielders); cam(); after(); } }; tickers.add(g2); };
