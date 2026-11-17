@@ -277,10 +277,10 @@ function afterWeekEvent(msgs) {
   eventChoiceModal(P.pendingEvent);
 }
 
-function yearHistoryModal() {
-  const names={...STAT_NAME,will:'의지',tough:'근성'},current=G.currentYearGrowth(P),rows=[...(current&&!P.done?[{...current,current:true}]:[]),...(P.yearHistory||[])];
-  const m=show($(`<div class="modal"><div class="panel"><h2>학년별 성장 돌아보기</h2><p style="font-size:13px;color:#b5c6dd">진행 중인 학년의 변화와 저장된1·2학년 결산입니다. 졸업 결과와는 별개입니다.</p><div style="max-height:56vh;overflow:auto">${rows.map(r=>`<div style="background:#20375e;padding:14px;border-radius:10px;margin:10px 0"><b>${r.year}학년 ${r.current?'진행 중':'결산'}</b><p>종합 ${r.prevOvr} → ${r.ovr}</p><small>${r.year===1?'입학 때':'전 학년 결산 때'}와 비교</small><div class="chips" style="margin-top:8px">${r.diffs.filter(([,v])=>v).map(([k,v])=>`<span class="chip ${v>0?'up':'dn'}">${names[k]} ${v>0?'+':''}${v}</span>`).join('')||'<span class="chip">능력 수치 변화 없음</span>'}</div></div>`).join('')||'<p>아직 저장된 학년 결산이 없습니다.<br>기존 저장에서 누락된 결산은 추정하지 않습니다.</p>'}</div><button class="btn" id="backyears" style="width:100%">상세 능력으로</button></div></div>`));
-  m.querySelector('#backyears').onclick=()=>{m.remove();detailModal();};
+function yearHistoryModal(fromEnding = false) {
+  const names={...STAT_NAME,will:'의지',tough:'근성'},current=G.currentYearGrowth(P),rows=[...(P.finalYearReview?[P.finalYearReview]:[]),...(current&&!P.done?[{...current,current:true}]:[]),...(P.yearHistory||[])];
+  const m=show($(`<div class="modal"><div class="panel"><h2>학년별 성장 돌아보기</h2><p style="font-size:13px;color:#b5c6dd">진행 중인 학년과 저장된 학년별 결산입니다. 기록이 없는 과거 학년은 추정하지 않습니다.</p><div style="max-height:56vh;overflow:auto">${rows.map(r=>`<div style="background:#20375e;padding:14px;border-radius:10px;margin:10px 0"><b>${r.year}학년 ${r.current?'진행 중':'결산'}</b><p>종합 ${r.prevOvr} → ${r.ovr}</p><small>${r.year===1?'입학 때':'전 학년 결산 때'}와 비교</small><div class="chips" style="margin-top:8px">${r.diffs.filter(([,v])=>v).map(([k,v])=>`<span class="chip ${v>0?'up':'dn'}">${names[k]} ${v>0?'+':''}${v}</span>`).join('')||'<span class="chip">능력 수치 변화 없음</span>'}</div></div>`).join('')||'<p>아직 저장된 학년 결산이 없습니다.<br>기존 저장에서 누락된 결산은 추정하지 않습니다.</p>'}</div><button class="btn" id="backyears" style="width:100%">${fromEnding?'졸업 결과로':'상세 능력으로'}</button></div></div>`));
+  m.querySelector('#backyears').onclick=()=>{m.remove();if(!fromEnding)detailModal();};
 }
 function yearReviewModal(msgs) {
   const rv = P.review; rv.msgs = msgs; G.save(P);
@@ -400,7 +400,8 @@ function endingScreen() {
   const r = P.result;
   const el = show($(`<div class="screen"><div class="title" style="font-size:28px">졸업 · 드래프트</div><div class="panel" style="text-align:center"><div style="font-size:22px;font-weight:900">${r.text}</div>${r.rank ? `<div>${r.team}</div>` : ''}<div style="margin-top:8px">종합 ${r.ovr} · 평가점수 ${r.score}</div><div>${P.wins}승 ${P.losses}패 · ${P.pos === 'pit' ? `${P.ab}이닝 · ${P.so || 0}탈삼진` : `홈런 ${P.hr}`}</div></div>
     <div class="panel">${statsHtml()}<div class="ev" style="margin-top:6px">${P.traits.filter((t) => TRAITS[t].good).map((t) => `<span class="tr">${TRAITS[t].name}</span>`).join('')}</div></div>
-    <div class="spacer"></div><div class="panel log">선수는 명예의 전당에 저장되었습니다.</div><button class="btn big" id="again">새 선수로 다시 시작</button><button class="btn gray" id="hof">명예의 전당</button></div>`));
+    <div class="spacer"></div><div class="panel log">선수는 명예의 전당에 저장되었습니다.</div><button class="btn alt" id="finalyears">학년별 성장 돌아보기</button><button class="btn big" id="again">새 선수로 다시 시작</button><button class="btn gray" id="hof">명예의 전당</button></div>`));
+  el.querySelector('#finalyears').onclick = () => yearHistoryModal(true);
   el.querySelector('#again').onclick = () => { G.clearSave(); createScreen(); };
   el.querySelector('#hof').onclick = hofScreen;
 }

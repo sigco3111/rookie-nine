@@ -329,6 +329,7 @@ export function draftStatus(p) {
 }
 
 function finish(p) {
+  p.finalYearReview = currentYearGrowth(p);
   p.done = true;
   const { score } = draftStatus(p);
   let rank, team, text;

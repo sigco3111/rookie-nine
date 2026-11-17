@@ -323,3 +323,6 @@
 
 ## 06:47 Nov 18
 - Equipment screen now shows all3 school-year uniform shirt icons together with current-year border/label and auto-promotion explanation. Shared UNIFORMS data drives actual3D and UI instead of duplicate hex arrays; colors/rules unchanged. Both positions years1/2/3 preview-color=active3D-shirt, no player mutation, return controls passed;390x844 portrait inspected. Year injected not natural progression/device QA. Icons are illustrative, not new3D jersey geometry; no rewards/batting change.
+
+## 07:07 Nov 18
+- Final-year growth now captured at graduation separately from existing year1/2 archives, viewable from ending via school-year history with return-to-ending. Ending reload preserves year3 snapshot; old endings without snapshot not reconstructed. No extra HOF insertion on viewing. Both-position graduation capture/JSON/archive independence and actual two boundary reviews->final rest->ending/reload->read-only history/back passed; portrait inspected. Week/stats/RNG injected not natural3year/device QA. Draft score/rank/rewards/batting unchanged; final archive lives in career save, not HOF record.
