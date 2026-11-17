@@ -101,7 +101,7 @@ export async function playMatch(p, m, hud) {
   // 입력
   let cx = 0, cy = ZY;
   const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-  const setRet = (x, y) => { cx = Math.max(-0.95, Math.min(0.95, x)); cy = Math.max(0.1, Math.min(1.7, y)); ret.position.set(cx, cy, 0.05); };
+  const setRet = (x, y) => { cx = Math.max(-0.95, Math.min(0.95, x)); cy = Math.max(0.1, Math.min(1.7, y)); ret.position.set(cx, cy, 0.05); o.batter.userData.aimHeight = cy; };
   const pt = (e) => { const r = renderer.domElement.getBoundingClientRect(); const v = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1 + 0.12); ray.setFromCamera(v, camera); const hit = new THREE.Vector3(); ray.ray.intersectPlane(plane, hit); if (hit) setRet(hit.x, hit.y); };
   let down = false;
   const onD = (e) => { down = true; pt(e); }, onM = (e) => { if (down || e.pointerType === 'mouse') pt(e); }, onU = () => { down = false; };
