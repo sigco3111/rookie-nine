@@ -256,12 +256,13 @@ export function resolveEvent(p, ev, ci) {
   const before = Object.fromEntries(Object.keys(fx).filter((k) => k !== 'msg').map((k) => [k, ['coach', 'captain', 'team', 'scout'].includes(k) ? p.ev[k] : p[k]]));
   applyFx(p, fx);
   const actual = Object.fromEntries(Object.entries(before).filter(([, v]) => typeof v === 'number').map(([k, v]) => [k, (['coach', 'captain', 'team', 'scout'].includes(k) ? p.ev[k] : p[k]) - v]));
+  const values = Object.fromEntries(Object.entries(before).filter(([,v])=>Number.isFinite(v)).map(([k,v])=>[k,[v,v+actual[k]]]));
   const c = cal(p.week);
   const origin = eventOrigin(p, ev);
-  p.eventHistory = [{ chance: ch.chance, origin, title: ev.title, choice: ch.label, success, msg: fx.msg || '', fx: actual, year: c.year, month: c.month, wk: c.wk }, ...(p.eventHistory || [])].slice(0, 30);
+  p.eventHistory = [{ values, chance: ch.chance, origin, title: ev.title, choice: ch.label, success, msg: fx.msg || '', fx: actual, year: c.year, month: c.month, wk: c.wk }, ...(p.eventHistory || [])].slice(0, 30);
   p.log.unshift(`[${ev.title}] ${ch.label}: ${fx.msg || (success ? '성공' : '실패')}`);
   p.log = p.log.slice(0, 80);
-  return { chance: ch.chance, success, msg: fx.msg || '', fx: actual, origin };
+  return { values, chance: ch.chance, success, msg: fx.msg || '', fx: actual, origin };
 }
 
 // 시합 후 결과 반영

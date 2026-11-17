@@ -314,3 +314,6 @@
 
 ## 05:45 Nov 18
 - Added bat grip sleeve, five wrap rings and end knob to the active character model. Dark grip retains its own color for wood and purchased gold bat; body geometry/scale/anchor untouched. Cosmetic only, no swing/timing/contact/reward changes. Actual shop->save->reload checked gold body, independent grip, all7parts and original body dimensions; direct-match swing smoke passed. Wood/gold close renders inspected. First test used nonexistent #swing selector; corrected to real .swing pointer handler and passed. Close camera is test evidence only, gameplay camera unchanged. No natural fullgame/device/performance claim.
+
+## 06:05 Nov 18
+- Event results and saved choice history now show exact selected-effect before->after values alongside deltas. Snapshot only the applied numeric keys, including capped and position-filtered effects; old saves omit comparison rather than infer current state. Both positions all events/choices/success-failure/caps/low-money exact-state/JSON and608 preview regression passed. Actual followup->result->reload identical->history after current-stat change passed; portrait inspected. No probability/reward/selection/batting change. Week/prereq/RNG controlled, not natural3year/device QA.
