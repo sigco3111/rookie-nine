@@ -197,3 +197,6 @@
 
 ## 16:19 Nov 17
 - Replaced undersized flat shoe attachment with rounded full-foot sized mesh, preserving foot anchors and color material; actual meshes now stored in shoes array. Runner now receives owned-shoe red color on match entry as batter already did. Local actual pitcher shop shoes->reload red footwear close render passed; actual direct hit->runner close render shows both red shoes, no JS/HTTP errors. Synthetic gear/forced homer/fixed dt and close cameras, not natural timing/device QA. Simple rounded footwear, not finished laces/sole detail; hand/swing timing untouched.
+
+## 16:40 Nov 17
+- Event result now keeps scenario title/chosen response beside actual capped deltas, explicit zero-delta text and record location. Saves unconfirmed result+weekly messages; Continue after reload resumes the same result without rolling/applying it again. Confirmation clears pending state, subsequent reload opens home. Both batter/pitcher actual weekly command->event choice->reload->confirm->reload passed, including capped100 evaluation/99 condition zero case. Synthetic state/fixed RNG, not natural long-run balance/device QA. Portrait pixels inspected; difficulty/guide/motion and event rewards/chances unchanged.

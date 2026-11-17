@@ -26,7 +26,7 @@ function titleScreen() {
     <button class="btn big alt" id="new">새 선수 만들기</button>
     <button class="btn gray" id="hof">명예의 전당 (${h.length})</button></div>`));
   el.querySelector('#new').onclick = createScreen;
-  if (sv && !sv.done) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else homeScreen(); };
+  if (sv && !sv.done) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingEventResult) { clear(); showHome(P.pos, P); eventResultModal(P.pendingEventResult); } else homeScreen(); };
   el.querySelector('#hof').onclick = hofScreen;
 }
 
@@ -203,11 +203,17 @@ function afterWeekEvent(msgs) {
   const ev = G.randomEvent(P);
   if (!ev) return homeScreen(msgs);
   const mod = show($(`<div class="modal"><div class="panel"><h2>${ev.title}</h2><p>${ev.text}</p><div style="display:grid;gap:8px">${ev.choices.map((c, i) => `<button class="btn alt" data-c="${i}">${c.label} <small>(성공률 ${c.chance}%)</small></button>`).join('')}</div></div></div>`));
-  mod.querySelectorAll('[data-c]').forEach((b) => b.onclick = () => { const r = G.resolveEvent(P, ev, +b.dataset.c); G.save(P); mod.remove(); sfx.ui();
-    const NM = { ...STAT_NAME, cond: '컨디션', will: '의지', money: '용돈', coach: '감독평가', captain: '캡틴평가', team: '팀평가', scout: '스카우트', study: '학업', tough: '근성' };
-    const chips = Object.entries(r.fx).filter(([k, v]) => k !== 'msg' && typeof v === 'number' && v).map(([k, v]) => `<span class="chip ${v > 0 ? 'up' : 'dn'}">${NM[k] || k} ${v > 0 ? '+' : ''}${v}</span>`).join('');
-    const rm = show($(`<div class="modal"><div class="panel"><h2>${r.success ? '성공!' : '아쉽다...'}</h2><p>${r.msg}</p><div class="chips">${chips}</div><button class="btn" id="okev" style="margin-top:12px;width:100%">확인</button></div></div>`));
-    rm.querySelector('#okev').onclick = () => { rm.remove(); homeScreen(msgs.concat([`[이벤트] ${r.msg}`])); }; });
+  mod.querySelectorAll('[data-c]').forEach((b) => b.onclick = () => { const r = G.resolveEvent(P, ev, +b.dataset.c); mod.remove(); sfx.ui();
+    P.pendingEventResult = { title: ev.title, choice: ev.choices[+b.dataset.c].label, result: r, msgs };
+    G.save(P); eventResultModal(P.pendingEventResult); });
+}
+
+function eventResultModal(q) {
+  const r = q.result;
+  const NM = { ...STAT_NAME, cond: '컨디션', will: '의지', money: '용돈', coach: '감독평가', captain: '캡틴평가', team: '팀평가', scout: '스카우트', study: '학업', tough: '근성' };
+  const chips = Object.entries(r.fx).filter(([k,v]) => typeof v === 'number' && v).map(([k,v]) => `<span class="chip ${v>0?'up':'dn'}">${NM[k]||k} ${v>0?'+':''}${v}</span>`).join('');
+  const rm = show($(`<div class="modal"><div class="panel"><small style="color:#b5c6dd">이벤트 결과 · ${q.title}</small><h2 style="color:${r.success?'#8ce99a':'#ffb58f'}">${r.success?'성공!':'아쉽다...'}</h2><div style="padding:10px;background:#20375e;border-radius:10px;color:#ffd23f">선택: ${q.choice}</div><p>${r.msg}</p><small style="display:block;margin-bottom:8px;color:#b5c6dd">이번 선택의 실제 변화 · 상한/하한 반영</small><div class="chips">${chips||'<span class="chip">능력·상태 수치 변화 없음</span>'}</div><p style="font-size:12px;color:#b5c6dd">상세 능력의 선택의 기록에서 다시 볼 수 있습니다.</p><button class="btn" id="okev" style="margin-top:12px;width:100%">확인</button></div></div>`));
+  rm.querySelector('#okev').onclick = () => { P.pendingEventResult = null; G.save(P); rm.remove(); homeScreen(q.msgs.concat([`[이벤트] ${r.msg}`])); };
 }
 
 function matchPrompt(m, msgs, previousTraits, cont) {
