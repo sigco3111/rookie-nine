@@ -125,6 +125,7 @@ export async function playMatch(p, m, hud) {
 
   // 한 번의 투구
   const pitchOnce = (count, scoringChance = false) => new Promise(async (res) => {
+    hud.setBattingActive?.(true);
     setBatterPose(o.batter, 0);
     o.zone.visible = true; o.ret.visible = true;
     const pt_ = PITCHES[Math.floor(Math.random() * (strength > 50 ? 4 : strength > 42 ? 3 : 2))];
@@ -179,6 +180,7 @@ export async function playMatch(p, m, hud) {
 
   // 타구 연출 후 결과 판정
   const flight = (h) => new Promise((res) => {
+    hud.setBattingActive?.(false); hud.setPitch('타구 비행');
     o.zone.visible = false; o.ret.visible = false;
     const a = h.angle * Math.PI / 180; const dir = new THREE.Vector3(Math.sin(a), 0, -Math.cos(a));
     const dur = Math.max(0.9, Math.min(2.6, h.dst / 38 + 0.6)); const peak = Math.max(0.3, Math.min(30, h.dst * Math.tan(Math.max(0, h.launch) * Math.PI / 180) * 0.28));
@@ -198,6 +200,7 @@ export async function playMatch(p, m, hud) {
     }; tickers.add(f);
   });
   const runBases = (kind) => new Promise((res) => {
+    hud.setPitch('베이스 러닝');
     const pts = { single: [[0, 0], [19.4, -19.4]], double: [[0, 0], [19.4, -19.4], [0, -38.8]], hr: [[0, 0], [19.4, -19.4], [0, -38.8], [-19.4, -19.4], [0, 0]] }[kind] || [[0, 0], [19.4, -19.4]];
     const rn = o.runner; rn.visible = true; o.batter.visible = false; let t = 0; const dur = 0.9 * (pts.length - 1);
     camera.position.set(0, 14, 16); camera.lookAt(0, 0, -18);

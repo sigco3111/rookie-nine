@@ -206,3 +206,6 @@
 
 ## 17:21 Nov 17
 - Centralized equipment appearance assignment for home/batter/runner/pitcher. Direct pitching explicitly applies current player's gloves/shoes and resets opponent bat/shoes; direct batting resets opponent pitcher gear. Prevents reused scene actors from inheriting former player's purchased colors across title/new-position flow and stops reliance on a previous home render. Same-session owned batter->new pitcher->direct entry test asserts own gold glove/red shoes, opponent default wood bat/black shoes; year3 team palette intact. Runner regression passed. Close-camera and normal portrait pixels inspected. Test gear/week values injected, not full purchases or device QA. Geometry/prices/stats/batting acceptance unchanged.
+
+## 17:42 Nov 17
+- Direct batting flight/base-running now hides/disables SWING and batting instruction; timing guide remains hidden. Phase chip says 타구 비행/베이스 러닝 instead of stale pitch speed; next pitch restores button/hint/guide and pitch label. Existing no-input phase made explicit, no swing timing/acceptance/physics changed. Actual forced homer->flight->run->next-pitch test passed with hidden/disabled controls and restored guide; portrait pixels inspected. Uses fixed dt/forced hit/synthetic regular status, not human or device QA. Does not add catches/throws.
