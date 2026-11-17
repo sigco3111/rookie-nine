@@ -284,3 +284,6 @@
 
 ## 02:18 Nov 18
 - Cosmetic fielder arrival polish: pursuit and backup running swing tapers within last3 distance units, settled fielders turn toward plate and return ready legs instead of keeping travel heading. Path speeds/reaction/landing/range unchanged; no catch/throw/collision/outcome change. Pure path remaining0/arrival regression passed; actual pitching two-moving/all7reset passed, separate controlled arrival t100 close render inspected for2ready fielders facing plate. Camera/time/target injection only test evidence, no gameplay camera change/natural-device claim. Shared batting/pitching pursuit.
+
+## 02:38 Nov 18
+- Added2 one-time second-year followups to after_win_review choice from week52: shared celebration memory->team defense/rest, opponent analysis->practice/shared key notes. Exact earlier choice needed; later losses do not erase unlocked story. Existing24% gate unchanged, story pool/low stat+trust+condition tradeoffs expand; pacing/balance deferred. Both-position prerequisites/opposite exclusion/week51-52/once/JSON/effects plus all origin and576 preview comparisons passed. Actual rest->analysis followup->choice/result-reload/history passed, portrait inspected. Synthetic week/prerequisite/RNG not natural3year/device QA, no batting change.

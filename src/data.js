@@ -82,6 +82,12 @@ export const INJURIES = [
 
 // 이벤트. chance는 화면에 표시된다.
 export const EVENTS = [
+  { id: 'win_team_followup', req: 'after_win_review', reqChoice: ['after_win_review', 0], title: '함께 기억한 한 장면', text: '승리 뒤 동료들과 나눴던 장면을 다시 이야기한다. 누군가의 준비가 다른 누군가의 플레이를 도왔다는 걸 알게 됐다.', min: 52, choices: [
+    { label: '동료와 수비 호흡을 맞춘다', chance: 100, ok: { field: 2, team: 3, cond: -6, msg: '기분 좋은 기억을 함께하는 훈련으로 옮겼다. 서로 어느 쪽을 맡을지 정했다.' } },
+    { label: '팀원들의 준비를 칭찬하고 함께 쉰다', chance: 100, ok: { captain: 3, team: 3, cond: 6, msg: '기록에 남지 않은 준비도 기억했다. 다음에도 서로를 도울 힘을 채웠다.' } } ] },
+  { id: 'win_analysis_followup', req: 'after_win_review', reqChoice: ['after_win_review', 1], title: '분석에서 정한 한 가지', text: '승리 뒤 감독과 적었던 상대 분석을 다시 펼쳤다. 기록을 늘리는 대신 훈련에서 실행할 한 가지를 골라 보자.', min: 52, choices: [
+    { label: '수비 위치의 이유를 연습으로 확인한다', chance: 100, ok: { field: 2, coach: 3, cond: -6, msg: '분석을 움직임으로 확인했다. 메모를 읽을 때보다 과제가 또렷해졌다.' } },
+    { label: '핵심을 동료들과 짧게 공유한다', chance: 100, ok: { coach: 2, team: 3, will: 2, msg: '혼자 알고 있던 내용을 짧게 나눴다. 같은 준비를 할 수 있게 됐다.' } } ] },
   { id: 'loss_review_followup', req: 'after_loss_review', reqChoice: ['after_loss_review', 0], title: '고쳐 쓴 플레이 노트', text: '패배 뒤 동료들과 짚었던 실수가 노트에 남아 있다. 같은 상황을 가정해 준비해 보자는 이야기가 나왔다.', min: 44, choices: [
     { label: '함께 수비 위치와 연결 동작을 맞춘다', chance: 100, ok: { field: 2, team: 3, cond: -6, msg: '지적에서 멈추지 않고 움직임을 맞췄다. 다음에는 서로 어떤 준비를 할지 정했다.' } },
     { label: '감독에게 노트를 보여주고 과제를 추린다', chance: 100, ok: { coach: 3, will: 3, cond: -3, msg: '한 번에 모두 고치려 하지 않기로 했다. 다음 훈련의 작은 목표를 정했다.' } } ] },
