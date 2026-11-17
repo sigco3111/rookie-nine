@@ -134,3 +134,6 @@
 
 ## 09:46 Nov 17
 - Local aim-height plane experiment: aimHeight passed from reticle; wrist/elbow lift tracks low/center/high. Synthetic callback height overrides (not genuine pointer/pitch generation) yield sampled gaps .065/.078/.114m. High pose still has an awkward raised arm above helmet; not accepted for deployment. No timing/hit-window changes. Local source+dist differ from docs/live. Need high-hand pose constraint and actual drag input evidence before publish; lateral aim and glancing contact timing remain open.
+
+## 10:06 Nov 17
+- Limited high-aim wrist lift to .5 and used modest barrel elevation for rest: fewer above-helmet hand artifacts but high gap .141m (worse than .114), not yet a release candidate. Added actual projected canvas PointerEvent test: aim 1.25 yields actual aimHeight 1.2499999999999991 and matches expected plane. Ball height still test-overridden, not natural high-pitch generation. Source/dist LOCAL ONLY, docs/live unchanged. Next prioritize contact-time response to stop ball travelling through bat after apparent intersection; then review pose+timing together rather than over-tuning gap metric.
