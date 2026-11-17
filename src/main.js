@@ -128,9 +128,11 @@ function detailModal() {
     <button class="btn alt" id="academic" style="width:100%;margin-top:8px">학업과 다음 시험</button><h2 style="margin-top:10px">평가</h2>${Object.keys(evName).map((k) => `${evName[k]} ${P.ev[k]}`).join(' / ')}
     <button class="btn alt" id="selection" style="width:100%;margin-top:8px">출전 기회와 신뢰</button><button class="btn alt" id="draft" style="width:100%;margin-top:8px">지명 목표와 현재 평가</button><h2 style="margin-top:10px">전적</h2>${P.wins}승 ${P.losses}패 · ${P.pos === 'pit' ? `${P.so || 0}탈삼진 · ${P.hits}피안타 · ${P.ab}이닝` : `${P.hits}/${P.ab} · 홈런 ${P.hr} · 타점 ${P.rbi}`}<button class="btn alt" id="matches" style="width:100%;margin-top:8px">최근 경기 기록</button>
     <h2 style="margin-top:10px">특수능력</h2>${P.traits.map((t) => `<div><b>${TRAITS[t].name}</b> <small>${TRAITS[t].desc}</small></div>`).join('') || '없음'}
+    <button class="btn alt" id="mastery" style="width:100%;margin-top:10px">훈련 숙련도와 다음 레벨</button>
     <button class="btn alt" id="goals" style="width:100%;margin-top:10px">특수능력 성장 목표</button>
     <button class="btn alt" id="evhistory" style="width:100%;margin-top:8px">선택의 기록</button>
     <button class="btn alt" id="equipment" style="width:100%;margin-top:8px">내 장비와 유니폼</button><h2 style="margin-top:10px">기록</h2><div class="log">${P.log.slice(0, 8).map((x) => '· ' + x).join('<br>')}</div><br><button class="btn" style="width:100%" id="x">닫기</button></div></div>`));
+  m.querySelector('#mastery').onclick = () => { m.remove(); masteryModal(); };
   m.querySelector('#draft').onclick = () => { m.remove(); draftModal(); };
   m.querySelector('#equipment').onclick = () => { m.remove(); equipmentModal(); };
   m.querySelector('#academic').onclick = () => { m.remove(); academicModal(); };
@@ -139,6 +141,13 @@ function detailModal() {
   m.querySelector('#evhistory').onclick = () => { m.remove(); eventHistoryModal(); };
   m.querySelector('#goals').onclick = () => { m.remove(); goalsModal(); };
   m.querySelector('#x').onclick = () => m.remove();
+}
+function masteryModal() {
+  const m=show($(`<div class="modal"><div class="panel"><h2>훈련 숙련도</h2><p style="font-size:13px;color:#b5c6dd">같은 훈련을 반복하면 성장 계산의 숙련 배율이 올라갑니다. 실제 능력 상승량은 컨디션·특성·현재 능력·무작위에 따라 달라집니다.</p><div style="max-height:53vh;overflow:auto" id="masterylist">${practicesFor(P).map(pr=>{
+    const t=G.trainingMastery(P,pr.id), start=t.level===1?0:t.level===2?7:16;
+    return `<div data-training="${pr.id}" style="background:#20375e;border-radius:10px;padding:12px;margin:8px 0"><b>${pr.name} · Lv${t.level}</b><span style="float:right;color:#ffd23f">×${t.multiplier.toFixed(1)}</span><div class="bar" style="margin:8px 0"><i style="width:${t.next?100*(t.count-start)/(t.next-start):100}%;background:#66e692"></i></div><small>${t.count}회 완료 · ${t.next?`Lv${t.level+1}까지 ${t.remaining}회 (누적 ${t.next}회)`:'최고 레벨 도달'}</small></div>`;
+  }).join('')}</div><p style="font-size:12px;color:#b5c6dd">완료 횟수는 정상 실행된 훈련만 셉니다. 입원·연습 금지로 실행하지 못한 주는 제외됩니다. 레벨 상승은 다음 훈련부터 적용됩니다. 리프레쉬는 회복·치료용이며 숙련 배율로 회복량이 늘지 않습니다.</p><button class="btn" id="backmastery" style="width:100%">상세 능력으로</button></div></div>`));
+  m.querySelector('#backmastery').onclick=()=>{m.remove();detailModal();};
 }
 function draftModal() {
   const d=G.draftStatus(P), fmt=n=>(Math.floor(n*100+1e-8)/100).toFixed(2);

@@ -26,6 +26,10 @@ export function pushHof(e) { const h = hof(); h.push(e); try { localStorage.setI
 
 export const level = (p, id) => { const n = p.cnt[id] || 0; return n >= 16 ? 3 : n >= 7 ? 2 : 1; };
 const LV_MUL = [0, 1, 1.3, 1.6];
+export function trainingMastery(p, id) {
+  const lv = level(p, id), count = p.cnt[id] || 0, next = lv === 3 ? null : lv === 1 ? 7 : 16;
+  return { level: lv, count, next, remaining: next == null ? 0 : next - count, multiplier: LV_MUL[lv] };
+}
 
 // 이번 주가 시합 주인지: {kind:'league'|'tour', round}
 export function matchOfWeek(p) {
@@ -110,7 +114,7 @@ function executeCommand(p, id, arg) {
     if (p.banWeeks > 0 && id !== 'refresh') { out.push('시험 성적 탓에 연습 금지! 효과 없음.'); p.cond = clamp(p.cond - 3); }
     else {
       const cmul = 0.6 + p.cond / 100 * 0.7; // 컨디션이 좋을수록 효율
-      let mul = 0.5 * LV_MUL[lv] * cmul * (bad('lazy') ? 0.7 : 1) * rnd(0.85, 1.2);
+      let mul = 0.5 * trainingMastery(p, id).multiplier * cmul * (bad('lazy') ? 0.7 : 1) * rnd(0.85, 1.2);
       const gained = [];
       for (const k in pr.gain) { if (typeof p[k] !== 'number') continue; const before = p[k]; const g = Math.max(pr.gain[k] > 0 && Math.random() < 0.6 ? 1 : 0, Math.round(pr.gain[k] * mul * (p[k] > 60 ? 0.5 : 1))); if (g) { p[k] = clamp(p[k] + g); const actual = p[k] - before; if (actual) gained.push(`${STAT_NAME[k]} +${actual}`); } }
       if (pr.will) { const before = p.will; p.will = clamp(p.will + Math.round(pr.will * mul)); if (p.will > before) gained.push(`의지 +${p.will - before}`); }

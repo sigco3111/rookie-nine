@@ -263,3 +263,6 @@
 
 ## 23:53 Nov 17
 - Player creation now previews selected HOF mentor's exact existing all-stat/will/coach bonus and inherited first trait, updates on position change, explicitly no-trait for cross-position or empty-trait mentors. Shared inheritanceInfo used by preview and actual entry; no bonus formula changes. Dropdown labels mentor position as well as overall. Controlled HOF85 batter -> same-position +6/avg preview -> pitcher cross-position no-trait warning -> batter create exact meet48/will35/coach36/avg ->reload no repeat passed. Portrait inspected, synthetic predecessor not natural3year/device QA. No HOF record mutation, stat-price/batting rules unchanged.
+
+## 00:14 Nov 18
+- Added read-only training mastery screen under detailed stats, per-position counts/current level/shared actual multiplier/progress to7 or16 and max-level state. Explains next-training application, successful execution counts only, condition/traits/random gains and refresh recovery exception. Actual training reads same exported mastery multiplier, no formula/threshold change. Both-position practice boundary/no-mutation tests and actual basic6->7 unlock Lv2/1.3x UI passed; injury/ban do not increment. Portrait390x844 inspected (scrolling list + fixed explanation/back). Injected counters/RNG, not natural3year/device QA. Batting/ability rewards unchanged.
