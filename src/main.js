@@ -26,7 +26,7 @@ function titleScreen() {
     <button class="btn big alt" id="new">새 선수 만들기</button>
     <button class="btn gray" id="hof">명예의 전당 (${h.length})</button></div>`));
   el.querySelector('#new').onclick = createScreen;
-  if (sv && !sv.done) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingEvent) { clear(); showHome(P.pos, P); eventChoiceModal(P.pendingEvent); } else if (P.pendingEventResult) { clear(); showHome(P.pos, P); eventResultModal(P.pendingEventResult); } else homeScreen(); };
+  if (sv && !sv.done) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingEvent) { clear(); showHome(P.pos, P); eventChoiceModal(P.pendingEvent); } else if (P.pendingEventResult) { clear(); showHome(P.pos, P); eventResultModal(P.pendingEventResult); } else if (P.review) { clear(); showHome(P.pos, P); yearReviewModal(P.review.msgs || []); } else homeScreen(); };
   el.querySelector('#hof').onclick = hofScreen;
 }
 
@@ -196,14 +196,19 @@ function finishWeek(msgs, previousTraits) {
 
 function afterWeekEvent(msgs) {
   if (P.done) { G.save(P); return homeScreen(); }
-  if (P.review) { const rv = P.review; P.review = null; const NM = { ...STAT_NAME, will: '의지', tough: '근성' };
-    const chips = rv.diffs.filter(([, d]) => d).map(([k, d]) => `<span class="chip ${d > 0 ? 'up' : 'dn'}">${NM[k] || k} ${d > 0 ? '+' : ''}${d}</span>`).join('') || '<span class="chip" style="background:#556">비교 데이터 없음</span>';
-    const rmod = show($(`<div class="modal"><div class="panel"><h2>${rv.year}학년 결산</h2><p>종합 ${rv.ovr}${rv.prevOvr != null ? ` (작년 ${rv.prevOvr}, ${rv.ovr - rv.prevOvr >= 0 ? '+' : ''}${rv.ovr - rv.prevOvr})` : ''}</p><div class="chips">${chips}</div><button class="btn" id="okrv" style="margin-top:12px;width:100%">다음 학년으로</button></div></div>`));
-    rmod.querySelector('#okrv').onclick = () => { rmod.remove(); sfx.ui(); afterWeekEvent(msgs); }; return; }
+  if (P.review) return yearReviewModal(msgs);
   const ev = G.randomEvent(P);
   if (!ev) return homeScreen(msgs);
   P.pendingEvent = { ev, msgs }; G.save(P);
   eventChoiceModal(P.pendingEvent);
+}
+
+function yearReviewModal(msgs) {
+  const rv = P.review; rv.msgs = msgs; G.save(P);
+  const NM = { ...STAT_NAME, will: '의지', tough: '근성' };
+  const chips = rv.diffs.filter(([,d]) => d).map(([k,d]) => `<span class="chip ${d>0?'up':'dn'}">${NM[k]||k} ${d>0?'+':''}${d}</span>`).join('') || '<span class="chip">능력 수치 변화 없음</span>';
+  const rmod = show($(`<div class="modal"><div class="panel"><h2>${rv.year}학년 결산</h2><p>종합 ${rv.ovr}${rv.prevOvr!=null?` (${rv.year===1?'입학':'전 학년'} ${rv.prevOvr}, ${rv.ovr-rv.prevOvr>=0?'+':''}${rv.ovr-rv.prevOvr})`:''}</p><div class="chips">${chips}</div><p style="font-size:13px;color:#b5c6dd">${rv.year===1?'입학 때':'지난 학년 결산 때'}와 비교한 성장입니다.<br>확인 전 재접속해도 이 결산을 이어서 봅니다.</p><button class="btn" id="okrv" style="margin-top:12px;width:100%">다음 학년으로</button></div></div>`));
+  rmod.querySelector('#okrv').onclick = () => { P.review = null; G.save(P); rmod.remove(); sfx.ui(); afterWeekEvent(msgs); };
 }
 
 function eventChoiceModal(q) {
