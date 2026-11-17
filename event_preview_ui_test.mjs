@@ -1,0 +1,23 @@
+import puppeteer from 'puppeteer-core';
+import fs from 'fs';
+import {EVENTS} from './src/data.js';
+import {spawn} from 'child_process';
+const server=process.env.TEST_URL?null:spawn(process.execPath,['node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','8123'],{stdio:'ignore'});
+const fontB64 = fs.readFileSync('node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-700-normal.woff2').toString('base64');
+const css = `@font-face{font-family:TKR;src:url(data:font/woff2;base64,${fontB64}) format('woff2');font-weight:100 900}*{font-family:TKR,sans-serif!important}`;
+const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const p = await b.newPage(); await p.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
+const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.text().includes('UNI')) errs.push(m.text()); });
+await p.evaluateOnNewDocument((c) => { document.addEventListener('DOMContentLoaded', () => { const st = document.createElement('style'); st.textContent = c; document.head.appendChild(st); }); }, css);
+await p.goto(process.env.TEST_URL||'http://localhost:8123/'); await new Promise(r => setTimeout(r, 1500));
+await p.evaluate(() => document.querySelector('#new').click()); await new Promise(r => setTimeout(r, 300));
+await p.evaluate(() => document.querySelector('#go').click()); await new Promise(r => setTimeout(r, 800));
+await p.evaluate(()=>{const p=window.__game.P;p.week=36;p.cnt.ev_bench_resolve=1;p.eventChoices={bench_resolve:[1]};window.__game.skipWeeks(0);Math.random=()=>0;[...document.querySelectorAll('.cmd')].find(b=>b.innerText.includes('휴식')).click();});
+await p.waitForSelector('[data-c]');
+const text=await p.$eval('.modal',e=>e.innerText);if(!text.includes('예상 변화')||!text.includes('성공: 수비 +2 · 감독 +3 · 컨디션 -6')||!text.includes('작은 역할이 남긴 신뢰')||!text.includes('그때의 선택: 팀 훈련을 돕고 감독에게 조언을 구한다'))throw Error(text);
+await p.screenshot({path:`/downloads/rookie9_event_preview${process.env.TEST_URL?'_live':''}.png`});
+await p.click('[data-c="1"]');await p.waitForSelector('#okev');
+console.log(await p.$eval('.modal',e=>e.innerText));
+await p.reload();await p.waitForSelector('#cont');await p.click('#cont');
+const saved=await p.evaluate(()=>window.__game.P);if(saved.cnt.ev_bench_support_followup!==1||saved.eventHistory[0].title!=='작은 역할이 남긴 신뢰')throw Error('save');if(errs.length)throw Error(errs.join('|'));
+if(!saved.pendingEventResult.result.origin||!saved.eventHistory[0].origin)throw Error('missing origin');await p.click('#okev');await p.click('#stat');await p.click('#evhistory');await p.screenshot({path:`/downloads/rookie9_event_preview_history${process.env.TEST_URL?'_live':''}.png`});if(!await p.$eval('.modal',e=>e.innerText.includes('그때의 선택: 팀 훈련을 돕고 감독에게 조언을 구한다')))throw Error('missing history origin');await p.evaluate(ev=>{const p=window.__game.P;p.pendingEvent={ev,msgs:[]};window.__game.G.save(p)},EVENTS.find(e=>e.id==='rival_duel'));await p.reload();await p.waitForSelector('#cont');await p.click('#cont');await p.waitForSelector('[data-c]');if(!await p.$eval('.modal',e=>e.innerText.includes('실패: 의지 -5 · 컨디션 -15')))throw Error('missing failure preview');await p.screenshot({path:`/downloads/rookie9_event_preview_risk${process.env.TEST_URL?'_live':''}.png`});console.log('choice preview plus risky success/failure; origin/result/history retained');await b.close();if(server){const done=new Promise(r=>server.once('exit',r));server.kill('SIGTERM');await done;}

@@ -205,6 +205,14 @@ export function randomEvent(p) {
   const pool = EVENTS.filter((e) => eventEligible(p, e));
   return pool[Math.floor(Math.random() * pool.length)];
 }
+export function eventEffectPreview(p, choice) {
+  const preview = fx => {
+    const q={...p,ev:{...p.ev}};applyFx(q,fx);
+    return Object.fromEntries(Object.keys(fx).filter(k=>k!=='msg').map(k=>[k,['coach','captain','team','scout'].includes(k)?q.ev[k]-p.ev[k]:q[k]-p[k]]).filter(([,v])=>Number.isFinite(v)&&v));
+  };
+  return {success:preview(choice.ok),failure:choice.chance<100?preview(choice.ng||choice.ok):null};
+}
+
 export function eventOrigin(p, ev) {
   if (!ev.req || !p.cnt['ev_' + ev.req]) return null;
   const source = EVENTS.find(e => e.id === ev.req);

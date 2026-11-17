@@ -239,9 +239,15 @@ function yearReviewModal(msgs) {
   rmod.querySelector('#okrv').onclick = () => { P.review = null; G.save(P); rmod.remove(); sfx.ui(); afterWeekEvent(msgs); };
 }
 
+function eventPreviewHtml(choice) {
+  const p=G.eventEffectPreview(P,choice),names={...STAT_NAME,...evName,cond:'컨디션',will:'의지',tough:'근성',study:'학업',money:'용돈'};
+  const row=(label,fx)=>`<span style="display:block;font-size:11px;line-height:1.5;color:#cbd9ea;margin-top:5px">${label}: ${Object.entries(fx).map(([k,v])=>`${names[k]||k} ${v>0?'+':''}${v}`).join(' · ')||'수치 변화 없음'}</span>`;
+  return row('성공',p.success)+(p.failure?row('실패',p.failure):'');
+}
+
 function eventChoiceModal(q) {
   const { ev, msgs } = q;
-  const mod = show($(`<div class="modal"><div class="panel"><h2>${ev.title}</h2>${eventOriginHtml(G.eventOrigin(P, ev))}<p>${ev.text}</p><div style="display:grid;gap:8px">${ev.choices.map((c, i) => `<button class="btn alt" data-c="${i}">${c.label} <small>(성공률 ${c.chance}%)</small></button>`).join('')}</div></div></div>`));
+  const mod = show($(`<div class="modal"><div class="panel"><h2>${ev.title}</h2>${eventOriginHtml(G.eventOrigin(P, ev))}<p>${ev.text}</p><div style="display:grid;gap:8px">${ev.choices.map((c, i) => `<button class="btn alt" data-c="${i}">${c.label} <small>(성공률 ${c.chance}%)</small>${eventPreviewHtml(c)}</button>`).join('')}</div><small style="display:block;margin-top:10px;color:#b5c6dd;font-size:11px">현재 수치와 상한·하한을 반영한 예상 변화입니다.</small></div></div>`));
   mod.querySelectorAll('[data-c]').forEach((b) => b.onclick = () => { const r = G.resolveEvent(P, ev, +b.dataset.c); mod.remove(); sfx.ui();
     P.pendingEvent = null;
     P.pendingEventResult = { title: ev.title, choice: ev.choices[+b.dataset.c].label, result: r, msgs };
