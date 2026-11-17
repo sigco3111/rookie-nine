@@ -218,3 +218,6 @@
 
 ## 18:43 Nov 17
 - Direct pitching controls now reflect real input state: disabled 준비 중 before throw-wait and during windup/pitch, enabled 던지기 only when callback armed, picker/hint hidden during hit flight, restored for next throw. Prevents misleading live-looking button before actual readiness and pitch-type change while ball already in motion. Flight chip says 타구 비행. Actual throw->locked->flight hidden->allfielders reset->next enabled test passed; portrait flight/ready pixels inspected. Fixed RNG/time/gear/year values, not device QA. No pitch probabilities, stat effects or batting changes.
+
+## 19:04 Nov 17
+- Unchosen event now saves exact scenario and weekly messages before displaying choices; Continue resumes same choice without rerolling gate/scenario or applying rewards. Selecting clears pending choice and atomically saves existing pending result. Both positions choice screen->reload->same text/state/no early counter->choose->result reload->confirm->home reload passed, plus capped-zero case. Portrait inspected. Synthetic week/evaluation/RNG setup, not full lifecycle/device QA. Choice RNG success remains evaluated once at selection as before; no persistent random-seed guarantee for outcome manipulation. Does not yet recover unshown annual-review/trait/match prompts.

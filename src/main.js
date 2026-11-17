@@ -26,7 +26,7 @@ function titleScreen() {
     <button class="btn big alt" id="new">새 선수 만들기</button>
     <button class="btn gray" id="hof">명예의 전당 (${h.length})</button></div>`));
   el.querySelector('#new').onclick = createScreen;
-  if (sv && !sv.done) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingEventResult) { clear(); showHome(P.pos, P); eventResultModal(P.pendingEventResult); } else homeScreen(); };
+  if (sv && !sv.done) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingEvent) { clear(); showHome(P.pos, P); eventChoiceModal(P.pendingEvent); } else if (P.pendingEventResult) { clear(); showHome(P.pos, P); eventResultModal(P.pendingEventResult); } else homeScreen(); };
   el.querySelector('#hof').onclick = hofScreen;
 }
 
@@ -202,8 +202,15 @@ function afterWeekEvent(msgs) {
     rmod.querySelector('#okrv').onclick = () => { rmod.remove(); sfx.ui(); afterWeekEvent(msgs); }; return; }
   const ev = G.randomEvent(P);
   if (!ev) return homeScreen(msgs);
+  P.pendingEvent = { ev, msgs }; G.save(P);
+  eventChoiceModal(P.pendingEvent);
+}
+
+function eventChoiceModal(q) {
+  const { ev, msgs } = q;
   const mod = show($(`<div class="modal"><div class="panel"><h2>${ev.title}</h2><p>${ev.text}</p><div style="display:grid;gap:8px">${ev.choices.map((c, i) => `<button class="btn alt" data-c="${i}">${c.label} <small>(성공률 ${c.chance}%)</small></button>`).join('')}</div></div></div>`));
   mod.querySelectorAll('[data-c]').forEach((b) => b.onclick = () => { const r = G.resolveEvent(P, ev, +b.dataset.c); mod.remove(); sfx.ui();
+    P.pendingEvent = null;
     P.pendingEventResult = { title: ev.title, choice: ev.choices[+b.dataset.c].label, result: r, msgs };
     G.save(P); eventResultModal(P.pendingEventResult); });
 }
