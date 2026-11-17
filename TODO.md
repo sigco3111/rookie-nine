@@ -338,3 +338,6 @@
 
 ## 08:31 Nov 18
 - Cosmetic defensive attention: all7 fielders turn head horizontally toward projected landing point after reaction delay, max0.6rad local yaw; resetDefense/home clears old head pose too. Two pursuit paths/speeds/arrival/outcomes unchanged, no catch/throw added. Angle wrap/bounds/near-target pure tests and both-position stale-head home reset passed; actual pitching fly->two moving/head attention bound->all7 reset passed. Close render inspected; test-only camera/time/RNG, not gameplay camera change or natural/device QA. Batting/rewards unchanged.
+
+## 08:51 Nov 18
+- Recent-match history toggles latest8/all saved20 with explicit retention limit/no reconstruction. Existing dates/order/growth deltas unchanged. Both positions24 simulated games->saved20cap/reload/latest8/all20/date endpoints/scroll toggle/back/read-only passed,390x844 pitching portrait inspected. Initial test used wrong helper name autoMatch, corrected to existing simulateMatch and passed. Forced weeks/RNG and simulated results, not full direct/natural3year/device QA. Match outcomes/rewards/batting unchanged.
