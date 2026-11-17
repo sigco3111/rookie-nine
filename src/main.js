@@ -200,10 +200,21 @@ async function startMatch(m) {
   const hud = $(`<div class="screen" style="padding:6px 10px"><div class="scoreb"><span id="t" style="font-size:13px"></span><span id="sc">0 : 0</span></div><div class="top"><div class="dots" id="cnt"></div><div class="chip" id="pi"></div></div></div>`);
   show(hud); const bn = $(`<div></div>`); ui.appendChild(bn);
   const sw = $(`<button class="swing">SWING</button>`); show(sw);
+  const timing = $(`<div id="timingguide" style="position:absolute;left:14px;bottom:145px;width:100px;text-align:center;pointer-events:none;display:none"><svg viewBox="0 0 100 100" style="width:86px;height:86px;overflow:visible"><circle cx="50" cy="50" r="25" fill="#102039cc" stroke="#ffffff66" stroke-width="3"/><circle id="timingring" cx="50" cy="50" r="43" fill="none" stroke="#ffd23f" stroke-width="5"/><text id="timingword" x="50" y="55" text-anchor="middle" fill="white" font-size="15" font-weight="900">준비</text></svg><div style="color:white;font-size:12px;font-weight:900;text-shadow:0 2px 2px #000">원이 겹칠 때 SWING</div></div>`); show(timing);
   show($(`<div class="hint">화면을 드래그해 노란 링을 공 위치에 맞추고, 공이 홈플레이트에 닿을 때 SWING!<br><small>타격 보조: 타이밍·조준이 조금 빗나가도 맞힐 수 있어요.</small></div>`));
   let swFn = null;
   const act = (e) => { e.preventDefault(); if (swFn) swFn(); }; sw.addEventListener('pointerdown', act);
   const api = {
+    setTiming: (progress, target, ready) => {
+      if (progress == null) { timing.style.display = 'none'; sw.style.boxShadow = ''; sw.textContent = 'SWING'; return; }
+      timing.style.display = 'block';
+      const near = Math.abs(progress - target) <= ready;
+      timing.querySelector('#timingring').setAttribute('r', String(Math.max(12, 25 + (target - progress) * 30)));
+      timing.querySelector('#timingring').setAttribute('stroke', near ? '#66f593' : '#ffd23f');
+      timing.querySelector('#timingword').textContent = near ? '지금!' : progress > target ? '늦음' : '준비';
+      sw.style.boxShadow = near ? '0 0 0 4px #66f593,0 0 24px #66f593aa' : '';
+      sw.textContent = near ? '지금!' : 'SWING';
+    },
     setTitle: (t) => hud.querySelector('#t').textContent = t,
     setScore: (i, a, b) => hud.querySelector('#sc').textContent = `${i}회  ${a} : ${b}`,
     setCount: (c) => hud.querySelector('#cnt').innerHTML = `B ${[0, 1, 2, 3].map((i) => `<span class="dot b ${i < c.b ? 'on' : ''}"></span>`).join('')} S ${[0, 1, 2].map((i) => `<span class="dot s ${i < c.s ? 'on' : ''}"></span>`).join('')}`,

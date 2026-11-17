@@ -124,12 +124,15 @@ export async function playMatch(p, m, hud) {
     hud.setPitch(`${pt_.n} ${Math.round(105 + (1.5 - T) * 60 * (pt_.Tm === 1 ? 1.15 : 0.9))}km/h`);
     // 와인드업
     for (let t = 0; t < 0.7; t += 0.03) { setPitcherPose(o.pitcher, t / 0.7 * 0.65); await wait(30); }
+    hud.setTiming?.(0, 1 - 0.075 / T, 0);
     o.ball.visible = true;
     const st = { t: 0, swingT: null, swingAnim: 0 }; pitching = st; sbOp(1);
     let done = false;
     const f = (dt) => {
       if (done) return;
       st.t += dt;
+      const guide = battingWindow(p, count.s, scoringChance);
+      hud.setTiming?.(st.swingT == null ? st.t / T : null, 1 - 0.075 / T, guide.timing * 0.65 / T);
       const sN = st.t / T;
       setPitcherPose(o.pitcher, Math.min(1, 0.65 + st.t * 2));
       const ss = Math.min(1.12, sN);
@@ -143,6 +146,7 @@ export async function playMatch(p, m, hud) {
       if (st.t >= T + 0.2) { done = true; delTicker(f); finalize(); }
     };
     const finalize = () => {
+      hud.setTiming?.(null);
       pitching = null; sbOp(0.25); o.ball.visible = false; setBatterPose(o.batter, st.swingT != null ? 1 : 0);
       if (st.swingT == null) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
       const FRC = window.__force; const err = FRC ? 0 : st.swingT + 0.075 - T; // 0.075s = 스윙 시작~배트 컨택트 프레임(모캡 85번) 지연
