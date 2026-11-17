@@ -340,5 +340,5 @@ function finish(p) {
   else { rank = 0; text = '지명받지 못했다. 사회인 야구에서 도전을 이어간다.'; }
   team = rank ? PRO[Math.floor(Math.random() * PRO.length)] : '-';
   p.result = { rank, team, text, score: Math.round(score), ovr: ovr(p) };
-  pushHof({ name: p.name, build: p.build, ovr: ovr(p), rank, team, pos: p.pos, stats: keysOf(p).map((k) => p[k]), traits: p.traits.filter((t) => TRAITS[t].good), hr: p.hr, wins: p.wins, career: p.pos === 'pit' ? { ip:p.ab, so:p.so||0, hitsAllowed:p.hits, wins:p.wins, losses:p.losses } : { ab:p.ab, hits:p.hits, hr:p.hr, rbi:p.rbi, wins:p.wins, losses:p.losses }, date: Date.now() });
+  pushHof({ yearReviews: structuredClone([...(p.finalYearReview?[p.finalYearReview]:[]),...(p.yearHistory||[])]), name: p.name, build: p.build, ovr: ovr(p), rank, team, pos: p.pos, stats: keysOf(p).map((k) => p[k]), traits: p.traits.filter((t) => TRAITS[t].good), hr: p.hr, wins: p.wins, career: p.pos === 'pit' ? { ip:p.ab, so:p.so||0, hitsAllowed:p.hits, wins:p.wins, losses:p.losses } : { ab:p.ab, hits:p.hits, hr:p.hr, rbi:p.rbi, wins:p.wins, losses:p.losses }, date: Date.now() });
 }

@@ -326,3 +326,6 @@
 
 ## 07:07 Nov 18
 - Final-year growth now captured at graduation separately from existing year1/2 archives, viewable from ending via school-year history with return-to-ending. Ending reload preserves year3 snapshot; old endings without snapshot not reconstructed. No extra HOF insertion on viewing. Both-position graduation capture/JSON/archive independence and actual two boundary reviews->final rest->ending/reload->read-only history/back passed; portrait inspected. Week/stats/RNG injected not natural3year/device QA. Draft score/rank/rewards/batting unchanged; final archive lives in career save, not HOF record.
+
+## 07:29 Nov 18
+- New graduates copy independent year1/2/3 reviews into HOF; per-entry growth-history button works after new career and fresh title reload with no active player. Old HOF explicitly says not stored, no reconstruction. Archive uses shared read-only card view and returns HOF. Both-position detached career/JSON checks and actual two reviews->graduate->new career->fresh reload->HOF archive/back passed, final-year UI regression passed. First test compared new career to old one, fixed snapshot placement before archive read; passed. Portrait inspected. Week/stat/RNG injection, not natural3year/device QA. No extra HOF entries on read, inheritance/draft/rewards/batting unchanged.
