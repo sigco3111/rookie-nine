@@ -115,6 +115,7 @@ export async function playMatch(p, m, hud) {
 
   // 한 번의 투구
   const pitchOnce = (count, scoringChance = false) => new Promise(async (res) => {
+    setBatterPose(o.batter, 0);
     o.zone.visible = true; o.ret.visible = true;
     const pt_ = PITCHES[Math.floor(Math.random() * (strength > 50 ? 4 : strength > 42 ? 3 : 2))];
     const T = Math.max(0.78, Math.min(1.5, (1.5 - (strength - 35) * 0.012) * pt_.Tm));
@@ -226,6 +227,7 @@ export async function playMatch(p, m, hud) {
         resetCam();
         return { res: res_, label };
       }
+      setBatterPose(o.batter, 0);
       hud.setCount(c);
       if (c.b >= 4) return { res: 'walk', label: '볼넷' };
       if (c.s >= 3) return { res: 'k', label: '삼진 아웃' };

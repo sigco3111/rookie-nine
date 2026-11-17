@@ -152,3 +152,6 @@
 
 ## 11:19 Nov 17
 - User11:16 asked timing guide. Added separate shrinking ring at lower left away from ball/zone, target circle + green NOW text, synchronized swing-button green glow/NOW label. Centers on actual input target T-.075 (swing lead), green range65% of current fair timing window; hides immediately after swing/finalization. No hit-probability change. Actual direct game callback paused at t1.35/T1.4208 to inspect ready UI, pointer swing hides guide. Portrait pixels inspected; fixed software test, not actual human success study or device QA. Pitcher controls do not use guide. Motion issue remains independent.
+
+## 11:28 Nov 17
+- User11:24 wants reset after swing then pass further swing refinement for now. Added stance reset after non-hit pitch result (whiff/foul/looking) and defensive reset at next pitch entry; fair-hit path retains existing post-flight reset. Actual direct whiff -> following pitch test shows stance mocap16/phase0 and timing guide準備, portrait pixels checked. Timing difficulty/guide unchanged. Further precision swing/contact work paused per user; other project work continues. Fixed-input software test, not real-device QA.
