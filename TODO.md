@@ -167,3 +167,6 @@
 
 ## 12:51 Nov 17
 - Added 2 once-per-run selection-status scenarios: regular player's preparation vs team gratitude; candidate after week16 choosing fundamentals vs team trust. Eligibility uses existing isRegular, supports batter/pitcher; existing24% event gate unchanged, neither is guaranteed immediately after status change. Both positions/status/min-week/once/JSON/year-threshold tests passed plus prior win/loss scenarios. Actual weekly button -> regular event -> choice -> reload saved history passed with synthetic state/fixed RNG. Portrait inspected. No hitting/guide/motion changes; full balance deferred.
+
+## 13:12 Nov 17
+- Direct pitching now explicitly colors player pitcher +8 fielders with current-year team shirts and opponent batter with selected opponent palette, instead of inheriting batting/home scene colors. Also corrected HUD's always-starting-pitcher label to 선발/구원 from existing selection rule. Local actual creation->weekly command->direct pitching tests for years1/2/3 and regular/candidate passed, inspecting shirt materials; portrait pixels show orange third-year player vs teal opponent and 구원 label. Fielders behind pitching camera verified by material values, not claimed legible in normal view. No probabilities/motion/controls changed.
