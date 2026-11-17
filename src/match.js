@@ -51,7 +51,10 @@ function applyLook(a, p) {
   u.star.visible = n >= 1; u.star.scale.setScalar(0.8 + Math.min(n, 4) * 0.35);
   if (!u.band) { u.band = new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.025, 6, 12), new THREE.MeshBasicMaterial({ color: 0xff5a5a })); u.band.rotation.x = Math.PI / 2; u.band.position.y = -0.3; u.armR.add(u.band); }
   u.band.visible = p.will >= 50;
-  const gr = p.gear || {};
+  applyEquipment(a, p.gear);
+}
+export function applyEquipment(a, gr = {}) {
+  const u = a.userData;
   if (u.bat) u.bat.material.color.set(gr.bat ? 0xf2c94c : 0xdeb887);
   if (u.glove) { u.glove.material.color.set(gr.glove ? 0xf2c94c : 0x7b4a1e); u.glove.scale.set(gr.glove ? 1.2 : 1, gr.glove ? 1.3 : 1.1, 0.55); }
   for (const s of u.shoes) s.material.color.set(gr.shoes ? 0xe53935 : 0x222222);
@@ -92,7 +95,7 @@ export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배
 }
 
 export async function playMatch(p, m, hud) {
-  const o = ensureG(); { const P = window.__game && window.__game.P; if (P) { const y = cal(P.week).year; setUniform(o.batter, y); const gr = P.gear || {}; { const u = o.batter.userData; if (u.bat) u.bat.material.color.set(gr.bat ? 0xf2c94c : 0xdeb887); for (const s of u.shoes) s.material.color.set(gr.shoes ? 0xe53935 : 0x222222); } if (o.runner) { setUniform(o.runner, y); for (const s of o.runner.userData.shoes) s.material.color.set(gr.shoes ? 0xe53935 : 0x222222); } } } o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.5, 0, 0.2); o.batter.rotation.y = Math.PI / 2 - 1.4; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
+  const o = ensureG(); const y = cal(p.week).year; setUniform(o.batter, y); applyEquipment(o.batter, p.gear); if (o.runner) { setUniform(o.runner, y); applyEquipment(o.runner, p.gear); } applyEquipment(o.pitcher); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.5, 0, 0.2); o.batter.rotation.y = Math.PI / 2 - 1.4; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
   const opp = TEAMS[Math.floor(Math.random() * TEAMS.length)]; { const oc = OPP_COLORS[TEAMS.indexOf(opp) % OPP_COLORS.length]; setShirt(o.pitcher, oc); o.fielders.forEach((f) => setShirt(f, oc)); }
   const regular = isRegular(p);
   const strength = oppStrength(p);
