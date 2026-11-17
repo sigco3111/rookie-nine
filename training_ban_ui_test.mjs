@@ -1,0 +1,18 @@
+import puppeteer from 'puppeteer-core';
+import fs from 'fs';
+const fontB64 = fs.readFileSync('node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-700-normal.woff2').toString('base64');
+const css = `@font-face{font-family:TKR;src:url(data:font/woff2;base64,${fontB64}) format('woff2');font-weight:100 900}*{font-family:TKR,sans-serif!important}`;
+const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const p = await b.newPage(); await p.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
+const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.text().includes('UNI')) errs.push(m.text()); });
+await p.evaluateOnNewDocument((c) => { document.addEventListener('DOMContentLoaded', () => { const st = document.createElement('style'); st.textContent = c; document.head.appendChild(st); }); }, css);
+await p.goto('http://localhost:8123/'); await new Promise(r => setTimeout(r, 1500));
+await p.evaluate(() => document.querySelector('#new').click()); await new Promise(r => setTimeout(r, 300));
+await p.evaluate(() => document.querySelector('#go').click()); await new Promise(r => setTimeout(r, 800));
+await p.evaluate(()=>{window.__game.P.banWeeks=3;Math.random=()=>.99;window.__game.skipWeeks(0);});
+const blocked=await p.$$eval('.cmd:disabled',bs=>bs.length);if(blocked!==9)throw Error('blocked '+blocked);
+const week=await p.evaluate(()=>window.__game.P.week);await p.evaluate(()=>document.querySelector('.cmd').click());if(await p.evaluate(()=>window.__game.P.week)!==week)throw Error('blocked consumed week');
+await p.screenshot({path:'/downloads/rookie9_training_ban.png'});
+await p.evaluate(()=>[...document.querySelectorAll('.cmd')].find(b=>b.innerText.includes('공부')).click());await p.waitForFunction(()=>window.__game.P.week===1);if(await p.evaluate(()=>window.__game.P.banWeeks)!==2)throw Error('ban countdown');
+await p.reload();await p.waitForSelector('#cont');await p.click('#cont');if(await p.$$eval('.cmd:disabled',bs=>bs.length)!==9)throw Error('reload ban');
+await p.evaluate(()=>{window.__game.P.banWeeks=0;window.__game.skipWeeks(0);});if(await p.$('.cmd:disabled'))throw Error('not unlocked');console.log('blocked clicks no week spent; study/countdown/reload/unlock passed');if(errs.length)throw Error(errs.join('|'));await b.close();

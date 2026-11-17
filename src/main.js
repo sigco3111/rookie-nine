@@ -92,8 +92,9 @@ function homeScreen(msgs) {
   const inj = !!P.injury;
   for (const pr of practicesFor(P)) {
     const lv = G.level(P, pr.id);
-    const b = $(`<button class="cmd ${inj ? 'dis' : ''}"><span class="ic">${ic(pr.id)}</span>${pr.name}<small>${pr.desc}</small>${riskBadge(pr)}${P.cnt[pr.id] ? `<span class="lv">Lv${lv}</span>` : ''}</button>`);
-    b.onclick = () => runWeek(pr.id); box.appendChild(b);
+    const blocked = P.banWeeks > 0 && pr.id !== 'refresh';
+    const b = $(`<button ${blocked ? 'disabled aria-disabled="true"' : ''} class="cmd ${inj || blocked ? 'dis' : ''}"><span class="ic">${ic(pr.id)}</span>${pr.name}<small>${blocked ? '연습 금지 중' : pr.desc}</small>${blocked ? '' : riskBadge(pr)}${P.cnt[pr.id] ? `<span class="lv">Lv${lv}</span>` : ''}</button>`);
+    b.onclick = () => { if (!blocked) runWeek(pr.id); }; box.appendChild(b);
   }
   for (const o of OTHER_CMDS) {
     const b = $(`<button class="cmd ${inj ? 'dis' : ''}" style="background:#2c4580"><span class="ic">${ic(o.id)}</span>${o.name}<small>${o.desc}</small></button>`);

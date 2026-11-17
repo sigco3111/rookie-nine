@@ -191,3 +191,6 @@
 
 ## 15:37 Nov 17
 - Added 학업과 다음 시험 from detailed stats: next actual exam date/weeks, current study vs shared execution threshold, shortfall, current practice ban and exact existing failure/post-exam costs. Shared examNeed used by endWeek so no duplicated drifting formula. Tests across both positions/years/before-after exam/graduation/pass-fail boundary passed; year2 pre-exam shortage portrait inspected. No test threshold/penalty/probability change. Does not promise future pass if events change study.
+
+## 15:58 Nov 17
+- Practice-ban UI now disables banned training commands with 연습 금지 중 label instead of allowing an effectless click to spend a week. Refresh/rest/study/alba/shop stay available as existing engine rules allow; ban duration/penalties unchanged. Actual blocked click consumes no week, study advances week and ban3->2, reload retains disabled state, expiry reenables commands tested. Portrait pixels inspected. Engine fallback for invalid callers unchanged; no hitting/guide/motion changes.
