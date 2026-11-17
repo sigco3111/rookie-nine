@@ -107,15 +107,16 @@ function homeScreen(msgs) {
   const inj = !!P.injury;
   for (const pr of practicesFor(P)) {
     const lv = G.level(P, pr.id);
-    const blocked = P.banWeeks > 0 && pr.id !== 'refresh';
-    const b = $(`<button ${blocked ? 'disabled aria-disabled="true"' : ''} class="cmd ${inj || blocked ? 'dis' : ''}"><span class="ic">${ic(pr.id)}</span>${pr.name}<small>${blocked ? '연습 금지 중' : pr.desc}</small>${blocked ? '' : riskBadge(pr)}${P.cnt[pr.id] ? `<span class="lv">Lv${lv}</span>` : ''}</button>`);
+    const blocked = inj || (P.banWeeks > 0 && pr.id !== 'refresh');
+    const b = $(`<button ${blocked ? 'disabled aria-disabled="true"' : ''} class="cmd ${inj || blocked ? 'dis' : ''}"><span class="ic">${ic(pr.id)}</span>${pr.name}<small>${inj ? '입원 중 · 치료 필요' : blocked ? '연습 금지 중' : pr.desc}</small>${blocked ? '' : riskBadge(pr)}${P.cnt[pr.id] ? `<span class="lv">Lv${lv}</span>` : ''}</button>`);
     b.onclick = () => { if (!blocked) runWeek(pr.id); }; box.appendChild(b);
   }
   for (const o of OTHER_CMDS) {
-    const b = $(`<button class="cmd ${inj ? 'dis' : ''}" style="background:#2c4580"><span class="ic">${ic(o.id)}</span>${o.name}<small>${o.desc}</small></button>`);
-    b.onclick = () => o.id === 'shop' ? shopModal() : runWeek(o.id); box.appendChild(b);
+    const blocked = inj && o.id !== 'shop';
+    const b = $(`<button ${blocked ? 'disabled aria-disabled="true"' : ''} class="cmd ${blocked ? 'dis' : ''}" style="background:#2c4580"><span class="ic">${ic(o.id)}</span>${o.name}<small>${blocked ? '입원 중 · 치료 필요' : o.desc}</small></button>`);
+    b.onclick = () => { if (!blocked) o.id === 'shop' ? shopModal() : runWeek(o.id); }; box.appendChild(b);
   }
-  if (inj) { const b = $(`<button class="cmd" style="grid-column:1/-1;background:#c92a2a"><span class="ic">${ic('hospital')}</span>입원 중: 한 주 쉬며 치료하기</button>`); b.onclick = () => runWeek('hospital'); box.prepend(b); }
+  if (inj) { const b = $(`<button class="cmd" style="grid-column:1/-1;background:#c92a2a;font-size:18px"><span class="ic">${ic('hospital')}</span>한 주 쉬며 치료하기<small style="font-size:12px;line-height:1.4">${P.injury.name} · 남은 ${P.injury.weeks}주 → ${P.injury.weeks-1}주<br>컨디션 +${Math.min(6,99-P.cond)} · 훈련/알바/공부는 쉬어갑니다</small></button>`); b.onclick = () => runWeek('hospital'); box.prepend(b); }
   el.querySelector('#stat').onclick = detailModal;
   el.querySelector('#menu').onclick = menuModal;
 }
@@ -213,7 +214,7 @@ function purchaseReportHtml() {
 }
 function shopModal() {
   const draw = (note) => {
-    const m = show($(`<div class="modal"><div class="panel"><h2> 쇼핑 (${ic('coin')} ${P.money})</h2>${note ? `<div class="log" style="color:#ffd23f">${note}</div>${purchaseReportHtml()}` : ''}<div style="display:grid;gap:6px">${itemsFor(P).map((i) => `<button class="btn alt" data-i="${i.id}" style="text-align:left;display:flex;justify-content:space-between"><span>${i.name}<br><small>${itemDescription(P, i)}</small></span><span>${i.price}</span></button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn gray" id="x">그만 사기</button><button class="btn" id="end">쇼핑 끝 (한 주 소비)</button></div></div></div>`));
+    const m = show($(`<div class="modal"><div class="panel"><h2> 쇼핑 (${ic('coin')} ${P.money})</h2>${note ? `<div class="log" style="color:#ffd23f">${note}</div>${purchaseReportHtml()}` : ''}<div style="display:grid;gap:6px">${itemsFor(P).map((i) => `<button class="btn alt" data-i="${i.id}" style="text-align:left;display:flex;justify-content:space-between"><span>${i.name}<br><small>${itemDescription(P, i)}</small></span><span>${i.price}</span></button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn gray" id="x">그만 사기</button><button class="btn" id="end">${P.injury ? '쇼핑 끝 · 한 주 치료' : '쇼핑 끝 (한 주 소비)'}</button></div></div></div>`));
     m.querySelectorAll('[data-i]').forEach((b) => b.onclick = () => { const r = G.buy(P, b.dataset.i); G.save(P); m.remove(); draw(r); });
     m.querySelector('#x').onclick = () => { m.remove(); G.save(P); homeScreen(); };
     m.querySelector('#end').onclick = () => { m.remove(); runWeek('shop'); };
