@@ -187,7 +187,7 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
     const logo = new THREE.Mesh(new THREE.SphereGeometry(0.035, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff })); logo.position.set(0, 0.68, 0.22); logo.scale.set(1, 1, 0.3); a.add(logo);
     u.hat = a; }
   const gold = { bat: false };
-  u.bat = new THREE.Group(); u.bat.material = { color: { set() {} } }; u.glove = null; const shoeMat = mt(0x222222); for (const n of ['FootL', 'FootR']) { const fa2 = anchor(B[n], wq(B[n]), 1); const sh = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.07, 0.25), shoeMat); sh.position.set(0, -0.03, 0.06); sh.castShadow = true; fa2.add(sh); } u.shoes = [{ material: shoeMat }, { material: shoeMat }];
+  u.bat = new THREE.Group(); u.bat.material = { color: { set() {} } }; u.glove = null; const shoes = []; const shoeMat = mt(0x222222); for (const n of ['FootL', 'FootR']) { const fa2 = anchor(B[n], wq(B[n]), 1); const sh = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 7), shoeMat); sh.scale.set(0.12, 0.12, 0.24); sh.position.set(0, 0.06, 0.10); sh.castShadow = true; fa2.add(sh); shoes.push(sh); } u.shoes = shoes;
   const mkBat = () => { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.05, 0.85, 10), mt(0xdeb887)); const a = anchor(armPlus.hand, wq(armPlus.hand), 1); b.scale.y = 1.25; b.position.set(0, 0.34 * 1.25, 0.02); a.add(b); a.userData.hand = armPlus.hand; b.castShadow = true; return b; };
   if (bat) { const b = mkBat(); u.bat = new THREE.Group(); u.bat.material = b.material; u.batMesh = b; u.batAnchor = b.parent; u.bat.rotation.set(-0.5, 0, 0); }
   if (glove) {

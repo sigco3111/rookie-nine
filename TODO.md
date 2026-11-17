@@ -194,3 +194,6 @@
 
 ## 15:58 Nov 17
 - Practice-ban UI now disables banned training commands with 연습 금지 중 label instead of allowing an effectless click to spend a week. Refresh/rest/study/alba/shop stay available as existing engine rules allow; ban duration/penalties unchanged. Actual blocked click consumes no week, study advances week and ban3->2, reload retains disabled state, expiry reenables commands tested. Portrait pixels inspected. Engine fallback for invalid callers unchanged; no hitting/guide/motion changes.
+
+## 16:19 Nov 17
+- Replaced undersized flat shoe attachment with rounded full-foot sized mesh, preserving foot anchors and color material; actual meshes now stored in shoes array. Runner now receives owned-shoe red color on match entry as batter already did. Local actual pitcher shop shoes->reload red footwear close render passed; actual direct hit->runner close render shows both red shoes, no JS/HTTP errors. Synthetic gear/forced homer/fixed dt and close cameras, not natural timing/device QA. Simple rounded footwear, not finished laces/sole detail; hand/swing timing untouched.
