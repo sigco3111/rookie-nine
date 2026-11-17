@@ -332,3 +332,6 @@
 
 ## 07:50 Nov 18
 - Choice history can toggle recent12/all saved30, exposing older already-stored decisions with explicit30 cap and no lost-record reconstruction. No storage limit/order/probability/reward changes. Both positions34 controlled resolutions of existing general events->save/reload->latest12/all30/newest-oldest dates/toggle while scrolled/back/state equality passed, before-after result regression passed. Portrait inspected. Forced event sequence and dates not natural eligible pacing/3year/device QA; no batting changes.
+
+## 08:09 Nov 18
+- Added final-year camp accept/decline followups from week108: shared stamina/recovery planning vs individual defense/shared preparation. Exact prior choice; accepted camp success/failure wording neutral, each once-only. Both positions/opposite choice/week107-108/JSON/once/effects and640 preview/origin regression passed. Actual rest->decline followup->result/reload/history passed; portrait inspected. Existing24% event gate unchanged but eligible story pool/tradeoffs expand, long-run balance deferred. Week/prereq/RNG controlled not natural3year/device QA; no batting changes.

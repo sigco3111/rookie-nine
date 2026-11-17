@@ -83,6 +83,12 @@ export const INJURIES = [
 
 // 이벤트. chance는 화면에 표시된다.
 export const EVENTS = [
+  { id: 'camp_join_followup', req: 'camp', reqChoice: ['camp', 0], title: '합숙에서 남긴 한 가지', text: '예전에 참가했던 합숙의 기록을 다시 펼쳤다. 끝까지 해냈든 중간에 쉬었든, 그 시간을 다음 준비에 어떻게 남길지 정해 보자.', min: 108, choices: [
+    { label: '짧은 체력 과제를 동료와 반복한다', chance: 100, ok: { stamina: 2, team: 3, cond: -6, msg: '힘들었던 훈련을 그대로 늘리지 않았다. 함께 이어갈 수 있는 분량을 정했다.' } },
+    { label: '회복일을 넣어 훈련표를 고친다', chance: 100, ok: { will: 3, coach: 2, cond: 8, msg: '지난 기록에서 무리했던 부분도 살폈다. 쉬는 날도 준비의 일부로 적었다.' } } ] },
+  { id: 'camp_skip_followup', req: 'camp', reqChoice: ['camp', 1], title: '남아서 쌓을 준비', text: '합숙을 사양했던 때의 메모를 찾았다. 같은 길을 가지 않았어도 지금 쌓을 준비는 있다. 남은 시간을 어떻게 쓸까?', min: 108, choices: [
+    { label: '수비 기초 과제를 정해 반복한다', chance: 100, ok: { field: 2, will: 2, cond: -5, msg: '남과 분량을 비교하기보다 오늘 확인할 동작을 정했다. 작은 과제를 끝냈다.' } },
+    { label: '동료와 준비 계획을 나누고 쉰다', chance: 100, ok: { team: 3, coach: 2, cond: 7, msg: '각자 해 온 준비를 나눠 들었다. 내 계획에서 보완할 점도 찾았다.' } } ] },
   { id: 'pitch_form_followup', pos: 'pit', req: 'p_form', reqChoice: ['p_form', 0], title: '고쳐 본 투구폼의 기록', text: '전에 폼을 고쳐 보기로 했던 때의 메모를 코치와 다시 편다. 당시의 성공이나 실패와 관계없이, 지금 확인할 준비를 골라 보자.', min: 76, choices: [
     { label: '릴리스 지점을 천천히 반복한다', chance: 100, ok: { ctrl: 2, coach: 3, cond: -6, msg: '빠르게 던지기보다 손을 놓는 지점을 살폈다. 작은 반복을 기록에 더했다.' } },
     { label: '회복하며 다음 불펜 과제를 정한다', chance: 100, ok: { will: 3, coach: 2, cond: 8, msg: '잘됐던 점과 어려웠던 점을 나눠 적었다. 다음에 확인할 한 가지를 남겼다.' } } ] },
