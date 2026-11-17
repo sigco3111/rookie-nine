@@ -82,6 +82,12 @@ export const INJURIES = [
 
 // 이벤트. chance는 화면에 표시된다.
 export const EVENTS = [
+  { id: 'bench_basics_followup', req: 'bench_resolve', reqChoice: ['bench_resolve', 0], title: '쌓아 둔 기본기의 쓰임', text: '벤치에서 기본기부터 쌓기로 했던 날이 떠오른다. 반복하던 동작을 동료가 알아봤다. "그 연습, 나도 같이 해도 돼?"', min: 36, choices: [
+    { label: '함께 수비 기본기를 맞춰 본다', chance: 100, ok: { field: 2, team: 3, cond: -6, msg: '눈에 띄지 않던 반복이 함께할 훈련이 됐다. 서로의 동작을 보며 배웠다.' } },
+    { label: '회복하며 훈련 계획을 다시 정리한다', chance: 100, ok: { cond: 9, will: 3, msg: '쌓아 온 시간을 돌아보고 다음 과제를 골랐다. 조급함 대신 이어갈 힘을 챙겼다.' } } ] },
+  { id: 'bench_support_followup', req: 'bench_resolve', reqChoice: ['bench_resolve', 1], title: '작은 역할이 남긴 신뢰', text: '예전에 팀 훈련을 돕던 모습을 기억한 감독이 준비를 함께 보자고 한다. 작은 역할에서 시작한 대화가 다음 과제로 이어진다.', min: 36, choices: [
+    { label: '감독과 수비 위치를 복습한다', chance: 100, ok: { field: 2, coach: 3, cond: -6, msg: '조언을 들으며 위치 선정의 이유를 익혔다. 신뢰가 배울 기회로 이어졌다.' } },
+    { label: '동료와 준비 순서를 나누고 함께 쉰다', chance: 100, ok: { team: 4, captain: 2, cond: 6, msg: '도움을 혼자 떠맡지 않고 나눴다. 함께 준비하고 쉴 수 있는 사이가 됐다.' } } ] },
   { id: 'prep_followup', req: 'regular_resolve', reqChoice: ['regular_resolve', 0], title: '준비 노트의 다음 장', text: '예전에 감독과 적어 둔 경기 준비 노트를 다시 폈다. 당시 정한 과제를 지금의 훈련에 어떻게 이어갈까?', min: 32, choices: [
     { label: '부족했던 수비 기본기를 반복한다', chance: 100, ok: { field: 2, coach: 3, cond: -7, msg: '노트의 과제를 반복 동작으로 옮겼다. 기본기가 조금 더 단단해졌다.' } },
     { label: '몸 상태를 살피고 준비량을 조절한다', chance: 100, ok: { cond: 9, will: 2, msg: '준비를 오래 이어가려면 쉴 때도 필요했다. 다음 훈련을 위한 여유를 뒀다.' } } ] },
