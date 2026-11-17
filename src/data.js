@@ -82,6 +82,12 @@ export const INJURIES = [
 
 // 이벤트. chance는 화면에 표시된다.
 export const EVENTS = [
+  { id: 'prep_followup', req: 'regular_resolve', reqChoice: ['regular_resolve', 0], title: '준비 노트의 다음 장', text: '예전에 감독과 적어 둔 경기 준비 노트를 다시 폈다. 당시 정한 과제를 지금의 훈련에 어떻게 이어갈까?', min: 32, choices: [
+    { label: '부족했던 수비 기본기를 반복한다', chance: 100, ok: { field: 2, coach: 3, cond: -7, msg: '노트의 과제를 반복 동작으로 옮겼다. 기본기가 조금 더 단단해졌다.' } },
+    { label: '몸 상태를 살피고 준비량을 조절한다', chance: 100, ok: { cond: 9, will: 2, msg: '준비를 오래 이어가려면 쉴 때도 필요했다. 다음 훈련을 위한 여유를 뒀다.' } } ] },
+  { id: 'thanks_followup', req: 'regular_resolve', reqChoice: ['regular_resolve', 1], title: '돌아온 동료의 응원', text: '기회를 얻었을 때 고마움을 전했던 동료가 먼저 말을 건넨다. "이번에는 내가 도울게. 같이 해보자."', min: 32, choices: [
+    { label: '서로 수비 동작을 봐준다', chance: 100, ok: { field: 2, team: 4, cond: -6, msg: '혼자서는 놓치던 동작을 서로 짚었다. 고맙다는 말이 함께하는 훈련으로 이어졌다.' } },
+    { label: '훈련 뒤 함께 쉬며 이야기를 나눈다', chance: 100, ok: { captain: 3, team: 3, cond: 7, msg: '각자의 고민을 나누며 쉬었다. 응원을 주고받을 동료가 있다는 게 든든했다.' } } ] },
   { id: 'regular_resolve', once: true, regular: true, title: '이제 내 자리', text: '출전 명단에 내 이름이 있다. 기회를 잡은 만큼 준비도 달라져야 한다. 오늘은 무엇을 먼저 할까?', min: 1, choices: [
     { label: '감독과 경기 준비를 점검한다', chance: 100, ok: { coach: 4, will: 4, cond: -6, msg: '경기에 나서는 책임을 실감했다. 준비할 과제가 분명해졌다.' } },
     { label: '함께 연습한 동료들에게 고맙다고 한다', chance: 100, ok: { team: 5, captain: 3, cond: 3, msg: '혼자 얻은 기회가 아니었다. 동료들의 응원이 힘이 됐다.' } } ] },
