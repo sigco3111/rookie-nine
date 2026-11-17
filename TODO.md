@@ -299,3 +299,6 @@
 
 ## 04:02 Nov 18
 - Selection status screen now shows all3 years' exact regular-player thresholds and current-year marker, explaining either overall OR trust condition and re-evaluation after promotion. Common selectionRequirements feeds real eligibility and table, unchanged34/42,46/54,56/64 rules. Both positions3year/trust boundary and read-only year2 UI tests passed, portrait inspected. Initial boundary test forgot pitcher can already qualify on overall; lowered test-only abilities to isolate trust then passed. Synthetic year/abilities not natural progression/device QA. No rewards or batting changes.
+
+## 04:22 Nov 18
+- Added2 one-time academic-choice followups from week60: prior exam_help study->shared/personal notes, training-first->short study plan/friend help. Exact prior choices, no guaranteed next event/automatic exam pass. Existing24% event gate unchanged; pool and modest study/trust/will/condition tradeoffs expand. Both positions prerequisites/opposite/week59-60/once/JSON/finite effects, origin regression and592 preview comparisons passed. Actual rest->training-first followup->choice/result-reload/history passed, portrait inspected. Week/prereq/RNG injection not natural pacing/3year/device QA. Exam threshold/ban duration/batting unchanged.

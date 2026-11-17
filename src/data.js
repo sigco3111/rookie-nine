@@ -82,6 +82,12 @@ export const INJURIES = [
 
 // 이벤트. chance는 화면에 표시된다.
 export const EVENTS = [
+  { id: 'exam_notes_followup', req: 'exam_help', reqChoice: ['exam_help', 0], title: '돌아온 공부 노트', text: '전에 친구에게 빌렸던 노트를 다시 펼쳤다. 도움받았던 내용을 내 방식으로 정리해 돌려줄 기회다.', min: 60, choices: [
+    { label: '핵심을 정리해 친구와 함께 본다', chance: 100, ok: { study: 5, team: 3, cond: -3, msg: '답을 외우기보다 내용을 설명해 봤다. 친구의 질문 덕에 놓친 부분도 찾았다.' } },
+    { label: '짧게 복습할 나만의 노트를 만든다', chance: 100, ok: { study: 3, will: 2, cond: -2, msg: '훈련 전후에 볼 작은 노트를 만들었다. 조금씩 이어갈 공부가 생겼다.' } } ] },
+  { id: 'exam_balance_followup', req: 'exam_help', reqChoice: ['exam_help', 1], title: '훈련과 공부 사이의 시간', text: '전에 시험보다 훈련을 먼저 택했던 일을 돌아본다. 오늘은 훈련을 이어가면서 공부할 시간도 찾아보자.', min: 60, choices: [
+    { label: '훈련 뒤 짧게 복습 시간을 잡는다', chance: 100, ok: { study: 4, will: 2, cond: -4, msg: '할 일을 나눠 적고 짧게 공부했다. 모든 걸 미루지 않고 조금씩 이어가기로 했다.' } },
+    { label: '친구에게 어려운 단원을 물어본다', chance: 100, ok: { study: 3, team: 3, cond: -2, msg: '모르는 부분을 먼저 골라 물었다. 혼자 오래 붙잡던 내용이 조금 풀렸다.' } } ] },
   { id: 'win_team_followup', req: 'after_win_review', reqChoice: ['after_win_review', 0], title: '함께 기억한 한 장면', text: '승리 뒤 동료들과 나눴던 장면을 다시 이야기한다. 누군가의 준비가 다른 누군가의 플레이를 도왔다는 걸 알게 됐다.', min: 52, choices: [
     { label: '동료와 수비 호흡을 맞춘다', chance: 100, ok: { field: 2, team: 3, cond: -6, msg: '기분 좋은 기억을 함께하는 훈련으로 옮겼다. 서로 어느 쪽을 맡을지 정했다.' } },
     { label: '팀원들의 준비를 칭찬하고 함께 쉰다', chance: 100, ok: { captain: 3, team: 3, cond: 6, msg: '기록에 남지 않은 준비도 기억했다. 다음에도 서로를 도울 힘을 채웠다.' } } ] },
