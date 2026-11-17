@@ -82,6 +82,13 @@ export function trainingRisk(p, pr, preview = true) {
 
 // 한 주 진행. 결과 메시지 배열 반환
 export function doCommand(p, id, arg) {
+  const before = { cond: p.cond, money: p.money, study: p.study, tough: p.tough, ...p.ev };
+  const out = executeCommand(p, id, arg);
+  const after = { cond: p.cond, money: p.money, study: p.study, tough: p.tough, ...p.ev };
+  p.commandReport = { fx: Object.fromEntries(Object.keys(before).map(k => [k, after[k] - before[k]]).filter(([,v]) => v)), ...cal(p.week) };
+  return out;
+}
+function executeCommand(p, id, arg) {
   ensureGrowthBaseline(p);
   const out = [];
   const bad = (t) => p.traits.includes(t);

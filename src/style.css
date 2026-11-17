@@ -61,3 +61,5 @@ table.mini{width:100%;border-collapse:collapse;font-size:13px}table.mini td{padd
 .homepanel{padding:6px 8px!important}
 
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.chip{padding:5px 10px;border-radius:999px;font-weight:900;font-size:14px;color:#fff}.chip.up{background:#2f9e44}.chip.dn{background:#d9363e}
+
+.command-report{margin-top:6px;padding-top:5px;border-top:1px solid #ffffff30}.command-report>small{font-size:10px;color:#bccce2}.command-report .chips{margin-top:4px;gap:4px}.command-report .chip{font-size:11px;padding:3px 7px}

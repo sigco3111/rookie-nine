@@ -66,6 +66,12 @@ function evHtml() {
   return `<div class="row" style="gap:6px">${Object.keys(evName).map((k) => `<div style="font-size:11px;text-align:center">${evName[k]}<div class="bar"><i style="width:${P.ev[k]}%;background:${P.ev[k] > 60 ? '#3bd16f' : P.ev[k] > 35 ? '#ffd23f' : '#e5484d'}"></i></div></div>`).join('')}</div>`;
 }
 
+function commandReportHtml() {
+  const names = { cond: '컨디션', money: '용돈', study: '학업', tough: '터프도', ...evName };
+  const fx = Object.entries(P.commandReport?.fx || {});
+  if (!fx.length) return '';
+  return `<div class="command-report"><small>명령 직후 변화 · 주말 회복/경기/이벤트 제외</small><div class="chips">${fx.map(([k,v]) => `<span class="chip ${v>0?'up':'dn'}">${names[k]} ${v>0?'+':''}${v}</span>`).join('')}</div></div>`;
+}
 function homeScreen(msgs) {
   const selectionNotice = G.selectionChange(P);
   clear(); showHome(typeof P !== 'undefined' && P ? P.pos : 'bat', typeof P !== 'undefined' ? P : null); G.save(P);
@@ -78,7 +84,7 @@ function homeScreen(msgs) {
       <div style="margin-top:4px">${evHtml()}</div>
       <div class="ev" style="margin-top:6px">${P.traits.map((t) => `<span class="tr ${TRAITS[t].good ? '' : 'bad'}">${TRAITS[t].name}</span>`).join('') || '<small style="opacity:.7">특수능력 없음</small>'}${P.banWeeks ? `<span class="tr bad">연습 금지 ${P.banWeeks}주</span>` : ''}${P.injury ? `<span class="tr bad">입원 ${P.injury.name} ${P.injury.weeks}주</span>` : ''}</div></div>
     <div class="spacer"></div>
-    ${msgs ? `<div class="panel log">${msgs.map((x) => '· ' + x).join('<br>')}</div>` : `<div class="panel log">${P.log.slice(0, 2).map((x) => '· ' + x).join('<br>')}</div>`}
+    ${msgs ? `<div class="panel log">${msgs.map((x) => '· ' + x).join('<br>')}${commandReportHtml()}</div>` : `<div class="panel log">${P.log.slice(0, 2).map((x) => '· ' + x).join('<br>')}</div>`}
     ${m ? `<div class="panel" style="border-color:#ffd23f"><b>${ic('ball')} 이번 주 시합: ${m.name}</b></div>` : ''}
     <div class="cmds" id="cmds"></div>
     <div class="row"><button class="btn gray" id="menu">메뉴</button><button class="btn alt" id="stat">상세 능력</button></div></div>`));
