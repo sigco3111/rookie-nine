@@ -308,3 +308,6 @@
 
 ## 05:04 Nov 18
 - Extended year summaries to show current-year live growth against existing start/year-review baseline above archived cards; detail entry renamed school-year growth review. Pure currentYearGrowth does not alter snapshot or archive; graduation separate/finished players omit live card, no missing-baseline inference. Both positions no-mutation/current diffs/year-reset/archive separation tests and UI two reviews->reload->current+3 vs archived+5 passed. Portrait inspected. Synthetic boundary/week/stats/RNG not natural3year/device QA; baseline/rewards/batting unchanged.
+
+## 05:24 Nov 18
+- Added two final-year coach-choice followups from week100: prior pro ambition -> personal preparation/recovery plan, prior team contribution -> mentoring/shared preparation. Exact prior choice and once-per-followup; no forced occurrence/draft promise/role guarantee. Existing24% gate unchanged but eligible pool and modest growth/trust/condition tradeoffs expand. Both-position prerequisites/opposite/week99-100/once/JSON/effects, all origins and608 previews-vs-effects passed. Actual rest->team branch->result->reload history passed;390x844 choice portrait inspected. Week/prerequisite/RNG injection, not natural pacing/3year/device QA; batting/draft/selection unchanged.

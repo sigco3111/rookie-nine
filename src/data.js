@@ -82,6 +82,12 @@ export const INJURIES = [
 
 // 이벤트. chance는 화면에 표시된다.
 export const EVENTS = [
+  { id: 'coach_pro_followup', req: 'coach', reqChoice: ['coach', 0], title: '프로라는 목표의 오늘', text: '감독이 예전에 말했던 프로라는 목표를 기억하고 있다. 마지막 학년, 먼 결과보다 오늘 해낼 준비를 정해 보자고 한다.', min: 100, choices: [
+    { label: '기초 체력 과제를 정해 꾸준히 한다', chance: 100, ok: { stamina: 2, will: 3, coach: 2, cond: -6, msg: '큰 포부를 작은 과제로 나눴다. 오늘 끝낼 분량이 분명해졌다.' } },
+    { label: '쉴 시간까지 넣어 준비 계획을 짠다', chance: 100, ok: { coach: 3, will: 2, cond: 7, msg: '오래 준비할 몸 상태도 목표의 일부였다. 무리하지 않을 기준을 적었다.' } } ] },
+  { id: 'coach_team_followup', req: 'coach', reqChoice: ['coach', 1], title: '팀을 돕는 나의 방식', text: '감독이 팀에 도움이 되고 싶다던 말을 꺼낸다. 마지막 학년이 된 지금, 동료에게 필요한 작은 역할을 직접 골라 보자.', min: 100, choices: [
+    { label: '후배와 수비 기본기를 함께 맞춘다', chance: 100, ok: { field: 2, team: 3, captain: 2, cond: -6, msg: '설명하려고 동작을 천천히 되짚었다. 후배에게 알려 주며 내 준비도 살폈다.' } },
+    { label: '동료들의 준비를 나누고 함께 쉰다', chance: 100, ok: { team: 4, captain: 2, cond: 7, msg: '한 사람이 모든 일을 맡지 않게 순서를 나눴다. 함께 쉴 여유도 생겼다.' } } ] },
   { id: 'exam_notes_followup', req: 'exam_help', reqChoice: ['exam_help', 0], title: '돌아온 공부 노트', text: '전에 친구에게 빌렸던 노트를 다시 펼쳤다. 도움받았던 내용을 내 방식으로 정리해 돌려줄 기회다.', min: 60, choices: [
     { label: '핵심을 정리해 친구와 함께 본다', chance: 100, ok: { study: 5, team: 3, cond: -3, msg: '답을 외우기보다 내용을 설명해 봤다. 친구의 질문 덕에 놓친 부분도 찾았다.' } },
     { label: '짧게 복습할 나만의 노트를 만든다', chance: 100, ok: { study: 3, will: 2, cond: -2, msg: '훈련 전후에 볼 작은 노트를 만들었다. 조금씩 이어갈 공부가 생겼다.' } } ] },
