@@ -137,3 +137,6 @@
 
 ## 10:06 Nov 17
 - Limited high-aim wrist lift to .5 and used modest barrel elevation for rest: fewer above-helmet hand artifacts but high gap .141m (worse than .114), not yet a release candidate. Added actual projected canvas PointerEvent test: aim 1.25 yields actual aimHeight 1.2499999999999991 and matches expected plane. Ball height still test-overridden, not natural high-pitch generation. Source/dist LOCAL ONLY, docs/live unchanged. Next prioritize contact-time response to stop ball travelling through bat after apparent intersection; then review pose+timing together rather than over-tuning gap metric.
+
+## 10:29 Nov 17
+- Local response experiment: eligible contact resolves at swingT+.075, retaining original timing/location acceptance and foul/hit windows. Follow-through continues from current phase instead of snapping to end pose. Actual center test resolves at1.4333 vs old1.6333 (T1.4208, swing1.35), .2s earlier simulation. +.22 late miss remains canContact false and resolves old deadline; no widened hitting window. Local only pending flight transition and early/late comparison. Pose changes also remain local; docs/live unchanged.
