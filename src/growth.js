@@ -243,10 +243,10 @@ export function resolveEvent(p, ev, ci) {
   const actual = Object.fromEntries(Object.entries(before).filter(([, v]) => typeof v === 'number').map(([k, v]) => [k, (['coach', 'captain', 'team', 'scout'].includes(k) ? p.ev[k] : p[k]) - v]));
   const c = cal(p.week);
   const origin = eventOrigin(p, ev);
-  p.eventHistory = [{ origin, title: ev.title, choice: ch.label, success, msg: fx.msg || '', fx: actual, year: c.year, month: c.month, wk: c.wk }, ...(p.eventHistory || [])].slice(0, 30);
+  p.eventHistory = [{ chance: ch.chance, origin, title: ev.title, choice: ch.label, success, msg: fx.msg || '', fx: actual, year: c.year, month: c.month, wk: c.wk }, ...(p.eventHistory || [])].slice(0, 30);
   p.log.unshift(`[${ev.title}] ${ch.label}: ${fx.msg || (success ? '성공' : '실패')}`);
   p.log = p.log.slice(0, 80);
-  return { success, msg: fx.msg || '', fx: actual, origin };
+  return { chance: ch.chance, success, msg: fx.msg || '', fx: actual, origin };
 }
 
 // 시합 후 결과 반영
