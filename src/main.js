@@ -141,10 +141,14 @@ function matchHistoryModal() {
   m.querySelector('#backmatches').onclick = () => { m.remove(); detailModal(); };
 }
 
+function eventOriginHtml(origin) {
+  return origin ? `<div style="padding:10px;background:#142a44;border-left:3px solid #ffd23f;border-radius:6px;margin:10px 0;font-size:12px;color:#b5c6dd">이전 이야기 · ${origin.title}${origin.choice ? `<br><span style="color:#ffd23f">그때의 선택: ${origin.choice}</span>` : ''}<br>그 경험에서 이어진 이야기입니다.</div>` : '';
+}
+
 function eventHistoryModal() {
   const names = {...STAT_NAME, will:'의지', tough:'근성', cond:'컨디션', money:'용돈', study:'학업', ...evName};
   const rows = (P.eventHistory || []).slice(0, 12);
-  const m=show($(`<div class="modal"><div class="panel"><h2>선택의 기록</h2><small>최근 12개 · 새로 겪은 이벤트부터 기록됩니다.</small><div style="max-height:58vh;overflow:auto;margin:12px 0">${rows.map(e=>`<div style="background:#20375e;border-radius:10px;padding:10px;margin-bottom:8px"><small>${e.year}학년 ${e.month}월 ${e.wk}주</small><div><b>${e.title}</b></div><p style="margin:6px 0;color:#ffd23f">${e.choice}</p><small>${e.msg}</small><div class="chips">${Object.entries(e.fx).filter(([,v])=>v).map(([k,v])=>`<span class="chip ${v>0?'up':'dn'}">${names[k]||k} ${v>0?'+':''}${v}</span>`).join('')}</div></div>`).join('')||'<p>아직 기록된 선택이 없습니다.<br>이벤트를 겪으면 선택과 결과가 남습니다.</p>'}</div><button class="btn" id="backhistory" style="width:100%">상세 능력으로</button></div></div>`));
+  const m=show($(`<div class="modal"><div class="panel"><h2>선택의 기록</h2><small>최근 12개 · 새로 겪은 이벤트부터 기록됩니다.</small><div style="max-height:58vh;overflow:auto;margin:12px 0">${rows.map(e=>`<div style="background:#20375e;border-radius:10px;padding:10px;margin-bottom:8px"><small>${e.year}학년 ${e.month}월 ${e.wk}주</small><div><b>${e.title}</b></div>${eventOriginHtml(e.origin)}<p style="margin:6px 0;color:#ffd23f">${e.choice}</p><small>${e.msg}</small><div class="chips">${Object.entries(e.fx).filter(([,v])=>v).map(([k,v])=>`<span class="chip ${v>0?'up':'dn'}">${names[k]||k} ${v>0?'+':''}${v}</span>`).join('')}</div></div>`).join('')||'<p>아직 기록된 선택이 없습니다.<br>이벤트를 겪으면 선택과 결과가 남습니다.</p>'}</div><button class="btn" id="backhistory" style="width:100%">상세 능력으로</button></div></div>`));
   m.querySelector('#backhistory').onclick=()=>{m.remove();detailModal();};
 }
 function goalsModal() {
@@ -217,7 +221,7 @@ function yearReviewModal(msgs) {
 
 function eventChoiceModal(q) {
   const { ev, msgs } = q;
-  const mod = show($(`<div class="modal"><div class="panel"><h2>${ev.title}</h2><p>${ev.text}</p><div style="display:grid;gap:8px">${ev.choices.map((c, i) => `<button class="btn alt" data-c="${i}">${c.label} <small>(성공률 ${c.chance}%)</small></button>`).join('')}</div></div></div>`));
+  const mod = show($(`<div class="modal"><div class="panel"><h2>${ev.title}</h2>${eventOriginHtml(G.eventOrigin(P, ev))}<p>${ev.text}</p><div style="display:grid;gap:8px">${ev.choices.map((c, i) => `<button class="btn alt" data-c="${i}">${c.label} <small>(성공률 ${c.chance}%)</small></button>`).join('')}</div></div></div>`));
   mod.querySelectorAll('[data-c]').forEach((b) => b.onclick = () => { const r = G.resolveEvent(P, ev, +b.dataset.c); mod.remove(); sfx.ui();
     P.pendingEvent = null;
     P.pendingEventResult = { title: ev.title, choice: ev.choices[+b.dataset.c].label, result: r, msgs };
@@ -228,7 +232,7 @@ function eventResultModal(q) {
   const r = q.result;
   const NM = { ...STAT_NAME, cond: '컨디션', will: '의지', money: '용돈', coach: '감독평가', captain: '캡틴평가', team: '팀평가', scout: '스카우트', study: '학업', tough: '근성' };
   const chips = Object.entries(r.fx).filter(([k,v]) => typeof v === 'number' && v).map(([k,v]) => `<span class="chip ${v>0?'up':'dn'}">${NM[k]||k} ${v>0?'+':''}${v}</span>`).join('');
-  const rm = show($(`<div class="modal"><div class="panel"><small style="color:#b5c6dd">이벤트 결과 · ${q.title}</small><h2 style="color:${r.success?'#8ce99a':'#ffb58f'}">${r.success?'성공!':'아쉽다...'}</h2><div style="padding:10px;background:#20375e;border-radius:10px;color:#ffd23f">선택: ${q.choice}</div><p>${r.msg}</p><small style="display:block;margin-bottom:8px;color:#b5c6dd">이번 선택의 실제 변화 · 상한/하한 반영</small><div class="chips">${chips||'<span class="chip">능력·상태 수치 변화 없음</span>'}</div><p style="font-size:12px;color:#b5c6dd">상세 능력의 선택의 기록에서 다시 볼 수 있습니다.</p><button class="btn" id="okev" style="margin-top:12px;width:100%">확인</button></div></div>`));
+  const rm = show($(`<div class="modal"><div class="panel"><small style="color:#b5c6dd">이벤트 결과 · ${q.title}</small>${eventOriginHtml(r.origin)}<h2 style="color:${r.success?'#8ce99a':'#ffb58f'}">${r.success?'성공!':'아쉽다...'}</h2><div style="padding:10px;background:#20375e;border-radius:10px;color:#ffd23f">선택: ${q.choice}</div><p>${r.msg}</p><small style="display:block;margin-bottom:8px;color:#b5c6dd">이번 선택의 실제 변화 · 상한/하한 반영</small><div class="chips">${chips||'<span class="chip">능력·상태 수치 변화 없음</span>'}</div><p style="font-size:12px;color:#b5c6dd">상세 능력의 선택의 기록에서 다시 볼 수 있습니다.</p><button class="btn" id="okev" style="margin-top:12px;width:100%">확인</button></div></div>`));
   rm.querySelector('#okev').onclick = () => { P.pendingEventResult = null; G.save(P); rm.remove(); homeScreen(q.msgs.concat([`[이벤트] ${r.msg}`])); };
 }
 

@@ -205,6 +205,15 @@ export function randomEvent(p) {
   const pool = EVENTS.filter((e) => eventEligible(p, e));
   return pool[Math.floor(Math.random() * pool.length)];
 }
+export function eventOrigin(p, ev) {
+  if (!ev.req || !p.cnt['ev_' + ev.req]) return null;
+  const source = EVENTS.find(e => e.id === ev.req);
+  if (!source) return null;
+  const ci = ev.reqChoice?.[1];
+  if (ev.reqChoice && !(p.eventChoices?.[ev.reqChoice[0]] || []).includes(ci)) return null;
+  return { title: source.title, choice: ev.reqChoice ? source.choices[ci]?.label || '' : '' };
+}
+
 export function resolveEvent(p, ev, ci) {
   ensureGrowthBaseline(p);
   const ch = ev.choices[ci]; p.cnt['ev_' + ev.id] = (p.cnt['ev_' + ev.id] || 0) + 1;
@@ -218,10 +227,11 @@ export function resolveEvent(p, ev, ci) {
   applyFx(p, fx);
   const actual = Object.fromEntries(Object.entries(before).filter(([, v]) => typeof v === 'number').map(([k, v]) => [k, (['coach', 'captain', 'team', 'scout'].includes(k) ? p.ev[k] : p[k]) - v]));
   const c = cal(p.week);
-  p.eventHistory = [{ title: ev.title, choice: ch.label, success, msg: fx.msg || '', fx: actual, year: c.year, month: c.month, wk: c.wk }, ...(p.eventHistory || [])].slice(0, 30);
+  const origin = eventOrigin(p, ev);
+  p.eventHistory = [{ origin, title: ev.title, choice: ch.label, success, msg: fx.msg || '', fx: actual, year: c.year, month: c.month, wk: c.wk }, ...(p.eventHistory || [])].slice(0, 30);
   p.log.unshift(`[${ev.title}] ${ch.label}: ${fx.msg || (success ? '성공' : '실패')}`);
   p.log = p.log.slice(0, 80);
-  return { success, msg: fx.msg || '', fx: actual };
+  return { success, msg: fx.msg || '', fx: actual, origin };
 }
 
 // 시합 후 결과 반영
