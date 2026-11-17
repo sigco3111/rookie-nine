@@ -1,3 +1,4 @@
+import { defensePaths, defenseStep } from './defense.js';
 import { TRAITS } from './data.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, OPP_COLORS } from './scene.js';
 import { cal, battingWindow, oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
@@ -26,21 +27,19 @@ export function resetDefense(fielders) {
   for (const fd of fielders) { fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); fielderReady(fd); fd.rotation.y = Math.atan2(-fd.position.x, -fd.position.z); }
 }
 export function defensivePursuit(fielders, x, z) {
-  // 타구를 향한 이동 연출일 뿐 포구/안타 판정에 관여하지 않는다.
-  const radius = Math.hypot(x, z), bound = radius > 91 ? 91 / radius : 1;
-  x *= bound; z *= bound;
-  let near = null, best = Infinity;
-  for (const fd of fielders) { const [hx,hz] = fd.userData.home, d = Math.hypot(x-hx,z-hz); if (d<best) { best=d;near=fd; } }
+  // 타구 추적과 뒤를 받치는 이동 연출. 포구/송구/안타 판정과는 별개다.
+  const paths = defensePaths(fielders.map(fd=>fd.userData.home),x,z);
   return t => {
-    if (!near) return;
-    const [hx,hz] = near.userData.home, travel = Math.min(best, Math.max(0,t-.18)*7), k = best ? travel/best : 0;
-    near.position.set(hx+(x-hx)*k,0,hz+(z-hz)*k);
-    if (best>.01) near.rotation.y = Math.atan2(x-hx,z-hz);
-    fielderReady(near);
-    if (travel>0 && travel<best) {
-      const u=near.userData,stride=Math.sin(t*13);
-      u.legL.rotation.x=stride*.65;u.legR.rotation.x=-stride*.65;
-      u.armL.rotation.x=-.55-stride*.45;u.armR.rotation.x=-.4+stride*.45;
+    for (const path of paths) {
+      const fd=fielders[path.index], step=defenseStep(path,t);
+      fd.position.set(step.x,0,step.z);
+      if(path.distance>.01) fd.rotation.y=Math.atan2(path.target[0]-path.home[0],path.target[1]-path.home[1]);
+      fielderReady(fd);
+      if(step.moving){
+        const u=fd.userData,stride=Math.sin(t*13);
+        u.legL.rotation.x=stride*.65;u.legR.rotation.x=-stride*.65;
+        u.armL.rotation.x=-.55-stride*.45;u.armR.rotation.x=-.4+stride*.45;
+      }
     }
   };
 }
