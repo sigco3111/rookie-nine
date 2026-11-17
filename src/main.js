@@ -116,7 +116,7 @@ function homeScreen(msgs) {
     const b = $(`<button ${blocked ? 'disabled aria-disabled="true"' : ''} class="cmd ${blocked ? 'dis' : ''}" style="background:#2c4580"><span class="ic">${ic(o.id)}</span>${o.name}<small>${blocked ? '입원 중 · 치료 필요' : o.desc}</small></button>`);
     b.onclick = () => { if (!blocked) o.id === 'shop' ? shopModal() : runWeek(o.id); }; box.appendChild(b);
   }
-  if (inj) { const b = $(`<button class="cmd" style="grid-column:1/-1;background:#c92a2a;font-size:18px"><span class="ic">${ic('hospital')}</span>한 주 쉬며 치료하기<small style="font-size:12px;line-height:1.4">${P.injury.name} · 남은 ${P.injury.weeks}주 → ${P.injury.weeks-1}주<br>컨디션 +${Math.min(6,99-P.cond)} · 훈련/알바/공부는 쉬어갑니다</small></button>`); b.onclick = () => runWeek('hospital'); box.prepend(b); }
+  if (inj) { const b = $(`<button class="cmd" style="grid-column:1/-1;background:#c92a2a;font-size:18px"><span class="ic">${ic('hospital')}</span>한 주 쉬며 치료하기<small style="font-size:12px;line-height:1.4">${P.injury.name} · 남은 ${P.injury.weeks}주 → ${P.injury.weeks-1}주<br>치료 직후 컨디션 +${Math.min(6,99-P.cond)} (주말 회복 별도)<br>훈련/알바/공부는 쉬어갑니다</small></button>`); b.onclick = () => runWeek('hospital'); box.prepend(b); }
   el.querySelector('#stat').onclick = detailModal;
   el.querySelector('#menu').onclick = menuModal;
 }
