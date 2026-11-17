@@ -26,7 +26,7 @@ function titleScreen() {
     <button class="btn big alt" id="new">새 선수 만들기</button>
     <button class="btn gray" id="hof">명예의 전당 (${h.length})</button></div>`));
   el.querySelector('#new').onclick = createScreen;
-  if (sv && !sv.done) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingEvent) { clear(); showHome(P.pos, P); eventChoiceModal(P.pendingEvent); } else if (P.pendingEventResult) { clear(); showHome(P.pos, P); eventResultModal(P.pendingEventResult); } else if (P.pendingLearned) { clear(); showHome(P.pos, P); learnedModal(P.pendingLearned); } else if (P.review) { clear(); showHome(P.pos, P); yearReviewModal(P.review.msgs || []); } else homeScreen(); };
+  if (sv && !sv.done) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingMatch) { clear(); showHome(P.pos, P); const q = P.pendingMatch; matchPrompt(q.match, q.msgs, new Set(q.previousTraits), () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingEvent) { clear(); showHome(P.pos, P); eventChoiceModal(P.pendingEvent); } else if (P.pendingEventResult) { clear(); showHome(P.pos, P); eventResultModal(P.pendingEventResult); } else if (P.pendingLearned) { clear(); showHome(P.pos, P); learnedModal(P.pendingLearned); } else if (P.review) { clear(); showHome(P.pos, P); yearReviewModal(P.review.msgs || []); } else homeScreen(); };
   el.querySelector('#hof').onclick = hofScreen;
 }
 
@@ -233,16 +233,20 @@ function eventResultModal(q) {
 }
 
 function matchPrompt(m, msgs, previousTraits, cont) {
-  const before = { ...P.ev, cond: P.cond };
+  if (!P.pendingMatch) P.pendingMatch = { match: m, msgs, previousTraits: [...previousTraits], before: { ...P.ev, cond: P.cond }, started: false };
+  G.save(P);
+  const q = P.pendingMatch;
+  const before = q.before;
   const report = (r) => {
     r.growthDelta = Object.fromEntries([...Object.keys(P.ev), 'cond'].map(k => [k, (k === 'cond' ? P.cond : P.ev[k]) - before[k]]));
+    P.pendingMatch = null;
     P.pendingResult = { result: r, msgs, previousTraits: [...previousTraits] };
     G.save(P);
     resultModal(r, msgs, cont);
   };
-  const mod = show($(`<div class="modal"><div class="panel"><h2>${ic('ball')} ${m.name}</h2><p>${P.pos === 'pit' ? (G.isRegular(P) ? '선발로 등판합니다. 3이닝을 직접 던집니다.' : '아직 후보입니다. 구원으로 1이닝만 던집니다.') : (G.isRegular(P) ? '레귤러로 출전합니다. 타석 3번을 직접 칠 수 있어요.' : '아직 후보입니다. 대타로 1타석만 기회가 옵니다.')}</p><div style="display:grid;gap:8px"><button class="btn big" id="play">직접 플레이</button><button class="btn gray" id="auto">자동 진행</button></div></div></div>`));
+  const mod = show($(`<div class="modal"><div class="panel"><h2>${ic('ball')} ${m.name}</h2><p>${P.pos === 'pit' ? (G.isRegular(P) ? '선발로 등판합니다. 3이닝을 직접 던집니다.' : '아직 후보입니다. 구원으로 1이닝만 던집니다.') : (G.isRegular(P) ? '레귤러로 출전합니다. 타석 3번을 직접 칠 수 있어요.' : '아직 후보입니다. 대타로 1타석만 기회가 옵니다.')}</p><p style="font-size:12px;color:#b5c6dd">${q.started ? '중단된 경기를 경기 시작 전부터 다시 진행합니다.<br>중단 전 투구·타석·점수는 복구되지 않습니다.' : '선택 전 재접속해도 같은 경기를 이어서 선택합니다.'}<br>이번 주 훈련은 다시 적용되지 않습니다.</p><div style="display:grid;gap:8px"><button class="btn big" id="play">직접 플레이</button><button class="btn gray" id="auto">자동 진행</button></div></div></div>`));
   mod.querySelector('#auto').onclick = () => { mod.remove(); const r = G.simulateMatch(P, m); report(r); };
-  mod.querySelector('#play').onclick = async () => { mod.remove(); const r = await startMatch(m); report(r); };
+  mod.querySelector('#play').onclick = async () => { q.started = true; G.save(P); mod.remove(); const r = await startMatch(m); report(r); };
 }
 
 async function startMatch(m) {
