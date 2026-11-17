@@ -69,8 +69,8 @@ function createScreen() {
   el.querySelector('#go').onclick = () => { P = G.newPlayer(el.querySelector('#nm').value.trim() || '신인', sel, pos); { const sv = el.querySelector('#inh'); if (sv && sv.value !== '') { const e = G.hof()[+sv.value]; const info = G.inheritanceInfo(e,pos), b = info.bonus; for (const k of keysOf(P)) P[k] += b; P.will += 5; P.ev.coach += 6; P.log.unshift(`${e.name} 선배의 가르침을 받았다. (능력치 +${b})`); if (info.trait && !P.traits.includes(info.trait)) { P.traits.push(info.trait); P.log.unshift('선배의 특수능력을 이어받았다!'); } } } G.save(P); homeScreen(); };
 }
 
-let lastDiff = {};
-function statsHtml() {
+function statsHtml(showCommand = false) {
+  const lastDiff = showCommand ? P.commandReport?.statFx || {} : {};
   return `<div class="stats">${keysOf(P).map((k) => `<div class="st"><span>${STAT_NAME[k]}</span><span><b style="color:${barColor(P[k])}">${grade(P[k])}</b> ${P[k]}${lastDiff[k] ? `<small style="color:${lastDiff[k] > 0 ? '#3bd16f' : '#ff6b6b'};font-weight:900"> ${lastDiff[k] > 0 ? '+' : ''}${lastDiff[k]}</small>` : ''}</span></div>`).join('')}</div>`;
 }
 function topHtml() {
@@ -82,10 +82,10 @@ function evHtml() {
 }
 
 function commandReportHtml() {
-  const names = { cond: '컨디션', money: '용돈', study: '학업', tough: '터프도', ...evName };
+  const names = { cond: '컨디션', money: '용돈', study: '학업', tough: '터프도', will: '의지', ...evName };
   const fx = Object.entries(P.commandReport?.fx || {});
   if (!fx.length) return '';
-  return `<div class="command-report"><small>명령 직후 변화 · 주말 회복/경기/이벤트 제외</small><div class="chips">${fx.map(([k,v]) => `<span class="chip ${v>0?'up':'dn'}">${names[k]} ${v>0?'+':''}${v}</span>`).join('')}</div></div>`;
+  return `<div class="command-report"><small>${P.commandReport.year}학년 ${P.commandReport.month}월 ${P.commandReport.wk}주 명령 직후<br>능력 옆 증감도 같은 시점 · 주말 회복/경기/이벤트 제외</small><div class="chips">${fx.map(([k,v]) => `<span class="chip ${v>0?'up':'dn'}">${names[k]} ${v>0?'+':''}${v}</span>`).join('')}</div></div>`;
 }
 function homeScreen(msgs) {
   const selectionNotice = G.selectionChange(P);
@@ -95,11 +95,11 @@ function homeScreen(msgs) {
   const c = G.cal(P.week);
   const el = show($(`<div class="screen">${topHtml()}
     ${selectionNotice ? `<div class="panel" style="border:2px solid ${selectionNotice.regular ? '#66e692' : '#ffd23f'};background:#20375e"><b style="font-size:20px;color:${selectionNotice.regular ? '#66e692' : '#ffd23f'}">${selectionNotice.title}</b><div style="font-size:13px;margin-top:5px">${selectionNotice.text}</div></div>` : ''}
-    <div class="panel homepanel"><div class="top"><span>${ic("cap")} ${P.name} <small>종합 ${G.ovr(P)}</small></span><span style="font-size:12px">${G.isRegular(P) ? '● 레귤러' : '○ 후보'}</span></div>${statsHtml()}
+    <div class="panel homepanel"><div class="top"><span>${ic("cap")} ${P.name} <small>종합 ${G.ovr(P)}</small></span><span style="font-size:12px">${G.isRegular(P) ? '● 레귤러' : '○ 후보'}</span></div>${statsHtml(true)}
       <div style="margin-top:4px">${evHtml()}</div>
       <div class="ev" style="margin-top:6px">${P.traits.map((t) => `<span class="tr ${TRAITS[t].good ? '' : 'bad'}">${TRAITS[t].name}</span>`).join('') || '<small style="opacity:.7">특수능력 없음</small>'}${P.banWeeks ? `<span class="tr bad">연습 금지 ${P.banWeeks}주</span>` : ''}${P.injury ? `<span class="tr bad">입원 ${P.injury.name} ${P.injury.weeks}주</span>` : ''}</div></div>
     <div class="spacer"></div>
-    ${msgs ? `<div class="panel log">${msgs.map((x) => '· ' + x).join('<br>')}${commandReportHtml()}</div>` : `<div class="panel log">${P.log.slice(0, 2).map((x) => '· ' + x).join('<br>')}</div>`}
+    <div class="panel log">${(msgs || P.log.slice(0,2)).map(x=>'· '+x).join('<br>')}${commandReportHtml()}</div>
     ${m ? `<div class="panel" style="border-color:#ffd23f"><b>${ic('ball')} 이번 주 시합: ${m.name}</b></div>` : ''}
     <div class="cmds" id="cmds"></div>
     <div class="row"><button class="btn gray" id="menu">메뉴</button><button class="btn alt" id="stat">상세 능력</button></div></div>`));
@@ -223,11 +223,9 @@ function shopModal() {
 
 function runWeek(id) {
   const previousTraits = new Set(P.traits);
-  const before = Object.fromEntries(keysOf(P).map((k) => [k, P[k]]));
   let msgs = G.doCommand(P, id === 'hospital' ? 'x' : id);
   const m = G.matchOfWeek(P);
   playTrainingAnim(id);
-  lastDiff = Object.fromEntries(keysOf(P).map((k) => [k, P[k] - before[k]]));
   sfx.ui();
   if (m && !P.injury) matchPrompt(m, msgs, previousTraits, () => finishWeek(msgs, previousTraits)); else finishWeek(msgs, previousTraits);
 }
