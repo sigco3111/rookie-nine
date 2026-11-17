@@ -161,3 +161,6 @@
 
 ## 12:10 Nov 17
 - Added one-time home card + durable log when candidate/regular status changes. Baseline old/new saves silently on first home, no false promotion. Actual same selection rules; year-threshold demotion supported. Logic baseline/promotion/repeat/year-demotion/JSON tests passed; synthetic trust threshold via actual home render plus reload verified one log only. Portrait card layout inspected. Does not pause gameplay with modal; motion/difficulty/guide unchanged.
+
+## 12:30 Nov 17
+- Added compact command-only actual resource/evaluation chips under weekly home report: condition, money, study, toughness, coach/captain/team/scout. Captures command execution before weekly recovery, match or event so label explicitly excludes these; no rewards or risk/RNG change. Old saves start next command; latest data survives JSON save, while result chips only appear on the immediate weekly result screen. Batter/pitcher cap/ban/hospital/week recovery tests and actual 잡무 button -> next week -> reload passed. Portrait checked with simultaneous promotion notice; controls fit. No batting/guide/motion changes.
