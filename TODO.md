@@ -296,3 +296,6 @@
 
 ## 03:41 Nov 18
 - Home background now runs full shared resetDefense for all7 fielders, not just position: removes stale running arms/legs/travel headings from an interrupted/reused scene. Batter-home fielders also reset to same default red as background opponent pitcher rather than former pitching-team colors. Hidden pitcher-home fielders still reset. Both-position forced stale transforms->home positions/limbs/visibility/color assertions passed; normal portrait and separate close render inspected. Synthetic pose/color injection not natural full-match/device QA; gameplay camera and match outcomes unchanged. Initial test syntax corrected before running.
+
+## 04:02 Nov 18
+- Selection status screen now shows all3 years' exact regular-player thresholds and current-year marker, explaining either overall OR trust condition and re-evaluation after promotion. Common selectionRequirements feeds real eligibility and table, unchanged34/42,46/54,56/64 rules. Both positions3year/trust boundary and read-only year2 UI tests passed, portrait inspected. Initial boundary test forgot pitcher can already qualify on overall; lowered test-only abilities to isolate trust then passed. Synthetic year/abilities not natural progression/device QA. No rewards or batting changes.
