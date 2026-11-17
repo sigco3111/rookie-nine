@@ -185,3 +185,6 @@
 
 ## 14:56 Nov 17
 - Replaced Kenney hand's sphere glove with original extruded palm/thumb/finger silhouette and double-sided pocket seam; not the rejected sphere-overlay experiment. Existing material ownership remains so bought gold glove uses same shape as default brown. Actual pitcher creation->shop glove->reload money/gear/color->direct pitching entry passed; close purchased glove, brown fielder and normal pitching-view pixels checked. Close proof uses separate camera; normal camera/poses unchanged. Geometry-only, no catch/throw logic or gameplay changes. Detailed fingers/hand fit and real-device GPU checks still late QA.
+
+## 15:16 Nov 17
+- Shop purchase result now shows actual capped stat/condition changes and actual game-currency cost, plus equipment/insurance/cured-trait outcome chips, instead of repeating nominal product description as achieved gain. Product descriptions/prices remain unchanged. Failed purchase clears last report to avoid stale success chips. Batter/pitcher cap/gear/cure/insurance/failure/JSON logic tests passed; actual drink at condition98 ->99 costs20 and reload retains99/80, pitcher shop regression passed. Portrait result fits390x844. No balance/gameplay changes; report itself is not replayed on reopen, saved values persist.

@@ -152,9 +152,14 @@ function menuModal() {
   m.querySelector('#t').onclick = () => { G.save(P); titleScreen(); };
   m.querySelector('#r').onclick = () => { if (prompt('정말 삭제합니까? "초기화"를 입력하세요') === '초기화') { G.clearSave(); titleScreen(); } };
 }
+function purchaseReportHtml() {
+  const r = P.purchaseReport; if (!r) return '';
+  const names = { ...STAT_NAME, cond: '컨디션', money: '용돈' };
+  return `<div class="chips" style="margin:6px 0 10px">${Object.entries(r.fx).map(([k,v])=>`<span class="chip ${v>0?'up':'dn'}">${names[k]} ${v>0?'+':''}${v}</span>`).join('')}${r.cured.map(t=>`<span class="chip up">${TRAITS[t].name} 치료</span>`).join('')}${r.insured?'<span class="chip up">다음 부상 보험 적용</span>':''}${r.gear?'<span class="chip up">장비 적용</span>':''}</div>`;
+}
 function shopModal() {
   const draw = (note) => {
-    const m = show($(`<div class="modal"><div class="panel"><h2> 쇼핑 (${ic('coin')} ${P.money})</h2>${note ? `<div class="log" style="color:#ffd23f">${note}</div>` : ''}<div style="display:grid;gap:6px">${itemsFor(P).map((i) => `<button class="btn alt" data-i="${i.id}" style="text-align:left;display:flex;justify-content:space-between"><span>${i.name}<br><small>${itemDescription(P, i)}</small></span><span>${i.price}</span></button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn gray" id="x">그만 사기</button><button class="btn" id="end">쇼핑 끝 (한 주 소비)</button></div></div></div>`));
+    const m = show($(`<div class="modal"><div class="panel"><h2> 쇼핑 (${ic('coin')} ${P.money})</h2>${note ? `<div class="log" style="color:#ffd23f">${note}</div>${purchaseReportHtml()}` : ''}<div style="display:grid;gap:6px">${itemsFor(P).map((i) => `<button class="btn alt" data-i="${i.id}" style="text-align:left;display:flex;justify-content:space-between"><span>${i.name}<br><small>${itemDescription(P, i)}</small></span><span>${i.price}</span></button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn gray" id="x">그만 사기</button><button class="btn" id="end">쇼핑 끝 (한 주 소비)</button></div></div></div>`));
     m.querySelectorAll('[data-i]').forEach((b) => b.onclick = () => { const r = G.buy(P, b.dataset.i); G.save(P); m.remove(); draw(r); });
     m.querySelector('#x').onclick = () => { m.remove(); G.save(P); homeScreen(); };
     m.querySelector('#end').onclick = () => { m.remove(); runWeek('shop'); };

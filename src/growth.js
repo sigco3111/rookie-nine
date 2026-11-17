@@ -140,11 +140,17 @@ function executeCommand(p, id, arg) {
 }
 
 export function buy(p, id) {
+  p.purchaseReport = null;
   ensureGrowthBaseline(p);
   const it = itemsFor(p).find((i) => i.id === id);
   if (!it) return '현재 포지션에서 사용할 수 없는 상품입니다.';
   if (p.money < it.price) return `돈이 부족하다 (${it.price}원)`;
-  p.money -= it.price; it.fx(p); return `${it.name} 구입! ${itemDescription(p, it)}`;
+  const keys = [...keysOf(p), 'cond', 'money'];
+  const before = Object.fromEntries(keys.map(k => [k, p[k]])), traits = [...p.traits];
+  p.money -= it.price; it.fx(p);
+  p.purchaseReport = { fx: Object.fromEntries(keys.map(k => [k, p[k] - before[k]]).filter(([,v]) => v)), cured: traits.filter(t => !p.traits.includes(t)), insured: id === 'insure', gear: ['bat','glove','shoes'].includes(id) };
+  return `${it.name} 구입!`;
+
 }
 
 const growthSnapshot = (p) => Object.fromEntries([...keysOf(p), 'will', 'tough'].map((k) => [k, p[k]]));
