@@ -302,3 +302,6 @@
 
 ## 04:22 Nov 18
 - Added2 one-time academic-choice followups from week60: prior exam_help study->shared/personal notes, training-first->short study plan/friend help. Exact prior choices, no guaranteed next event/automatic exam pass. Existing24% event gate unchanged; pool and modest study/trust/will/condition tradeoffs expand. Both positions prerequisites/opposite/week59-60/once/JSON/finite effects, origin regression and592 preview comparisons passed. Actual rest->training-first followup->choice/result-reload/history passed, portrait inspected. Week/prereq/RNG injection not natural pacing/3year/device QA. Exam threshold/ban duration/batting unchanged.
+
+## 04:43 Nov 18
+- Growth-goal screen now toggles nearest3/all eligible unlearned special traits, letting user plan beyond top3. Same existing traitGoals/requirements/order/35% explanation; position-only invalid traits remain filtered. Scrollable list keeps mode/back visible. Both-position actual UI nearest->all->nearest state byte-equality and pitcher no batter trait passed, portrait inspected. No learned traits/threshold/reward/batting changes; not natural earning/device QA.
