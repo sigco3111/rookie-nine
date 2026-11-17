@@ -46,7 +46,12 @@ export function battingWindow(p, strikes = 0, scoringChance = false) {
 
 export const defenseEvaluationBonus = (p) => (p.traits.includes('gun') ? 2 : 0) + (p.traits.includes('glove') ? 2 : 0);
 export const teamStrength = (p) => 34 + ovr(p) * 0.35 + (p.ev.team - 30) * 0.15 + (p.cnt.chore || 0) * 0.02;
-export const isRegular = (p) => { const avg = (p.ev.coach + p.ev.captain + p.ev.team) / 3; const need = [28, 40, 50][cal(p.week).year - 1]; return ovr(p) >= need + 6 || avg >= need + 14; };
+export function selectionStatus(p) {
+  const avg = (p.ev.coach + p.ev.captain + p.ev.team) / 3;
+  const need = [28, 40, 50][Math.min(2, cal(p.week).year - 1)];
+  return { overall: ovr(p), overallNeed: need + 6, trust: avg, trustNeed: need + 14, regular: ovr(p) >= need + 6 || avg >= need + 14 };
+}
+export const isRegular = p => selectionStatus(p).regular;
 
 function addEv(p, k, v) { p.ev[k] = clamp(p.ev[k] + v, 0, 100); }
 export function applyFx(p, fx) {

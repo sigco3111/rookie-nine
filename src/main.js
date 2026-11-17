@@ -102,16 +102,24 @@ function detailModal() {
     <table class="mini">${keysOf(P).map((k) => `<tr><td>${STAT_NAME[k]}</td><td><b style="color:${barColor(P[k])}">${grade(P[k])}</b> ${P[k]}</td><td style="width:50%"><div class="bar"><i style="width:${P[k]}%;background:${barColor(P[k])}"></i></div></td></tr>`).join('')}
     <tr><td>의지</td><td>${P.will}</td><td></td></tr><tr><td>터프도</td><td>${P.tough}</td><td></td></tr><tr><td>학업</td><td>${P.study}</td><td></td></tr></table>
     <h2 style="margin-top:10px">평가</h2>${Object.keys(evName).map((k) => `${evName[k]} ${P.ev[k]}`).join(' / ')}
-    <h2 style="margin-top:10px">전적</h2>${P.wins}승 ${P.losses}패 · ${P.pos === 'pit' ? `${P.so || 0}탈삼진 · ${P.hits}피안타 · ${P.ab}이닝` : `${P.hits}/${P.ab} · 홈런 ${P.hr} · 타점 ${P.rbi}`}<button class="btn alt" id="matches" style="width:100%;margin-top:8px">최근 경기 기록</button>
+    <button class="btn alt" id="selection" style="width:100%;margin-top:8px">출전 기회와 신뢰</button><h2 style="margin-top:10px">전적</h2>${P.wins}승 ${P.losses}패 · ${P.pos === 'pit' ? `${P.so || 0}탈삼진 · ${P.hits}피안타 · ${P.ab}이닝` : `${P.hits}/${P.ab} · 홈런 ${P.hr} · 타점 ${P.rbi}`}<button class="btn alt" id="matches" style="width:100%;margin-top:8px">최근 경기 기록</button>
     <h2 style="margin-top:10px">특수능력</h2>${P.traits.map((t) => `<div><b>${TRAITS[t].name}</b> <small>${TRAITS[t].desc}</small></div>`).join('') || '없음'}
     <button class="btn alt" id="goals" style="width:100%;margin-top:10px">특수능력 성장 목표</button>
     <button class="btn alt" id="evhistory" style="width:100%;margin-top:8px">선택의 기록</button>
     <h2 style="margin-top:10px">기록</h2><div class="log">${P.log.slice(0, 8).map((x) => '· ' + x).join('<br>')}</div><br><button class="btn" style="width:100%" id="x">닫기</button></div></div>`));
+  m.querySelector('#selection').onclick = () => { m.remove(); selectionModal(); };
   m.querySelector('#matches').onclick = () => { m.remove(); matchHistoryModal(); };
   m.querySelector('#evhistory').onclick = () => { m.remove(); eventHistoryModal(); };
   m.querySelector('#goals').onclick = () => { m.remove(); goalsModal(); };
   m.querySelector('#x').onclick = () => m.remove();
 }
+function selectionModal() {
+  const s = G.selectionStatus(P);
+  const row = (name, value, need) => `<div style="background:#20375e;padding:12px;border-radius:10px;margin:10px 0"><b>${name}</b><div style="font-size:22px;font-weight:900;margin:6px 0">${value.toFixed(1)} / ${need}</div><div class="bar"><i style="width:${Math.min(100,value/need*100)}%;background:#69db93"></i></div><small>${value >= need ? '조건 달성' : `앞으로 ${(need-value).toFixed(1)} 필요`}</small></div>`;
+  const m = show($(`<div class="modal"><div class="panel"><h2>출전 기회와 신뢰</h2><div class="chip ${s.regular ? 'up' : 'dn'}">현재 ${s.regular ? '레귤러' : '후보'}</div><p>두 조건 중 하나를 채우면 레귤러로 출전합니다. 기준은 학년이 올라가면 높아집니다.</p>${row('실력으로 인정받기 · 종합',s.overall,s.overallNeed)}${row('신뢰로 인정받기 · 평가 평균',s.trust,s.trustNeed)}<p style="font-size:13px;color:#b5c6dd">신뢰는 감독·캡틴·팀메이트 평가의 평균입니다. 훈련·경기·이벤트 선택으로 달라집니다. 스카우트 평가는 출전 조건에 포함되지 않습니다.</p><button class="btn" id="backselection" style="width:100%">상세 능력으로</button></div></div>`));
+  m.querySelector('#backselection').onclick = () => { m.remove(); detailModal(); };
+}
+
 function matchHistoryModal() {
   const rows = (P.matchHistory || []).slice(0, 8);
   const m = show($(`<div class="modal"><div class="panel"><h2>최근 경기 기록</h2><p style="font-size:13px;color:#b5c6dd">최근 8경기 · 새로 마친 경기부터 기록됩니다.</p><div style="max-height:57vh;overflow:auto">${rows.map(r => `<div style="background:#20375e;border-radius:10px;padding:12px;margin-bottom:8px"><small>${r.year}학년 ${r.month}월 ${r.wk}주 · ${r.title}</small><div style="font-size:22px;font-weight:900;color:${r.win ? '#7aeb99' : '#ff9c9c'};margin:6px 0">${r.win ? '승리' : '패배'} ${r.my} : ${r.opp}</div><div>${r.pos === 'pit' ? `${r.ip}이닝 ${r.so}탈삼진 ${r.hitsAllowed}피안타 ${r.er}실점` : `${r.ab}타수 ${r.hits}안타 ${r.hr}홈런 ${r.rbi}타점`}</div></div>`).join('') || '<p>아직 기록된 경기가 없습니다.</p>'}</div><button class="btn" id="backmatches" style="width:100%;margin-top:10px">상세 능력으로</button></div></div>`));

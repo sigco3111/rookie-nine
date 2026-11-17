@@ -155,3 +155,6 @@
 
 ## 11:28 Nov 17
 - User11:24 wants reset after swing then pass further swing refinement for now. Added stance reset after non-hit pitch result (whiff/foul/looking) and defensive reset at next pitch entry; fair-hit path retains existing post-flight reset. Actual direct whiff -> following pitch test shows stance mocap16/phase0 and timing guide準備, portrait pixels checked. Timing difficulty/guide unchanged. Further precision swing/contact work paused per user; other project work continues. Fixed-input software test, not real-device QA.
+
+## 11:49 Nov 17
+- Added 출전 기회와 신뢰 from detailed stats: exact existing overall or coach/captain/team average thresholds, shortfall, progress bars, current candidate/regular status. Shared selectionStatus helper now drives actual isRegular and screen;300 comparisons across years preserve existing rules. No difficulty/guide/motion change. Portrait UI inspected, next live verification. Purpose: make relationship choices' link to playing opportunities visible, not invent new selection mechanics.
