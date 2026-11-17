@@ -311,3 +311,6 @@
 
 ## 05:24 Nov 18
 - Added two final-year coach-choice followups from week100: prior pro ambition -> personal preparation/recovery plan, prior team contribution -> mentoring/shared preparation. Exact prior choice and once-per-followup; no forced occurrence/draft promise/role guarantee. Existing24% gate unchanged but eligible pool and modest growth/trust/condition tradeoffs expand. Both-position prerequisites/opposite/week99-100/once/JSON/effects, all origins and608 previews-vs-effects passed. Actual rest->team branch->result->reload history passed;390x844 choice portrait inspected. Week/prerequisite/RNG injection, not natural pacing/3year/device QA; batting/draft/selection unchanged.
+
+## 05:45 Nov 18
+- Added bat grip sleeve, five wrap rings and end knob to the active character model. Dark grip retains its own color for wood and purchased gold bat; body geometry/scale/anchor untouched. Cosmetic only, no swing/timing/contact/reward changes. Actual shop->save->reload checked gold body, independent grip, all7parts and original body dimensions; direct-match swing smoke passed. Wood/gold close renders inspected. First test used nonexistent #swing selector; corrected to real .swing pointer handler and passed. Close camera is test evidence only, gameplay camera unchanged. No natural fullgame/device/performance claim.

@@ -197,7 +197,16 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
     for(const z of [.14,.19,.24]){const lace=new THREE.Mesh(laceGeo,trimMat);lace.name='shoe-lace';lace.position.set(0,.10+.09*Math.sqrt(1-((z-.10)/.24)**2),z);fa2.add(lace);}
   }
   u.shoes = shoes;
-  const mkBat = () => { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.05, 0.85, 10), mt(0xdeb887)); const a = anchor(armPlus.hand, wq(armPlus.hand), 1); b.scale.y = 1.25; b.position.set(0, 0.34 * 1.25, 0.02); a.add(b); a.userData.hand = armPlus.hand; b.castShadow = true; return b; };
+  const mkBat = () => {
+    const b = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.05, 0.85, 10), mt(0xdeb887));
+    // 본체 색과 독립된 그립. 타격 판정과 배트 길이는 그대로 둔다.
+    const gripMat=mt(0x252934),lineMat=mt(0x78818f);
+    const grip=new THREE.Mesh(new THREE.CylinderGeometry(.052,.052,.25,10),gripMat);grip.name='bat-grip';grip.position.y=-.28;b.add(grip);
+    const ringGeo=new THREE.TorusGeometry(.053,.0035,4,10);
+    for(const y of [-.37,-.32,-.27,-.22,-.17]){const ring=new THREE.Mesh(ringGeo,lineMat);ring.name='bat-grip-wrap';ring.rotation.x=Math.PI/2;ring.position.y=y;b.add(ring);}
+    const knob=new THREE.Mesh(new THREE.CylinderGeometry(.068,.068,.024,10),gripMat);knob.name='bat-knob';knob.position.y=-.426;b.add(knob);
+    const a = anchor(armPlus.hand, wq(armPlus.hand), 1); b.scale.y = 1.25; b.position.set(0, 0.34 * 1.25, 0.02); a.add(b); a.userData.hand = armPlus.hand; b.castShadow = true; return b;
+  };
   if (bat) { const b = mkBat(); u.bat = new THREE.Group(); u.bat.material = b.material; u.batMesh = b; u.batAnchor = b.parent; u.bat.rotation.set(-0.5, 0, 0); }
   if (glove) {
     const a = anchor(armMinus.hand, wq(armMinus.hand), 1);
