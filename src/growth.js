@@ -171,6 +171,10 @@ export function buy(p, id) {
 }
 
 const growthSnapshot = (p) => Object.fromEntries([...keysOf(p), 'will', 'tough'].map((k) => [k, p[k]]));
+export function currentYearGrowth(p) {
+  if(!p.snap)return null;const now=growthSnapshot(p);
+  return {year:Math.min(3,cal(p.week).year),ovr:ovr(p),prevOvr:p.snapOvr,diffs:Object.keys(now).map(k=>[k,now[k]-p.snap[k]])};
+}
 function ensureGrowthBaseline(p) {
   if (!p.snap) { p.snap = growthSnapshot(p); p.snapOvr = ovr(p); }
 }

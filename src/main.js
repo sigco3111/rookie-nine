@@ -129,7 +129,7 @@ function detailModal() {
     <button class="btn alt" id="academic" style="width:100%;margin-top:8px">학업과 다음 시험</button><h2 style="margin-top:10px">평가</h2>${Object.keys(evName).map((k) => `${evName[k]} ${P.ev[k]}`).join(' / ')}
     <button class="btn alt" id="selection" style="width:100%;margin-top:8px">출전 기회와 신뢰</button><button class="btn alt" id="draft" style="width:100%;margin-top:8px">지명 목표와 현재 평가</button><h2 style="margin-top:10px">전적</h2>${P.wins}승 ${P.losses}패 · ${P.pos === 'pit' ? `${P.so || 0}탈삼진 · ${P.hits}피안타 · ${P.ab}이닝` : `${P.hits}/${P.ab} · 홈런 ${P.hr} · 타점 ${P.rbi}`}<button class="btn alt" id="matches" style="width:100%;margin-top:8px">최근 경기 기록</button>
     <h2 style="margin-top:10px">특수능력</h2>${P.traits.map((t) => `<div><b>${TRAITS[t].name}</b> <small>${TRAITS[t].desc}</small></div>`).join('') || '없음'}
-    <button class="btn alt" id="years" style="width:100%;margin-top:10px">지난 학년 성장 결산</button>
+    <button class="btn alt" id="years" style="width:100%;margin-top:10px">학년별 성장 돌아보기</button>
     <button class="btn alt" id="mastery" style="width:100%;margin-top:10px">훈련 숙련도와 다음 레벨</button>
     <button class="btn alt" id="goals" style="width:100%;margin-top:10px">특수능력 성장 목표</button>
     <button class="btn alt" id="evhistory" style="width:100%;margin-top:8px">선택의 기록</button>
@@ -273,8 +273,8 @@ function afterWeekEvent(msgs) {
 }
 
 function yearHistoryModal() {
-  const names={...STAT_NAME,will:'의지',tough:'근성'},rows=P.yearHistory||[];
-  const m=show($(`<div class="modal"><div class="panel"><h2>지난 학년 성장 결산</h2><p style="font-size:13px;color:#b5c6dd">1·2학년 종료 때 저장된 비교입니다. 새로 저장된 결산부터 볼 수 있으며, 졸업 결과와는 별개입니다.</p><div style="max-height:56vh;overflow:auto">${rows.map(r=>`<div style="background:#20375e;padding:14px;border-radius:10px;margin:10px 0"><b>${r.year}학년 결산</b><p>종합 ${r.prevOvr} → ${r.ovr}</p><small>${r.year===1?'입학 때':'전 학년 결산 때'}와 비교</small><div class="chips" style="margin-top:8px">${r.diffs.filter(([,v])=>v).map(([k,v])=>`<span class="chip ${v>0?'up':'dn'}">${names[k]} ${v>0?'+':''}${v}</span>`).join('')||'<span class="chip">능력 수치 변화 없음</span>'}</div></div>`).join('')||'<p>아직 저장된 학년 결산이 없습니다.<br>기존 저장에서 누락된 결산은 추정하지 않습니다.</p>'}</div><button class="btn" id="backyears" style="width:100%">상세 능력으로</button></div></div>`));
+  const names={...STAT_NAME,will:'의지',tough:'근성'},current=G.currentYearGrowth(P),rows=[...(current&&!P.done?[{...current,current:true}]:[]),...(P.yearHistory||[])];
+  const m=show($(`<div class="modal"><div class="panel"><h2>학년별 성장 돌아보기</h2><p style="font-size:13px;color:#b5c6dd">진행 중인 학년의 변화와 저장된1·2학년 결산입니다. 졸업 결과와는 별개입니다.</p><div style="max-height:56vh;overflow:auto">${rows.map(r=>`<div style="background:#20375e;padding:14px;border-radius:10px;margin:10px 0"><b>${r.year}학년 ${r.current?'진행 중':'결산'}</b><p>종합 ${r.prevOvr} → ${r.ovr}</p><small>${r.year===1?'입학 때':'전 학년 결산 때'}와 비교</small><div class="chips" style="margin-top:8px">${r.diffs.filter(([,v])=>v).map(([k,v])=>`<span class="chip ${v>0?'up':'dn'}">${names[k]} ${v>0?'+':''}${v}</span>`).join('')||'<span class="chip">능력 수치 변화 없음</span>'}</div></div>`).join('')||'<p>아직 저장된 학년 결산이 없습니다.<br>기존 저장에서 누락된 결산은 추정하지 않습니다.</p>'}</div><button class="btn" id="backyears" style="width:100%">상세 능력으로</button></div></div>`));
   m.querySelector('#backyears').onclick=()=>{m.remove();detailModal();};
 }
 function yearReviewModal(msgs) {

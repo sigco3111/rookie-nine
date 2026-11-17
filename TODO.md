@@ -305,3 +305,6 @@
 
 ## 04:43 Nov 18
 - Growth-goal screen now toggles nearest3/all eligible unlearned special traits, letting user plan beyond top3. Same existing traitGoals/requirements/order/35% explanation; position-only invalid traits remain filtered. Scrollable list keeps mode/back visible. Both-position actual UI nearest->all->nearest state byte-equality and pitcher no batter trait passed, portrait inspected. No learned traits/threshold/reward/batting changes; not natural earning/device QA.
+
+## 05:04 Nov 18
+- Extended year summaries to show current-year live growth against existing start/year-review baseline above archived cards; detail entry renamed school-year growth review. Pure currentYearGrowth does not alter snapshot or archive; graduation separate/finished players omit live card, no missing-baseline inference. Both positions no-mutation/current diffs/year-reset/archive separation tests and UI two reviews->reload->current+3 vs archived+5 passed. Portrait inspected. Synthetic boundary/week/stats/RNG not natural3year/device QA; baseline/rewards/batting unchanged.
