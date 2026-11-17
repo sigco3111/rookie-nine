@@ -174,7 +174,7 @@ export function endWeek(p) {
 }
 
 export function eventEligible(p, e) {
-  return p.week >= e.min && (!e.once || !p.cnt['ev_' + e.id])
+  return p.week >= e.min && (e.regular == null || isRegular(p) === e.regular) && (!e.once || !p.cnt['ev_' + e.id])
     && (e.afterWin == null || (!!p.lastMatch && p.lastMatch.win === e.afterWin && p.week - p.lastMatch.week <= 4))
     && (!e.pos || e.pos === p.pos) && (!e.trait || p.traits.includes(e.trait))
     && (!e.req || (p.cnt['ev_' + e.req] > 0 && !p.cnt['ev_' + e.id]))

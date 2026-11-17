@@ -164,3 +164,6 @@
 
 ## 12:30 Nov 17
 - Added compact command-only actual resource/evaluation chips under weekly home report: condition, money, study, toughness, coach/captain/team/scout. Captures command execution before weekly recovery, match or event so label explicitly excludes these; no rewards or risk/RNG change. Old saves start next command; latest data survives JSON save, while result chips only appear on the immediate weekly result screen. Batter/pitcher cap/ban/hospital/week recovery tests and actual 잡무 button -> next week -> reload passed. Portrait checked with simultaneous promotion notice; controls fit. No batting/guide/motion changes.
+
+## 12:51 Nov 17
+- Added 2 once-per-run selection-status scenarios: regular player's preparation vs team gratitude; candidate after week16 choosing fundamentals vs team trust. Eligibility uses existing isRegular, supports batter/pitcher; existing24% event gate unchanged, neither is guaranteed immediately after status change. Both positions/status/min-week/once/JSON/year-threshold tests passed plus prior win/loss scenarios. Actual weekly button -> regular event -> choice -> reload saved history passed with synthetic state/fixed RNG. Portrait inspected. No hitting/guide/motion changes; full balance deferred.

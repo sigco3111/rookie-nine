@@ -79,6 +79,12 @@ export const INJURIES = [
 
 // 이벤트. chance는 화면에 표시된다.
 export const EVENTS = [
+  { id: 'regular_resolve', once: true, regular: true, title: '이제 내 자리', text: '출전 명단에 내 이름이 있다. 기회를 잡은 만큼 준비도 달라져야 한다. 오늘은 무엇을 먼저 할까?', min: 1, choices: [
+    { label: '감독과 경기 준비를 점검한다', chance: 100, ok: { coach: 4, will: 4, cond: -6, msg: '경기에 나서는 책임을 실감했다. 준비할 과제가 분명해졌다.' } },
+    { label: '함께 연습한 동료들에게 고맙다고 한다', chance: 100, ok: { team: 5, captain: 3, cond: 3, msg: '혼자 얻은 기회가 아니었다. 동료들의 응원이 힘이 됐다.' } } ] },
+  { id: 'bench_resolve', once: true, regular: false, title: '벤치에서 세운 목표', text: '아직 출전 기회가 적다. 조급해지기보다 다음 명단에 이름을 올릴 방법을 찾아보자.', min: 16, choices: [
+    { label: '기본기와 체력부터 다시 쌓는다', chance: 100, ok: { stamina: 2, will: 4, cond: -6, msg: '당장 눈에 띄는 성과보다 버틸 힘을 택했다.' } },
+    { label: '팀 훈련을 돕고 감독에게 조언을 구한다', chance: 100, ok: { coach: 5, team: 4, cond: -4, msg: '작은 역할부터 해내며 팀의 신뢰를 쌓았다.' } } ] },
   { id: 'after_win_review', once: true, afterWin: true, title: '승리 다음의 선택', text: '최근 경기의 승리를 되짚는 시간. 동료들은 잠깐 쉬자고 하고, 감독은 다음 경기를 준비한다.', min: 1, choices: [
     { label: '동료들과 승리 장면을 나눈다', chance: 100, ok: { team: 5, captain: 2, cond: 5, msg: '함께 만든 승리라는 마음이 남았다. 몸과 마음도 조금 가벼워졌다.' } },
     { label: '다음 상대를 분석한다', chance: 100, ok: { coach: 5, will: 3, cond: -5, msg: '감독과 다음 경기의 과제를 정리했다. 쉴 시간은 줄었다.' } } ] },
