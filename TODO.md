@@ -281,3 +281,6 @@
 
 ## 01:58 Nov 18
 - Shop now previews exact capped immediate stat/condition/cure/insurance effects per item before spending game currency, with owned-look/insurance-nonstack/insufficient-funds notes. Clone isolates traits/gear, no preview mutation; existing prices/rebuy/effect rules unchanged. Scrollable items keep exit/week controls visible, smaller exit text avoids awkward wrapping.26 both-position all-item/capped/owned/insurance/cure preview-vs-actual checks and UI capped98glove->99/+1->reopen0effect/purchase-save passed. Portrait inspected, synthetic money/stats/gear not full natural/device QA. No real purchase or batting change.
+
+## 02:18 Nov 18
+- Cosmetic fielder arrival polish: pursuit and backup running swing tapers within last3 distance units, settled fielders turn toward plate and return ready legs instead of keeping travel heading. Path speeds/reaction/landing/range unchanged; no catch/throw/collision/outcome change. Pure path remaining0/arrival regression passed; actual pitching two-moving/all7reset passed, separate controlled arrival t100 close render inspected for2ready fielders facing plate. Camera/time/target injection only test evidence, no gameplay camera change/natural-device claim. Shared batting/pitching pursuit.

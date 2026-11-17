@@ -33,10 +33,11 @@ export function defensivePursuit(fielders, x, z) {
     for (const path of paths) {
       const fd=fielders[path.index], step=defenseStep(path,t);
       fd.position.set(step.x,0,step.z);
-      if(path.distance>.01) fd.rotation.y=Math.atan2(path.target[0]-path.home[0],path.target[1]-path.home[1]);
+      if(step.moving) fd.rotation.y=Math.atan2(path.target[0]-path.home[0],path.target[1]-path.home[1]);
+      else if(t>=path.delay) fd.rotation.y=Math.atan2(-fd.position.x,-fd.position.z);
       fielderReady(fd);
       if(step.moving){
-        const u=fd.userData,stride=Math.sin(t*13);
+        const u=fd.userData,stride=Math.sin(t*13)*Math.min(1,step.remaining/3);
         u.legL.rotation.x=stride*.65;u.legR.rotation.x=-stride*.65;
         u.armL.rotation.x=-.55-stride*.45;u.armR.rotation.x=-.4+stride*.45;
       }

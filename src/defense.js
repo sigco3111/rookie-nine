@@ -13,5 +13,5 @@ export function defensePaths(homes,x,z){
 }
 export function defenseStep(path,t){
  const travel=Math.min(path.distance,Math.max(0,t-path.delay)*path.speed),k=path.distance?travel/path.distance:0;
- return {x:path.home[0]+(path.target[0]-path.home[0])*k,z:path.home[1]+(path.target[1]-path.home[1])*k,moving:travel>0&&travel<path.distance};
+ return {x:path.home[0]+(path.target[0]-path.home[0])*k,z:path.home[1]+(path.target[1]-path.home[1])*k,remaining:path.distance-travel,moving:travel>0&&travel<path.distance};
 }
