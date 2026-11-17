@@ -199,6 +199,7 @@ export function endWeek(p) {
   if (p.week % 48 === 0 && p.week < 144) { // 연말 결산: 지난 1년 성장 비교
     const nowS = growthSnapshot(p);
     p.review = { year: c.year - 1, ovr: ovr(p), prevOvr: p.snapOvr, diffs: Object.keys(nowS).map((k) => [k, nowS[k] - p.snap[k]]) };
+    p.yearHistory = [structuredClone(p.review), ...(p.yearHistory || []).filter(r=>r.year!==p.review.year)].slice(0,2);
     p.snap = nowS; p.snapOvr = ovr(p);
   }
   if (p.week >= 144) { finish(p); out.push('졸업식이다. 드래프트가 열린다!'); }

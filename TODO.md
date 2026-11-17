@@ -290,3 +290,6 @@
 
 ## 02:59 Nov 18
 - Match history now saves and displays exact capped post-match evaluation/condition deltas for new matches, including defense-trait effects, via common applyMatchResult wrapper for direct/auto both positions. Clearly excludes training/weekend/event; absent legacy delta says not saved. Match reward calculation unchanged. Both-position capped/uncapped/defense-trait result-vs-state/history JSON checks and actual auto-game->result-delta=history->confirm/reload->UI passed. Portrait pitching history inspected. Week/RNG injection not natural3year/direct-fullgame/device QA. No batting or reward rebalance.
+
+## 03:20 Nov 18
+- Added detailed stats -> past school-year growth summaries; new year1/2 boundary snapshots preserved independently before pending-review confirmation, per-year dedupe/max2, original overall comparison and ability deltas. Empty/older saves explicit no stored summaries, no inferred reconstruction. Both positions boundary snapshot vs review/independent deep copy/JSON and actual two boundary rest->reviews confirmed->reload archive read-only UI passed, portrait inspected. Boundary/week/field+5/RNG injection, not natural3year/device QA. Existing review/growth/batting rules unchanged; graduation separate.

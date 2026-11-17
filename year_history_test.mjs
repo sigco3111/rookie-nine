@@ -1,0 +1,2 @@
+import assert from 'node:assert/strict';import * as G from './src/growth.js';
+for(const pos of ['bat','pit']){const p=G.newPlayer('a','contact',pos);G.save(p);for(const year of [1,2]){p.week=year*48-1;p.field+=5;G.endWeek(p);assert.deepEqual(p.yearHistory[0],p.review);p.review.diffs[0][1]=999;assert.notEqual(p.yearHistory[0].diffs[0][1],999);p.review=null;assert.equal(p.yearHistory.length,year)}assert.equal(JSON.parse(JSON.stringify(p)).yearHistory[0].year,2)}console.log('both-position two boundary archives independent of pending review and JSON');
