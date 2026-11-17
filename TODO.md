@@ -182,3 +182,6 @@
 
 ## 14:34 Nov 17
 - Position-safe shop: pitcher no longer sees/can purchase batting-only bat. Meal keeps existing stamina+1 for pitcher without writing nonexistent power (previously NaN/null); pitcher text says 체력+1, batter keeps power+1/stamina+1. Prices unchanged, no added pitching stat bonus. Invalid/unavailable item IDs return safely before spending. Both-position item/effect/cost/JSON/finite tests passed; actual pitcher meal purchase->reload stamina31/money40 and batter bat purchase->reload regressions passed. Portrait shop inspected. Existing malformed optional fields in old saves are not migrated; new purchases stop introducing them.
+
+## 14:56 Nov 17
+- Replaced Kenney hand's sphere glove with original extruded palm/thumb/finger silhouette and double-sided pocket seam; not the rejected sphere-overlay experiment. Existing material ownership remains so bought gold glove uses same shape as default brown. Actual pitcher creation->shop glove->reload money/gear/color->direct pitching entry passed; close purchased glove, brown fielder and normal pitching-view pixels checked. Close proof uses separate camera; normal camera/poses unchanged. Geometry-only, no catch/throw logic or gameplay changes. Detailed fingers/hand fit and real-device GPU checks still late QA.

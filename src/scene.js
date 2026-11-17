@@ -190,7 +190,31 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
   u.bat = new THREE.Group(); u.bat.material = { color: { set() {} } }; u.glove = null; const shoeMat = mt(0x222222); for (const n of ['FootL', 'FootR']) { const fa2 = anchor(B[n], wq(B[n]), 1); const sh = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.07, 0.25), shoeMat); sh.position.set(0, -0.03, 0.06); sh.castShadow = true; fa2.add(sh); } u.shoes = [{ material: shoeMat }, { material: shoeMat }];
   const mkBat = () => { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.05, 0.85, 10), mt(0xdeb887)); const a = anchor(armPlus.hand, wq(armPlus.hand), 1); b.scale.y = 1.25; b.position.set(0, 0.34 * 1.25, 0.02); a.add(b); a.userData.hand = armPlus.hand; b.castShadow = true; return b; };
   if (bat) { const b = mkBat(); u.bat = new THREE.Group(); u.bat.material = b.material; u.batMesh = b; u.batAnchor = b.parent; u.bat.rotation.set(-0.5, 0, 0); }
-  if (glove) { const a = anchor(armMinus.hand, wq(armMinus.hand), 1); const gl = new THREE.Mesh(new THREE.SphereGeometry(0.15, 12, 10), mt(0x7b4a1e)); gl.scale.set(1, 1.15, 0.6); gl.position.set(0, -0.08, 0.1); a.add(gl); gl.castShadow = true; u.glove = gl; }
+  if (glove) {
+    const a = anchor(armMinus.hand, wq(armMinus.hand), 1);
+    const outline = new THREE.Shape();
+    outline.moveTo(-0.08, -0.15);
+    outline.quadraticCurveTo(-0.19, -0.10, -0.19, 0.03);
+    outline.quadraticCurveTo(-0.22, 0.13, -0.16, 0.14);
+    outline.lineTo(-0.10, 0.07); outline.lineTo(-0.09, 0.23);
+    outline.quadraticCurveTo(-0.075, 0.27, -0.05, 0.23);
+    outline.lineTo(-0.035, 0.12); outline.lineTo(-0.02, 0.27);
+    outline.quadraticCurveTo(0, 0.30, 0.025, 0.26);
+    outline.lineTo(0.04, 0.12); outline.lineTo(0.065, 0.24);
+    outline.quadraticCurveTo(0.09, 0.27, 0.11, 0.22);
+    outline.lineTo(0.11, 0.10); outline.lineTo(0.14, 0.19);
+    outline.quadraticCurveTo(0.18, 0.21, 0.18, 0.14);
+    outline.lineTo(0.17, -0.01); outline.quadraticCurveTo(0.16, -0.13, 0.06, -0.15); outline.closePath();
+    const geo = new THREE.ExtrudeGeometry(outline, { depth: 0.09, bevelEnabled: true, bevelThickness: 0.025, bevelSize: 0.018, bevelSegments: 2, steps: 1, curveSegments: 6 });
+    geo.translate(0, 0, -0.045); geo.rotateZ(Math.PI / 2);
+    const gl = new THREE.Mesh(geo, mt(0x7b4a1e)); gl.scale.set(1, 1.15, 0.6); gl.position.set(0, -0.08, 0.1); a.add(gl); gl.castShadow = true;
+    // 손 방향이 바뀌어도 보이도록 양면에 포켓 바느질을 둔다.
+    for (const side of [-1, 1]) {
+      const seam = new THREE.Mesh(new THREE.TorusGeometry(0.075, 0.008, 4, 14, Math.PI * 1.4), mt(0xe6bd86));
+      seam.position.set(0.005, 0, side * 0.073); seam.rotation.z = Math.PI * 0.2; gl.add(seam);
+    }
+    u.glove = gl;
+  }
   // 장식(별/띠)은 부착 대상으로 리다이렉트
   { const hA = u.hat; u.head.add = (o) => { o.position.set(0, 0.72, 0.1); o.scale.setScalar(1.4); hA.add(o); return u.head; }; const fa = anchor(armPlus.fore, wq(armPlus.fore), 1); u.armR.add = (o) => { o.position.set(0, -0.2, 0); fa.add(o); return u.armR; }; }
   const posedBones = [['Spine', null], ['Head', null]];
