@@ -329,3 +329,6 @@
 
 ## 07:29 Nov 18
 - New graduates copy independent year1/2/3 reviews into HOF; per-entry growth-history button works after new career and fresh title reload with no active player. Old HOF explicitly says not stored, no reconstruction. Archive uses shared read-only card view and returns HOF. Both-position detached career/JSON checks and actual two reviews->graduate->new career->fresh reload->HOF archive/back passed, final-year UI regression passed. First test compared new career to old one, fixed snapshot placement before archive read; passed. Portrait inspected. Week/stat/RNG injection, not natural3year/device QA. No extra HOF entries on read, inheritance/draft/rewards/batting unchanged.
+
+## 07:50 Nov 18
+- Choice history can toggle recent12/all saved30, exposing older already-stored decisions with explicit30 cap and no lost-record reconstruction. No storage limit/order/probability/reward changes. Both positions34 controlled resolutions of existing general events->save/reload->latest12/all30/newest-oldest dates/toggle while scrolled/back/state equality passed, before-after result regression passed. Portrait inspected. Forced event sequence and dates not natural eligible pacing/3year/device QA; no batting changes.
