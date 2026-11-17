@@ -22,6 +22,28 @@ function fielderReady(f) {
   u.armL.elbow = u.armR.elbow = 0.65;
   u.legL.rotation.set(0, 0, 0.10); u.legR.rotation.set(0, 0, -0.10);
 }
+export function resetDefense(fielders) {
+  for (const fd of fielders) { fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); fielderReady(fd); fd.rotation.y = Math.atan2(-fd.position.x, -fd.position.z); }
+}
+export function defensivePursuit(fielders, x, z) {
+  // 타구를 향한 이동 연출일 뿐 포구/안타 판정에 관여하지 않는다.
+  const radius = Math.hypot(x, z), bound = radius > 91 ? 91 / radius : 1;
+  x *= bound; z *= bound;
+  let near = null, best = Infinity;
+  for (const fd of fielders) { const [hx,hz] = fd.userData.home, d = Math.hypot(x-hx,z-hz); if (d<best) { best=d;near=fd; } }
+  return t => {
+    if (!near) return;
+    const [hx,hz] = near.userData.home, travel = Math.min(best, Math.max(0,t-.18)*7), k = best ? travel/best : 0;
+    near.position.set(hx+(x-hx)*k,0,hz+(z-hz)*k);
+    if (best>.01) near.rotation.y = Math.atan2(x-hx,z-hz);
+    fielderReady(near);
+    if (travel>0 && travel<best) {
+      const u=near.userData,stride=Math.sin(t*13);
+      u.legL.rotation.x=stride*.65;u.legR.rotation.x=-stride*.65;
+      u.armL.rotation.x=-.55-stride*.45;u.armR.rotation.x=-.4+stride*.45;
+    }
+  };
+}
 function ensureG() {
   if (G) return G;
   const g = new THREE.Group();
@@ -186,11 +208,9 @@ export async function playMatch(p, m, hud) {
     const dur = Math.max(0.9, Math.min(2.6, h.dst / 38 + 0.6)); const peak = Math.max(0.3, Math.min(30, h.dst * Math.tan(Math.max(0, h.launch) * Math.PI / 180) * 0.28));
     o.ball.visible = true; let t = 0;
     const land = [dir.x * h.dst, dir.z * h.dst + 0.3];
-    let near = null, nd = 1e9; for (const fd of o.fielders) { const dd = Math.hypot(fd.userData.home[0] - land[0], fd.userData.home[1] - land[1]); if (dd < nd) { nd = dd; near = fd; } }
+    const chase = defensivePursuit(o.fielders, land[0], land[1]);
     const f = (dt) => {
-      if (near) { const hx = near.userData.home[0], hz = near.userData.home[1]; const distance = Math.hypot(land[0] - hx, land[1] - hz); const travel = Math.min(distance, Math.max(0, t - 0.18) * 7); const k2 = distance > 0 ? travel / distance : 0;
-        near.position.x = hx + (land[0] - hx) * k2; near.position.z = hz + (land[1] - hz) * k2; near.rotation.y = Math.atan2(land[0] - hx, land[1] - hz);
-        const stride = travel > 0 && travel < distance ? Math.sin(t * 13) : 0; near.userData.legL.rotation.x = stride * 0.65; near.userData.legR.rotation.x = -stride * 0.65; near.userData.armL.rotation.x = -stride * 0.45; near.userData.armR.rotation.x = stride * 0.45; }
+      chase(t);
       t += dt; const k = Math.min(1, t / dur);
       const d = h.dst * k; let y = 1 + 4 * peak * k * (1 - k) - (h.launch < 8 ? 0.9 * k : 0);
       if (h.launch < 8) y = 0.15 + Math.abs(Math.sin(k * Math.PI * 4)) * 0.5 * (1 - k);
@@ -209,7 +229,7 @@ export async function playMatch(p, m, hud) {
       if (t >= dur) { delTicker(f); setTimeout(() => { rn.visible = false; o.batter.visible = true; res(); }, 300); } };
     tickers.add(f);
   });
-  const resetFielders = () => { for (const fd of o.fielders) { fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); fielderReady(fd); fd.rotation.y = Math.atan2(-fd.position.x, -fd.position.z); } };
+  const resetFielders = () => resetDefense(o.fielders);
   const resetCam = () => { camera.position.set(-0.15, 1.8, 5.4); camera.lookAt(-0.25, -0.35, -9); setBatterPose(o.batter, 0); };
 
   // 타석

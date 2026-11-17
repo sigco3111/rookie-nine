@@ -1,5 +1,5 @@
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, OPP_COLORS } from './scene.js';
-import { internals, applyEquipment } from './match.js';
+import { internals, applyEquipment, defensivePursuit, resetDefense } from './match.js';
 import { oppStrength, teamStrength, isRegular, cal, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
 import { sfx } from './audio.js';
@@ -28,6 +28,7 @@ export async function playPitching(p, m, hud) {
   setUniform(o.pitcher, year); applyEquipment(o.pitcher, p.gear);
   applyEquipment(o.batter);
   setShirt(o.batter, OPP_COLORS[TEAMS.indexOf(opp) % OPP_COLORS.length]);
+  resetDefense(o.fielders);
   for (const fd of o.fielders) { fd.visible = true; setUniform(fd, year); }
   if (!o.catcher) { o.catcher = makeChibi({ shirt: 0x333a44, pants: 0x333a44, cap: 0x222222, glove: true }); o.catcher.rotation.y = Math.PI; o.catcher.position.set(0, 0, 1.6); o.catcher.scale.set(1.0, 0.8, 1.0); o.catcher.userData.armL.rotation.set(-1.4, 0, 0.2); o.g.add(o.catcher);
     o.ump = makeChibi({ shirt: 0x111111, pants: 0x555555, cap: 0x111111 }); o.ump.rotation.y = Math.PI; o.ump.position.set(0.7, 0, 3.0); o.ump.scale.setScalar(1.0); o.g.add(o.ump); }
@@ -70,8 +71,9 @@ export async function playPitching(p, m, hud) {
       if (t >= T + 0.15) { done = true; delTicker(f); fin(); }
     };
     const fly = (kind, r, after) => { const dist = kind === 'out' ? 16 + Math.random() * 12 : kind === 'foul' ? 12 : [0, 26, 42, 58, 125][r.t]; const hi = kind === 'out' ? 7 : r && r.t === 4 ? 32 : 5 + (r ? r.t * 2 : 0); const dx = (Math.random() - 0.5) * (r && r.t === 4 ? 40 : 30); const dur = 0.9 + dist / 70;
-      o.ball.visible = true; let k = 0; const g2 = (dt) => { k += dt / dur; const s = Math.min(1, k); o.ball.position.set(bx + dx * s * 0.5, 1.0 + Math.sin(Math.PI * s) * hi, -dist * s * 0.9); const tg = o.ball.position; camera.lookAt(tg.x * 0.6, Math.max(0.8, tg.y * 0.7), Math.max(tg.z * 0.5, -40) + 4); camera.position.y = 3.1 + Math.min(4, tg.y * 0.1);
-        if (s >= 1) { delTicker(g2); o.ball.visible = false; cam(); after(); } }; tickers.add(g2); };
+      const chase = defensivePursuit(o.fielders, bx + dx * .5, -dist * .9);
+      o.ball.visible = true; let k = 0; const g2 = (dt) => { k += dt / dur; chase(k * dur); const s = Math.min(1, k); o.ball.position.set(bx + dx * s * 0.5, 1.0 + Math.sin(Math.PI * s) * hi, -dist * s * 0.9); const tg = o.ball.position; camera.lookAt(tg.x * 0.6, Math.max(0.8, tg.y * 0.7), Math.max(tg.z * 0.5, -40) + 4); camera.position.y = 3.1 + Math.min(4, tg.y * 0.1);
+        if (s >= 1) { delTicker(g2); o.ball.visible = false; resetDefense(o.fielders); cam(); after(); } }; tickers.add(g2); };
     const fin = () => {
       o.ball.visible = false; setBatterPose(o.batter, 0); setPitcherPose(o.pitcher, 0);
       if (!willSwing) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }

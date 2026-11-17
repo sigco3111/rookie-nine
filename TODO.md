@@ -212,3 +212,6 @@
 
 ## 18:02 Nov 17
 - Year/team palette now updates cap/helmet dark shade along with shirt, using tagged cap material. Previously pitcher kept red cap and batter blue helmet despite teal/orange or opponent shirt. Shared setShirt covers home/batting/runner/pitching/fielders without touching logo/skin/hair/gear. Both positions years1/2/3 cap colors checked and close pixels inspected; direct pitching verifies own/opponent/7fielder hat shade vs shirt plus prior gear ownership. Synthetic year/gear values, not natural3-year/device QA. Batting mechanics untouched.
+
+## 18:24 Nov 17
+- Direct pitching now moves nearest fielder toward hit landing area during flight instead of leaving all7 stationary; shared pursuit with batting uses reaction .18s/speed7, target radius capped91 inside stylized95 fence. Arms retain ready-pose baseline while running, stops return ready limbs. Explicit full reset on pitching entry and flight completion. No collision/catch/throw or outcome probability change. Local actual pitching throw->hit->fielder displacement>1.5->all7 home/legs reset passed; prior batting foul->next pitch reset regression passed. Close render inspected (synthetic RNG/year/fixed dt, not full device or natural balance QA). First test clicked before throw readiness, timed out; test now waits for aim instruction before click. No release claim from failed test.
