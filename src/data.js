@@ -82,6 +82,12 @@ export const INJURIES = [
 
 // 이벤트. chance는 화면에 표시된다.
 export const EVENTS = [
+  { id: 'pitch_form_followup', pos: 'pit', req: 'p_form', reqChoice: ['p_form', 0], title: '고쳐 본 투구폼의 기록', text: '전에 폼을 고쳐 보기로 했던 때의 메모를 코치와 다시 편다. 당시의 성공이나 실패와 관계없이, 지금 확인할 준비를 골라 보자.', min: 76, choices: [
+    { label: '릴리스 지점을 천천히 반복한다', chance: 100, ok: { ctrl: 2, coach: 3, cond: -6, msg: '빠르게 던지기보다 손을 놓는 지점을 살폈다. 작은 반복을 기록에 더했다.' } },
+    { label: '회복하며 다음 불펜 과제를 정한다', chance: 100, ok: { will: 3, coach: 2, cond: 8, msg: '잘됐던 점과 어려웠던 점을 나눠 적었다. 다음에 확인할 한 가지를 남겼다.' } } ] },
+  { id: 'bat_form_followup', pos: 'bat', req: 'senior', reqChoice: ['senior', 0], title: '바꿔 본 타격폼의 기록', text: '선배의 조언을 듣고 폼을 바꿔 봤던 기록을 찾았다. 그때 잘 맞았든 어려웠든, 지금의 준비에 남길 부분을 골라 보자.', min: 76, choices: [
+    { label: '기본 스윙을 천천히 되짚는다', chance: 100, ok: { meet: 2, coach: 3, cond: -6, msg: '공을 세게 치기보다 준비 동작을 살폈다. 내게 필요한 반복을 기록했다.' } },
+    { label: '쉬면서 연습 내용을 정리한다', chance: 100, ok: { will: 3, coach: 2, cond: 8, msg: '남길 부분과 다시 확인할 부분을 나눴다. 서두르지 않고 다음 연습을 준비했다.' } } ] },
   { id: 'coach_pro_followup', req: 'coach', reqChoice: ['coach', 0], title: '프로라는 목표의 오늘', text: '감독이 예전에 말했던 프로라는 목표를 기억하고 있다. 마지막 학년, 먼 결과보다 오늘 해낼 준비를 정해 보자고 한다.', min: 100, choices: [
     { label: '기초 체력 과제를 정해 꾸준히 한다', chance: 100, ok: { stamina: 2, will: 3, coach: 2, cond: -6, msg: '큰 포부를 작은 과제로 나눴다. 오늘 끝낼 분량이 분명해졌다.' } },
     { label: '쉴 시간까지 넣어 준비 계획을 짠다', chance: 100, ok: { coach: 3, will: 2, cond: 7, msg: '오래 준비할 몸 상태도 목표의 일부였다. 무리하지 않을 기준을 적었다.' } } ] },

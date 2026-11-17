@@ -317,3 +317,6 @@
 
 ## 06:05 Nov 18
 - Event results and saved choice history now show exact selected-effect before->after values alongside deltas. Snapshot only the applied numeric keys, including capped and position-filtered effects; old saves omit comparison rather than infer current state. Both positions all events/choices/success-failure/caps/low-money exact-state/JSON and608 preview regression passed. Actual followup->result->reload identical->history after current-stat change passed; portrait inspected. No probability/reward/selection/batting change. Week/prereq/RNG controlled, not natural3year/device QA.
+
+## 06:26 Nov 18
+- Added position-specific form-change followups from week76: pitcher p_form change->release practice/recovery notes; batter senior change->basic swing/recovery notes. Exact prior change choice and position; both prior success/failure allowed with outcome-neutral wording, no invented prior success. Each once-only. Both-position opposite-choice/position/week75-76/once/save/origin tests and624 preview regression passed. Actual both-position rest->followup->result->reload->history passed; pitching portrait inspected. Existing24% gate unchanged, eligible pool/modest stats-trust-condition tradeoffs expand; not natural pacing/3year/device/balance QA. No actual swing/pitch animation or difficulty change.
