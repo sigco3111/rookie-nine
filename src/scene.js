@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { UNIFORMS } from './data.js';
+export { UNIFORMS } from './data.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { sample as mcSample } from './mocap.js';
 import { clone as skClone } from 'three/examples/jsm/utils/SkeletonUtils.js';
@@ -370,7 +372,6 @@ export const THREEX = THREE;
 window.__rk = { THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose };
 
 // 학년별 셔츠와 같은 계열의 짙은 모자/헬멧
-export const UNIFORMS = [0x2b6cb0, 0x1f8a70, 0xd98a1f];
 export function setUniform(ch, year) { setShirt(ch, UNIFORMS[Math.max(0, Math.min(2, year - 1))]); }
 export function setShirt(ch, c) {
   const capColor = new THREE.Color(c).multiplyScalar(0.48);

@@ -1,4 +1,5 @@
 // 시스템 구조만 참고한 독자 구현 데이터
+export const UNIFORMS = [0x2b6cb0, 0x1f8a70, 0xd98a1f];
 export const STAT_KEYS = ['meet', 'power', 'speed', 'arm', 'field', 'stamina'];
 export const PIT_KEYS = ['velo', 'ctrl', 'brk', 'speed', 'field', 'stamina'];
 export const keysOf = (p) => (p.pos === 'pit' ? PIT_KEYS : STAT_KEYS);

@@ -320,3 +320,6 @@
 
 ## 06:26 Nov 18
 - Added position-specific form-change followups from week76: pitcher p_form change->release practice/recovery notes; batter senior change->basic swing/recovery notes. Exact prior change choice and position; both prior success/failure allowed with outcome-neutral wording, no invented prior success. Each once-only. Both-position opposite-choice/position/week75-76/once/save/origin tests and624 preview regression passed. Actual both-position rest->followup->result->reload->history passed; pitching portrait inspected. Existing24% gate unchanged, eligible pool/modest stats-trust-condition tradeoffs expand; not natural pacing/3year/device/balance QA. No actual swing/pitch animation or difficulty change.
+
+## 06:47 Nov 18
+- Equipment screen now shows all3 school-year uniform shirt icons together with current-year border/label and auto-promotion explanation. Shared UNIFORMS data drives actual3D and UI instead of duplicate hex arrays; colors/rules unchanged. Both positions years1/2/3 preview-color=active3D-shirt, no player mutation, return controls passed;390x844 portrait inspected. Year injected not natural progression/device QA. Icons are illustrative, not new3D jersey geometry; no rewards/batting change.
