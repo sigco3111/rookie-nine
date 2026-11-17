@@ -116,7 +116,8 @@ function detailModal() {
     <h2 style="margin-top:10px">특수능력</h2>${P.traits.map((t) => `<div><b>${TRAITS[t].name}</b> <small>${TRAITS[t].desc}</small></div>`).join('') || '없음'}
     <button class="btn alt" id="goals" style="width:100%;margin-top:10px">특수능력 성장 목표</button>
     <button class="btn alt" id="evhistory" style="width:100%;margin-top:8px">선택의 기록</button>
-    <h2 style="margin-top:10px">기록</h2><div class="log">${P.log.slice(0, 8).map((x) => '· ' + x).join('<br>')}</div><br><button class="btn" style="width:100%" id="x">닫기</button></div></div>`));
+    <button class="btn alt" id="equipment" style="width:100%;margin-top:8px">내 장비와 유니폼</button><h2 style="margin-top:10px">기록</h2><div class="log">${P.log.slice(0, 8).map((x) => '· ' + x).join('<br>')}</div><br><button class="btn" style="width:100%" id="x">닫기</button></div></div>`));
+  m.querySelector('#equipment').onclick = () => { m.remove(); equipmentModal(); };
   m.querySelector('#academic').onclick = () => { m.remove(); academicModal(); };
   m.querySelector('#selection').onclick = () => { m.remove(); selectionModal(); };
   m.querySelector('#matches').onclick = () => { m.remove(); matchHistoryModal(); };
@@ -124,6 +125,17 @@ function detailModal() {
   m.querySelector('#goals').onclick = () => { m.remove(); goalsModal(); };
   m.querySelector('#x').onclick = () => m.remove();
 }
+function equipmentModal() {
+  const gear = P.gear || {}, year = Math.min(3, G.cal(P.week).year);
+  const equipment = [
+    ...(P.pos === 'pit' ? [] : [{ id:'bat', label:'배트', owned:'새 배트 · 금색', base:'기본 배트 · 나무색', color:gear.bat?'#f2c94c':'#deb887' }]),
+    { id:'glove', label:'글러브', owned:'새 글러브 · 금색', base:'기본 글러브 · 갈색', color:gear.glove?'#f2c94c':'#7b4a1e' },
+    { id:'shoes', label:'신발', owned:'러닝화 · 빨간색', base:'기본 신발 · 검은색', color:gear.shoes?'#e53935':'#222222' }
+  ];
+  const m=show($(`<div class="modal"><div class="panel"><h2>내 장비와 유니폼</h2><div style="padding:12px;background:#20375e;border-radius:10px;margin-bottom:10px"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:${['#2b6cb0','#1f8a70','#d98a1f'][year-1]};margin-right:8px"></span><b>${year}학년 유니폼</b><small style="display:block;margin-top:5px;color:#b5c6dd">학년별 셔츠와 같은 계열의 모자·헬멧</small></div>${equipment.map(e=>`<div style="padding:12px;background:#20375e;border-radius:10px;margin-bottom:8px"><small>${e.label} · ${gear[e.id]?'구입 장비 적용 중':'기본 장비 사용 중'}</small><div style="margin-top:5px"><span style="display:inline-block;width:14px;height:14px;border:1px solid #ffffff66;border-radius:50%;background:${e.color};margin-right:8px"></span><b>${gear[e.id]?e.owned:e.base}</b></div></div>`).join('')}<p style="font-size:12px;color:#b5c6dd">구입한 장비 외형은 자동 적용됩니다. 타격·투구·주루 등 장면에 따라 보이는 장비는 다릅니다.<br>구매 때 오른 능력치는 현재 능력에 포함돼 있습니다. 이 화면을 열어도 추가로 오르지 않습니다.</p><button class="btn" id="backequipment" style="width:100%">상세 능력으로</button></div></div>`));
+  m.querySelector('#backequipment').onclick=()=>{m.remove();detailModal();};
+}
+
 function academicModal() {
   const s = G.academicStatus(P), c = s.nextWeek == null ? null : G.cal(s.nextWeek);
   const m = show($(`<div class="modal"><div class="panel"><h2>학업과 다음 시험</h2><div class="chip ${s.banned?'dn':'up'}">${s.banned?`연습 금지 ${s.banned}주`:'현재 연습 가능'}</div>${c?`<p>${c.year}학년 ${c.month}월 ${c.wk}주 · ${s.remaining}주 진행 뒤 시험</p><div style="background:#20375e;padding:14px;border-radius:10px"><b>현재 학업 / 통과 기준</b><div style="font-size:28px;font-weight:900;margin:8px 0">${s.study} / ${s.need}</div><div class="bar"><i style="width:${Math.min(100,s.study/s.need*100)}%;background:${s.study>=s.need?'#69db93':'#ffd23f'}"></i></div><p style="margin-bottom:0">${s.study>=s.need?'현재 수치면 통과 가능':`현재 기준 ${s.need-s.study} 부족`}</p></div><p>공부 명령이나 이벤트로 학업을 올릴 수 있습니다. 시험 전 이벤트 선택으로 수치가 달라질 수 있습니다.</p>`:'<p>졸업 전 남은 시험이 없습니다.</p>'}<p style="font-size:13px;color:#b5c6dd">시험에 미달하면 연습 금지 3주와 감독 평가 -5. 통과 여부와 관계없이 시험 후 학업은 12 줄어듭니다. 금지 중에도 공부·휴식·리프레쉬는 가능합니다.</p><button class="btn" id="backacademic" style="width:100%">상세 능력으로</button></div></div>`));
