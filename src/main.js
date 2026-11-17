@@ -33,7 +33,13 @@ function titleScreen() {
 
 function hofScreen() {
   const h = G.hof().slice().reverse();
-  const m = show($(`<div class="modal"><div class="panel"><h2>${ic('trophy')} 명예의 전당</h2>${h.length ? h.map((e) => `<div class="panel" style="margin:6px 0"><b>${e.name}</b> · 종합 ${e.ovr} · ${e.rank ? e.rank + '순위 ' + e.team : '미지명'}<br><small>${e.stats.join('/')} · 홈런 ${e.hr} · ${e.traits.map((t) => TRAITS[t].name).join(', ') || '특능 없음'}</small></div>`).join('') : '아직 졸업한 선수가 없습니다.'}<br><button class="btn" style="width:100%" id="x">닫기</button></div></div>`));
+  const career = e => {
+    const c=e.career;
+    if(!c)return e.pos==='pit'?'이전 기록: 투수 세부 성적 미저장':`홈런 ${e.hr??0} · 이전 기록은 일부 성적만 저장됨`;
+    return `${c.wins}승 ${c.losses}패 · ${e.pos==='pit'?`${c.ip}이닝 ${c.so}탈삼진 ${c.hitsAllowed}피안타`:`${c.ab}타수 ${c.hits}안타 ${c.hr}홈런 ${c.rbi}타점`}`;
+  };
+  const stats=e=>(e.pos==='pit'?['구속','제구','변화구','주력','수비','체력']:['미트','파워','주력','송구','수비','체력']).map((name,i)=>`${name} ${e.stats[i]}`).join(' · ');
+  const m = show($(`<div class="modal"><div class="panel"><h2>${ic('trophy')} 명예의 전당</h2><div style="max-height:65vh;overflow:auto">${h.length ? h.map((e) => `<div class="panel" style="margin:8px 0"><b>${e.name}</b> · ${e.pos==='pit'?'투수':'타자'} · 종합 ${e.ovr}<div style="color:#ffd23f;margin:6px 0">${e.rank ? e.rank + '순위 ' + e.team : '미지명'}</div><p style="font-size:13px;margin:6px 0">${career(e)}</p><small style="color:#b5c6dd">${stats(e)}</small><div class="chips" style="margin-top:6px">${e.traits.map((t) => `<span class="chip up">${TRAITS[t].name}</span>`).join('') || '<span class="chip">특능 없음</span>'}</div></div>`).join('') : '<p>아직 졸업한 선수가 없습니다.</p>'}</div><button class="btn" style="width:100%;margin-top:8px" id="x">닫기</button></div></div>`));
   m.querySelector('#x').onclick = () => m.remove();
 }
 
