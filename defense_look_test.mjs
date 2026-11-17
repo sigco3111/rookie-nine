@@ -1,0 +1,2 @@
+import assert from 'node:assert/strict';import {defenseLookYaw} from './src/defense.js';
+assert.equal(defenseLookYaw(0,0,0,0,1),0);assert.equal(defenseLookYaw(0,0,0,1,0),.6);assert.equal(defenseLookYaw(0,0,0,-1,0),-.6);assert.equal(defenseLookYaw(2,3,1,2,3),0);assert(Math.abs(defenseLookYaw(0,0,Math.PI-.1,-.01,-1)-.11)<.001);for(let a=-10;a<10;a+=.1)assert(Math.abs(defenseLookYaw(0,0,a,1,-2))<=.6);console.log('attention bounded, facing and angle-wrap cases passed');

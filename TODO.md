@@ -335,3 +335,6 @@
 
 ## 08:09 Nov 18
 - Added final-year camp accept/decline followups from week108: shared stamina/recovery planning vs individual defense/shared preparation. Exact prior choice; accepted camp success/failure wording neutral, each once-only. Both positions/opposite choice/week107-108/JSON/once/effects and640 preview/origin regression passed. Actual rest->decline followup->result/reload/history passed; portrait inspected. Existing24% event gate unchanged but eligible story pool/tradeoffs expand, long-run balance deferred. Week/prereq/RNG controlled not natural3year/device QA; no batting changes.
+
+## 08:31 Nov 18
+- Cosmetic defensive attention: all7 fielders turn head horizontally toward projected landing point after reaction delay, max0.6rad local yaw; resetDefense/home clears old head pose too. Two pursuit paths/speeds/arrival/outcomes unchanged, no catch/throw added. Angle wrap/bounds/near-target pure tests and both-position stale-head home reset passed; actual pitching fly->two moving/head attention bound->all7 reset passed. Close render inspected; test-only camera/time/RNG, not gameplay camera change or natural/device QA. Batting/rewards unchanged.

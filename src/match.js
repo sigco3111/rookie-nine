@@ -1,4 +1,4 @@
-import { defensePaths, defenseStep } from './defense.js';
+import { defensePaths, defenseStep, defenseLookYaw } from './defense.js';
 import { TRAITS } from './data.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, OPP_COLORS } from './scene.js';
 import { cal, battingWindow, oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
@@ -18,6 +18,7 @@ export function frame() { const n = performance.now(); const dt = window.__dt ||
 
 function fielderReady(f) {
   const u = f.userData;
+  u.head.rotation.set(0,0,0);
   u.body.rotation.x = 0.12;
   u.armL.rotation.set(-0.55, 0, 0.15); u.armR.rotation.set(-0.4, 0, -0.15);
   u.armL.elbow = u.armR.elbow = 0.65;
@@ -42,6 +43,7 @@ export function defensivePursuit(fielders, x, z) {
         u.armL.rotation.x=-.55-stride*.45;u.armR.rotation.x=-.4+stride*.45;
       }
     }
+    for(const fd of fielders) fd.userData.head.rotation.y=t<.18?0:defenseLookYaw(fd.position.x,fd.position.z,fd.rotation.y,x,z);
   };
 }
 function ensureG() {

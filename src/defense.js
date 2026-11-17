@@ -15,3 +15,11 @@ export function defenseStep(path,t){
  const travel=Math.min(path.distance,Math.max(0,t-path.delay)*path.speed),k=path.distance?travel/path.distance:0;
  return {x:path.home[0]+(path.target[0]-path.home[0])*k,z:path.home[1]+(path.target[1]-path.home[1])*k,remaining:path.distance-travel,moving:travel>0&&travel<path.distance};
 }
+
+// Horizontal attention toward the projected landing point, not a catch decision.
+export function defenseLookYaw(x,z,facing,targetX,targetZ){
+ const dx=targetX-x,dz=targetZ-z;
+ if(Math.hypot(dx,dz)<.1)return 0;
+ const offset=Math.atan2(dx,dz)-facing;
+ return Math.max(-.6,Math.min(.6,Math.atan2(Math.sin(offset),Math.cos(offset))));
+}
