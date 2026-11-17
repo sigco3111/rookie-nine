@@ -1,0 +1,2 @@
+import assert from 'node:assert/strict';import {newPlayer,battingWindow} from './src/growth.js';
+for(const meet of [30,42,70,99]){const p=newPlayer('검증','contact');p.meet=meet;const w=battingWindow(p);assert(w.timing>0.07+meet*.0009);assert(w.radius>.18+meet*.0015);console.log(meet,w);}const p=newPlayer('검증','contact');p.traits=['avg','grit','walk','clutch'];const a=battingWindow(p,2,true),b=battingWindow({...p,traits:[]});assert(Math.abs(a.timing-b.timing-.04)<1e-8);assert(Math.abs(a.radius-b.radius-.045)<1e-8);console.log('trait bonuses preserved');

@@ -200,7 +200,7 @@ async function startMatch(m) {
   const hud = $(`<div class="screen" style="padding:6px 10px"><div class="scoreb"><span id="t" style="font-size:13px"></span><span id="sc">0 : 0</span></div><div class="top"><div class="dots" id="cnt"></div><div class="chip" id="pi"></div></div></div>`);
   show(hud); const bn = $(`<div></div>`); ui.appendChild(bn);
   const sw = $(`<button class="swing">SWING</button>`); show(sw);
-  show($(`<div class="hint">화면을 드래그해 노란 링을 공 위치에 맞추고, 공이 홈플레이트에 닿을 때 SWING!</div>`));
+  show($(`<div class="hint">화면을 드래그해 노란 링을 공 위치에 맞추고, 공이 홈플레이트에 닿을 때 SWING!<br><small>타격 보조: 타이밍·조준이 조금 빗나가도 맞힐 수 있어요.</small></div>`));
   let swFn = null;
   const act = (e) => { e.preventDefault(); if (swFn) swFn(); }; sw.addEventListener('pointerdown', act);
   const api = {

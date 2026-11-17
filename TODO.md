@@ -146,3 +146,6 @@
 
 ## 11:08 Nov 17
 - Paused motion tuning to finish narrow pitcher result/history smoke check: actual pitcher creation->auto loss->reload result->finish week->reload->history all passed. Found separate score bug: tied pitcher auto games assigned as losses still showed tied team score (seed7 produced2:2 loss). Now loss-side tie-break adds opponent team run, like existing win-side tie-break; pitcher line stays outing stats. 1000 deterministic seeds verified non-tied score, win flag and saved-history score agreement. No balance probability changes. Motion experiments remain reverted; next motion work requires structural contact solution, not parameter tuning.
+
+## 11:14 Nov 17
+- User11:11 asked easier swing judgment. Increased direct batting base timing .07+meet*.0009 -> .10+meet*.001 and contact radius .18+meet*.0015 -> .24+meet*.0018. Trait bonuses preserved; automatic simulation unchanged. At starting meet42 fair-contact timing ±.1078 -> ±.142s, aim radius .243 -> .3156 worldm; foul limits scale as before. HUD explains assistance. Actual direct center pitch no force-hit override: measured late error+.137533 within new .15 window at test meet50 led to flight (old .115 would be foul). Pixel checked; fixed input not human difficulty study. Motion/physical-contact mismatch remains separate and unfixed.

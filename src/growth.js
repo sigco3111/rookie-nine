@@ -38,6 +38,12 @@ export function battingAssist(p, strikes = 0, scoringChance = false) {
   const has = (id) => p.traits.includes(id);
   return { timing: (has('avg') ? 0.02 : 0) + (strikes === 2 && has('grit') ? 0.02 : 0), radius: (has('walk') ? 0.02 : 0) + (scoringChance && has('clutch') ? 0.025 : 0) };
 }
+// 직접 타격 기본 보조: 초반에도 타이밍/조준이 조금 빗나가면 맞힐 수 있다.
+export function battingWindow(p, strikes = 0, scoringChance = false) {
+  const assist = battingAssist(p, strikes, scoringChance);
+  return { timing: 0.10 + p.meet * 0.001 + assist.timing, radius: 0.24 + p.meet * 0.0018 + assist.radius };
+}
+
 export const defenseEvaluationBonus = (p) => (p.traits.includes('gun') ? 2 : 0) + (p.traits.includes('glove') ? 2 : 0);
 export const teamStrength = (p) => 34 + ovr(p) * 0.35 + (p.ev.team - 30) * 0.15 + (p.cnt.chore || 0) * 0.02;
 export const isRegular = (p) => { const avg = (p.ev.coach + p.ev.captain + p.ev.team) / 3; const need = [28, 40, 50][cal(p.week).year - 1]; return ovr(p) >= need + 6 || avg >= need + 14; };

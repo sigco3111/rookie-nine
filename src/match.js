@@ -1,6 +1,6 @@
 import { TRAITS } from './data.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, OPP_COLORS } from './scene.js';
-import { cal, battingAssist, oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
+import { cal, battingWindow, oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
 import { sfx } from './audio.js';
 
@@ -146,9 +146,7 @@ export async function playMatch(p, m, hud) {
       pitching = null; sbOp(0.25); o.ball.visible = false; setBatterPose(o.batter, st.swingT != null ? 1 : 0);
       if (st.swingT == null) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
       const FRC = window.__force; const err = FRC ? 0 : st.swingT + 0.075 - T; // 0.075s = 스윙 시작~배트 컨택트 프레임(모캡 85번) 지연
-      const assist = battingAssist(p, count.s, scoringChance);
-      const w = 0.07 + p.meet * 0.0009 + assist.timing;
-      const r = 0.18 + p.meet * 0.0015 + assist.radius;
+      const { timing: w, radius: r } = battingWindow(p, count.s, scoringChance);
       const ballPos = o.ball.position; // 도달 위치 보정
       const dist = FRC ? 0 : Math.hypot(cx - bx, cy - by);
       const tm = Math.abs(err) < w * 0.3 ? 'PERFECT' : err < 0 ? '빠름' : '늦음';
