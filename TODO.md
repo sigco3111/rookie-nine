@@ -209,3 +209,6 @@
 
 ## 17:42 Nov 17
 - Direct batting flight/base-running now hides/disables SWING and batting instruction; timing guide remains hidden. Phase chip says 타구 비행/베이스 러닝 instead of stale pitch speed; next pitch restores button/hint/guide and pitch label. Existing no-input phase made explicit, no swing timing/acceptance/physics changed. Actual forced homer->flight->run->next-pitch test passed with hidden/disabled controls and restored guide; portrait pixels inspected. Uses fixed dt/forced hit/synthetic regular status, not human or device QA. Does not add catches/throws.
+
+## 18:02 Nov 17
+- Year/team palette now updates cap/helmet dark shade along with shirt, using tagged cap material. Previously pitcher kept red cap and batter blue helmet despite teal/orange or opponent shirt. Shared setShirt covers home/batting/runner/pitching/fielders without touching logo/skin/hair/gear. Both positions years1/2/3 cap colors checked and close pixels inspected; direct pitching verifies own/opponent/7fielder hat shade vs shirt plus prior gear ownership. Synthetic year/gear values, not natural3-year/device QA. Batting mechanics untouched.

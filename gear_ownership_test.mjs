@@ -20,8 +20,10 @@ const colors=await p.evaluate(()=>{
  const {scene}=window.__rk;let g;scene.traverse(o=>{if(o.children.filter(c=>c.userData.home).length===7)g=o;});
  if(!g)throw Error('game group missing');
  const shirt=o=>{const c=new Set();o.traverse(m=>{if(m.isMesh)for(const a of (Array.isArray(m.material)?m.material:[m.material]))if(a.userData.isShirt)c.add(a.color.getHexString());});return [...c];};
+ const validateCap=a=>{let shirt;const caps=[];a.traverse(o=>{if(o.isMesh)for(const m of(Array.isArray(o.material)?o.material:[o.material])){if(m.userData.isShirt)shirt=m.color;if(m.userData.isCap)caps.push(m.color)}});if(!caps.length||caps.some(c=>!c.equals(shirt.clone().multiplyScalar(.48))))throw Error('cap mismatch')};
  const pitcher=g.children.find(o=>o.userData.hasGlove&&Math.abs(o.position.z+18.44)<.01);
  const batter=g.children.find(o=>o.userData.hasBat);
+ [pitcher,batter,...g.children.filter(o=>o.userData.home)].forEach(validateCap);
  return {gear:{pitcherShoes:pitcher.userData.shoes.map(x=>x.material.color.getHexString()),pitcherGlove:pitcher.userData.glove.material.color.getHexString(),opponentShoes:batter.userData.shoes.map(x=>x.material.color.getHexString()),opponentBat:batter.userData.bat.material.color.getHexString()},pitcher:shirt(pitcher),batter:shirt(batter),fielders:g.children.filter(o=>o.userData.home).map(shirt),title:document.querySelector('#t').innerText};
 });
 const expected=['2b6cb0','1f8a70','d98a1f'][year-1];if(colors.pitcher[0]!==expected||colors.fielders.some(a=>a[0]!==expected)||colors.batter[0]===expected||!colors.title.includes(regular?'선발':'구원'))throw Error(JSON.stringify(colors));

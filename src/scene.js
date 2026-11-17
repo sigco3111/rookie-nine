@@ -179,7 +179,7 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
   // 부착물 앵커 (머리: 바인드 방향 상쇄, 손: 팔을 내린 자세 기준 상쇄)
   const anchor = (bone, cancelQ, sc = 1) => { const gr = new THREE.Group(); gr.quaternion.copy(cancelQ.clone().invert()); const ws = bone.getWorldScale(new THREE.Vector3()).x; const wrap = new THREE.Group(); wrap.scale.setScalar(sc / ws); wrap.add(gr); bone.add(wrap); return gr; };
   const mt = (c) => new THREE.MeshLambertMaterial({ color: c });
-  { const a = anchor(B.Head, rest.Head, 1), m = mt(cap); // 모자 또는 헬멧
+  { const a = anchor(B.Head, rest.Head, 1), m = mt(cap); m.userData.isCap = true; // 모자 또는 헬멧
     const dome = new THREE.Mesh(new THREE.SphereGeometry(helmet ? 0.34 : 0.325, 18, 12, 0, Math.PI * 2, 0, Math.PI / 2), m); dome.position.set(0, 0.36, 0);
     const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.29, 0.29, 0.025, 16, 1, false, -Math.PI / 2, Math.PI), m); brim.position.set(0, 0.37, 0.23); brim.scale.set(1, 1, helmet ? 0.8 : 1.1);
     a.add(dome, brim);
@@ -351,8 +351,14 @@ export function addShadow(g) { const s = new THREE.Mesh(new THREE.CircleGeometry
 export const THREEX = THREE;
 window.__rk = { THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose };
 
-// 학년별 유니폼: 셔츠 색만 교체 (1학년 파랑 / 2학년 청록 / 3학년 주황)
+// 학년별 셔츠와 같은 계열의 짙은 모자/헬멧
 export const UNIFORMS = [0x2b6cb0, 0x1f8a70, 0xd98a1f];
-export function setUniform(ch, year) { const c = UNIFORMS[Math.max(0, Math.min(2, year - 1))]; ch.traverse((b) => { if (b.isMesh) (Array.isArray(b.material) ? b.material : [b.material]).forEach((m) => { if (b.material && m && m.color && m.userData.isShirt) m.color.set(c); }); }); }
-export function setShirt(ch, c) { ch.traverse((b) => { if (b.isMesh) (Array.isArray(b.material) ? b.material : [b.material]).forEach((m) => { if (m && m.userData && m.userData.isShirt) m.color.set(c); }); }); }
+export function setUniform(ch, year) { setShirt(ch, UNIFORMS[Math.max(0, Math.min(2, year - 1))]); }
+export function setShirt(ch, c) {
+  const capColor = new THREE.Color(c).multiplyScalar(0.48);
+  ch.traverse(b => { if (b.isMesh) for (const m of (Array.isArray(b.material) ? b.material : [b.material])) {
+    if (m?.color && m.userData?.isShirt) m.color.set(c);
+    if (m?.color && m.userData?.isCap) m.color.copy(capColor);
+  } });
+}
 export const OPP_COLORS = [0xc53030, 0x7b3fa0, 0x9aa3ad, 0x2f2f38, 0x3a8f3a, 0xb5486a, 0x8a5a2b, 0x2a9fb5];
