@@ -84,7 +84,8 @@ export function applyEquipment(a, gr = {}) {
 export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배경: 선수가 대기/훈련 모션
   const o = ensureG(); o.g.visible = true; o.ret.visible = false; o.zone.visible = false; o.ball.visible = false;
   o.batter.position.set(-0.6, 0, 0.3); o.batter.rotation.y = Math.PI / 2 - 0.5; o.batter.scale.setScalar(0.44);
-  for (const fd of o.fielders) { fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); fd.visible = !pit; }
+  resetDefense(o.fielders);
+  for (const fd of o.fielders) { fd.visible = !pit; if (!pit) setShirt(fd, 0xc53030); }
   o.batter.visible = !pit; o.pitcher.visible = true; o.pitcher.position.set(pit ? -0.6 : 0, pit ? 0 : 0.35, pit ? 0.3 : -18.44); o.pitcher.rotation.y = pit ? Math.PI / 2 - 0.9 : 0; o.pitcher.scale.setScalar(pit ? 0.5 : 1.3);
   if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; }
   const pu = o.pitcher.userData; applyLook(pit ? o.pitcher : o.batter, pl); if (pl) { setUniform(o.batter, cal(pl.week).year); if (pit) setUniform(o.pitcher, cal(pl.week).year); else setShirt(o.pitcher, 0xc53030); }

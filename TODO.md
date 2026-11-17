@@ -293,3 +293,6 @@
 
 ## 03:20 Nov 18
 - Added detailed stats -> past school-year growth summaries; new year1/2 boundary snapshots preserved independently before pending-review confirmation, per-year dedupe/max2, original overall comparison and ability deltas. Empty/older saves explicit no stored summaries, no inferred reconstruction. Both positions boundary snapshot vs review/independent deep copy/JSON and actual two boundary rest->reviews confirmed->reload archive read-only UI passed, portrait inspected. Boundary/week/field+5/RNG injection, not natural3year/device QA. Existing review/growth/batting rules unchanged; graduation separate.
+
+## 03:41 Nov 18
+- Home background now runs full shared resetDefense for all7 fielders, not just position: removes stale running arms/legs/travel headings from an interrupted/reused scene. Batter-home fielders also reset to same default red as background opponent pitcher rather than former pitching-team colors. Hidden pitcher-home fielders still reset. Both-position forced stale transforms->home positions/limbs/visibility/color assertions passed; normal portrait and separate close render inspected. Synthetic pose/color injection not natural full-match/device QA; gameplay camera and match outcomes unchanged. Initial test syntax corrected before running.
