@@ -248,3 +248,6 @@
 
 ## 22:10 Nov 17
 - Added 상세 능력 -> 내 장비와 유니폼 read-only screen, showing current year shirt palette and actual stored default/purchased bat/glove/shoes colors. Pitcher omits batting-only bat. Explains automatic look, scene-dependent visible gear and purchased stat gains already included, no extra view bonus. No equip toggles or invented upgrade multipliers. Both positions defaults, actual game-currency purchases/reload,3year palette text and state byte-equivalent before/after view passed. Portrait batter loaded3gear screen inspected. Year injection not natural3year/device QA. Visual gear meshes/prices/stats/batting unchanged.
+
+## 22:30 Nov 17
+- Added 상세 능력 -> 지명 목표와 현재 평가: read-only current draft score/components, minimum54 shortfall, rank thresholds, explicit not-final and graduation-time/random club/rank caveats. Shares exact original draft formula with actual finish, no new scoring bonus; honestly notes pitcher uses same existing categories including HR. Score display floors at2decimals and shortfall rounds upward so rounding cannot claim a threshold crossed.300 exact original/new/actualfinish comparisons both positions and54/64/74/82 boundaries passed. Both-position UI values/caveats/no-state-mutation/reload passed; portrait inspected. Synthetic week/evaluation/wins, not natural long-term/device QA. Draft/batting balance unchanged.

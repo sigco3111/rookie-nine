@@ -1,0 +1,11 @@
+import puppeteer from 'puppeteer-core';import fs from 'fs';import {spawn} from 'child_process';
+const server=process.env.TEST_URL?null:spawn(process.execPath,['node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','8123'],{stdio:'ignore'});
+const css=`@font-face{font-family:TKR;src:url(data:font/woff2;base64,${fs.readFileSync('node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-700-normal.woff2').toString('base64')})}*{font-family:TKR,sans-serif!important}`;
+const b=await puppeteer.launch({executablePath:'/usr/bin/google-chrome',headless:'new',args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+try{for(const pos of ['bat','pit']){
+ const ctx=await b.createBrowserContext(),p=await ctx.newPage();await p.setViewport({width:390,height:844,isMobile:true,hasTouch:true});const errs=[];p.on('pageerror',e=>errs.push(e.message));await p.evaluateOnNewDocument(c=>document.addEventListener('DOMContentLoaded',()=>{const s=document.createElement('style');s.textContent=c;document.head.append(s)}),css);
+ await p.goto(process.env.TEST_URL||'http://localhost:8123/');await p.waitForSelector('#new');await p.click('#new');await p.click(`[data-p="${pos}"]`);await p.click('#go');
+ await p.evaluate(()=>{const p=window.__game.P;p.week=90;p.ev.scout=55;p.ev.coach=60;p.wins=10;window.__game.skipWeeks(0)});
+ const before=await p.evaluate(()=>JSON.stringify(window.__game.P));await p.click('#stat');await p.click('#draft');const text=await p.$eval('.modal',e=>e.innerText);if(!text.includes('확정 결과 아님')||!text.includes('최소 지명 기준까지')||!text.includes('스카우트 평가'))throw Error('missing content');await p.screenshot({path:`/downloads/rookie9_draft_status_${pos}${process.env.TEST_URL?'_live':''}.png`});if(await p.evaluate(()=>JSON.stringify(window.__game.P))!==before)throw Error('view mutated');await p.click('#backdraft');await p.click('#x');await p.reload();await p.waitForSelector('#cont');await p.click('#cont');await p.click('#stat');await p.click('#draft');if(await p.$eval('.modal',e=>e.innerText)!==text)throw Error('reload changed');
+ if(errs.length)throw Error(errs.join('|'));console.log(pos,'outlook components and caveats; no mutation; reload same outlook');await ctx.close();
+}}finally{await b.close();if(server){const done=new Promise(r=>server.once('exit',r));server.kill('SIGTERM');await done}}

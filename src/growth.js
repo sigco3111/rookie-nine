@@ -285,9 +285,16 @@ export function finishMatch(p, m, s) {
   applyMatchResult(p, r); return r;
 }
 
+export function draftStatus(p) {
+  const parts = [['종합 능력', ovr(p) * .7], ['스카우트 평가', p.ev.scout * .2], ['감독 평가', p.ev.coach * .1], ['좋은 특수능력', p.traits.filter(t=>TRAITS[t].good).length * 1.2], ['팀 승리', Math.min(8,p.wins*.3)], ['홈런',p.hr*.4]];
+  const score = ovr(p) * 0.7 + p.ev.scout * 0.2 + p.ev.coach * 0.1 + p.traits.filter((t) => TRAITS[t].good).length * 1.2 + Math.min(8, p.wins * 0.3) + p.hr * 0.4;
+  const band=score>=82?'1순위':score>=74?'상위 지명':score>=64?'지명':score>=54?'하위 라운드':'지명 기준 미달';
+  return {parts,score,band,need:54,shortfall:Math.max(0,54-score)};
+}
+
 function finish(p) {
   p.done = true;
-  const score = ovr(p) * 0.7 + p.ev.scout * 0.2 + p.ev.coach * 0.1 + p.traits.filter((t) => TRAITS[t].good).length * 1.2 + Math.min(8, p.wins * 0.3) + p.hr * 0.4;
+  const { score } = draftStatus(p);
   let rank, team, text;
   if (score >= 82) { rank = 1; text = '1순위 지명! 전국이 주목하는 슈퍼 루키'; }
   else if (score >= 74) { rank = 2 + Math.floor(Math.random() * 3); text = `${rank}순위 상위 지명`; }

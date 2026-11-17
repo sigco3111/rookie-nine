@@ -112,11 +112,12 @@ function detailModal() {
     <table class="mini">${keysOf(P).map((k) => `<tr><td>${STAT_NAME[k]}</td><td><b style="color:${barColor(P[k])}">${grade(P[k])}</b> ${P[k]}</td><td style="width:50%"><div class="bar"><i style="width:${P[k]}%;background:${barColor(P[k])}"></i></div></td></tr>`).join('')}
     <tr><td>의지</td><td>${P.will}</td><td></td></tr><tr><td>터프도</td><td>${P.tough}</td><td></td></tr><tr><td>학업</td><td>${P.study}</td><td></td></tr></table>
     <button class="btn alt" id="academic" style="width:100%;margin-top:8px">학업과 다음 시험</button><h2 style="margin-top:10px">평가</h2>${Object.keys(evName).map((k) => `${evName[k]} ${P.ev[k]}`).join(' / ')}
-    <button class="btn alt" id="selection" style="width:100%;margin-top:8px">출전 기회와 신뢰</button><h2 style="margin-top:10px">전적</h2>${P.wins}승 ${P.losses}패 · ${P.pos === 'pit' ? `${P.so || 0}탈삼진 · ${P.hits}피안타 · ${P.ab}이닝` : `${P.hits}/${P.ab} · 홈런 ${P.hr} · 타점 ${P.rbi}`}<button class="btn alt" id="matches" style="width:100%;margin-top:8px">최근 경기 기록</button>
+    <button class="btn alt" id="selection" style="width:100%;margin-top:8px">출전 기회와 신뢰</button><button class="btn alt" id="draft" style="width:100%;margin-top:8px">지명 목표와 현재 평가</button><h2 style="margin-top:10px">전적</h2>${P.wins}승 ${P.losses}패 · ${P.pos === 'pit' ? `${P.so || 0}탈삼진 · ${P.hits}피안타 · ${P.ab}이닝` : `${P.hits}/${P.ab} · 홈런 ${P.hr} · 타점 ${P.rbi}`}<button class="btn alt" id="matches" style="width:100%;margin-top:8px">최근 경기 기록</button>
     <h2 style="margin-top:10px">특수능력</h2>${P.traits.map((t) => `<div><b>${TRAITS[t].name}</b> <small>${TRAITS[t].desc}</small></div>`).join('') || '없음'}
     <button class="btn alt" id="goals" style="width:100%;margin-top:10px">특수능력 성장 목표</button>
     <button class="btn alt" id="evhistory" style="width:100%;margin-top:8px">선택의 기록</button>
     <button class="btn alt" id="equipment" style="width:100%;margin-top:8px">내 장비와 유니폼</button><h2 style="margin-top:10px">기록</h2><div class="log">${P.log.slice(0, 8).map((x) => '· ' + x).join('<br>')}</div><br><button class="btn" style="width:100%" id="x">닫기</button></div></div>`));
+  m.querySelector('#draft').onclick = () => { m.remove(); draftModal(); };
   m.querySelector('#equipment').onclick = () => { m.remove(); equipmentModal(); };
   m.querySelector('#academic').onclick = () => { m.remove(); academicModal(); };
   m.querySelector('#selection').onclick = () => { m.remove(); selectionModal(); };
@@ -125,6 +126,12 @@ function detailModal() {
   m.querySelector('#goals').onclick = () => { m.remove(); goalsModal(); };
   m.querySelector('#x').onclick = () => m.remove();
 }
+function draftModal() {
+  const d=G.draftStatus(P), fmt=n=>(Math.floor(n*100+1e-8)/100).toFixed(2);
+  const m=show($(`<div class="modal"><div class="panel"><h2>지명 목표와 현재 평가</h2><small style="color:#b5c6dd">지금 졸업한다면 · 확정 결과 아님</small><div style="background:#20375e;padding:12px;border-radius:10px;margin:10px 0"><b>${d.band}</b><div style="font-size:28px;font-weight:900;margin:8px 0">${fmt(d.score)} / ${d.need}</div><div class="bar"><i style="width:${Math.min(100,d.score/d.need*100)}%;background:#ffd23f"></i></div><small>${d.shortfall?`최소 지명 기준까지 ${(Math.ceil(d.shortfall*100-1e-8)/100).toFixed(2)} 필요`:'최소 지명 기준 도달'}</small></div><table class="mini">${d.parts.map(([name,value])=>`<tr><td>${name}</td><td style="text-align:right">${fmt(value)}점</td></tr>`).join('')}</table><p style="font-size:12px;color:#b5c6dd">표시 점수는 소수 셋째 자리 이하는 버립니다.<br>기준: 54 하위 라운드 · 64 지명 · 74 상위 · 82 1순위. 졸업 시점의 실제 수치로 정해지며 구단과 일부 순위는 무작위입니다.<br>현재 규칙은 투수도 같은 항목을 씁니다. 능력·특능·경기·평가 선택으로 전망이 달라집니다.</p><button class="btn" id="backdraft" style="width:100%">상세 능력으로</button></div></div>`));
+  m.querySelector('#backdraft').onclick=()=>{m.remove();detailModal();};
+}
+
 function equipmentModal() {
   const gear = P.gear || {}, year = Math.min(3, G.cal(P.week).year);
   const equipment = [
