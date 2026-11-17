@@ -205,6 +205,7 @@ function makeKenney({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, bat = 
   const setW = (bone, W, invG) => { const par = bone.parent; par.updateWorldMatrix(true, false); const pq = par.getWorldQuaternion(new THREE.Quaternion()).premultiply(invG); bone.quaternion.copy(pq.invert().multiply(W)); };
   const mocapSync = () => {
     const m = u.mocap, J = mcSample(m.clip, m.f, m), invG = g.getWorldQuaternion(new THREE.Quaternion()).invert();
+    if (m.clip === 'swing' && m.handLift) { for (const side of ['L','R']) { J['wr'+side].y += m.handLift; J['el'+side].y += m.handLift * 0.5; } }
     const sub = (a, b) => J[a].clone().sub(J[b]);
     const hipSide = sub('hpL', 'hpR'), shSide = sub('shL', 'shR');
     const spineUp = sub('chest', 'hips'), upper = sub('neck', 'chest');
@@ -284,7 +285,7 @@ function mcBatter(c, swing) { const u = c.userData;
   const s = swing < 0 ? 0 : swing; // -1 중립도 스탠스
   const f = swing <= 0 ? 16 : seg(s, [[0, 24], [0.34, 35], [1, 56]]); // swing.json은 프레임 50에서 시작: 16=스탠스(66), 24=74 시작, 40=90, 76=126
   const bl = Math.max(0, Math.min(1, (s - 0.08) / 0.2)); // 컨택트 직전에 배트를 수평으로
-  u.mocap = { clip: 'swing', f, mirror: false, yaw: 0, travel: 0.4, batBlend: swing <= 0 ? 0 : bl * (s > 0.7 ? Math.max(0, 1 - (s - 0.7) / 0.3) : 1), batUp2: 0.1 };
+  u.mocap = { clip: 'swing', f, mirror: false, yaw: 0, travel: 0.4, batBlend: swing <= 0 ? 0 : bl * (s > 0.7 ? Math.max(0, 1 - (s - 0.7) / 0.3) : 1), batUp2: 0.1, handLift: swing <= 0 ? 0 : 0.25 * Math.sin(Math.PI * Math.min(1, s / 0.75)) };
 }
 function mcPitcher(c, t) { const u = c.userData;
   const f = t <= 0 ? 0 : seg(t, [[0, 10], [0.5, 66], [0.65, 84], [1, 110], [1.2, 125]]);
