@@ -188,3 +188,6 @@
 
 ## 15:16 Nov 17
 - Shop purchase result now shows actual capped stat/condition changes and actual game-currency cost, plus equipment/insurance/cured-trait outcome chips, instead of repeating nominal product description as achieved gain. Product descriptions/prices remain unchanged. Failed purchase clears last report to avoid stale success chips. Batter/pitcher cap/gear/cure/insurance/failure/JSON logic tests passed; actual drink at condition98 ->99 costs20 and reload retains99/80, pitcher shop regression passed. Portrait result fits390x844. No balance/gameplay changes; report itself is not replayed on reopen, saved values persist.
+
+## 15:37 Nov 17
+- Added 학업과 다음 시험 from detailed stats: next actual exam date/weeks, current study vs shared execution threshold, shortfall, current practice ban and exact existing failure/post-exam costs. Shared examNeed used by endWeek so no duplicated drifting formula. Tests across both positions/years/before-after exam/graduation/pass-fail boundary passed; year2 pre-exam shortage portrait inspected. No test threshold/penalty/probability change. Does not promise future pass if events change study.

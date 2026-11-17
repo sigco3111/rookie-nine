@@ -109,17 +109,23 @@ function detailModal() {
   const m = show($(`<div class="modal"><div class="panel"><h2>${P.name}의 상세</h2>
     <table class="mini">${keysOf(P).map((k) => `<tr><td>${STAT_NAME[k]}</td><td><b style="color:${barColor(P[k])}">${grade(P[k])}</b> ${P[k]}</td><td style="width:50%"><div class="bar"><i style="width:${P[k]}%;background:${barColor(P[k])}"></i></div></td></tr>`).join('')}
     <tr><td>의지</td><td>${P.will}</td><td></td></tr><tr><td>터프도</td><td>${P.tough}</td><td></td></tr><tr><td>학업</td><td>${P.study}</td><td></td></tr></table>
-    <h2 style="margin-top:10px">평가</h2>${Object.keys(evName).map((k) => `${evName[k]} ${P.ev[k]}`).join(' / ')}
+    <button class="btn alt" id="academic" style="width:100%;margin-top:8px">학업과 다음 시험</button><h2 style="margin-top:10px">평가</h2>${Object.keys(evName).map((k) => `${evName[k]} ${P.ev[k]}`).join(' / ')}
     <button class="btn alt" id="selection" style="width:100%;margin-top:8px">출전 기회와 신뢰</button><h2 style="margin-top:10px">전적</h2>${P.wins}승 ${P.losses}패 · ${P.pos === 'pit' ? `${P.so || 0}탈삼진 · ${P.hits}피안타 · ${P.ab}이닝` : `${P.hits}/${P.ab} · 홈런 ${P.hr} · 타점 ${P.rbi}`}<button class="btn alt" id="matches" style="width:100%;margin-top:8px">최근 경기 기록</button>
     <h2 style="margin-top:10px">특수능력</h2>${P.traits.map((t) => `<div><b>${TRAITS[t].name}</b> <small>${TRAITS[t].desc}</small></div>`).join('') || '없음'}
     <button class="btn alt" id="goals" style="width:100%;margin-top:10px">특수능력 성장 목표</button>
     <button class="btn alt" id="evhistory" style="width:100%;margin-top:8px">선택의 기록</button>
     <h2 style="margin-top:10px">기록</h2><div class="log">${P.log.slice(0, 8).map((x) => '· ' + x).join('<br>')}</div><br><button class="btn" style="width:100%" id="x">닫기</button></div></div>`));
+  m.querySelector('#academic').onclick = () => { m.remove(); academicModal(); };
   m.querySelector('#selection').onclick = () => { m.remove(); selectionModal(); };
   m.querySelector('#matches').onclick = () => { m.remove(); matchHistoryModal(); };
   m.querySelector('#evhistory').onclick = () => { m.remove(); eventHistoryModal(); };
   m.querySelector('#goals').onclick = () => { m.remove(); goalsModal(); };
   m.querySelector('#x').onclick = () => m.remove();
+}
+function academicModal() {
+  const s = G.academicStatus(P), c = s.nextWeek == null ? null : G.cal(s.nextWeek);
+  const m = show($(`<div class="modal"><div class="panel"><h2>학업과 다음 시험</h2><div class="chip ${s.banned?'dn':'up'}">${s.banned?`연습 금지 ${s.banned}주`:'현재 연습 가능'}</div>${c?`<p>${c.year}학년 ${c.month}월 ${c.wk}주 · ${s.remaining}주 진행 뒤 시험</p><div style="background:#20375e;padding:14px;border-radius:10px"><b>현재 학업 / 통과 기준</b><div style="font-size:28px;font-weight:900;margin:8px 0">${s.study} / ${s.need}</div><div class="bar"><i style="width:${Math.min(100,s.study/s.need*100)}%;background:${s.study>=s.need?'#69db93':'#ffd23f'}"></i></div><p style="margin-bottom:0">${s.study>=s.need?'현재 수치면 통과 가능':`현재 기준 ${s.need-s.study} 부족`}</p></div><p>공부 명령이나 이벤트로 학업을 올릴 수 있습니다. 시험 전 이벤트 선택으로 수치가 달라질 수 있습니다.</p>`:'<p>졸업 전 남은 시험이 없습니다.</p>'}<p style="font-size:13px;color:#b5c6dd">시험에 미달하면 연습 금지 3주와 감독 평가 -5. 통과 여부와 관계없이 시험 후 학업은 12 줄어듭니다. 금지 중에도 공부·휴식·리프레쉬는 가능합니다.</p><button class="btn" id="backacademic" style="width:100%">상세 능력으로</button></div></div>`));
+  m.querySelector('#backacademic').onclick=()=>{m.remove();detailModal();};
 }
 function selectionModal() {
   const s = G.selectionStatus(P);

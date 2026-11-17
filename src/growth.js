@@ -158,6 +158,17 @@ function ensureGrowthBaseline(p) {
   if (!p.snap) { p.snap = growthSnapshot(p); p.snapOvr = ovr(p); }
 }
 
+export const examNeed = week => 30 + (cal(week).year - 1) * 4;
+export function academicStatus(p) {
+  let nextWeek = p.week + 1;
+  while (nextWeek < 144) {
+    const c = cal(nextWeek);
+    if (c.wk === 1 && [6, 12].includes(c.month)) break;
+    nextWeek++;
+  }
+  return { nextWeek: nextWeek < 144 ? nextWeek : null, remaining: nextWeek - p.week, need: examNeed(nextWeek), study: p.study, banned: p.banWeeks || 0 };
+}
+
 // 주 종료 처리: 월말 시험, 달력 진행
 export function endWeek(p) {
   const out = [];
@@ -167,7 +178,7 @@ export function endWeek(p) {
   p.week++;
   const c = cal(p.week);
   if (c.wk === 1 && [6, 12].includes(c.month)) { // 학기말 시험
-    if (p.study < 30 + (c.year - 1) * 4) { p.banWeeks = 3; out.push('시험 성적 부진! 3주간 연습 금지'); addEv(p, 'coach', -5); }
+    if (p.study < examNeed(p.week)) { p.banWeeks = 3; out.push('시험 성적 부진! 3주간 연습 금지'); addEv(p, 'coach', -5); }
     else { out.push('시험 통과'); }
     p.study = clamp(p.study - 12);
   }
