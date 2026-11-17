@@ -82,6 +82,12 @@ export const INJURIES = [
 
 // 이벤트. chance는 화면에 표시된다.
 export const EVENTS = [
+  { id: 'loss_review_followup', req: 'after_loss_review', reqChoice: ['after_loss_review', 0], title: '고쳐 쓴 플레이 노트', text: '패배 뒤 동료들과 짚었던 실수가 노트에 남아 있다. 같은 상황을 가정해 준비해 보자는 이야기가 나왔다.', min: 44, choices: [
+    { label: '함께 수비 위치와 연결 동작을 맞춘다', chance: 100, ok: { field: 2, team: 3, cond: -6, msg: '지적에서 멈추지 않고 움직임을 맞췄다. 다음에는 서로 어떤 준비를 할지 정했다.' } },
+    { label: '감독에게 노트를 보여주고 과제를 추린다', chance: 100, ok: { coach: 3, will: 3, cond: -3, msg: '한 번에 모두 고치려 하지 않기로 했다. 다음 훈련의 작은 목표를 정했다.' } } ] },
+  { id: 'loss_recovery_followup', req: 'after_loss_review', reqChoice: ['after_loss_review', 1], title: '다시 시작하는 속도', text: '패배 뒤 쉬며 마음을 추슬렀던 날을 떠올린다. 쉬어 간 시간을 다음 준비로 연결할 방법을 골라 보자.', min: 44, choices: [
+    { label: '가벼운 기초훈련으로 리듬을 되찾는다', chance: 100, ok: { stamina: 2, will: 3, cond: -4, msg: '작은 반복부터 다시 시작했다. 서두르지 않아도 앞으로 갈 수 있었다.' } },
+    { label: '동료와 회복 계획을 나눈다', chance: 100, ok: { team: 3, captain: 2, cond: 7, msg: '쉴 때와 움직일 때를 함께 정했다. 혼자 뒤처진다는 조급함이 줄었다.' } } ] },
   { id: 'bench_basics_followup', req: 'bench_resolve', reqChoice: ['bench_resolve', 0], title: '쌓아 둔 기본기의 쓰임', text: '벤치에서 기본기부터 쌓기로 했던 날이 떠오른다. 반복하던 동작을 동료가 알아봤다. "그 연습, 나도 같이 해도 돼?"', min: 36, choices: [
     { label: '함께 수비 기본기를 맞춰 본다', chance: 100, ok: { field: 2, team: 3, cond: -6, msg: '눈에 띄지 않던 반복이 함께할 훈련이 됐다. 서로의 동작을 보며 배웠다.' } },
     { label: '회복하며 훈련 계획을 다시 정리한다', chance: 100, ok: { cond: 9, will: 3, msg: '쌓아 온 시간을 돌아보고 다음 과제를 골랐다. 조급함 대신 이어갈 힘을 챙겼다.' } } ] },
