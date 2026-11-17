@@ -170,3 +170,6 @@
 
 ## 13:12 Nov 17
 - Direct pitching now explicitly colors player pitcher +8 fielders with current-year team shirts and opponent batter with selected opponent palette, instead of inheriting batting/home scene colors. Also corrected HUD's always-starting-pitcher label to 선발/구원 from existing selection rule. Local actual creation->weekly command->direct pitching tests for years1/2/3 and regular/candidate passed, inspecting shirt materials; portrait pixels show orange third-year player vs teal opponent and 구원 label. Fielders behind pitching camera verified by material values, not claimed legible in normal view. No probabilities/motion/controls changed.
+
+## 13:33 Nov 17
+- Corrected extra defensive fielder:7 fielders (4 infield+3 outfield) plus pitcher/catcher, instead of8. Positions are stylized game placements, not measured real-world defense. Added slight forward lean/glove-ready arm pose and consistent restoration after foul/flight. Actual forced foul->next pitch checks7 home positions/ready limbs restored; close and overhead rendered pixels inspected. Pitching team uniform regression passed with7 fielders. Existing test still reports2 resource404s (not identified/fixed here), no JS error. No hit probability/acceptance/camera change, no actual catching/throwing implementation.

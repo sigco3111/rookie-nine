@@ -15,6 +15,13 @@ export const delTicker = (f) => tickers.delete(f);
 let last = performance.now();
 export function frame() { const n = performance.now(); const dt = window.__dt || Math.min(0.05, (n - last) / 1000); last = n; for (const f of [...tickers]) f(dt, n / 1000); for (const f of permanent) f(dt); renderer.render(scene, camera); requestAnimationFrame(frame); }
 
+function fielderReady(f) {
+  const u = f.userData;
+  u.body.rotation.x = 0.12;
+  u.armL.rotation.set(-0.55, 0, 0.15); u.armR.rotation.set(-0.4, 0, -0.15);
+  u.armL.elbow = u.armR.elbow = 0.65;
+  u.legL.rotation.set(0, 0, 0.10); u.legR.rotation.set(0, 0, -0.10);
+}
 function ensureG() {
   if (G) return G;
   const g = new THREE.Group();
@@ -27,7 +34,7 @@ function ensureG() {
   const ret = new THREE.Mesh(new THREE.RingGeometry(0.17, 0.2, 28), new THREE.MeshBasicMaterial({ color: 0xffd23f, side: THREE.DoubleSide, depthTest: false })); ret.position.set(0, ZY, 0.05); ret.renderOrder = 10; g.add(ret);
   const dot = new THREE.Mesh(new THREE.CircleGeometry(0.018, 8), new THREE.MeshBasicMaterial({ color: 0xffd23f, depthTest: false })); dot.renderOrder = 10; ret.add(dot);
   const catcher = makeChibi({ shirt: 0x444444, cap: 0x222222, glove: true }); catcher.position.set(0, 0, 1.3); catcher.rotation.y = Math.PI; catcher.scale.setScalar(0.0001); g.add(catcher);
-  const fielders = [[-24, -34], [0, -42], [24, -34], [-52, -62], [0, -72], [52, -62], [-14, -24], [14, -24]].map(([x, z], i) => { const f = makeChibi({ shirt: 0xc53030, cap: 0x742a2a, glove: true }); f.position.set(x, 0, z); f.scale.setScalar(2.2); f.rotation.y = Math.atan2(-x, 0 - z) ; f.userData.home = [x, z]; addShadow(f); g.add(f); return f; });
+  const fielders = [[-24, -24], [-11, -36], [11, -36], [24, -24], [-48, -65], [0, -78], [48, -65]].map(([x, z], i) => { const f = makeChibi({ shirt: 0xc53030, cap: 0x742a2a, glove: true }); f.position.set(x, 0, z); f.scale.setScalar(2.2); f.rotation.y = Math.atan2(-x, 0 - z) ; f.userData.home = [x, z]; fielderReady(f); addShadow(f); g.add(f); return f; });
   
   const runner = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, helmet: true, num: 9 }); runner.visible = false; runner.scale.setScalar(1.6); g.add(runner);
   scene.add(g); G = { g, batter, pitcher, ball, zone, ret, fielders, runner, bshadow }; permanent.add((dt) => { const b = G.ball; G.bshadow.visible = b.visible; G.bshadow.position.x = b.position.x; G.bshadow.position.z = b.position.z; const sc2 = Math.max(0.5, 1.4 - b.position.y * 0.1); G.bshadow.scale.setScalar(sc2); });
@@ -196,7 +203,7 @@ export async function playMatch(p, m, hud) {
       if (t >= dur) { delTicker(f); setTimeout(() => { rn.visible = false; o.batter.visible = true; res(); }, 300); } };
     tickers.add(f);
   });
-  const resetFielders = () => { for (const fd of o.fielders) { fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); for (const k of ['legL','legR','armL','armR']) fd.userData[k].rotation.x = 0; fd.rotation.y = Math.atan2(-fd.position.x, -fd.position.z); } };
+  const resetFielders = () => { for (const fd of o.fielders) { fd.position.set(fd.userData.home[0], 0, fd.userData.home[1]); fielderReady(fd); fd.rotation.y = Math.atan2(-fd.position.x, -fd.position.z); } };
   const resetCam = () => { camera.position.set(-0.15, 1.8, 5.4); camera.lookAt(-0.25, -0.35, -9); setBatterPose(o.batter, 0); };
 
   // 타석

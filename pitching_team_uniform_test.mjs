@@ -15,7 +15,7 @@ await p.click('#menu');await p.click('#t');await p.click('#new');await p.click('
 await p.evaluate(({year,regular})=>{const p=window.__game.P;p.week=7+48*(year-1);p.injury=null;p.velo=p.ctrl=p.brk=p.stamina=p.field=p.speed=30;if(regular)p.ev.coach=p.ev.captain=p.ev.team=90;Math.random=()=>.99;window.__game.skipWeeks(0);document.querySelector('.cmd').click();},{year,regular});
 await p.waitForSelector('#play');await p.click('#play');await p.waitForSelector('#throw');
 const colors=await p.evaluate(()=>{
- const {scene}=window.__rk;let g;scene.traverse(o=>{if(o.children.filter(c=>c.userData.home).length===8)g=o;});
+ const {scene}=window.__rk;let g;scene.traverse(o=>{if(o.children.filter(c=>c.userData.home).length===7)g=o;});
  if(!g)throw Error('game group missing');
  const shirt=o=>{const c=new Set();o.traverse(m=>{if(m.isMesh)for(const a of (Array.isArray(m.material)?m.material:[m.material]))if(a.userData.isShirt)c.add(a.color.getHexString());});return [...c];};
  const pitcher=g.children.find(o=>o.userData.hasGlove&&Math.abs(o.position.z+18.44)<.01);

@@ -1,0 +1,20 @@
+import puppeteer from 'puppeteer-core';
+import fs from 'fs';
+const fontB64 = fs.readFileSync('node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-700-normal.woff2').toString('base64');
+const css = `@font-face{font-family:TKR;src:url(data:font/woff2;base64,${fontB64}) format('woff2');font-weight:100 900}*{font-family:TKR,sans-serif!important}`;
+const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const p = await b.newPage(); await p.setViewport({ width: 1000, height: 700, isMobile: true, hasTouch: true });
+const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.text().includes('UNI')) errs.push(m.text()); });
+await p.evaluateOnNewDocument((c) => { document.addEventListener('DOMContentLoaded', () => { const st = document.createElement('style'); st.textContent = c; document.head.appendChild(st); }); }, css);
+await p.goto('http://localhost:8123/'); await new Promise(r => setTimeout(r, 1500));
+await p.evaluate(() => document.querySelector('#new').click()); await new Promise(r => setTimeout(r, 300));
+await p.evaluate(() => document.querySelector('#go').click()); await new Promise(r => setTimeout(r, 800));
+const state=await p.evaluate(()=>{
+ const {scene,camera,renderer,THREE}=window.__rk;
+ const fs=[];scene.traverse(o=>{if(o.userData.home)fs.push(o);});
+ const positions=fs.map(o=>({home:o.userData.home,pos:o.position.toArray(),elbow:o.userData.armL.elbow}));
+ const c=new THREE.PerspectiveCamera(60,1000/700,.1,300);c.position.set(0,100,32);c.lookAt(0,0,-36);c.updateMatrixWorld(true);renderer.render(scene,c);
+ const url=renderer.domElement.toDataURL('image/png');const f=fs[0];const close=new THREE.PerspectiveCamera(40,1000/700,.1,200);close.position.set(f.position.x+5,3.5,f.position.z+8);close.lookAt(f.position.x,1.8,f.position.z);renderer.render(scene,close);return {positions,url,close:renderer.domElement.toDataURL('image/png')};
+});
+if(state.positions.length!==7||state.positions.filter(o=>o.home[1]>-50).length!==4||state.positions.some(o=>o.elbow!==.65))throw Error(JSON.stringify(state.positions));
+fs.writeFileSync('/downloads/rookie9_defense_layout.png',Buffer.from(state.url.split(',')[1],'base64'));fs.writeFileSync('/downloads/rookie9_defense_ready.png',Buffer.from(state.close.split(',')[1],'base64'));console.log(state.positions);if(errs.length)throw Error(errs.join('|'));await b.close();
