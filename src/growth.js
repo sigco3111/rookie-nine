@@ -12,6 +12,8 @@ export function newPlayer(name, build, pos = 'bat') {
     ev: { coach: 30, captain: 30, team: 30, scout: 15 }, cnt: {}, injury: null, banWeeks: 0, insured: false,
     wins: 0, losses: 0, hits: 0, ab: 0, hr: 0, rbi: 0, tour: [], log: ['입학했다. 3년 뒤 프로 지명을 목표로!'], pendingMatch: null, done: false, result: null };
 }
+export const inheritanceInfo = (e, pos) => e ? { bonus:Math.min(6,2+Math.floor(e.ovr/20)), trait:e.pos===pos && e.traits?.[0] ? e.traits[0] : null } : null;
+
 export const ovr = (p) => p.pos === 'pit' ? Math.round((p.velo * 1.3 + p.ctrl * 1.3 + p.brk + p.stamina + p.field * 0.5 + p.speed * 0.3) / 5.4) : Math.round((p.meet * 1.4 + p.power * 1.2 + p.speed + p.arm * 0.7 + p.field * 0.9 + p.stamina * 0.8) / 6);
 export const cal = (w) => { const y = 1 + Math.floor(w / 48); const m = ((Math.floor(w / 4) + 3) % 12) + 1; return { year: y, month: m, wk: (w % 4) + 1 }; };
 export const condLabel = (c) => c >= 80 ? ['절호조', '#ff5a5f'] : c >= 60 ? ['호조', '#ff8a3d'] : c >= 40 ? ['보통', '#f4c20d'] : c >= 20 ? ['부진', '#3aa0e8'] : ['절부진', '#6b7280'];

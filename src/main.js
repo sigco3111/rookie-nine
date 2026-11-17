@@ -54,11 +54,19 @@ function createScreen() {
     <div class="panel"><div style="font-size:13px;margin-bottom:6px">타입</div><div class="build" id="bd"></div></div>
     ${G.hof().length ? `<div class="panel"><div style="font-size:13px;margin-bottom:6px">선배의 가르침 (명예의 전당 계승)</div><select class="input" id="inh"><option value="">계승 안 함</option>${G.hof().map((e, i) => ({ e, i })).sort((a, b) => b.e.ovr - a.e.ovr).slice(0, 6).map(({ e, i }) => `<option value="${i}">${e.name} (${e.pos === 'pit' ? '투수' : '타자'} 종합 ${e.ovr})</option>`).join('')}</select><small id="inhd" style="opacity:.8">선배의 노하우로 전 능력치 소폭 상승, 같은 포지션이면 특수능력 계승.</small></div>` : ''}
     <div class="spacer"></div><button class="btn big" id="go">입학하기</button><button class="btn gray" id="bk">뒤로</button></div>`));
+  const drawInheritance = () => {
+    const select=el.querySelector('#inh'), note=el.querySelector('#inhd');if(!select)return;
+    const e=select.value===''?null:G.hof()[+select.value],info=G.inheritanceInfo(e,pos);
+    note.style.display='block';note.style.marginTop='8px';
+    note.textContent=info?`${e.name} 선배: 전 능력 +${info.bonus} · 의지 +5 · 감독 +6. ${info.trait?`계승 특능: ${TRAITS[info.trait].name}`:e.pos===pos?'계승할 특능 없음':'포지션이 달라 특능은 계승하지 않습니다.'}`:'계승 없이 시작합니다. 선배를 고르면 입학 전 보너스를 확인할 수 있습니다.';
+  };
+  if(el.querySelector('#inh'))el.querySelector('#inh').onchange=drawInheritance;
+  drawInheritance();
   const drawB = () => { const bd = el.querySelector('#bd'); bd.innerHTML = builds.map((b) => `<button data-b="${b[0]}" class="${b[0] === sel ? 'sel' : ''}"><b>${b[1]}</b><br><small>${b[2]}</small></button>`).join(''); bd.querySelectorAll('button').forEach((b) => b.onclick = () => { sel = b.dataset.b; drawB(); }); };
   drawB();
-  el.querySelectorAll('#pos button').forEach((b) => b.onclick = () => { pos = b.dataset.p; builds = BUILDS[pos]; sel = 'contact'; el.querySelectorAll('#pos button').forEach((x) => x.classList.toggle('sel', x === b)); drawB(); });
+  el.querySelectorAll('#pos button').forEach((b) => b.onclick = () => { pos = b.dataset.p; builds = BUILDS[pos]; sel = 'contact'; drawInheritance(); el.querySelectorAll('#pos button').forEach((x) => x.classList.toggle('sel', x === b)); drawB(); });
   el.querySelector('#bk').onclick = titleScreen;
-  el.querySelector('#go').onclick = () => { P = G.newPlayer(el.querySelector('#nm').value.trim() || '신인', sel, pos); { const sv = el.querySelector('#inh'); if (sv && sv.value !== '') { const e = G.hof()[+sv.value]; const b = Math.min(6, 2 + Math.floor(e.ovr / 20)); for (const k of keysOf(P)) P[k] += b; P.will += 5; P.ev.coach += 6; P.log.unshift(`${e.name} 선배의 가르침을 받았다. (능력치 +${b})`); if (e.pos === pos && e.traits && e.traits[0] && !P.traits.includes(e.traits[0])) { P.traits.push(e.traits[0]); P.log.unshift('선배의 특수능력을 이어받았다!'); } } } G.save(P); homeScreen(); };
+  el.querySelector('#go').onclick = () => { P = G.newPlayer(el.querySelector('#nm').value.trim() || '신인', sel, pos); { const sv = el.querySelector('#inh'); if (sv && sv.value !== '') { const e = G.hof()[+sv.value]; const info = G.inheritanceInfo(e,pos), b = info.bonus; for (const k of keysOf(P)) P[k] += b; P.will += 5; P.ev.coach += 6; P.log.unshift(`${e.name} 선배의 가르침을 받았다. (능력치 +${b})`); if (info.trait && !P.traits.includes(info.trait)) { P.traits.push(info.trait); P.log.unshift('선배의 특수능력을 이어받았다!'); } } } G.save(P); homeScreen(); };
 }
 
 let lastDiff = {};
