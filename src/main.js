@@ -26,7 +26,7 @@ function titleScreen() {
     <button class="btn big alt" id="new">새 선수 만들기</button>
     <button class="btn gray" id="hof">명예의 전당 (${h.length})</button></div>`));
   el.querySelector('#new').onclick = createScreen;
-  if (sv && !sv.done) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingEvent) { clear(); showHome(P.pos, P); eventChoiceModal(P.pendingEvent); } else if (P.pendingEventResult) { clear(); showHome(P.pos, P); eventResultModal(P.pendingEventResult); } else if (P.review) { clear(); showHome(P.pos, P); yearReviewModal(P.review.msgs || []); } else homeScreen(); };
+  if (sv && !sv.done) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingEvent) { clear(); showHome(P.pos, P); eventChoiceModal(P.pendingEvent); } else if (P.pendingEventResult) { clear(); showHome(P.pos, P); eventResultModal(P.pendingEventResult); } else if (P.pendingLearned) { clear(); showHome(P.pos, P); learnedModal(P.pendingLearned); } else if (P.review) { clear(); showHome(P.pos, P); yearReviewModal(P.review.msgs || []); } else homeScreen(); };
   el.querySelector('#hof').onclick = hofScreen;
 }
 
@@ -189,9 +189,13 @@ function finishWeek(msgs, previousTraits) {
     const e = G.endWeek(P); msgs = msgs.concat(e); G.save(P);
     const learned = P.traits.filter(t => !previousTraits.has(t) && TRAITS[t]?.good);
     if (!learned.length) return afterWeekEvent(msgs);
-    G.save(P); sfx.good();
-    const m = show($(`<div class="modal"><div class="panel"><h2 style="color:#ffd23f">특수능력 습득!</h2><p>꾸준한 훈련이 새로운 강점이 됐다.</p><div style="max-height:50vh;overflow:auto">${learned.map(t=>`<div style="padding:14px;background:#20375e;border-radius:10px;margin:8px 0"><b style="font-size:22px;color:#ffd23f">${TRAITS[t].name}</b><p style="margin:6px 0 0">${TRAITS[t].desc}</p></div>`).join('')}</div><button class="btn" id="oklearned" style="width:100%;margin-top:10px">계속</button></div></div>`));
-    m.querySelector('#oklearned').onclick=()=>{m.remove();afterWeekEvent(msgs);};
+    P.pendingLearned = { learned, msgs }; G.save(P); sfx.good(); learnedModal(P.pendingLearned);
+}
+
+function learnedModal(q) {
+  const { learned, msgs } = q;
+  const m = show($(`<div class="modal"><div class="panel"><h2 style="color:#ffd23f">특수능력 습득!</h2><p>꾸준한 훈련이 새로운 강점이 됐다.</p><div style="max-height:50vh;overflow:auto">${learned.map(t=>`<div style="padding:14px;background:#20375e;border-radius:10px;margin:8px 0"><b style="font-size:22px;color:#ffd23f">${TRAITS[t].name}</b><p style="margin:6px 0 0">${TRAITS[t].desc}</p></div>`).join('')}</div><p style="font-size:12px;color:#b5c6dd">능력은 이미 적용됐습니다.<br>확인 전 재접속해도 이 알림을 이어서 봅니다.</p><button class="btn" id="oklearned" style="width:100%;margin-top:10px">계속</button></div></div>`));
+  m.querySelector('#oklearned').onclick=()=>{P.pendingLearned=null;G.save(P);m.remove();afterWeekEvent(msgs);};
 }
 
 function afterWeekEvent(msgs) {

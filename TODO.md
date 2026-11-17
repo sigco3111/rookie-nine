@@ -224,3 +224,6 @@
 
 ## 19:25 Nov 17
 - Annual review now remains pending/saved until confirmation and Continue restores it. Retains weekly messages; confirmation clears/saves before following event selection so no repeated week or snapshot computation. Corrected first-year comparison label to 입학 rather than 작년; other years 전 학년. Zero stat delta says no change rather than no comparison data. Both positions year1/year2 boundary via actual rest command->review->reload identical state/text->confirm->reload home passed. Injected boundary weeks/field+5/RNG, not full natural years; portrait inspected. Other interruption surfaces remain open. Growth snapshot rules, batting mechanics and rewards unchanged.
+
+## 19:45 Nov 17
+- Trait acquisition notification now saves pending learned IDs/messages and restores on Continue before annual review; confirmation clears without granting again, then resumes review/event/home. Explicitly states ability already applied. Both positions ordinary week/year boundary rest->actual acquired trait->reload identical state/text->confirm->review reload/confirm->home reload verified single trait, no repeated week. Threshold/counter/RNG injected, not natural earning/device QA. Portrait inspected. Acquisition35%/conditions/trait effects and batting rules unchanged. Match prompts/mid-match recovery remain separate.
