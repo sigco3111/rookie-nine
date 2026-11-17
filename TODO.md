@@ -158,3 +158,6 @@
 
 ## 11:49 Nov 17
 - Added 출전 기회와 신뢰 from detailed stats: exact existing overall or coach/captain/team average thresholds, shortfall, progress bars, current candidate/regular status. Shared selectionStatus helper now drives actual isRegular and screen;300 comparisons across years preserve existing rules. No difficulty/guide/motion change. Portrait UI inspected, next live verification. Purpose: make relationship choices' link to playing opportunities visible, not invent new selection mechanics.
+
+## 12:10 Nov 17
+- Added one-time home card + durable log when candidate/regular status changes. Baseline old/new saves silently on first home, no false promotion. Actual same selection rules; year-threshold demotion supported. Logic baseline/promotion/repeat/year-demotion/JSON tests passed; synthetic trust threshold via actual home render plus reload verified one log only. Portrait card layout inspected. Does not pause gameplay with modal; motion/difficulty/guide unchanged.

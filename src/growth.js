@@ -52,6 +52,14 @@ export function selectionStatus(p) {
   return { overall: ovr(p), overallNeed: need + 6, trust: avg, trustNeed: need + 14, regular: ovr(p) >= need + 6 || avg >= need + 14 };
 }
 export const isRegular = p => selectionStatus(p).regular;
+export function selectionChange(p) {
+  const current = isRegular(p), previous = p.lastSelection;
+  p.lastSelection = current;
+  if (previous == null || previous === current || p.done) return null;
+  const notice = { regular: current, title: current ? '레귤러로 발탁!' : '다시 후보부터', text: current ? '실력 또는 팀의 신뢰가 출전 기준을 채웠다.' : '현재 학년의 출전 기준에 미치지 못했다. 실력과 신뢰를 다시 쌓자.' };
+  p.log.unshift(`[출전 변화] ${notice.title} ${notice.text}`); p.log = p.log.slice(0,80);
+  return notice;
+}
 
 function addEv(p, k, v) { p.ev[k] = clamp(p.ev[k] + v, 0, 100); }
 export function applyFx(p, fx) {

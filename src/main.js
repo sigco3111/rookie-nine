@@ -67,11 +67,13 @@ function evHtml() {
 }
 
 function homeScreen(msgs) {
+  const selectionNotice = G.selectionChange(P);
   clear(); showHome(typeof P !== 'undefined' && P ? P.pos : 'bat', typeof P !== 'undefined' ? P : null); G.save(P);
   if (P.done) return endingScreen();
   const m = G.matchOfWeek(P);
   const c = G.cal(P.week);
   const el = show($(`<div class="screen">${topHtml()}
+    ${selectionNotice ? `<div class="panel" style="border:2px solid ${selectionNotice.regular ? '#66e692' : '#ffd23f'};background:#20375e"><b style="font-size:20px;color:${selectionNotice.regular ? '#66e692' : '#ffd23f'}">${selectionNotice.title}</b><div style="font-size:13px;margin-top:5px">${selectionNotice.text}</div></div>` : ''}
     <div class="panel homepanel"><div class="top"><span>${ic("cap")} ${P.name} <small>종합 ${G.ovr(P)}</small></span><span style="font-size:12px">${G.isRegular(P) ? '● 레귤러' : '○ 후보'}</span></div>${statsHtml()}
       <div style="margin-top:4px">${evHtml()}</div>
       <div class="ev" style="margin-top:6px">${P.traits.map((t) => `<span class="tr ${TRAITS[t].good ? '' : 'bad'}">${TRAITS[t].name}</span>`).join('') || '<small style="opacity:.7">특수능력 없음</small>'}${P.banWeeks ? `<span class="tr bad">연습 금지 ${P.banWeeks}주</span>` : ''}${P.injury ? `<span class="tr bad">입원 ${P.injury.name} ${P.injury.weeks}주</span>` : ''}</div></div>
