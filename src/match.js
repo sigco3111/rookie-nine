@@ -101,7 +101,7 @@ export async function playMatch(p, m, hud) {
   // 입력
   let cx = 0, cy = ZY;
   const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-  const setRet = (x, y) => { cx = Math.max(-0.95, Math.min(0.95, x)); cy = Math.max(0.1, Math.min(1.7, y)); ret.position.set(cx, cy, 0.05); o.batter.userData.aimHeight = cy; };
+  const setRet = (x, y) => { cx = Math.max(-0.95, Math.min(0.95, x)); cy = Math.max(0.1, Math.min(1.7, y)); ret.position.set(cx, cy, 0.05); };
   const pt = (e) => { const r = renderer.domElement.getBoundingClientRect(); const v = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1 + 0.12); ray.setFromCamera(v, camera); const hit = new THREE.Vector3(); ray.ray.intersectPlane(plane, hit); if (hit) setRet(hit.x, hit.y); };
   let down = false;
   const onD = (e) => { down = true; pt(e); }, onM = (e) => { if (down || e.pointerType === 'mouse') pt(e); }, onU = () => { down = false; };
@@ -140,16 +140,10 @@ export async function playMatch(p, m, hud) {
       o.ball.rotation.z += dt * 20;
       if (st.swingAnim > 0) { st.swingAnim += dt / 0.22; setBatterPose(o.batter, st.swingAnim); }
       if (window.__dbgShot) window.__dbgShot(st, T, o, sN);
-      const assist = battingAssist(p, count.s, scoringChance);
-      const w = 0.07 + p.meet * 0.0009 + assist.timing;
-      const r = 0.18 + p.meet * 0.0015 + assist.radius;
-      const canContact = st.swingT != null && (window.__force || (Math.abs(st.swingT + 0.075 - T) <= w * 1.5 && Math.hypot(cx - bx, cy - by) <= r * 1.6));
-      if ((canContact && st.t >= st.swingT + 0.075) || st.t >= T + 0.2) { done = true; delTicker(f); if (window.__contactLog) window.__contactLog({t: st.t, T, swingT: st.swingT, canContact, ball: o.ball.position.toArray()}); finalize(); }
+      if (st.t >= T + 0.2) { done = true; delTicker(f); finalize(); }
     };
     const finalize = () => {
-      pitching = null; sbOp(0.25); o.ball.visible = false;
-      if (st.swingT != null && st.swingAnim < 1) { let phase = st.swingAnim; const follow = dt => { phase += dt / 0.22; setBatterPose(o.batter, Math.min(1, phase)); if (phase >= 1) delTicker(follow); }; tickers.add(follow); }
-      else setBatterPose(o.batter, st.swingT != null ? 1 : 0);
+      pitching = null; sbOp(0.25); o.ball.visible = false; setBatterPose(o.batter, st.swingT != null ? 1 : 0);
       if (st.swingT == null) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
       const FRC = window.__force; const err = FRC ? 0 : st.swingT + 0.075 - T; // 0.075s = 스윙 시작~배트 컨택트 프레임(모캡 85번) 지연
       const assist = battingAssist(p, count.s, scoringChance);
