@@ -1,0 +1,2 @@
+import assert from 'node:assert/strict';import {newPlayer,simulateMatch} from './src/growth.js';
+for(let n=1;n<=1000;n++){let seed=n;Math.random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/2**32;};const p=newPlayer('검증','contact','pit');p.week=7;const r=simulateMatch(p,{kind:'league',name:'리그전'});assert.notEqual(r.my,r.opp);assert.equal(r.win,r.my>r.opp);assert.equal(p.matchHistory[0].opp,r.opp);}console.log('1000 deterministic pitcher results: score/win/history consistent');

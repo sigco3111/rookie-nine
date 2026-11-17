@@ -214,7 +214,7 @@ export function simulateMatch(p, m) {
     const ip = isRegular(p) ? 5 : 1; const q = (p.velo * 1.1 + p.ctrl * 1.1 + p.brk * 0.8) / 3 + (p.traits.includes('aura') ? 4 : 0); const st = oppStrength(p);
     let er = 0, so = 0, ha = 0; for (let i = 0; i < ip * 3; i++) { const e = (st - 40) * 0.006 - (q - 50) * 0.004; if (Math.random() < 0.26 + e) { ha++; if (Math.random() < 0.45) er++; } if (Math.random() < 0.18 + (q - 40) * 0.004) so++; }
     const my = Math.max(0, Math.round(rnd(0, 3) + (teamStrength(p) - 40) / 12 + rnd(-1, 2))); let win = my > er; if (my === er) win = Math.random() < 0.5;
-    const r = { ip, so, er, hitsAllowed: ha, my: my + (win && my === er ? 1 : 0), opp: er, win, kind: m.kind, title: m.name, ab: 0, hits: 0, hr: 0, rbi: 0 }; applyMatchResult(p, r); return r;
+    const r = { ip, so, er, hitsAllowed: ha, my: my + (win && my === er ? 1 : 0), opp: er + (!win && my === er ? 1 : 0), win, kind: m.kind, title: m.name, ab: 0, hits: 0, hr: 0, rbi: 0 }; applyMatchResult(p, r); return r;
   }
   const pa = isRegular(p) ? 3 : 1;
   let hits = 0, hr = 0, rbi = 0, ab = 0;

@@ -143,3 +143,6 @@
 
 ## 10:48 Nov 17
 - Rejected contact-response candidate after early/late test. Accepted early swing resolves while ball z=-1.305m, distance to bat centerline1.523m; late resolves at z1.619m. Thus fast response fixes center only and creates/retains disconnected contact elsewhere. Restored BOTH scene.js and match.js to deployed2b1cb5d, rebuilt matching index-B9hagiAY.js. All experiments remain recoverable in local commits but none in active source. docs/live unchanged. Next motion approach must separate input timing error (gameplay) from visual contact clock, or change physics with explicit design; do not widen/narrow acceptance to conceal mismatch. Avoid repeated parameter-only tuning.
+
+## 11:08 Nov 17
+- Paused motion tuning to finish narrow pitcher result/history smoke check: actual pitcher creation->auto loss->reload result->finish week->reload->history all passed. Found separate score bug: tied pitcher auto games assigned as losses still showed tied team score (seed7 produced2:2 loss). Now loss-side tie-break adds opponent team run, like existing win-side tie-break; pitcher line stays outing stats. 1000 deterministic seeds verified non-tied score, win flag and saved-history score agreement. No balance probability changes. Motion experiments remain reverted; next motion work requires structural contact solution, not parameter tuning.
