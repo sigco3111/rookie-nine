@@ -215,9 +215,17 @@ function purchaseReportHtml() {
   const names = { ...STAT_NAME, cond: '컨디션', money: '용돈' };
   return `<div class="chips" style="margin:6px 0 10px">${Object.entries(r.fx).map(([k,v])=>`<span class="chip ${v>0?'up':'dn'}">${names[k]} ${v>0?'+':''}${v}</span>`).join('')}${r.cured.map(t=>`<span class="chip up">${TRAITS[t].name} 치료</span>`).join('')}${r.insured?'<span class="chip up">다음 부상 보험 적용</span>':''}${r.gear?'<span class="chip up">장비 적용</span>':''}</div>`;
 }
+function purchasePreviewHtml(id) {
+  const r=G.purchasePreview(P,id),names={...STAT_NAME,cond:'컨디션',money:'용돈'};
+  const chips=Object.entries(r.fx).filter(([k])=>k!=='money').map(([k,v])=>`${names[k]} ${v>0?'+':''}${v}`);
+  if(r.cured.length)chips.push(...r.cured.map(t=>`${TRAITS[t].name} 치료`));
+  if(r.insured)chips.push(r.repeat?'보험 이미 적용 중 · 중첩되지 않음':'다음 부상 입원 기간 반감');
+  if(!chips.length)chips.push('현재 능력·상태 변화 없음');
+  return `<small style="display:block;color:#b9efcd;margin-top:5px">구매 직후: ${chips.join(' · ')}</small>${r.repeat&&!r.insured?'<small style="display:block;color:#ffd23f">이미 보유 · 다시 사도 외형은 그대로</small>':''}${!r.affordable?'<small style="display:block;color:#ffb58f">현재 용돈 부족</small>':''}`;
+}
 function shopModal() {
   const draw = (note) => {
-    const m = show($(`<div class="modal"><div class="panel"><h2> 쇼핑 (${ic('coin')} ${P.money})</h2>${note ? `<div class="log" style="color:#ffd23f">${note}</div>${purchaseReportHtml()}` : ''}<div style="display:grid;gap:6px">${itemsFor(P).map((i) => `<button class="btn alt" data-i="${i.id}" style="text-align:left;display:flex;justify-content:space-between"><span>${i.name}<br><small>${itemDescription(P, i)}</small></span><span>${i.price}</span></button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn gray" id="x">그만 사기</button><button class="btn" id="end">${P.injury ? '쇼핑 끝 · 한 주 치료' : '쇼핑 끝 (한 주 소비)'}</button></div></div></div>`));
+    const m = show($(`<div class="modal"><div class="panel"><h2> 쇼핑 (${ic('coin')} ${P.money})</h2>${note ? `<div class="log" style="color:#ffd23f">${note}</div>${purchaseReportHtml()}` : ''}<div style="display:grid;gap:6px;max-height:56vh;overflow:auto">${itemsFor(P).map((i) => `<button class="btn alt" data-i="${i.id}" style="text-align:left;display:flex;justify-content:space-between"><span>${i.name}<br><small>${itemDescription(P, i)}</small>${purchasePreviewHtml(i.id)}</span><span>${i.price}</span></button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn gray" id="x">그만 사기</button><button class="btn" id="end" style="font-size:14px">${P.injury ? '쇼핑 끝 · 한 주 치료' : '쇼핑 끝 (한 주 소비)'}</button></div></div></div>`));
     m.querySelectorAll('[data-i]').forEach((b) => b.onclick = () => { const r = G.buy(P, b.dataset.i); G.save(P); m.remove(); draw(r); });
     m.querySelector('#x').onclick = () => { m.remove(); G.save(P); homeScreen(); };
     m.querySelector('#end').onclick = () => { m.remove(); runWeek('shop'); };

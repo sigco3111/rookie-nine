@@ -278,3 +278,6 @@
 
 ## 01:36 Nov 18
 - Event results/history now preserve selected chance in snapshot; history shows explicit success/failure badges and capped-zero no-stat-change label instead of ambiguous blank chips. Result says original selection chance/already finalized, old history with absent chance says not saved rather than infer from current data. No probability/reward changes. Both positions success/failure JSON snapshots and read-only restored history/UI legacy/zero case passed;560 effect-preview comparisons and origin regression passed. Portrait inspected. Synthetic event/RNG/history, not natural run/device QA.
+
+## 01:58 Nov 18
+- Shop now previews exact capped immediate stat/condition/cure/insurance effects per item before spending game currency, with owned-look/insurance-nonstack/insufficient-funds notes. Clone isolates traits/gear, no preview mutation; existing prices/rebuy/effect rules unchanged. Scrollable items keep exit/week controls visible, smaller exit text avoids awkward wrapping.26 both-position all-item/capped/owned/insurance/cure preview-vs-actual checks and UI capped98glove->99/+1->reopen0effect/purchase-save passed. Portrait inspected, synthetic money/stats/gear not full natural/device QA. No real purchase or batting change.

@@ -146,6 +146,13 @@ function executeCommand(p, id, arg) {
   return out;
 }
 
+export function purchasePreview(p, id) {
+  const it=itemsFor(p).find(i=>i.id===id);if(!it)return null;
+  const q={...p,traits:[...p.traits],gear:{...p.gear}};q.money-=it.price;it.fx(q);
+  const fx=Object.fromEntries([...keysOf(p),'cond','money'].map(k=>[k,q[k]-p[k]]).filter(([,v])=>v));
+  return {fx,cured:p.traits.filter(t=>!q.traits.includes(t)),insured:id==='insure',repeat:!!p.gear?.[id]||id==='insure'&&!!p.insured,affordable:p.money>=it.price};
+}
+
 export function buy(p, id) {
   p.purchaseReport = null;
   ensureGrowthBaseline(p);
