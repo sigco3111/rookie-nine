@@ -173,3 +173,9 @@
 
 ## 13:33 Nov 17
 - Corrected extra defensive fielder:7 fielders (4 infield+3 outfield) plus pitcher/catcher, instead of8. Positions are stylized game placements, not measured real-world defense. Added slight forward lean/glove-ready arm pose and consistent restoration after foul/flight. Actual forced foul->next pitch checks7 home positions/ready limbs restored; close and overhead rendered pixels inspected. Pitching team uniform regression passed with7 fielders. Existing test still reports2 resource404s (not identified/fixed here), no JS error. No hit probability/acceptance/camera change, no actual catching/throwing implementation.
+
+## 13:53 Nov 17
+- Tried procedural glove fingers/rim/pocket on existing hand anchor, purchase->reload retained gold color. Close-camera pixels still looked like a round disk with fingers on the side, not a convincing glove; rejected and fully restored scene.js/dist to9644a22. docs/live unchanged. Need glove palm orientation/shape rather than cosmetic overlays. Screenshot retained for rejected-test evidence, no shipped improvement claimed.
+
+## 14:14 Nov 17
+- Identified both repeated match-resource404s: same /favicon.ico requested twice, not two missing game assets in this tested path. Added original SVG baseball browser icon with relative link. Local title->creation->training->direct forced foul->following pitch flow now logs no HTTP>=400/request failures/JS errors. Icon pixels checked at128x128. Scoped smoke only, not all-resource/device QA; no gameplay changes. Glove experiment remains reverted.
