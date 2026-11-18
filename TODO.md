@@ -468,3 +468,7 @@
 ## 19:14 Nov18 - batting aim locked during deadball/fielding
 - Battingcanvasaim onlyactive duringpitch preparation/flight, disabledanddragcleared whenpitchfinalizes; returnsactive nextpitch. Previouslyfoul/fielding/run camera touches could changefuturegoal. Pitch flightaim remainsavailable, no battingwindow/timing/swingchange.
 - Local3fouls→groundout/full1PA:54deadballpointerinjections leaveaimunchanged,4pitchphasesacceptnewaim,2strikefoulcap/noearlycount/fullresultpassed. Battinghandrelease/postblendtrajectory/calledstrike regressionpassed. Actual390portraitfoul landing withhiddenaiminspected. ControlledRNG/time notnatural/deviceQA.
+
+## 19:35 Nov18 - batting hits run from contact
+- Batting single/double runner now startsduringflight withsame9unit/sec hitpath, elapsedflightcontinuesintorelay, waitsarrival andrestorespreflightFOV. Wideflightcamera showsdiamond/runner. Existinghitroll/easybatting/scoring/followupscoreunchanged; teammatebaserunnersstillnotmodeled. Groundout/HR separateflowunchanged.
+- Local single+double full1PA:visibleflight→noresetatrelay→correctbasearrival→FOVrestore→existingfollowupscore/result passed. Actual390portraitflightwithrunnerinspected. Initialtestcheckedrunnerpositiononlyatfinalresult, butexistingfollowupHRrunmovedsameavatar; correctedassertionatrelayarrival. ControlledRNG/time notnatural/deviceQA.

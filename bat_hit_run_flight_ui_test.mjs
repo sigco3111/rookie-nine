@@ -1,0 +1,20 @@
+import puppeteer from 'puppeteer-core';
+import fs from 'fs';
+import {spawn} from 'child_process';
+const server=process.env.TEST_URL?null:spawn(process.execPath,['node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','8123'],{stdio:'ignore'});
+const fontB64 = fs.readFileSync('node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-700-normal.woff2').toString('base64');
+const css = `@font-face{font-family:TKR;src:url(data:font/woff2;base64,${fontB64}) format('woff2');font-weight:100 900}*{font-family:TKR,sans-serif!important}`;
+const year=+(process.argv[2]||3), regular=process.argv[3]==='regular';
+const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const p = await b.newPage(); await p.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
+const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.text().includes('UNI')) errs.push(m.text()); });
+await p.evaluateOnNewDocument((c) => { document.addEventListener('DOMContentLoaded', () => { const st = document.createElement('style'); st.textContent = c; document.head.appendChild(st); }); }, css);
+await p.goto(process.env.TEST_URL||'http://localhost:8123/'); await new Promise(r => setTimeout(r, 1500));
+await p.evaluate(() => document.querySelector('#new').click()); await new Promise(r => setTimeout(r, 300));
+await p.evaluate(() => document.querySelector('#go').click()); await new Promise(r => setTimeout(r, 800));
+await p.evaluate((double)=>{const p=window.__game.P;p.week=7;Math.random=()=>.01;window.__game.skipWeeks(0);[...document.querySelectorAll('.cmd')].find(b=>b.innerText.includes('휴식')).click();window.__force={angle:-20,launch:15,v:double?50:35};window.__dbgIn=true;window.__dbgShot=(st,T)=>{if(st.swingT==null&&st.t>=T-.375){Math.random=()=>.01;document.querySelector('.swing').dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}));}}},!!process.env.DOUBLE);
+await p.waitForSelector('#play');await p.evaluate(n=>(window.__expectedBases=n,window.__initialFov=window.__rk.camera.fov),process.env.DOUBLE?2:1);
+await p.evaluate(()=>{window.__rk.renderer.setPixelRatio(.5);window.__dt=.125;window.__flightSeen=false;window.__batHitRunFlight=d=>{if(!d.runner.visible||d.runner.position.length()<=0)throw Error('missing flight runner');window.__flightSeen=true;window.__end=d.runner.position.clone();if(d.t>.5&&!window.__flightShot){window.__flightShot=true;window.__dt=.00001;}};window.__defensePlay=d=>{if(!window.__flightSeen)throw Error('missing flight phase');if(!window.__relaySeen){window.__relaySeen=true;if(d.runner.position.length()<window.__end.length()-.1)throw Error('runner reset');}window.__runner=d.runner;const target=window.__expectedBases===2?[0,-38.8]:[19.4,-19.4];if(Math.hypot(d.runner.position.x-target[0],d.runner.position.z-target[1])<.001)window.__arrived=true;};});
+await p.click('#play');await p.waitForFunction(()=>window.__flightShot,{timeout:30000});await p.evaluate(()=>window.__rk.renderer.setPixelRatio(1));await p.screenshot({path:`/downloads/rookie9_bat_hit_run${process.env.TEST_URL?'_live':''}.png`});await p.evaluate(()=>window.__dt=.125);
+await p.waitForSelector('#ok',{timeout:60000});const result=await p.evaluate(()=>window.__game.P.pendingResult.result);const check=await p.evaluate(()=>{const target=window.__expectedBases===2?[0,-38.8]:[19.4,-19.4];return {flight:window.__flightSeen,relay:window.__relaySeen,arrived:window.__arrived,fov:window.__rk.camera.fov===window.__initialFov};});if(!check.flight||!check.relay||!check.arrived||!check.fov||result.hits!==1||result.ab!==1)throw Error(JSON.stringify({check,result}));console.log('bat hit contact→relay→arrival→fullresult',check,result);
+if(errs.length)throw Error(errs.join('|'));await b.close();if(server){const done=new Promise(r=>server.once('exit',r));server.kill('SIGTERM');await done;}

@@ -368,6 +368,8 @@ export async function playMatch(p, m, hud) {
   const flight = (h, defenseOut = '') => new Promise((res) => {
     hud.setBattingActive?.(false); hud.setPitch('타구 비행');
     o.zone.visible = false; o.ret.visible = false;
+    const hitBases=defenseOut==='double'?2:defenseOut==='single'?1:0,hitRunSpeed=9,hitRunTime=hitBases*Math.hypot(19.4,19.4)/hitRunSpeed,oldFov=camera.fov;
+    if(hitBases){o.runner.visible=true;o.batter.visible=false;}
     const a = h.angle * Math.PI / 180; const dir = new THREE.Vector3(Math.sin(a), 0, -Math.cos(a));
     let dur = Math.max(0.9, Math.min(2.6, h.dst / 38 + 0.6)); const peak = Math.max(0.3, Math.min(30, h.dst * Math.tan(Math.max(0, h.launch) * Math.PI / 180) * 0.28));
     o.ball.visible = true; let t = 0;
@@ -377,13 +379,14 @@ export async function playMatch(p, m, hud) {
     const f = (dt) => {
       chase(t);
       t += dt; const k = Math.min(1, t / dur);
+      if(hitBases){const pos=hitRunStep(hitBases,Math.min(1,t/hitRunTime));o.runner.position.set(pos.x,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);o.runner.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);window.__batHitRunFlight?.({t,hitBases,runner:o.runner});}
       const d = h.dst * k; let y = 1 + 4 * peak * k * (1 - k) - (h.launch < 8 ? 0.9 * k : 0);
       if (h.launch < 8) y = 0.15 + Math.abs(Math.sin(k * Math.PI * 4)) * 0.5 * (1 - k);
       o.ball.position.set(dir.x * d, Math.max(0.1, y), dir.z * d + 0.3); o.ball.scale.setScalar(Math.min(5, Math.max(1, camera.position.distanceTo(o.ball.position) / 9)));
       if(air){const glove=air.step(t),blend=Math.max(0,(k-.85)/.15);o.ball.position.lerp(glove,blend);window.__airOutPlay?.({phase:'flight',t,k,plan:air.plan,ball:o.ball,collector:o.fielders[air.plan.collector]});}
       if (window.__flog) window.__flog(o.ball, camera, k);
-      const tgt = o.ball.position; camera.position.lerp(new THREE.Vector3(tgt.x * 0.25, 2.6 + k * 2.5, Math.min(11, 5 + Math.max(0, -tgt.z) * 0.06)), 0.06); camera.lookAt(tgt.x * 0.6, 1 + k * 3, tgt.z * 0.65 - 3);
-      if (k >= 1) { delTicker(f); if(defenseOut==='ground')completeGroundOut(o,hud,{runner:true}).then(res);else if(air)air.finish().then(res);else if(defenseOut==='single'||defenseOut==='double')completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases:defenseOut==='double'?2:1}).then(res);else setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); resetFielders(); res(); }, 250); }
+      const tgt = o.ball.position; camera.position.lerp(new THREE.Vector3(tgt.x * 0.25, 2.6 + k * 2.5, Math.min(11, 5 + Math.max(0, -tgt.z) * 0.06)), 0.06); camera.lookAt(tgt.x * 0.6, 1 + k * 3, tgt.z * 0.65 - 3);if(hitBases){camera.fov=76;camera.updateProjectionMatrix();camera.position.set(0,42,28);camera.lookAt(0,0,-28);}
+      if (k >= 1) { delTicker(f); if(defenseOut==='ground')completeGroundOut(o,hud,{runner:true}).then(res);else if(air)air.finish().then(res);else if(hitBases){o.batter.visible=true;completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases,runnerElapsed:dur,hitRunSpeed}).then(()=>{camera.fov=oldFov;camera.updateProjectionMatrix();res();});}else setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); resetFielders(); res(); }, 250); }
     }; tickers.add(f);
   });
   const runBases = () => runHomeRun(o,hud);
