@@ -495,3 +495,7 @@
 
 ## 21:40 Nov18 - fallback full pitching game regression
 - Test-only fallback_full_pitch_ui_test.mjs abortsplayer.fbx thenrunsmixed19pitch3inning walk/single/foul/HR/groundforce/airreturn/K,allinningchanges/result/growth/history/reloadContinue/confirm. Local+livepassed3IP3H1SO played3:3/3ER→oldauto3:4/4ER. Actualfallbackliveportraitresultnotebuttoninspected. Noadditionalruntimechange; coverswiderfallbackflowafterec7aef8. ControlledRNG/acceleratedclock notdevice/naturalQA;modeldownloadreliabilitystillunfixed.
+
+## 21:59 Nov18 - bounded player-model retry
+- Model fetch nowchecksHTTPstatus andtriesonceagain(cache reload) afterfetch/status/parsefailure, thenexistingproceduralfallback. Maximum2attempts/startup,procqueryskipsboth. No timer/backoff/timeoutadded; slow/hungnetwork stillbrowserfetchbound. Notguaranteedmodeldelivery orofflinecache. No gameplayformula/permissionschange.
+- model_retry_ui_test firstHTTP503→secondactualfile givesnormalmodel;twoHTTP503givesproceduralmodel;exactly2initialrequests. Bothlocalmixed3PAHR/double/K/results/history/reloadpassed. Buildpassed. Controlledfaults/RNG/time notnetwork/deviceperformanceQA.

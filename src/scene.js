@@ -130,11 +130,16 @@ function makeChibiProc({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, ski
 // ---- Quaternius Ultimate Animated Character Pack (CC0) 기반 선수 ----
 let kBase = null, kImg = null; const kTex = {};
 const USE_PROC = new URLSearchParams(location.search).has('proc');
-if (!USE_PROC) { try {
+if (!USE_PROC) {
   const base = import.meta.env.BASE_URL || './';
-  const buf = await fetch(base + 'models/player.fbx').then((r) => r.arrayBuffer());
-  kBase = new FBXLoader().parse(buf, './');
-} catch (e) { console.warn('player model load failed', e); kBase = null; } }
+  for(let attempt=0;attempt<2&&!kBase;attempt++){
+    try{
+      const response=await fetch(base+'models/player.fbx',attempt?{cache:'reload'}:{});
+      if(!response.ok)throw new Error('player model HTTP '+response.status);
+      const buf=await response.arrayBuffer();kBase=new FBXLoader().parse(buf,'./');
+    }catch(e){if(attempt===1){console.warn('player model load failed after retry',e);kBase=null;}}
+  }
+}
 const css = (c) => '#' + new THREE.Color(c).getHexString();
 function kTexture(shirt, pants, trim, redShoes) {
   const key = shirt + '|' + pants + '|' + trim + '|' + (redShoes ? 1 : 0); if (kTex[key]) return kTex[key];
