@@ -599,3 +599,6 @@
 ## 07:21 Nov19 - pitcher race runout stops its legs
 - Sharedrunnerstopthresholdnowdistinguishespitchrace2unitrunoutfrombat4unitrunout. Nonforcepitchracepostarrivalminimum.25→.4sectoreach2unitsatexisting6speed;forceunchanged. Receiverarrival/racemargin/outcomeunchanged.
 - ground_race_pitching_ui_test checksrunnerlegs/ygroundedduringpitcherreturn;localout/safepassedreceive4.250/4.856vsrunner4.573→1outempty/0out1B. Batground4unitreturnregressionpassed. Buildpassed. Controlledclock/RNGnotdevice/naturalQA.
+
+## 07:40 Nov19 - live out runout close inspection
+- Groundrace test rendersinspection-onlyrunnerclosecameraafteractualreturncapture. Liveoutpassedstoppedlegs/y0throughreturnandnextpitch1outempty,receive4.250vsrunner4.573 unchanged. Actualclosepixelsinspectedrunnerfeetgrounded/legsneutral/separatefromreceiver;notnormalgamecamera. Buildsameindex-DVDUn-eX.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
