@@ -1,3 +1,4 @@
+import { advanceBases } from './bases.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, OPP_COLORS } from './scene.js';
 import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut, airOutSequence, runHomeRun } from './match.js';
 import { oppStrength, teamStrength, isRegular, cal, rnd, chance, applyMatchResult } from './growth.js';
@@ -94,9 +95,9 @@ export async function playPitching(p, m, hud) {
     tickers.add(f);
   });
 
-  let bases = 0; // 주자 수(단순)
+  let bases = 0; // 1루/2루/3루 점유 비트
   for (let inn = 1; inn <= innings; inn++) {
-    hud.setScore(inn, my, S.er); let outs = 0; bases = 0; const bn = (t, ms) => hud.banner(t, ms);
+    hud.setScore(inn, my, S.er); let outs = 0; bases = 0;hud.setBases?.(bases); const bn = (t, ms) => hud.banner(t, ms);
     while (outs < 3) {
       const c = { b: 0, s: 0 }; hud.setCount(c, outs); let ended = false;
       bn(`${inn}회 ${outs}아웃  다음 타자`, 900); await wait(1000);
@@ -105,13 +106,13 @@ export async function playPitching(p, m, hud) {
         if (r.kind === 'ball') { c.b++; bn('볼', 500); } else if (r.kind === 'strike') { c.s++; bn('스트라이크', 600); } else if (r.kind === 'whiff') { c.s++; bn('헛스윙!', 600); } else if (r.kind === 'foul') { if (c.s < 2) c.s++; bn('파울', 500); }
         else if (r.kind === 'out') { outs++; ended = true; sfx.out(); bn(r.fieldType==='air'?'뜬공 아웃':'땅볼 아웃', 900); }
         else { // 안타
-          S.ha++; const adv = r.t; if (r.t === 4) { const sc = bases + 1; S.er += sc; bases = 0; bn(`홈런 허용 (${sc}실점)`, 1200); sfx.cheer(1.5); }
-          else { let sc = 0; bases += 1; if (adv >= 2 && bases > 1) { sc += Math.min(bases - 1, adv); } if (bases > 3) { sc += bases - 3; bases = 3; } if (adv >= 2 && bases) { if (chance(55)) { sc++; bases = Math.max(0, bases - 1); } } S.er += sc; bn(`${['', '안타', '2루타', '3루타'][adv]} 허용${sc ? ` (${sc}실점)` : ''}`, 1100); sfx.cheer(0.8); } ended = true;
+          S.ha++;const adv=r.t,next=advanceBases(bases,adv);bases=next.bases;S.er+=next.runs;
+          bn(`${['', '안타', '2루타', '3루타', '홈런'][adv]} 허용${next.runs?` (${next.runs}실점)`:''}`,adv===4?1200:1100);sfx.cheer(adv===4?1.5:.8); ended = true;
         }
         hud.setCount(c, outs);
-        if (!ended && c.b >= 4) { ended = true; S.ha += 0; bases++; let sc = 0; if (bases > 3) { sc = 1; bases = 3; } S.er += sc; bn('볼넷', 800); }
+        if (!ended && c.b >= 4) { ended = true; const next=advanceBases(bases,'walk');bases=next.bases;S.er+=next.runs;bn(next.runs?'밀어내기 볼넷 (1실점)':'볼넷',800); }
         else if (!ended && c.s >= 3) { ended = true; outs++; S.so++; sfx.out(); bn('삼진!', 1000); }
-        hud.setScore(inn, my, S.er);
+        hud.setScore(inn, my, S.er);hud.setBases?.(bases);
         if (ended) await wait(900);
         if (outs >= 3) break;
       }

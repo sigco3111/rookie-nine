@@ -375,6 +375,11 @@ async function startMatch(m) {
     banner: (t, ms) => { bn.innerHTML = `<div class="banner">${t}</div>`; clearTimeout(api._t); api._t = setTimeout(() => bn.innerHTML = '', ms); },
     onSwing: (f) => { swFn = f; }, offSwing: () => { swFn = null; },
   };
+  api.setBases = (mask) => {
+    let row=hud.querySelector('#bases');if(!row){row=$('<div id="bases" style="display:flex;gap:5px;width:max-content;margin-top:3px;padding:4px 7px;background:#102039dd;border-radius:8px;font-size:11px;font-weight:900"></div>');hud.appendChild(row);}
+    row.setAttribute('aria-label',`주자: ${[1,2,3].filter(b=>mask&(1<<(b-1))).map(b=>b+'루').join(', ')||'없음'}`);
+    row.innerHTML=[1,2,3].map(b=>`<span data-base="${b}" data-occupied="${!!(mask&(1<<(b-1)))}" style="padding:2px 5px;border:1px solid ${mask&(1<<(b-1))?'#ffd23f':'#687991'};border-radius:4px;background:${mask&(1<<(b-1))?'#ffd23f':'transparent'};color:${mask&(1<<(b-1))?'#102039':'#c4d2e4'}">${b}루</span>`).join('');
+  };
   api.setCount = (c, outs) => hud.querySelector('#cnt').innerHTML = `B ${[0, 1, 2, 3].map((i) => `<span class="dot b ${i < c.b ? 'on' : ''}"></span>`).join('')} S ${[0, 1, 2].map((i) => `<span class="dot s ${i < c.s ? 'on' : ''}"></span>`).join('')}${outs != null ? ` O ${[0, 1, 2].map((i) => `<span class="dot s ${i < outs ? 'on' : ''}" style="background:${i < outs ? '#e5484d' : ''}"></span>`).join('')}` : ''}`;
   if (P.pos === 'pit') {
     sw.remove(); ui.querySelectorAll('.hint').forEach((h) => h.remove());
