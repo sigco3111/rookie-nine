@@ -591,3 +591,7 @@
 ## 06:39 Nov19 - guard batting flight arrival pose
 - Removedaccidentalground-onlythroughreferencefrombattinghitflightlegstopconditionintroducedd7014bd. Normalflightmax2.6secisless1Btime3.048sec,sonormalclocknotobservedblocked. Preventivefix,notconfirmeduserflowhang.
 - bat_hit_run_flight_ui_test ARRIVE_IN_FLIGHT usesdeliberate7secdebugstepaftercapturetoexecutearrivalbranchandassertstoppedlegs;localdefault/doubleconfigpassedresult. Groundreturnseparation/gaze/glove/resultregressionpassed. Buildpassed. Artificialboundarychecknotnatural/deviceQA.
+
+## 06:59 Nov19 - native clock run-through regression
+- Extendednatural_bat_ground_ui_test checks4unitrunner/receiverseparationthroughreturnwithout__dtortimeracceleration. Local/livecontact→approach/transfer/throw/receive/return→nextPApassed,battervisible/runnerhidden/zone/reticle/glove/inputretained. ActuallivenextPApixelsinspected. Buildsameindex-BneULsHz.js,no runtimechange.
+- Playbutton→nextPAwall36.337/38.106sec;sample259/257framesmean140.86/148.60ms,256/252>50ms. Includesinningwaits/softwaredesktoprenderingand50msdtclamp;NOTdeviceperformanceoracceptablepaceclaim. Forcedcontact/RNG/automaticswingremain.
