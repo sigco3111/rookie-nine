@@ -518,3 +518,7 @@
 
 ## 23:44 Nov18 - fallback batting defense-return regression
 - Extended bat_pitcher_return_ui_test FAIL_MODEL=1 aborts player asset; checks model absence and runs each return path. Local/live single relay, groundout and airout all reached pitcher glove with input disabled/no early result/FOV restored/expected hit-AB outcome. Additional local ground rerun passed after explicit model-absence assertion added. No runtime changes, bundle remainsindex-CB0AAfYO.js. Buildpassed; actualfallback390portrait returnpixels inspected. Controlled faults/RNG/clock, not physicalnetwork/device QA.
+
+## 00:07 Nov19 - consecutive defense test finds hidden batter regression
+- New bat_return_sequence_ui_test regular ground→air→single found second-pitch batter.visible=false after67164a7. Flight hides batter for runner; ground completion captured hidden state and kept it. Restore intended batter visibility before ground completion, matching existing hit branch; no outcome/timing formula change.
+- Local normal/fallback 3PA/3pitch returns all reach glove before next pitch, fielders back home, batter/zone/reticle restored, runner hidden, 3AB1H result/history and reloadconfirm passed. Normal rerun captured actual secondpitch390portrait visible batter. Firsttwo test failures exposed samebug beforefix. Buildpassed; controlledRNG/clock notnatural/deviceQA.
