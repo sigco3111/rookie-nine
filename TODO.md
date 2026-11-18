@@ -606,3 +606,6 @@
 ## 08:02 Nov19 - isolate runout visual step
 - ExtractedrunThroughStep(elapsed,speed,distance)topuredefensehelper;sharedrunnerusesreturnedthrough/movingforbody/legsstop. Exactexisting2/4unitdistanceandstoppingconditionpreserved.Nooutcome/time/pacechange.
 - Newrun_through_step_test before/atarrival/mid/exactstop/afterclampbothdistancespassed;groundplanlogic,localbatgroundseparationandpitchoutreturnstoppedlegs/resultpassed. Buildpassed. Internalrefactornotnewfeature;controlledRNG/clocknotdeviceQA.
+
+## 08:26 Nov19 - third-base force regression
+- Force_resulttestnowassertstargetbasenameinconfirmedlabel. Localout/liveoutandsafe1B+2B→3Bforcepassedreceiver/glove/pitcherreturn/yawreset/phase/occupancymodels. Out4.250vsrunner4.573→1outmask3;safereceive4.856→0outmask7,noruns. Actual390livepixelsinspected3Blabels/outdots/basesmatch;briefcenterbanneralreadygoneincaptures. Buildsameindex--84fGhps.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
