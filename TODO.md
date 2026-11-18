@@ -595,3 +595,7 @@
 ## 06:59 Nov19 - native clock run-through regression
 - Extendednatural_bat_ground_ui_test checks4unitrunner/receiverseparationthroughreturnwithout__dtortimeracceleration. Local/livecontact→approach/transfer/throw/receive/return→nextPApassed,battervisible/runnerhidden/zone/reticle/glove/inputretained. ActuallivenextPApixelsinspected. Buildsameindex-BneULsHz.js,no runtimechange.
 - Playbutton→nextPAwall36.337/38.106sec;sample259/257framesmean140.86/148.60ms,256/252>50ms. Includesinningwaits/softwaredesktoprenderingand50msdtclamp;NOTdeviceperformanceoracceptablepaceclaim. Forcedcontact/RNG/automaticswingremain.
+
+## 07:21 Nov19 - pitcher race runout stops its legs
+- Sharedrunnerstopthresholdnowdistinguishespitchrace2unitrunoutfrombat4unitrunout. Nonforcepitchracepostarrivalminimum.25→.4sectoreach2unitsatexisting6speed;forceunchanged. Receiverarrival/racemargin/outcomeunchanged.
+- ground_race_pitching_ui_test checksrunnerlegs/ygroundedduringpitcherreturn;localout/safepassedreceive4.250/4.856vsrunner4.573→1outempty/0out1B. Batground4unitreturnregressionpassed. Buildpassed. Controlledclock/RNGnotdevice/naturalQA.
