@@ -566,3 +566,7 @@
 ## 04:15 Nov19 - noncontact pitch next-aim regression
 - Extended pitch_catch_sound_ui_test asserts exact ball/strike/whiff result banner and next aim instruction after catcher return. Local three paths and live three paths passed; fallback local whiff also passed.17 release windup samples, hand release flight, mitt arrival/count ordering and exactly2mitt sounds retained. Actual390live whiff next-aim pixels inspected:1strike,throwenabled,aiminstruction. Banner assertion preceded image; screenshotdoesnotretainbriefbanner.
 - Initial suspected nonending phase residue disproved by actual test: next throw already replaces return phase. Discarded experimental game edit, runtime unchanged07b35e0/index-BK1hFrUR.js. Buildpassed. ControlledRNG/clock notdevice/natural/acousticQA.
+
+## 04:40 Nov19 - loaded home-force return regression
+- force_result_phase_ui_test accepts home/otherbase resultlabels and checks pitcher facing returner/gloveendpoint/yawreset. Local/live loadedhomeforceoutandsafepassedafter3setuphits:outreceive4.2667<runner4.5726sec→1out0run;safe4.6214>4.5726→0out1run;bothmask7andcatcherresetx0/z1.6/arm-1.4. Actual390liveout/safepixelsinspectedphase/banner/outdots/score/loadedbases.
+- Firstcombinedrunexecutionlimit afteroutcapture,individualrerunspassed. No runtimechange,buildsamebundle07b35e0/index-BK1hFrUR.js. ControlledRNG/clocknotdevice/naturalQA;notnewrule/exceptioncoverage.
