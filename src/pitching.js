@@ -44,7 +44,7 @@ export async function playPitching(p, m, hud) {
   let cx = 0, cy = ZY; const ray = new THREE.Raycaster(); const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
   const setRet = (x, y) => { cx = Math.max(-0.8, Math.min(0.8, x)); cy = Math.max(0.2, Math.min(1.6, y)); o.ret.position.set(cx, cy, -0.05); };
   const pt = (e) => { const r = renderer.domElement.getBoundingClientRect(); const v = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1 + 0.1); ray.setFromCamera(v, camera); const h = new THREE.Vector3(); if (ray.ray.intersectPlane(plane, h)) setRet(h.x, h.y); };
-  let down = false; const onD = (e) => { down = true; pt(e); }, onM = (e) => { if (down || e.pointerType === 'mouse') pt(e); }, onU = () => { down = false; };
+  let down = false, aimActive = false; const onD = (e) => { if(!aimActive)return;down = true; pt(e); }, onM = (e) => { if (aimActive && (down || e.pointerType === 'mouse')) pt(e); }, onU = () => { down = false; };
   const cv = renderer.domElement; cv.addEventListener('pointerdown', onD); cv.addEventListener('pointermove', onM); window.addEventListener('pointerup', onU); setRet(0, ZY);
   let selPitch = PT[0]; let throwNow = null;
   const types = avail(p);
@@ -53,8 +53,8 @@ export async function playPitching(p, m, hud) {
   hud.setPitchingActive?.(false);
 
   const throwBall = (count) => new Promise(async (res) => {
-    const pit = selPitch; hud.setPitch(`${pit.n}  목표를 정하고 던지기!`);
-    await new Promise((r) => { throwNow = () => { throwNow = null; hud.setPitchingActive?.(false); r(); }; hud.setPitchingActive?.(true); });
+    const pit = selPitch;aimActive=true;o.zone.visible=true;o.ret.visible=true;setRet(cx,cy);hud.setPitch(`${pit.n}  목표를 정하고 던지기!`);
+    await new Promise((r) => { throwNow = () => { throwNow = null;aimActive=false;down=false;o.zone.visible=false;o.ret.visible=false;hud.setPitchingActive?.(false); r(); }; hud.setPitchingActive?.(true); });
     // 실제 위치: 목표 + 제구 흔들림
     const wob = Math.max(0.03, 0.34 - p.ctrl * 0.0032 - (traits.includes('cmd') ? 0.04 : 0) + (pit.brk ? 0.05 * (1 - p.brk * 0.006) : 0));
     const bx = cx + rnd(-wob, wob) * 1.6, by = cy + rnd(-wob, wob);
