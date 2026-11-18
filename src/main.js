@@ -197,7 +197,8 @@ function matchGrowthHtml(r) {
 }
 function tiebreakHtml(r){
  if(!r.automaticTiebreak||!r.playedScore)return '';
- return `<p class="tiebreak-note" style="font-size:12px;line-height:1.6;color:#ffd23f;word-break:keep-all">직접 투구 종료 ${r.playedScore.my} : ${r.playedScore.opp} · ${r.playedScore.opp}실점<br>동점 추가 승부는 자동 결정했습니다. 최종 점수${r.win?'':'와 실점 기록'}에 결정 1점이 포함됩니다. 추가 이닝 직접 플레이는 없습니다.</p>`;
+ const pitcher=typeof r.ip==='number';
+ return `<p class="tiebreak-note" style="font-size:12px;line-height:1.6;color:#ffd23f;word-break:keep-all">${pitcher?'직접 투구':'정규 진행'} 종료 ${r.playedScore.my} : ${r.playedScore.opp}${pitcher?` · ${r.playedScore.opp}실점`:''}<br>동점 추가 승부는 자동 결정했습니다. 최종 점수${pitcher&&!r.win?'와 실점 기록':''}에 결정 1점이 포함됩니다. 추가 이닝 직접 플레이는 없습니다.</p>`;
 }
 function matchHistoryModal(all = false) {
   const history=P.matchHistory||[],rows=all?history:history.slice(0,8);

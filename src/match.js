@@ -457,8 +457,9 @@ export async function playMatch(p, m, hud) {
   // 정리
   cv.removeEventListener('pointerdown', onD); cv.removeEventListener('pointermove', onM); window.removeEventListener('pointerup', onU); window.removeEventListener('keydown', key);
   hud.offSwing();
-  let win = my > oppRuns; if (my === oppRuns) { win = chance(50 + p.ev.team * 0.1); if (win) my++; else oppRuns++; hud.banner('연장 승부 끝에 ' + (win ? '승리' : '패배'), 1400); await wait(1500); }
-  const r = { ab: s.ab, hits: s.hits, hr: s.hr, rbi: s.rbi, my, opp: oppRuns, win, kind: m.kind, title: m.name + ' vs ' + opp };
+  const playedScore={my,opp:oppRuns},automaticTiebreak=my===oppRuns;
+  let win = my > oppRuns; if (my === oppRuns) { win = chance(50 + p.ev.team * 0.1); if (win) my++; else oppRuns++; hud.banner('동점 자동 결정 · ' + (win ? '승리' : '패배'), 1400); await wait(1500); }
+  const r = { automaticTiebreak,playedScore,ab: s.ab, hits: s.hits, hr: s.hr, rbi: s.rbi, my, opp: oppRuns, win, kind: m.kind, title: m.name + ' vs ' + opp };
   applyMatchResult(p, r);
   return r;
 }

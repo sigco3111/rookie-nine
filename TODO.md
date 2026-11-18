@@ -480,3 +480,7 @@
 ## 20:15 Nov18 - defensive mitt sounds at ball reception
 - Groundpickupsecuresglove(attransfer.45),base/relayreceive,andgroundreturnpitcherglove noweachone mittSFX. AircatchkeepsoldmittSFX,airreturnpitcherarrivaladdsone. Persequenceflags preventrepeatduringholds. Noanimationduration/RNG/outcome changes(audioownRNGfrom93e6dd8).
 - Localground3buffers correctpickup/receive/returntimes,noduplicateandoldrace/out/input/glove passed;air2buffers catch+returnarrival/noduplicate/oldairflowpassed. AudiozeroRNGtest/buildpassed. Actualportraitgroundreturninspected. Buffercreationtimingnotacousticlistening/deviceaudiolatencyQA.
+
+## 20:37 Nov18 - batting automatic tie disclosure/fullgame resume
+- Battingmode preexistingcoinflipadds1finalpoint nowrecordedautomaticTiebreak/playedScore; banner no longerclaimsplayedextra innings. Sharedresult/historynote distinguishespitcher(ip) frombatting, battinghasnoERtext. No scoring/probability/evaluationchange; no actualextrainning added, olderrecordnotinferred.
+- Fullregularbatgame3PA/12pitches/3walks→0:0→automatic0:1/result/growth/save/reloadContinue/resultconfirmpassed. Actual390portraitnote/nextbuttoninspected. Initialyear3testopponentautoscores5becauseexistingstrengththreshold>1; usedyear1toexercise0:0tie. Thisisnotbalancefix. ControlledRNG/time notnatural/deviceQA.
