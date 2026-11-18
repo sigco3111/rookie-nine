@@ -63,7 +63,10 @@ export async function playPitching(p, m, hud) {
     const T = Math.max(0.7, 1.5 - p.velo * 0.0075 * 1.0 - (traits.includes('fast') ? 0.05 : 0)) * pit.Tm;
     hud.setPitch(`${pit.n} ${veloKm}km/h`);
     sfx.swing();
-    for (let t = 0; t < 0.5; t += 0.03) { setPitcherPose(o.pitcher, t / 0.5 * 0.65); await wait(30); }
+    const handPoint=()=>{o.pitcher.userData.sync?.();o.pitcher.updateWorldMatrix(true,true);return o.pitcher.userData.throwHand.getWorldPosition(new THREE.Vector3());};
+    o.ball.visible=true;o.ball.scale.setScalar(1);
+    for (let t = 0; t < 0.5; t += 0.03) { setPitcherPose(o.pitcher, t / 0.5 * 0.65);o.ball.position.copy(handPoint());window.__pitchRelease?.({phase:'windup',t,ball:o.ball,hand:handPoint()});await wait(30); }
+    const release=handPoint();
     o.ball.visible = true; let t = 0, done = false; const bat = { swing: false, at: 0 };
     // 타자 스윙 결정
     const q = (strength - 40) - (traits.includes('aura') ? 5 : 0) + 4;
@@ -73,6 +76,8 @@ export async function playPitching(p, m, hud) {
       if (done) return; t += dt; const s = t / T; const ss = Math.min(1.1, s);
       o.ball.position.set(bx * ss + pit.c * Math.sin(Math.PI * Math.min(1, ss)) * 0.6, 1.7 + (by - 1.7) * ss + pit.drop * 0.5 * ss * ss, -17.8 + 17.8 * ss); o.ball.rotation.z += dt * 20;
       setPitcherPose(o.pitcher, Math.min(1, 0.65 + t * 2));
+      const blend=Math.min(1,t/.14),smooth=blend*blend*(3-2*blend);o.ball.position.lerp(release,1-smooth);
+      window.__pitchRelease?.({phase:'flight',t,ball:o.ball,release,blend:smooth});
       if (willSwing && !bat.swing && s > 0.86) { bat.swing = true; bat.at = 0.0001; sfx.swing(); }
       if (bat.swing) { bat.at += dt / 0.22; setBatterPose(o.batter, bat.at); }
       if (t >= T + 0.15) { done = true; delTicker(f); fin(); }
