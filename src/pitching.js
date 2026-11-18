@@ -120,21 +120,21 @@ export async function playPitching(p, m, hud) {
 
   let bases = 0; // 1루/2루/3루 점유 비트
   for (let inn = 1; inn <= innings; inn++) {
-    hud.setScore(inn, my, S.er);o.zone.visible=true;o.ret.visible=true;o.batter.visible=true;o.pitcher.visible=true;o.catcher.visible=true;o.ump.visible=true;for(const fd of o.fielders)fd.visible=true;cam();let outs = 0; bases = 0;hud.setBases?.(bases);showBaseRunners(o,bases); const bn = (t, ms) => hud.banner(t, ms);
+    hud.setScore(inn, my, S.er);o.zone.visible=true;o.ret.visible=true;o.batter.visible=true;o.pitcher.visible=true;o.catcher.visible=true;o.ump.visible=true;for(const fd of o.fielders)fd.visible=true;cam();let outs = 0; bases = 0;hud.setBases?.(bases);showBaseRunners(o,bases); const bn = (t, ms) => hud.banner(t, ms);const resultBanner=(t,ms)=>{hud.setPitch(t);bn(t,ms);};
     while (outs < 3) {
       const c = { b: 0, s: 0 }; hud.setCount(c, outs); let ended = false;
       bn(`${inn}회 ${outs}아웃  다음 타자`, 900); await wait(1000);
       while (!ended) {
         const r = await throwBall(c);
         if (r.kind === 'ball') { c.b++; bn('볼', 500); } else if (r.kind === 'strike') { c.s++; bn('스트라이크', 600); } else if (r.kind === 'whiff') { c.s++; bn('헛스윙!', 600); } else if (r.kind === 'foul') { if (c.s < 2) c.s++; bn('파울', 500); }
-        else if(r.kind==='force'){const next=forceResult(bases,r.safe);outs+=next.outs;bases=next.bases;S.er+=next.runs;if(next.outs)sfx.out();ended=true;const name=r.target===4?'홈':`${r.target}루`;bn(r.safe?`${name} 세이프 · 야수선택${next.runs?' (1실점)':''}`:`${name} 포스 아웃`,1000);}
-        else if (r.kind === 'out') { outs++; ended = true; sfx.out(); bn(r.fieldType==='air'?'뜬공 아웃':'땅볼 아웃', 900); }
+        else if(r.kind==='force'){const next=forceResult(bases,r.safe);outs+=next.outs;bases=next.bases;S.er+=next.runs;if(next.outs)sfx.out();ended=true;const name=r.target===4?'홈':`${r.target}루`;resultBanner(r.safe?`${name} 세이프 · 야수선택${next.runs?' (1실점)':''}`:`${name} 포스 아웃`,1000);}
+        else if (r.kind === 'out') { outs++; ended = true; sfx.out(); resultBanner(r.fieldType==='air'?'뜬공 아웃':'땅볼 아웃', 900); }
         else { // 안타
           S.ha++;const adv=r.t,next=advanceBases(bases,r.infield?'infield':adv);bases=next.bases;S.er+=next.runs;
-          bn(`${r.infield?'내야 안타':['', '안타', '2루타', '3루타', '홈런'][adv]} 허용${next.runs?` (${next.runs}실점)`:''}`,adv===4?1200:1100);sfx.cheer(adv===4?1.5:.8); ended = true;
+          resultBanner(`${r.infield?'내야 안타':['', '안타', '2루타', '3루타', '홈런'][adv]} 허용${next.runs?` (${next.runs}실점)`:''}`,adv===4?1200:1100);sfx.cheer(adv===4?1.5:.8); ended = true;
         }
         hud.setCount(c, outs);
-        if (!ended && c.b >= 4) { ended = true;hud.setPitchingActive?.(false,true);await runWalk(o,hud,bases);cam();const next=advanceBases(bases,'walk');bases=next.bases;S.er+=next.runs;bn(next.runs?'밀어내기 볼넷 (1실점)':'볼넷',800); }
+        if (!ended && c.b >= 4) { ended = true;hud.setPitchingActive?.(false,true);await runWalk(o,hud,bases);cam();const next=advanceBases(bases,'walk');bases=next.bases;S.er+=next.runs;resultBanner(next.runs?'밀어내기 볼넷 (1실점)':'볼넷',800); }
         else if (!ended && c.s >= 3) { ended = true; outs++; S.so++; hud.setCount(c,outs);hud.setPitch(`삼진 · ${outs}아웃`);sfx.out(); bn('삼진!', 1000); }
         hud.setScore(inn, my, S.er);hud.setBases?.(bases);showBaseRunners(o,bases);
         if (ended) await wait(900);

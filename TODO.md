@@ -544,3 +544,7 @@
 ## 02:07 Nov19 - strikeout phase label consistency
 - Parentnoticedconfirmedoutscreenstillshowedcatcherreturnphase. Thirdstrikeconfirmation nowsetsphase 삼진 · N아웃, matchingoutdot/banner; no gameplaytimingchange.
 - strikeout_count_ui_test nowassertslabelwhenbannerappearsandaftercapture. Testonly900msbetweenturnwaitextended15sec toretainstateforactualpixels;bannerwalltimerunchanged. Localbanner+phase+1outpixelsinspected. Roleroundtripregression/buildpassed. Noacoustic/device/naturalQA.
+
+## 02:35 Nov19 - confirmed field-result phase labels
+- Resultbannerhelper nowsetsphase label forground/air/force/hit/walk afterplaycomplete,sooldreturnphasedoesnotlinger. StrikeoutNoutslabelkept. Nooutcome/timingchange.
+- Newpitch_result_phase_ui_test 10pitch1IPwalk/single/foul/HR/ground/air/ground verifiesresultlabelmatchesbanner,2H3ER/result/history/reloadconfirm. Localpassed;strikeoutlabelregression/buildpassed. Initial3IPtesttimedoutunderloadedtestChrome;ownorphanbrowserscleaned,scope1IP. Forcebranchchangedbutnotexercisebythisplan. Controlledclock/RNGnotnatural/deviceQA.
