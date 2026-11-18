@@ -1,4 +1,4 @@
-import { defensePaths, defenseStep, defenseLookYaw } from './defense.js';
+import { defensePaths, defenseStep, defenseLookYaw, groundOutPlan, groundOutPhase } from './defense.js';
 import { TRAITS } from './data.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, OPP_COLORS } from './scene.js';
 import { cal, battingWindow, oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
@@ -45,6 +45,41 @@ export function defensivePursuit(fielders, x, z) {
     }
     for(const fd of fielders) fd.userData.head.rotation.y=t<.18?0:defenseLookYaw(fd.position.x,fd.position.z,fd.rotation.y,x,z);
   };
+}
+export function completeGroundOut(o,hud,{runner=false}={}) {
+  const ball=o.ball,land=[ball.position.x,ball.position.z],positions=o.fielders.map(f=>[f.position.x,f.position.z]);
+  const plan=groundOutPlan(positions,land);if(!plan)return Promise.resolve();
+  const collector=o.fielders[plan.collector],receiver=o.fielders[plan.receiver],start=ball.position.clone();
+  const point=(f,glove=true)=>{f.userData.sync?.();f.updateWorldMatrix(true,true);return glove?f.userData.glove.localToWorld(new THREE.Vector3(0,0,.22)):(f.userData.throwHand||f.userData.armR).getWorldPosition(new THREE.Vector3());};
+  const run=(f,from,to,k,t)=>{f.position.set(from[0]+(to[0]-from[0])*k,0,from[1]+(to[1]-from[1])*k);f.rotation.y=Math.atan2(to[0]-from[0],to[1]-from[1]);fielderReady(f);const stride=k<1?Math.sin(t*13):0;f.userData.legL.rotation.x=stride*.65;f.userData.legR.rotation.x=-stride*.65;};
+  ball.visible=true;ball.scale.setScalar(2);let t=0,lastPhase='',release=null;
+  const oldBatter=o.batter.visible,pitcherHome=o.pitcher.position.clone();
+  const clearPitcher=o.pitcher.visible&&Math.hypot(pitcherHome.x-land[0],pitcherHome.z-land[1])<5;
+  const clearDir=new THREE.Vector3(pitcherHome.x-land[0],0,pitcherHome.z-land[1]);if(clearDir.length()<.1)clearDir.set(-1,0,0);clearDir.normalize().multiplyScalar(5);
+  const pitcherCover=new THREE.Vector3(land[0]+clearDir.x,pitcherHome.y,land[1]+clearDir.z);
+  if(runner){o.runner.visible=true;o.batter.visible=false;}
+  camera.position.set(17,24,15);camera.lookAt((land[0]+19.4)/2,1,(land[1]-19.4)/2);
+  return new Promise(resolve=>{const f=dt=>{t+=dt;const state=groundOutPhase(plan,t),{phase,k}=state;
+    if(phase!==lastPhase){lastPhase=phase;hud.setPitch({approach:'땅볼 처리 · 공으로 접근',transfer:'포구 · 송구 준비',throw:'1루 송구',receive:'1루 포구'}[phase]);}
+    if(phase==='approach'){
+      run(collector,positions[plan.collector],land,k,t);run(receiver,positions[plan.receiver],plan.base,k,t);
+      ball.position.copy(start);collector.userData.body.rotation.x=.12+.55*k;
+    }else{
+      collector.position.set(land[0],0,land[1]);receiver.position.set(plan.base[0],0,plan.base[1]);fielderReady(collector);fielderReady(receiver);
+      collector.rotation.y=Math.atan2(plan.base[0]-land[0],plan.base[1]-land[1]);receiver.rotation.y=Math.atan2(land[0]-plan.base[0],land[1]-plan.base[1]);
+      if(phase==='transfer'){
+        collector.userData.body.rotation.x=.6*(1-k);collector.userData.armR.rotation.x=-2.1*k;
+        const gl=point(collector),hand=point(collector,false);ball.position.copy(k<.45?start.clone().lerp(gl,k/.45):gl.lerp(hand,(k-.45)/.55));
+      }else if(phase==='throw'){
+        collector.userData.armR.rotation.x=-2.1+2.8*k;collector.userData.body.rotation.x=.3*k;
+        if(!release)release=ball.position.clone();const end=point(receiver);ball.position.copy(release).lerp(end,k);ball.position.y+=Math.sin(Math.PI*k)*1.8;
+      }else{ball.position.copy(point(receiver));}
+    }
+    if(clearPitcher)o.pitcher.position.copy(pitcherHome).lerp(pitcherCover,Math.min(1,t/plan.approach));
+    if(runner){const u=Math.min(1,t/(plan.total+.35));o.runner.position.set(19.4*u,Math.abs(Math.sin(t*14))*.12,-19.4*u);o.runner.rotation.y=Math.PI*.75;o.runner.userData.legL.rotation.x=Math.sin(t*14);o.runner.userData.legR.rotation.x=-Math.sin(t*14);}
+    window.__defensePlay?.({phase,k,t,plan,ball,collector,receiver});
+    if(t>=plan.total){delTicker(f);ball.visible=false;ball.scale.setScalar(1);if(runner){o.runner.visible=false;o.batter.visible=oldBatter;}o.pitcher.position.copy(pitcherHome);resetDefense(o.fielders);resolve();}
+  };tickers.add(f);});
 }
 function ensureG() {
   if (G) return G;
@@ -204,7 +239,7 @@ export async function playMatch(p, m, hud) {
   });
 
   // 타구 연출 후 결과 판정
-  const flight = (h) => new Promise((res) => {
+  const flight = (h, groundOut = false) => new Promise((res) => {
     hud.setBattingActive?.(false); hud.setPitch('타구 비행');
     o.zone.visible = false; o.ret.visible = false;
     const a = h.angle * Math.PI / 180; const dir = new THREE.Vector3(Math.sin(a), 0, -Math.cos(a));
@@ -219,7 +254,7 @@ export async function playMatch(p, m, hud) {
       if (h.launch < 8) y = 0.15 + Math.abs(Math.sin(k * Math.PI * 4)) * 0.5 * (1 - k);
       o.ball.position.set(dir.x * d, Math.max(0.1, y), dir.z * d + 0.3); o.ball.scale.setScalar(Math.min(5, Math.max(1, camera.position.distanceTo(o.ball.position) / 9))); if (window.__flog) window.__flog(o.ball, camera, k);
       const tgt = o.ball.position; camera.position.lerp(new THREE.Vector3(tgt.x * 0.25, 2.6 + k * 2.5, Math.min(11, 5 + Math.max(0, -tgt.z) * 0.06)), 0.06); camera.lookAt(tgt.x * 0.6, 1 + k * 3, tgt.z * 0.65 - 3);
-      if (k >= 1) { delTicker(f); setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); resetFielders(); res(); }, 250); }
+      if (k >= 1) { delTicker(f); if(groundOut)completeGroundOut(o,hud,{runner:true}).then(res);else setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); resetFielders(); res(); }, 250); }
     }; tickers.add(f);
   });
   const runBases = (kind) => new Promise((res) => {
@@ -258,7 +293,7 @@ export async function playMatch(p, m, hud) {
         else if (L <= 22) { const pr = 0.5 + h.q * 0.35; if (chance(pr * 100)) { res_ = h.dst > 62 && chance(50 + p.speed * 0.3) ? 'double' : 'single'; label = res_ === 'double' ? '2루타!' : '안타!'; } else label = '라인드라이브 잡힘'; }
         else if (L <= 50) { if (h.dst > 70 && chance(h.q * 55 + 15)) { res_ = 'double'; label = '2루타!'; } else { label = '뜬공 아웃'; } }
         else label = '내야 플라이 아웃';
-        await flight(h);
+        await flight(h,res_==='out'&&L<8);
         if (res_ !== 'out') await runBases(res_);
         resetCam();
         return { res: res_, label };

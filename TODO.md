@@ -344,3 +344,8 @@
 
 ## 09:12 Nov 18
 - Added latest12 weekly action history storing command name/date/messages and independent exact command-only stat/resource deltas at execution. Detail screen reopens after reload; hospital treatment labeled, old actions not inferred. Both-position12cap/dates/labels/copy/JSON/treatment and actual mental->week->reload->history/read-only/back passed; portrait inspected. Immediate command only, excludes match/weekend/event and individual shop purchase (existing separate report). RNG/will injected, not natural3year/device QA. Growth/reward/batting calculations unchanged.
+
+## 09:29 Nov 18 - core ground-out fielding
+- Both direct batting ground-outs and pitching in-play outs now wait for nearest-fielder approach, ground-ball pickup/transfer, throw to a separate 1B receiver and glove reception before advancing the result/out count. Ball follows world-space glove/hand positions; runner visible on batting ground-outs; fielders/pitcher reset after completion. Pitcher clears nearby pickup space.
+- Existing hit/out probabilities and easy batting window unchanged. Pitching generic in-play outs currently use this ground-ball presentation. Not physics/race-driven hit/out simulation; air catches, error/throw races, hit retrieval and double plays remain.
+- Deterministic plan/phase tests, pursuit regression, pitcher count-after-reception and batter full1PA/reset tests passed. Local 390x844 actual pixels inspected for pickup/throw/reception, not physical-device QA. Late detailed balance/device tests retained.
