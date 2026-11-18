@@ -135,7 +135,7 @@ export async function playPitching(p, m, hud) {
         }
         hud.setCount(c, outs);
         if (!ended && c.b >= 4) { ended = true;hud.setPitchingActive?.(false,true);await runWalk(o,hud,bases);cam();const next=advanceBases(bases,'walk');bases=next.bases;S.er+=next.runs;bn(next.runs?'밀어내기 볼넷 (1실점)':'볼넷',800); }
-        else if (!ended && c.s >= 3) { ended = true; outs++; S.so++; hud.setCount(c,outs);sfx.out(); bn('삼진!', 1000); }
+        else if (!ended && c.s >= 3) { ended = true; outs++; S.so++; hud.setCount(c,outs);hud.setPitch(`삼진 · ${outs}아웃`);sfx.out(); bn('삼진!', 1000); }
         hud.setScore(inn, my, S.er);hud.setBases?.(bases);showBaseRunners(o,bases);
         if (ended) await wait(900);
         if (outs >= 3) break;

@@ -540,3 +540,7 @@
 ## 01:47 Nov19 - immediate strikeout out-dot refresh
 - Thirdstrike increasedoutsafterHUDsetCount, leavingoldoutdotsduringstrikeoutbanner. Refreshcountafterconfirmedstrikeout,stillaftercatcherreturn. Nooutcome/stat/trajectorychange.
 - Newstrikeout_count_ui_test 3calledstrikes asserts0outduringreturns and1redoutdot whenstrikeoutbannerappears. Localpassed;actual390banner+reddot inspected. Roleroundtrip9strike3K/batground/newpitchregressionbuildpassed. Controlledclock/RNGnotnatural/deviceQA.
+
+## 02:07 Nov19 - strikeout phase label consistency
+- Parentnoticedconfirmedoutscreenstillshowedcatcherreturnphase. Thirdstrikeconfirmation nowsetsphase 삼진 · N아웃, matchingoutdot/banner; no gameplaytimingchange.
+- strikeout_count_ui_test nowassertslabelwhenbannerappearsandaftercapture. Testonly900msbetweenturnwaitextended15sec toretainstateforactualpixels;bannerwalltimerunchanged. Localbanner+phase+1outpixelsinspected. Roleroundtripregression/buildpassed. Noacoustic/device/naturalQA.
