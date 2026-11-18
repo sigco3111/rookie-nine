@@ -581,3 +581,6 @@
 ## 05:37 Nov19 - batting ground runner clears first receiver
 - Battingpreselectedgroundoutrunnercontinues4unitsbeyond1Batexistingspeed6,ratherthanstoppinginsidereceiverduringpitcherreturn. Keepstepsuntilrunoutends;minpostarrivalwindow.25→.7secforthisvisualonlypath.Nooutcome/prebasespeedchange;hitstillonbase,pitchingexistingracepathunchanged.
 - Localnormal/fallbackgroundreturnchecks>=4separation,gaze/glove/input/FOV/reset/resultpassed;contactflightcontinuityandnormalhitregressionpassed. Buildpassed,actualclosefallbackpixelsinspectednosamespotrunner;gamecameraunchanged. Controlledclock/RNGnotdevice/naturalQA.
+
+## 05:58 Nov19 - pitching full flow after batting runout
+- Extendedfull_pitch_return_direction_ui_test checksall7fieldergazesinreturnhooks. Local/live19pitch3IPmixedwalk/single/foul/HR/ground/force/air/Kpassed32returnframes/pitcherfacingandnextyawreset/inningchange/result/history/reloadconfirm. Same3IP3H1SO,played3:3/3ER→existingauto3:4/4ER. Confirmsbattingrunoutdidnotalterthispitchingplan. Buildsameindex-0aO5wjLg.js;actualliveresultpixelsinspected. No runtimechange;controlledRNG/clocknotnatural/deviceQA.
