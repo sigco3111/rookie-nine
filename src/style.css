@@ -63,3 +63,10 @@ table.mini{width:100%;border-collapse:collapse;font-size:13px}table.mini td{padd
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.chip{padding:5px 10px;border-radius:999px;font-weight:900;font-size:14px;color:#fff}.chip.up{background:#2f9e44}.chip.dn{background:#d9363e}
 
 .command-report{margin-top:6px;padding-top:5px;border-top:1px solid #ffffff30}.command-report>small{font-size:10px;color:#bccce2}.command-report .chips{margin-top:4px;gap:4px}.command-report .chip{font-size:11px;padding:3px 7px}
+
+/* Let the match status move below B/S/O rather than squeezing Korean words. */
+.top:has(#pi){flex-wrap:wrap;gap:5px 8px;align-items:flex-start}
+#cnt{flex:0 0 auto}
+#pi{margin-left:auto;max-width:100%;box-sizing:border-box;word-break:keep-all;overflow-wrap:break-word;line-height:1.35}
+
+.banner{box-sizing:border-box;max-width:100%;padding-inline:12px;word-break:keep-all;overflow-wrap:break-word;font-size:clamp(24px,7.5vw,38px)}

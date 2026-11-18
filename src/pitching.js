@@ -136,7 +136,7 @@ export async function playPitching(p, m, hud) {
       }
     }
     // Three outs end the defensive half before the automatic offense summary.
-    bases=0;hud.setBases?.(0);showBaseRunners(o,0);hud.setPitchingActive?.(false,true);hud.setPitch('공수 교대 · 우리 팀 공격');
+    bases=0;hud.setBases?.(0);showBaseRunners(o,0);hud.setPitchingActive?.(false,true);hud.setPitch('공수 교대 · 공격 중');
     o.ball.visible=false;o.runner.visible=false;o.zone.visible=false;o.ret.visible=false;
     o.batter.visible=false;o.pitcher.visible=false;o.catcher.visible=false;o.ump.visible=false;for(const fd of o.fielders)fd.visible=false;
     hud.setCount({b:0,s:0},3);resetDefense(o.fielders);
