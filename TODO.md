@@ -587,3 +587,7 @@
 
 ## 06:19 Nov19 - next batter reset after run-through
 - Extendedbat_return_sequence_ui_test assertsgroundreturnrunner>=4fromreceiverand7fieldergazerestorednextpitch. Local/live normal/fallback3PAground→air→singlepassedallreturns,battervisible/runnerhidden/zone-reticle/fieldershome/input/result3AB1H1:2/history/reloadconfirm. Buildsameindex-0aO5wjLg.js. Actual390livenextbatterpixelsinspectedvisiblebluebatter/swingUI. No runtimechange;controlledRNG/clocknotnatural/deviceQA.
+
+## 06:39 Nov19 - guard batting flight arrival pose
+- Removedaccidentalground-onlythroughreferencefrombattinghitflightlegstopconditionintroducedd7014bd. Normalflightmax2.6secisless1Btime3.048sec,sonormalclocknotobservedblocked. Preventivefix,notconfirmeduserflowhang.
+- bat_hit_run_flight_ui_test ARRIVE_IN_FLIGHT usesdeliberate7secdebugstepaftercapturetoexecutearrivalbranchandassertstoppedlegs;localdefault/doubleconfigpassedresult. Groundreturnseparation/gaze/glove/resultregressionpassed. Buildpassed. Artificialboundarychecknotnatural/deviceQA.

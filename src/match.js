@@ -383,7 +383,7 @@ export async function playMatch(p, m, hud) {
     const f = (dt) => {
       chase(t);
       t += dt; const k = Math.min(1, t / dur);
-      if(hitBases){const pos=hitRunStep(hitBases,Math.min(1,t/hitRunTime));o.runner.position.set(pos.x,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=pos.arrived&&(!through||through>=4)?0:Math.sin(t*14);o.runner.userData.legR.rotation.x=pos.arrived&&(!through||through>=4)?0:-Math.sin(t*14);window.__batHitRunFlight?.({t,hitBases,runner:o.runner});}
+      if(hitBases){const pos=hitRunStep(hitBases,Math.min(1,t/hitRunTime));o.runner.position.set(pos.x,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);o.runner.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);window.__batHitRunFlight?.({t,hitBases,runner:o.runner});}
       const d = h.dst * k; let y = 1 + 4 * peak * k * (1 - k) - (h.launch < 8 ? 0.9 * k : 0);
       if (h.launch < 8) y = 0.15 + Math.abs(Math.sin(k * Math.PI * 4)) * 0.5 * (1 - k);
       o.ball.position.set(dir.x * d, Math.max(0.1, y), dir.z * d + 0.3); o.ball.scale.setScalar(Math.min(5, Math.max(1, camera.position.distanceTo(o.ball.position) / 9)));
