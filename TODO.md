@@ -533,3 +533,6 @@
 
 ## 01:08 Nov19 - same-session pitching to batting reset
 - Newrole_switch_match_ui_test runs9calledstrikes/3K/1IP→resultconfirm→title/newbatter→groundout/return/result withoutreload. Normal/fallback local/livepassed;7fielders visibleat homebeforebatpitch,oldpitchcatcherhidden,battervisible,returngloveendpoint,1AB0Hresult. Buildpassed,runtimeunchanged. Existingautomatic tie1run/ERstillpresentanddisclosed,notrulefix. Actual390resultpixels inspected. ControlledRNG/acceleratedclock,notnatural/deviceQA.
+
+## 01:28 Nov19 - role roundtrip reset
+- Extendedrole_switch_match_ui_test throughnewthirdpitcherafterbatresult,withoutreload. Local/live normal/fallback passed catcher/ump/7fielders visible,calledstrike→catcherreturn→pitcherglove→nextthrowready. Previouspitch3K/batgroundresultsstillpassed. Build/runtimesame. Actual390nextpitchUI inspected, no gamecodechange. Controlledclock/RNG,notnatural/deviceQA.
