@@ -1,6 +1,6 @@
 import { advanceBases } from './bases.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, OPP_COLORS } from './scene.js';
-import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut, airOutSequence, runHomeRun } from './match.js';
+import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut, airOutSequence, runHomeRun, showBaseRunners } from './match.js';
 import { oppStrength, teamStrength, isRegular, cal, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
 import { sfx } from './audio.js';
@@ -30,6 +30,7 @@ export async function playPitching(p, m, hud) {
   applyEquipment(o.batter);
   setShirt(o.batter, OPP_COLORS[TEAMS.indexOf(opp) % OPP_COLORS.length]);
   applyEquipment(o.runner);setShirt(o.runner, OPP_COLORS[TEAMS.indexOf(opp) % OPP_COLORS.length]);o.runner.visible=false;
+  for(const r of o.baseRunners){applyEquipment(r);setShirt(r,OPP_COLORS[TEAMS.indexOf(opp)%OPP_COLORS.length]);}showBaseRunners(o,0);
   resetDefense(o.fielders);
   for (const fd of o.fielders) { fd.visible = true; setUniform(fd, year); }
   if (!o.catcher) { o.catcher = makeChibi({ shirt: 0x333a44, pants: 0x333a44, cap: 0x222222, glove: true }); o.catcher.rotation.y = Math.PI; o.catcher.position.set(0, 0, 1.6); o.catcher.scale.set(1.0, 0.8, 1.0); o.catcher.userData.armL.rotation.set(-1.4, 0, 0.2); o.g.add(o.catcher);
@@ -78,7 +79,7 @@ export async function playPitching(p, m, hud) {
     const fly = (kind, r, after) => { hud.setPitchingActive?.(false, true); hud.setPitch('타구 비행'); const dist = kind === 'out' ? 16 + Math.random() * 12 : kind === 'foul' ? 12 : [0, 26, 42, 58, 125][r.t]; const hi = kind === 'out' ? 7 : r && r.t === 4 ? 32 : 5 + (r ? r.t * 2 : 0); const dx = (Math.random() - 0.5) * (r && r.t === 4 ? 40 : 30); let dur = 0.9 + dist / 70;const outAir=kind==='out'&&dist>22;const air=outAir?airOutSequence(o,hud,[bx+dx*.5,-dist*.9],dur):null;if(air)dur=air.plan.duration;
       const chase = defensivePursuit(o.fielders, bx + dx * .5, -dist * .9);
       o.ball.visible = true; let k = 0; const g2 = (dt) => { k += dt / dur; chase(k * dur); const s = Math.min(1, k); o.ball.position.set(bx + dx * s * 0.5, kind==='out'&&!outAir?.15+Math.abs(Math.sin(s*Math.PI*4))*.5*(1-s):1.0 + Math.sin(Math.PI * s) * hi, -dist * s * 0.9); if(air){const glove=air.step(k*dur);o.ball.position.lerp(glove,Math.max(0,(s-.85)/.15));window.__airOutPlay?.({phase:'flight',k:s,t:k*dur,plan:air.plan,ball:o.ball,collector:o.fielders[air.plan.collector]});}const tg = o.ball.position; camera.lookAt(tg.x * 0.6, Math.max(0.8, tg.y * 0.7), Math.max(tg.z * 0.5, -40) + 4); camera.position.y = 3.1 + Math.min(4, tg.y * 0.1);
-        if (s >= 1) { delTicker(g2); if(air)air.finish().then(()=>{cam();after('air');});else if(kind==='out')completeGroundOut(o,hud,{runner:true}).then(()=>{cam();after('ground');});else if(kind==='hit'&&r.t!==4)completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases:r.t}).then(()=>{cam();after();});else if(kind==='hit'&&r.t===4){o.ball.scale.setScalar(1);resetDefense(o.fielders);runHomeRun(o,hud).then(()=>{cam();after();});}else{o.ball.visible = false;o.ball.scale.setScalar(1);resetDefense(o.fielders);cam();after();} } }; tickers.add(g2); };
+        if (s >= 1) { delTicker(g2); if(air)air.finish().then(()=>{cam();after('air');});else if(kind==='out')completeGroundOut(o,hud,{runner:true}).then(()=>{cam();after('ground');});else if(kind==='hit'&&r.t!==4)completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases:r.t,priorBases:bases}).then(()=>{cam();after();});else if(kind==='hit'&&r.t===4){o.ball.scale.setScalar(1);resetDefense(o.fielders);runHomeRun(o,hud,bases).then(()=>{cam();after();});}else{o.ball.visible = false;o.ball.scale.setScalar(1);resetDefense(o.fielders);cam();after();} } }; tickers.add(g2); };
     const fin = () => {
       o.ball.visible = false; setBatterPose(o.batter, 0); setPitcherPose(o.pitcher, 0);
       if (!willSwing) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
@@ -97,7 +98,7 @@ export async function playPitching(p, m, hud) {
 
   let bases = 0; // 1루/2루/3루 점유 비트
   for (let inn = 1; inn <= innings; inn++) {
-    hud.setScore(inn, my, S.er); let outs = 0; bases = 0;hud.setBases?.(bases); const bn = (t, ms) => hud.banner(t, ms);
+    hud.setScore(inn, my, S.er); let outs = 0; bases = 0;hud.setBases?.(bases);showBaseRunners(o,bases); const bn = (t, ms) => hud.banner(t, ms);
     while (outs < 3) {
       const c = { b: 0, s: 0 }; hud.setCount(c, outs); let ended = false;
       bn(`${inn}회 ${outs}아웃  다음 타자`, 900); await wait(1000);
@@ -112,7 +113,7 @@ export async function playPitching(p, m, hud) {
         hud.setCount(c, outs);
         if (!ended && c.b >= 4) { ended = true; const next=advanceBases(bases,'walk');bases=next.bases;S.er+=next.runs;bn(next.runs?'밀어내기 볼넷 (1실점)':'볼넷',800); }
         else if (!ended && c.s >= 3) { ended = true; outs++; S.so++; sfx.out(); bn('삼진!', 1000); }
-        hud.setScore(inn, my, S.er);hud.setBases?.(bases);
+        hud.setScore(inn, my, S.er);hud.setBases?.(bases);showBaseRunners(o,bases);
         if (ended) await wait(900);
         if (outs >= 3) break;
       }
@@ -121,6 +122,7 @@ export async function playPitching(p, m, hud) {
     const lam = Math.max(0.1, 0.35 + (teamStrength(p) - 40) / 25); const add = Math.random() < lam * 0.7 ? (chance(25) ? 2 : 1) : 0; my += add;
     hud.banner(`${inn}회말 우리 팀 ${add}점`, 900); hud.setScore(inn, my, S.er); await wait(1000);
   }
+  showBaseRunners(o,0);
   cv.removeEventListener('pointerdown', onD); cv.removeEventListener('pointermove', onM); window.removeEventListener('pointerup', onU); hud.removePicker(); window.dispatchEvent(new Event('resize'));
   let win = my > S.er; if (my === S.er) { win = chance(50 + p.ev.team * 0.1); if (win) my++; else S.er++; }
   const r = { ip: innings, so: S.so, er: S.er, hitsAllowed: S.ha, my, opp: S.er, win, kind: m.kind, title: m.name + ' vs ' + opp, ab: 0, hits: 0, hr: 0, rbi: 0 };

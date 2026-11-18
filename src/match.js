@@ -1,3 +1,4 @@
+import { baseRunStep } from './bases.js';
 import { defensePaths, defenseStep, defenseLookYaw, groundOutPlan, groundOutPhase, airOutPlan, airOutStep, hitRunStep } from './defense.js';
 import { TRAITS } from './data.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, OPP_COLORS } from './scene.js';
@@ -46,7 +47,13 @@ export function defensivePursuit(fielders, x, z) {
     for(const fd of fielders) fd.userData.head.rotation.y=t<.18?0:defenseLookYaw(fd.position.x,fd.position.z,fd.rotation.y,x,z);
   };
 }
-export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1}={}) {
+export function showBaseRunners(o,mask,advance=0,progress=0,t=0){
+  o.baseRunners.forEach((r,i)=>{const pos=baseRunStep(i+1,advance,advance?progress*advance/Math.min(advance,3-i):progress);r.visible=!!(mask&(1<<i))&&!pos.scored;
+    r.position.set(pos.x,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z);r.rotation.y=pos.yaw;
+    r.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);r.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);
+  });
+}
+export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1,priorBases=0}={}) {
   const ball=o.ball,land=[ball.position.x,ball.position.z],positions=o.fielders.map(f=>[f.position.x,f.position.z]);
   const plan=groundOutPlan(positions,land,returnHit?[3,-41.8]:[19.4,-19.4]);if(!plan)return Promise.resolve();
   const collector=o.fielders[plan.collector],receiver=o.fielders[plan.receiver],start=ball.position.clone();
@@ -79,12 +86,13 @@ export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1
     }
     if(clearPitcher)o.pitcher.position.copy(pitcherHome).lerp(pitcherCover,Math.min(1,t/plan.approach));
     if(runner){const u=Math.min(1,t/(returnHit?plan.total*.85:plan.total+.35)),pos=hitRunStep(returnHit?hitBases:1,u);o.runner.position.set(pos.x,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);o.runner.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);}
-    window.__defensePlay?.({phase,k,t,plan,ball,collector,receiver,returnHit,runner:runner?o.runner:null,hitBases});
+    if(priorBases&&returnHit)showBaseRunners(o,priorBases,hitBases,Math.min(1,t/(plan.total*.85)),t);
+    window.__defensePlay?.({phase,k,t,plan,ball,collector,receiver,returnHit,runner:runner?o.runner:null,hitBases,baseRunners:o.baseRunners,priorBases});
     if(t>=plan.total){delTicker(f);ball.visible=false;ball.scale.setScalar(1);if(runner){o.runner.visible=false;o.batter.visible=oldBatter;}camera.fov=oldFov;camera.updateProjectionMatrix();o.pitcher.position.copy(pitcherHome);resetDefense(o.fielders);resolve();}
   };tickers.add(f);});
 }
 // A completed home run still visits every base before the score/result advances.
-export function runHomeRun(o,hud){
+export function runHomeRun(o,hud,priorBases=0){
   const runner=o.runner,oldBatter=o.batter.visible,oldFov=camera.fov;
   runner.visible=true;o.batter.visible=false;o.ball.visible=false;
   hud.setPitch('홈런 · 베이스 러닝');
@@ -93,7 +101,8 @@ export function runHomeRun(o,hud){
   return new Promise(resolve=>{const f=dt=>{t+=dt;const pos=hitRunStep(4,t/duration);
     runner.position.set(pos.x,pos.arrived?0:Math.abs(Math.sin(t*14))*.15,pos.z);runner.rotation.y=pos.yaw;
     runner.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);runner.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);
-    window.__homeRunPlay?.({runner,t,duration,arrived:pos.arrived});
+    if(priorBases)showBaseRunners(o,priorBases,4,t/duration,t);
+    window.__homeRunPlay?.({runner,t,duration,arrived:pos.arrived,baseRunners:o.baseRunners,priorBases});
     if(t>=duration+hold){delTicker(f);runner.visible=false;o.batter.visible=oldBatter;camera.fov=oldFov;camera.updateProjectionMatrix();resolve();}
   };tickers.add(f);});
 }
@@ -138,7 +147,8 @@ function ensureG() {
   const fielders = [[-24, -24], [-11, -36], [11, -36], [24, -24], [-48, -65], [0, -78], [48, -65]].map(([x, z], i) => { const f = makeChibi({ shirt: 0xc53030, cap: 0x742a2a, glove: true }); f.position.set(x, 0, z); f.scale.setScalar(2.2); f.rotation.y = Math.atan2(-x, 0 - z) ; f.userData.home = [x, z]; fielderReady(f); addShadow(f); g.add(f); return f; });
   
   const runner = makeChibi({ shirt: 0x2b6cb0, cap: 0x1a365d, helmet: true, num: 9 }); runner.visible = false; runner.scale.setScalar(1.6); g.add(runner);
-  scene.add(g); G = { g, batter, pitcher, ball, zone, ret, fielders, runner, bshadow }; permanent.add((dt) => { const b = G.ball; G.bshadow.visible = b.visible; G.bshadow.position.x = b.position.x; G.bshadow.position.z = b.position.z; const sc2 = Math.max(0.5, 1.4 - b.position.y * 0.1); G.bshadow.scale.setScalar(sc2); });
+  const baseRunners=Array.from({length:3},()=>{const r=makeChibi({shirt:0x2b6cb0,helmet:true,num:9});r.visible=false;r.scale.setScalar(1.6);g.add(r);return r;});
+  scene.add(g); G = { baseRunners,g, batter, pitcher, ball, zone, ret, fielders, runner, bshadow }; permanent.add((dt) => { const b = G.ball; G.bshadow.visible = b.visible; G.bshadow.position.x = b.position.x; G.bshadow.position.z = b.position.z; const sc2 = Math.max(0.5, 1.4 - b.position.y * 0.1); G.bshadow.scale.setScalar(sc2); });
   return G;
 }
 let homeAnim = null;
@@ -161,7 +171,7 @@ export function applyEquipment(a, gr = {}) {
   for (const s of u.shoes) s.material.color.set(gr.shoes ? 0xe53935 : 0x222222);
 }
 export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배경: 선수가 대기/훈련 모션
-  const o = ensureG(); o.g.visible = true; o.ret.visible = false; o.zone.visible = false; o.ball.visible = false;
+  const o = ensureG();showBaseRunners(o,0); o.g.visible = true; o.ret.visible = false; o.zone.visible = false; o.ball.visible = false;
   o.batter.position.set(-0.6, 0, 0.3); o.batter.rotation.y = Math.PI / 2 - 0.5; o.batter.scale.setScalar(0.44);
   resetDefense(o.fielders);
   for (const fd of o.fielders) { fd.visible = !pit; if (!pit) setShirt(fd, 0xc53030); }
@@ -197,7 +207,7 @@ export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배
 }
 
 export async function playMatch(p, m, hud) {
-  const o = ensureG(); const y = cal(p.week).year; setUniform(o.batter, y); applyEquipment(o.batter, p.gear); if (o.runner) { setUniform(o.runner, y); applyEquipment(o.runner, p.gear); } applyEquipment(o.pitcher); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.5, 0, 0.2); o.batter.rotation.y = Math.PI / 2 - 1.4; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
+  const o = ensureG();showBaseRunners(o,0); const y = cal(p.week).year; setUniform(o.batter, y); applyEquipment(o.batter, p.gear); if (o.runner) { setUniform(o.runner, y); applyEquipment(o.runner, p.gear); } applyEquipment(o.pitcher); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.5, 0, 0.2); o.batter.rotation.y = Math.PI / 2 - 1.4; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
   const opp = TEAMS[Math.floor(Math.random() * TEAMS.length)]; { const oc = OPP_COLORS[TEAMS.indexOf(opp) % OPP_COLORS.length]; setShirt(o.pitcher, oc); o.fielders.forEach((f) => setShirt(f, oc)); }
   const regular = isRegular(p);
   const strength = oppStrength(p);

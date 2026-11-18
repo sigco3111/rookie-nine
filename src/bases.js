@@ -16,3 +16,13 @@ export function advanceBases(mask,kind){
  }
  return {bases:mask,runs:0};
 }
+
+// Visual path for an existing runner. Home-scoring runners leave the scene
+// on arrival so the next runner does not stack on the plate.
+export function baseRunStep(start,advance,progress){
+ const pts=[[0,0],[19.4,-19.4],[0,-38.8],[-19.4,-19.4],[0,0]];
+ const end=Math.min(4,start+advance),u=Math.max(0,Math.min(1,progress));
+ const q=start+(end-start)*u,i=Math.min(3,Math.floor(q)),k=q-i;
+ const a=pts[i],b=pts[i+1];
+ return {x:a[0]+(b[0]-a[0])*k,z:a[1]+(b[1]-a[1])*k,yaw:Math.atan2(b[0]-a[0],b[1]-a[1]),arrived:u>=1||advance===0,scored:end===4&&u>=1};
+}
