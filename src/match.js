@@ -152,7 +152,7 @@ export function runFollowupScore(o,hud,start){
   };tickers.add(f);});
 }
 // Flight duration includes the collector's travel. Ball stays live until glove hold ends.
-export function airOutSequence(o,hud,landing,minDuration){
+export function airOutSequence(o,hud,landing,minDuration,returnPitcher=false){
   const plan=airOutPlan(o.fielders.map(f=>[f.position.x,f.position.z]),landing,minDuration);
   if(!plan)return null;
   const collector=o.fielders[plan.collector],pitcherHome=o.pitcher.position.clone();
@@ -172,8 +172,20 @@ export function airOutSequence(o,hud,landing,minDuration){
   const finish=()=>new Promise(resolve=>{
     hud.setPitch('뜬공 포구');sfx.mitt();let t=0;o.ball.scale.setScalar(2);
     camera.position.set(landing[0]+10,13,landing[1]+19);camera.lookAt(landing[0],2,landing[1]);
-    const f=dt=>{t+=dt;o.ball.position.copy(glove());window.__airOutPlay?.({phase:'caught',t,plan,ball:o.ball,collector});
-      if(t>=.65){delTicker(f);o.ball.visible=false;o.ball.scale.setScalar(1);o.pitcher.position.copy(pitcherHome);resetDefense(o.fielders);resolve();}};tickers.add(f);
+    const throwTime=Math.max(.65,Math.hypot(landing[0]-pitcherHome.x,landing[1]-pitcherHome.z)/24),total=returnPitcher?1+throwTime+.3:.65;
+    const arm=o.pitcher.userData.armL.rotation.clone();let release=null;
+    const point=(f,key)=>{f.userData.sync?.();f.updateWorldMatrix(true,true);return f.userData[key].getWorldPosition(new THREE.Vector3());};
+    const f=dt=>{t+=dt;
+      if(!returnPitcher||t<=.65){o.ball.position.copy(glove());window.__airOutPlay?.({phase:'caught',t,plan,ball:o.ball,collector});}
+      else{
+        // Restore pitcher to mound before receiving the return; collector stays at catch.
+        o.pitcher.position.copy(pitcherHome);collector.rotation.y=Math.atan2(pitcherHome.x-landing[0],pitcherHome.z-landing[1]);
+        camera.position.set(5,42,28);camera.lookAt(0,0,-28);
+        if(t<1){const k=(t-.65)/.35;hud.setPitch('포구 후 · 투수에게 반환');collector.userData.armR.rotation.x=-2.1*k;o.ball.position.copy(glove()).lerp(point(collector,'throwHand'),k);}
+        else{const k=Math.min(1,(t-1)/throwTime);collector.userData.armR.rotation.x=-2.1+2.8*k;o.pitcher.userData.armL.rotation.x=arm.x-.4*k;if(!release)release=point(collector,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;
+          window.__airReturn?.({t,k,ball:o.ball,target,collector,pitcher:o.pitcher});}
+      }
+      if(t>=total){delTicker(f);o.ball.visible=false;o.ball.scale.setScalar(1);o.pitcher.position.copy(pitcherHome);o.pitcher.userData.armL.rotation.copy(arm);resetDefense(o.fielders);resolve();}};tickers.add(f);
   });
   return {plan,step,finish};
 }

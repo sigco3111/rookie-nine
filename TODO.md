@@ -435,3 +435,7 @@
 ## 16:29 Nov18 - pitching throwing-hand release
 - Directpitcher windup ball now stays at realworld throwinghand eachposeframe, snapshots handpoint then blends into existing pitch trajectory for first.14sec. Previously hiddenwindup then fixed-coordinate appearance. Original T/target/curve/odds/count preserved after first.14sec, no extraRNG. Ballscale reset1 beforewindup. Batter mode untouched/easybattingunchanged.
 - Local calledstrike/outsideball/whiff3cases handcoincidence17windup samples, departure/normalflight, catcherreception/return beforecount, correctcount/nextpitch passed. Actual390portrait handball windup inspected; visible ball perspective larger closecamera, actualscene radiusunchanged. Buildpassed. Forced RNG/aim/dt notnatural/deviceQA.
+
+## 16:50 Nov18 - pitcher air-out return throw
+- Pitcher airout finish now keeps collector at catchpoint after.65sec glovehold, transfersglove→throwhand .35sec then returns arc to pitcher worldglove, holds.3sec before reset/nextpitch/outupdate. Pitcher restores mound before return, armrestoredafter; fielders reset afterreturn instead of atcatch. Shared battingairout defaultunchanged. No new catch/outchance/tagup/doubleplay. Adds.35+throwdistance/24(min.65)+.3simsec return presentation.
+- Local actualpitcherairout catchglovecoincidence/returnendpoint/inputdisabled/countunchanged beforereturn thenout1 passed, actualportraitflight inspected; battingairoutfull1PA/resetregression andgroundpuretests/buildpassed. Forced RNG/dt, notnatural/deviceQA. Existing preselectedairout/priorrunnersholdpolicy unchanged.
