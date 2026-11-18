@@ -559,3 +559,6 @@
 ## 03:34 Nov19 - pitcher faces returning fielder
 - Ground/hitrelayandairreturns nowturnpitchertowardsenderduringreturn,glovetargettracksupdatedorientation;restoreoldyawafterhold. Existingreturntime/race/outcomeunchanged. Catcherreturnalreadycomesfromhome,nochange.
 - bat_pitcher_return_ui_test addsfacing-senderangleandfinalyaw0assertions. Localnormalhit/airandfallbackgroundpassed,gloveendpoint/input/FOV/resultchecksretained. Buildpassed;actual390returnframesinspectedthoughpitcherissmallwideview. Initialcombinedtesttimedout,ownorphanChromecleaned,individualrunspassed. Controlledclock/RNGnotnatural/deviceQA.
+
+## 03:53 Nov19 - full pitching return-direction regression
+- Newfull_pitch_return_direction_ui_test full19pitch3IP walk/single/foul/HR/ground/air/force/K acrossinningchanges assertsfacingreturningfielder32sampledreturnframesandrestoredyawbeforeeachpitch. Local/livepassed3IP3H1SO,played3:3→existingauto3:4,result/history/reloadconfirm. Buildsamebundle,actual390resultpixelsinspected. No runtimechange. ControlledRNG/acceleratedclock,notnatural/deviceQA;automaticdecidingrun/ERstilldisclosedunchanged.
