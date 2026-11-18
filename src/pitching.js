@@ -1,5 +1,5 @@
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, OPP_COLORS } from './scene.js';
-import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut } from './match.js';
+import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut, airOutSequence } from './match.js';
 import { oppStrength, teamStrength, isRegular, cal, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
 import { sfx } from './audio.js';
@@ -73,10 +73,10 @@ export async function playPitching(p, m, hud) {
       if (bat.swing) { bat.at += dt / 0.22; setBatterPose(o.batter, bat.at); }
       if (t >= T + 0.15) { done = true; delTicker(f); fin(); }
     };
-    const fly = (kind, r, after) => { hud.setPitchingActive?.(false, true); hud.setPitch('타구 비행'); const dist = kind === 'out' ? 16 + Math.random() * 12 : kind === 'foul' ? 12 : [0, 26, 42, 58, 125][r.t]; const hi = kind === 'out' ? 7 : r && r.t === 4 ? 32 : 5 + (r ? r.t * 2 : 0); const dx = (Math.random() - 0.5) * (r && r.t === 4 ? 40 : 30); const dur = 0.9 + dist / 70;
+    const fly = (kind, r, after) => { hud.setPitchingActive?.(false, true); hud.setPitch('타구 비행'); const dist = kind === 'out' ? 16 + Math.random() * 12 : kind === 'foul' ? 12 : [0, 26, 42, 58, 125][r.t]; const hi = kind === 'out' ? 7 : r && r.t === 4 ? 32 : 5 + (r ? r.t * 2 : 0); const dx = (Math.random() - 0.5) * (r && r.t === 4 ? 40 : 30); let dur = 0.9 + dist / 70;const outAir=kind==='out'&&dist>22;const air=outAir?airOutSequence(o,hud,[bx+dx*.5,-dist*.9],dur):null;if(air)dur=air.plan.duration;
       const chase = defensivePursuit(o.fielders, bx + dx * .5, -dist * .9);
-      o.ball.visible = true; let k = 0; const g2 = (dt) => { k += dt / dur; chase(k * dur); const s = Math.min(1, k); o.ball.position.set(bx + dx * s * 0.5, kind==='out'?.15+Math.abs(Math.sin(s*Math.PI*4))*.5*(1-s):1.0 + Math.sin(Math.PI * s) * hi, -dist * s * 0.9); const tg = o.ball.position; camera.lookAt(tg.x * 0.6, Math.max(0.8, tg.y * 0.7), Math.max(tg.z * 0.5, -40) + 4); camera.position.y = 3.1 + Math.min(4, tg.y * 0.1);
-        if (s >= 1) { delTicker(g2); if(kind==='out')completeGroundOut(o,hud).then(()=>{cam();after();});else{o.ball.visible = false;resetDefense(o.fielders);cam();after();} } }; tickers.add(g2); };
+      o.ball.visible = true; let k = 0; const g2 = (dt) => { k += dt / dur; chase(k * dur); const s = Math.min(1, k); o.ball.position.set(bx + dx * s * 0.5, kind==='out'&&!outAir?.15+Math.abs(Math.sin(s*Math.PI*4))*.5*(1-s):1.0 + Math.sin(Math.PI * s) * hi, -dist * s * 0.9); if(air){const glove=air.step(k*dur);o.ball.position.lerp(glove,Math.max(0,(s-.85)/.15));window.__airOutPlay?.({phase:'flight',k:s,t:k*dur,plan:air.plan,ball:o.ball,collector:o.fielders[air.plan.collector]});}const tg = o.ball.position; camera.lookAt(tg.x * 0.6, Math.max(0.8, tg.y * 0.7), Math.max(tg.z * 0.5, -40) + 4); camera.position.y = 3.1 + Math.min(4, tg.y * 0.1);
+        if (s >= 1) { delTicker(g2); if(air)air.finish().then(()=>{cam();after('air');});else if(kind==='out')completeGroundOut(o,hud).then(()=>{cam();after('ground');});else{o.ball.visible = false;resetDefense(o.fielders);cam();after();} } }; tickers.add(g2); };
     const fin = () => {
       o.ball.visible = false; setBatterPose(o.batter, 0); setPitcherPose(o.pitcher, 0);
       if (!willSwing) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
@@ -88,7 +88,7 @@ export async function playPitching(p, m, hud) {
       sfx.crack(0.8); hud.flash();
       const ph = 0.26 + q * 0.006 - (p.velo - 40) * 0.0018 - edge * 0.05; // 인플레이 안타 확률
       if (chance(Math.max(0.08, ph * 100))) { const r = Math.random(); const rr = { kind: 'hit', t: r < 0.64 ? 1 : r < 0.88 ? 2 : r < 0.93 ? 3 : 4 }; if (rr.t === 4) sfx.cheer(1); fly('hit', rr, () => res(rr)); }
-      else if (chance(32 - (inZone ? 0 : 10))) res({ kind: 'foul' }); else fly('out', null, () => res({ kind: 'out' }));
+      else if (chance(32 - (inZone ? 0 : 10))) res({ kind: 'foul' }); else fly('out', null, (fieldType) => res({ kind: 'out', fieldType }));
     };
     tickers.add(f);
   });
@@ -102,7 +102,7 @@ export async function playPitching(p, m, hud) {
       while (!ended) {
         const r = await throwBall(c);
         if (r.kind === 'ball') { c.b++; bn('볼', 500); } else if (r.kind === 'strike') { c.s++; bn('스트라이크', 600); } else if (r.kind === 'whiff') { c.s++; bn('헛스윙!', 600); } else if (r.kind === 'foul') { if (c.s < 2) c.s++; bn('파울', 500); }
-        else if (r.kind === 'out') { outs++; ended = true; sfx.out(); bn('땅볼 아웃', 900); }
+        else if (r.kind === 'out') { outs++; ended = true; sfx.out(); bn(r.fieldType==='air'?'뜬공 아웃':'땅볼 아웃', 900); }
         else { // 안타
           S.ha++; const adv = r.t; if (r.t === 4) { const sc = bases + 1; S.er += sc; bases = 0; bn(`홈런 허용 (${sc}실점)`, 1200); sfx.cheer(1.5); }
           else { let sc = 0; bases += 1; if (adv >= 2 && bases > 1) { sc += Math.min(bases - 1, adv); } if (bases > 3) { sc += bases - 3; bases = 3; } if (adv >= 2 && bases) { if (chance(55)) { sc++; bases = Math.max(0, bases - 1); } } S.er += sc; bn(`${['', '안타', '2루타', '3루타'][adv]} 허용${sc ? ` (${sc}실점)` : ''}`, 1100); sfx.cheer(0.8); } ended = true;

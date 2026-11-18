@@ -41,3 +41,15 @@ export function groundOutPhase(plan,t){
  t-=plan.transfer;if(t<plan.flight)return {phase:'throw',k:t/plan.flight};
  return {phase:'receive',k:Math.min(1,(t-plan.flight)/plan.hold)};
 }
+
+// A preselected air-out follows the nearest fielder, not a new outcome roll.
+export function airOutPlan(positions,landing,minDuration=1){
+ if(!positions.length)return null;
+ const ranked=positions.map(([x,z],index)=>({index,d:Math.hypot(x-landing[0],z-landing[1])})).sort((a,b)=>a.d-b.d);
+ const collector=ranked[0].index,duration=Math.max(.5,minDuration,.18+ranked[0].d/7);
+ return {collector,from:[...positions[collector]],landing:[...landing],duration};
+}
+export function airOutStep(plan,t){
+ const k=Math.min(1,Math.max(0,(t-.18)/(plan.duration-.18)));
+ return {x:plan.from[0]+(plan.landing[0]-plan.from[0])*k,z:plan.from[1]+(plan.landing[1]-plan.from[1])*k,k};
+}

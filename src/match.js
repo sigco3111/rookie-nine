@@ -1,4 +1,4 @@
-import { defensePaths, defenseStep, defenseLookYaw, groundOutPlan, groundOutPhase } from './defense.js';
+import { defensePaths, defenseStep, defenseLookYaw, groundOutPlan, groundOutPhase, airOutPlan, airOutStep } from './defense.js';
 import { TRAITS } from './data.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, OPP_COLORS } from './scene.js';
 import { cal, battingWindow, oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
@@ -80,6 +80,32 @@ export function completeGroundOut(o,hud,{runner=false}={}) {
     window.__defensePlay?.({phase,k,t,plan,ball,collector,receiver});
     if(t>=plan.total){delTicker(f);ball.visible=false;ball.scale.setScalar(1);if(runner){o.runner.visible=false;o.batter.visible=oldBatter;}o.pitcher.position.copy(pitcherHome);resetDefense(o.fielders);resolve();}
   };tickers.add(f);});
+}
+// Flight duration includes the collector's travel. Ball stays live until glove hold ends.
+export function airOutSequence(o,hud,landing,minDuration){
+  const plan=airOutPlan(o.fielders.map(f=>[f.position.x,f.position.z]),landing,minDuration);
+  if(!plan)return null;
+  const collector=o.fielders[plan.collector],pitcherHome=o.pitcher.position.clone();
+  const clearPitcher=o.pitcher.visible&&Math.hypot(pitcherHome.x-landing[0],pitcherHome.z-landing[1])<5;
+  const away=new THREE.Vector3(pitcherHome.x-landing[0],0,pitcherHome.z-landing[1]);if(away.length()<.1)away.set(-1,0,0);away.normalize().multiplyScalar(5);
+  const pitcherCover=new THREE.Vector3(landing[0]+away.x,pitcherHome.y,landing[1]+away.z);
+  const glove=()=>{collector.userData.sync?.();collector.updateWorldMatrix(true,true);return collector.userData.glove.localToWorld(new THREE.Vector3(0,0,.22));};
+  const step=t=>{
+    if(clearPitcher)o.pitcher.position.copy(pitcherHome).lerp(pitcherCover,Math.min(1,t/plan.duration));
+    const pos=airOutStep(plan,t);collector.position.set(pos.x,0,pos.z);fielderReady(collector);
+    collector.rotation.y=Math.atan2(-landing[0],-landing[1]);
+    const stride=pos.k<1?Math.sin(t*13):0;collector.userData.legL.rotation.x=stride*.65;collector.userData.legR.rotation.x=-stride*.65;
+    collector.userData.armL.rotation.x=-.55-Math.min(1,t/plan.duration)*.6;
+    for(const fd of o.fielders)fd.userData.head.rotation.y=defenseLookYaw(fd.position.x,fd.position.z,fd.rotation.y,o.ball.position.x,o.ball.position.z);
+    return glove();
+  };
+  const finish=()=>new Promise(resolve=>{
+    hud.setPitch('뜬공 포구');sfx.mitt();let t=0;o.ball.scale.setScalar(2);
+    camera.position.set(landing[0]+10,13,landing[1]+19);camera.lookAt(landing[0],2,landing[1]);
+    const f=dt=>{t+=dt;o.ball.position.copy(glove());window.__airOutPlay?.({phase:'caught',t,plan,ball:o.ball,collector});
+      if(t>=.65){delTicker(f);o.ball.visible=false;o.ball.scale.setScalar(1);o.pitcher.position.copy(pitcherHome);resetDefense(o.fielders);resolve();}};tickers.add(f);
+  });
+  return {plan,step,finish};
 }
 function ensureG() {
   if (G) return G;
@@ -239,22 +265,25 @@ export async function playMatch(p, m, hud) {
   });
 
   // 타구 연출 후 결과 판정
-  const flight = (h, groundOut = false) => new Promise((res) => {
+  const flight = (h, defenseOut = '') => new Promise((res) => {
     hud.setBattingActive?.(false); hud.setPitch('타구 비행');
     o.zone.visible = false; o.ret.visible = false;
     const a = h.angle * Math.PI / 180; const dir = new THREE.Vector3(Math.sin(a), 0, -Math.cos(a));
-    const dur = Math.max(0.9, Math.min(2.6, h.dst / 38 + 0.6)); const peak = Math.max(0.3, Math.min(30, h.dst * Math.tan(Math.max(0, h.launch) * Math.PI / 180) * 0.28));
+    let dur = Math.max(0.9, Math.min(2.6, h.dst / 38 + 0.6)); const peak = Math.max(0.3, Math.min(30, h.dst * Math.tan(Math.max(0, h.launch) * Math.PI / 180) * 0.28));
     o.ball.visible = true; let t = 0;
     const land = [dir.x * h.dst, dir.z * h.dst + 0.3];
+    const air=defenseOut==='air'?airOutSequence(o,hud,land,dur):null;if(air)dur=air.plan.duration;
     const chase = defensivePursuit(o.fielders, land[0], land[1]);
     const f = (dt) => {
       chase(t);
       t += dt; const k = Math.min(1, t / dur);
       const d = h.dst * k; let y = 1 + 4 * peak * k * (1 - k) - (h.launch < 8 ? 0.9 * k : 0);
       if (h.launch < 8) y = 0.15 + Math.abs(Math.sin(k * Math.PI * 4)) * 0.5 * (1 - k);
-      o.ball.position.set(dir.x * d, Math.max(0.1, y), dir.z * d + 0.3); o.ball.scale.setScalar(Math.min(5, Math.max(1, camera.position.distanceTo(o.ball.position) / 9))); if (window.__flog) window.__flog(o.ball, camera, k);
+      o.ball.position.set(dir.x * d, Math.max(0.1, y), dir.z * d + 0.3); o.ball.scale.setScalar(Math.min(5, Math.max(1, camera.position.distanceTo(o.ball.position) / 9)));
+      if(air){const glove=air.step(t),blend=Math.max(0,(k-.85)/.15);o.ball.position.lerp(glove,blend);window.__airOutPlay?.({phase:'flight',t,k,plan:air.plan,ball:o.ball,collector:o.fielders[air.plan.collector]});}
+      if (window.__flog) window.__flog(o.ball, camera, k);
       const tgt = o.ball.position; camera.position.lerp(new THREE.Vector3(tgt.x * 0.25, 2.6 + k * 2.5, Math.min(11, 5 + Math.max(0, -tgt.z) * 0.06)), 0.06); camera.lookAt(tgt.x * 0.6, 1 + k * 3, tgt.z * 0.65 - 3);
-      if (k >= 1) { delTicker(f); if(groundOut)completeGroundOut(o,hud,{runner:true}).then(res);else setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); resetFielders(); res(); }, 250); }
+      if (k >= 1) { delTicker(f); if(defenseOut==='ground')completeGroundOut(o,hud,{runner:true}).then(res);else if(air)air.finish().then(res);else setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); resetFielders(); res(); }, 250); }
     }; tickers.add(f);
   });
   const runBases = (kind) => new Promise((res) => {
@@ -293,7 +322,7 @@ export async function playMatch(p, m, hud) {
         else if (L <= 22) { const pr = 0.5 + h.q * 0.35; if (chance(pr * 100)) { res_ = h.dst > 62 && chance(50 + p.speed * 0.3) ? 'double' : 'single'; label = res_ === 'double' ? '2루타!' : '안타!'; } else label = '라인드라이브 잡힘'; }
         else if (L <= 50) { if (h.dst > 70 && chance(h.q * 55 + 15)) { res_ = 'double'; label = '2루타!'; } else { label = '뜬공 아웃'; } }
         else label = '내야 플라이 아웃';
-        await flight(h,res_==='out'&&L<8);
+        await flight(h,res_==='out'?(L<8?'ground':'air'):'');
         if (res_ !== 'out') await runBases(res_);
         resetCam();
         return { res: res_, label };
