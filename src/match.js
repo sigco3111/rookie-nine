@@ -118,6 +118,16 @@ export function runWalk(o,hud,mask){
     if(t>=duration+hold){delTicker(f);o.runner.visible=false;o.batter.visible=oldBatter;camera.fov=oldFov;camera.updateProjectionMatrix();resolve();}
   };tickers.add(f);});
 }
+export function runFollowupScore(o,hud,start){
+  const oldBatter=o.batter.visible,oldFov=camera.fov;let t=0;const duration=(4-start)*.9;
+  o.runner.visible=true;o.batter.visible=false;hud.setPitch('후속 안타 · 홈으로');
+  camera.fov=76;camera.updateProjectionMatrix();camera.position.set(0,42,28);camera.lookAt(0,0,-28);
+  return new Promise(resolve=>{const f=dt=>{t+=dt;const pos=baseRunStep(start,4-start,t/duration),r=o.runner;
+    r.position.set(pos.x,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z);r.rotation.y=pos.yaw;r.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);r.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);
+    window.__followupRun?.({runner:r,t,duration,start,arrived:pos.arrived});
+    if(t>=duration+.3){delTicker(f);r.visible=false;o.batter.visible=oldBatter;camera.fov=oldFov;camera.updateProjectionMatrix();resolve();}
+  };tickers.add(f);});
+}
 // Flight duration includes the collector's travel. Ball stays live until glove hold ends.
 export function airOutSequence(o,hud,landing,minDuration){
   const plan=airOutPlan(o.fielders.map(f=>[f.position.x,f.position.z]),landing,minDuration);
@@ -358,7 +368,7 @@ export async function playMatch(p, m, hud) {
       }
       setBatterPose(o.batter, 0);
       hud.setCount(c);
-      if (c.b >= 4) return { res: 'walk', label: '볼넷' };
+      if (c.b >= 4) {hud.setBattingActive?.(false);await runWalk(o,hud,0);resetCam();return { res: 'walk', label: '볼넷' };}
       if (c.s >= 3) return { res: 'k', label: '삼진 아웃' };
     }
     return { res: 'out', label: '아웃' };
@@ -380,7 +390,7 @@ export async function playMatch(p, m, hud) {
       if (r.res === 'hr') sfx.cheer(2); else if (sc || r.res === 'single' || r.res === 'double') sfx.cheer(1); else if (r.res === 'k' || r.res === 'out') sfx.out();
       hud.banner(r.label + (sc ? ` (+${sc}점)` : ''), 1500); hud.setScore(inn, my, oppRuns); await wait(1700);
       // 출루 후 득점
-      if (['single', 'double', 'walk'].includes(r.res) && chance(35 + p.speed * 0.2)) { s.runs++; my++; hud.banner('후속 안타로 홈인!', 1100); hud.setScore(inn, my, oppRuns); await wait(1200); }
+      if (['single', 'double', 'walk'].includes(r.res) && chance(35 + p.speed * 0.2)) { await runFollowupScore(o,hud,r.res==='double'?2:1);resetCam();s.runs++; my++; hud.banner('후속 안타로 홈인!', 1100); hud.setScore(inn, my, oppRuns); await wait(1200); }
     } else {
       const add = Math.random() < lam * 0.7 ? (chance(25) ? 2 : 1) : 0; my += add;
       hud.banner(`${inn}회 우리 팀 ${add}점`, 900); hud.setScore(inn, my, oppRuns); await wait(950);
