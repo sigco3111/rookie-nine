@@ -570,3 +570,7 @@
 ## 04:40 Nov19 - loaded home-force return regression
 - force_result_phase_ui_test accepts home/otherbase resultlabels and checks pitcher facing returner/gloveendpoint/yawreset. Local/live loadedhomeforceoutandsafepassedafter3setuphits:outreceive4.2667<runner4.5726sec→1out0run;safe4.6214>4.5726→0out1run;bothmask7andcatcherresetx0/z1.6/arm-1.4. Actual390liveout/safepixelsinspectedphase/banner/outdots/score/loadedbases.
 - Firstcombinedrunexecutionlimit afteroutcapture,individualrerunspassed. No runtimechange,buildsamebundle07b35e0/index-BK1hFrUR.js. ControlledRNG/clocknotdevice/naturalQA;notnewrule/exceptioncoverage.
+
+## 04:56 Nov19 - continuous fielder ball attention
+- Ground completion andground/airpitcherreturn nowupdateall7fieldersheadyawtowardactualballusingexisting±.6radattentionlimit. Previouslypursuit/airflightattentionstoppedatthesehandoffs. No bodymovement/path/race/outcomechange;resetDefenseclearsgazeasusual.
+- Extendedbat_pitcher_return_ui_test assertsall7returngazesandresultreset. Localnormalground/air/hitandfallbackgroundpassedwithgloveendpoint/pitcherfacing/input/FOV/resultchecks. Buildpassed,actual390returnpixelsinspected;wideviewheadsaretoosmallforpreciseangleQA. Controlledclock/RNGnotnatural/deviceQA.

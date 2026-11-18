@@ -99,6 +99,7 @@ export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1
     if(runner){const u=Math.min(1,race?(t+runnerElapsed)/race.runnerTime:hitRunTime?(t+runnerElapsed)/hitRunTime:t/(returnHit?plan.total*.85:plan.total+.35)),pos=hitRunStep(returnHit?hitBases:1,u);const through=race&&!forceBase?Math.min(2,Math.max(0,t+runnerElapsed-race.runnerTime)*raceSpeed):0;o.runner.position.set(pos.x+through/Math.SQRT2,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z-through/Math.SQRT2);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);o.runner.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);}
     if(forceBase){showForcedRunners(o,forceMask,Math.min(1,(t+runnerElapsed)/race.runnerTime),t);if(phase==='receive'&&!race.safe)o.baseRunners[forceBase-2].visible=false;}
     if(priorBases&&returnHit)showBaseRunners(o,priorBases,hitBases,Math.min(1,hitRunTime?(t+runnerElapsed)/hitRunTime:t/(plan.total*.85)),t);
+    for(const fd of o.fielders)fd.userData.head.rotation.y=defenseLookYaw(fd.position.x,fd.position.z,fd.rotation.y,ball.position.x,ball.position.z);
     window.__defensePlay?.({phase,k,t,plan,ball,collector,receiver,returnHit,runner:runner?o.runner:null,hitBases,baseRunners:o.baseRunners,priorBases,race,forceSecond:forceBase===2,forceBase,forceMask});
     if(t>=total){delTicker(f);const finish=()=>{ball.visible=false;ball.scale.setScalar(1);if(runner){o.runner.visible=false;o.batter.visible=oldBatter;}camera.fov=oldFov;camera.updateProjectionMatrix();o.pitcher.position.copy(pitcherHome);resetDefense(o.fielders);if(catcherRestore){o.catcher.position.copy(catcherRestore.position);o.catcher.rotation.copy(catcherRestore.rotation);for(const part of catcherRestore.parts){o.catcher.userData[part.key].rotation.copy(part.rotation);o.catcher.userData[part.key].elbow=part.elbow;}}resolve(race);};if(returnPitcher){o.pitcher.position.copy(pitcherHome);returnGroundBall(o,hud,receiver).then(finish);}else finish();}
   };tickers.add(f);});
@@ -113,7 +114,7 @@ function returnGroundBall(o,hud,receiver){
  camera.position.set(5,42,28);camera.lookAt(0,0,-28);hud.setPitch('수신 후 · 투수에게 반환');
  return new Promise(resolve=>{const f=dt=>{t+=dt;let k=0;
   if(t<.35){k=t/.35;receiver.userData.armR.rotation.x=arm.x-1.7*k;o.ball.position.copy(start).lerp(point(receiver,'throwHand'),k);}
-  else{k=Math.min(1,(t-.35)/duration);receiver.userData.armR.rotation.x=arm.x-1.7+2.4*k;o.pitcher.userData.armL.rotation.x=pitArm.x-.4*k;if(!release)release=point(receiver,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;if(k>=1&&!caughtSound){caughtSound=true;sfx.mitt();}window.__groundReturn?.({phase:'return',t,k,ball:o.ball,target,receiver,pitcher:o.pitcher});}
+  else{k=Math.min(1,(t-.35)/duration);receiver.userData.armR.rotation.x=arm.x-1.7+2.4*k;o.pitcher.userData.armL.rotation.x=pitArm.x-.4*k;if(!release)release=point(receiver,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;if(k>=1&&!caughtSound){caughtSound=true;sfx.mitt();}for(const fd of o.fielders)fd.userData.head.rotation.y=defenseLookYaw(fd.position.x,fd.position.z,fd.rotation.y,o.ball.position.x,o.ball.position.z);window.__groundReturn?.({phase:'return',t,k,ball:o.ball,target,receiver,pitcher:o.pitcher});}
   if(t>=.35+duration+.3){delTicker(f);receiver.userData.armR.rotation.copy(arm);o.pitcher.userData.armL.rotation.copy(pitArm);o.pitcher.rotation.y=pitYaw;resolve();}
  };tickers.add(f);});
 }
@@ -198,6 +199,7 @@ export function airOutSequence(o,hud,landing,minDuration,returnPitcher=false){
         camera.position.set(5,42,28);camera.lookAt(0,0,-28);
         if(t<1){const k=(t-.65)/.35;hud.setPitch('포구 후 · 투수에게 반환');collector.userData.armR.rotation.x=-2.1*k;o.ball.position.copy(glove()).lerp(point(collector,'throwHand'),k);}
         else{const k=Math.min(1,(t-1)/throwTime);collector.userData.armR.rotation.x=-2.1+2.8*k;o.pitcher.userData.armL.rotation.x=arm.x-.4*k;if(!release)release=point(collector,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;if(k>=1&&!caughtSound){caughtSound=true;sfx.mitt();}
+          for(const fd of o.fielders)fd.userData.head.rotation.y=defenseLookYaw(fd.position.x,fd.position.z,fd.rotation.y,o.ball.position.x,o.ball.position.z);
           window.__airReturn?.({t,k,ball:o.ball,target,collector,pitcher:o.pitcher});}
       }
       if(t>=total){delTicker(f);o.ball.visible=false;o.ball.scale.setScalar(1);o.pitcher.position.copy(pitcherHome);o.pitcher.userData.armL.rotation.copy(arm);o.pitcher.rotation.y=pitYaw;resetDefense(o.fielders);resolve();}};tickers.add(f);
