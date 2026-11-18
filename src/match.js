@@ -70,7 +70,7 @@ export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1
   const groundStart=start.clone();if(returnHit)groundStart.y=.15;
   const point=(f,glove=true)=>{f.userData.sync?.();f.updateWorldMatrix(true,true);return glove?f.userData.glove.localToWorld(new THREE.Vector3(0,0,.22)):(f.userData.throwHand||f.userData.armR).getWorldPosition(new THREE.Vector3());};
   const run=(f,from,to,k,t)=>{f.position.set(from[0]+(to[0]-from[0])*k,0,from[1]+(to[1]-from[1])*k);f.rotation.y=Math.atan2(to[0]-from[0],to[1]-from[1]);fielderReady(f);const stride=k<1?Math.sin(t*13):0;f.userData.legL.rotation.x=stride*.65;f.userData.legR.rotation.x=-stride*.65;};
-  ball.visible=true;ball.scale.setScalar(2);let t=0,lastPhase='',release=null;
+  ball.visible=true;ball.scale.setScalar(2);let t=0,lastPhase='',release=null,pickupSound=false,receiveSound=false;
   const oldFov=camera.fov,oldBatter=o.batter.visible,pitcherHome=o.pitcher.position.clone();
   const clearPitcher=o.pitcher.visible&&Math.hypot(pitcherHome.x-land[0],pitcherHome.z-land[1])<5;
   const clearDir=new THREE.Vector3(pitcherHome.x-land[0],0,pitcherHome.z-land[1]);if(clearDir.length()<.1)clearDir.set(-1,0,0);clearDir.normalize().multiplyScalar(5);
@@ -94,6 +94,7 @@ export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1
         if(!release)release=ball.position.clone();const end=point(receiver);ball.position.copy(release).lerp(end,k);ball.position.y+=Math.sin(Math.PI*k)*1.8;
       }else{ball.position.copy(point(receiver));}
     }
+    if(!pickupSound&&t>=plan.approach+plan.transfer*.45){pickupSound=true;sfx.mitt();}if(!receiveSound&&phase==='receive'){receiveSound=true;sfx.mitt();}
     if(clearPitcher)o.pitcher.position.copy(pitcherHome).lerp(pitcherCover,Math.min(1,t/plan.approach));
     if(runner){const u=Math.min(1,race?(t+runnerElapsed)/race.runnerTime:hitRunTime?(t+runnerElapsed)/hitRunTime:t/(returnHit?plan.total*.85:plan.total+.35)),pos=hitRunStep(returnHit?hitBases:1,u);const through=race&&!forceBase?Math.min(2,Math.max(0,t+runnerElapsed-race.runnerTime)*raceSpeed):0;o.runner.position.set(pos.x+through/Math.SQRT2,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z-through/Math.SQRT2);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);o.runner.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);}
     if(forceBase){showForcedRunners(o,forceMask,Math.min(1,(t+runnerElapsed)/race.runnerTime),t);if(phase==='receive'&&!race.safe)o.baseRunners[forceBase-2].visible=false;}
@@ -107,11 +108,11 @@ function returnGroundBall(o,hud,receiver){
  const arm=receiver.userData.armR.rotation.clone(),pitArm=o.pitcher.userData.armL.rotation.clone();
  const point=(f,key)=>{f.userData.sync?.();f.updateWorldMatrix(true,true);return f.userData[key].getWorldPosition(new THREE.Vector3());};
  receiver.rotation.y=Math.atan2(o.pitcher.position.x-receiver.position.x,o.pitcher.position.z-receiver.position.z);
- const start=o.ball.position.clone(),duration=Math.max(.65,receiver.position.distanceTo(o.pitcher.position)/24);let t=0,release=null;
+ const start=o.ball.position.clone(),duration=Math.max(.65,receiver.position.distanceTo(o.pitcher.position)/24);let t=0,release=null,caughtSound=false;
  camera.position.set(5,42,28);camera.lookAt(0,0,-28);hud.setPitch('수신 후 · 투수에게 반환');
  return new Promise(resolve=>{const f=dt=>{t+=dt;let k=0;
   if(t<.35){k=t/.35;receiver.userData.armR.rotation.x=arm.x-1.7*k;o.ball.position.copy(start).lerp(point(receiver,'throwHand'),k);}
-  else{k=Math.min(1,(t-.35)/duration);receiver.userData.armR.rotation.x=arm.x-1.7+2.4*k;o.pitcher.userData.armL.rotation.x=pitArm.x-.4*k;if(!release)release=point(receiver,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;window.__groundReturn?.({phase:'return',t,k,ball:o.ball,target,receiver,pitcher:o.pitcher});}
+  else{k=Math.min(1,(t-.35)/duration);receiver.userData.armR.rotation.x=arm.x-1.7+2.4*k;o.pitcher.userData.armL.rotation.x=pitArm.x-.4*k;if(!release)release=point(receiver,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;if(k>=1&&!caughtSound){caughtSound=true;sfx.mitt();}window.__groundReturn?.({phase:'return',t,k,ball:o.ball,target,receiver,pitcher:o.pitcher});}
   if(t>=.35+duration+.3){delTicker(f);receiver.userData.armR.rotation.copy(arm);o.pitcher.userData.armL.rotation.copy(pitArm);resolve();}
  };tickers.add(f);});
 }
@@ -186,7 +187,7 @@ export function airOutSequence(o,hud,landing,minDuration,returnPitcher=false){
     hud.setPitch('뜬공 포구');sfx.mitt();let t=0;o.ball.scale.setScalar(2);
     camera.position.set(landing[0]+10,13,landing[1]+19);camera.lookAt(landing[0],2,landing[1]);
     const throwTime=Math.max(.65,Math.hypot(landing[0]-pitcherHome.x,landing[1]-pitcherHome.z)/24),total=returnPitcher?1+throwTime+.3:.65;
-    const arm=o.pitcher.userData.armL.rotation.clone();let release=null;
+    const arm=o.pitcher.userData.armL.rotation.clone();let release=null,caughtSound=false;
     const point=(f,key)=>{f.userData.sync?.();f.updateWorldMatrix(true,true);return f.userData[key].getWorldPosition(new THREE.Vector3());};
     const f=dt=>{t+=dt;
       if(!returnPitcher||t<=.65){o.ball.position.copy(glove());window.__airOutPlay?.({phase:'caught',t,plan,ball:o.ball,collector});}
@@ -195,7 +196,7 @@ export function airOutSequence(o,hud,landing,minDuration,returnPitcher=false){
         o.pitcher.position.copy(pitcherHome);collector.rotation.y=Math.atan2(pitcherHome.x-landing[0],pitcherHome.z-landing[1]);
         camera.position.set(5,42,28);camera.lookAt(0,0,-28);
         if(t<1){const k=(t-.65)/.35;hud.setPitch('포구 후 · 투수에게 반환');collector.userData.armR.rotation.x=-2.1*k;o.ball.position.copy(glove()).lerp(point(collector,'throwHand'),k);}
-        else{const k=Math.min(1,(t-1)/throwTime);collector.userData.armR.rotation.x=-2.1+2.8*k;o.pitcher.userData.armL.rotation.x=arm.x-.4*k;if(!release)release=point(collector,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;
+        else{const k=Math.min(1,(t-1)/throwTime);collector.userData.armR.rotation.x=-2.1+2.8*k;o.pitcher.userData.armL.rotation.x=arm.x-.4*k;if(!release)release=point(collector,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;if(k>=1&&!caughtSound){caughtSound=true;sfx.mitt();}
           window.__airReturn?.({t,k,ball:o.ball,target,collector,pitcher:o.pitcher});}
       }
       if(t>=total){delTicker(f);o.ball.visible=false;o.ball.scale.setScalar(1);o.pitcher.position.copy(pitcherHome);o.pitcher.userData.armL.rotation.copy(arm);resetDefense(o.fielders);resolve();}};tickers.add(f);

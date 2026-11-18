@@ -476,3 +476,7 @@
 ## 19:59 Nov18 - audio randomness independent of match outcomes
 - SFX sample noise nowusesprivate xorshiftstream instead ofMath.random. Previouslyeachsound consumedthousands ofgameplayrandomdraws dependingonAudioContext/sampleRate; audioavailability couldalterfutureoutcomesequence. Noiseformat/duration/filter unchanged, exactnoisewaveformchanges. Gameprobabilityformulas unchanged butoldseededoutcomesequence isnotpreserved. Catchermitt SFX movedfromafterfullreturn tofirstglovehold(t>=.18), onceonly.
 - Nodeall8sfx zeroMath.randomcalls;4noisebuffers finite/bounded/mixedsign. ActualpitchcatchsoundUI interceptAudioContext verifiesone.08secbuffer atcatch andnoduplicateafterreturn/count;release/glove/inputregressionpassed. Full19pitch3regular/result/history/reloadpassed. Onecombinedchecks exceededwallbudget midfullgame, reranfullgamealonepassed. Noacousticlistening/physicaldeviceQAclaim; audiblewaveformandlatencyQAremain.
+
+## 20:15 Nov18 - defensive mitt sounds at ball reception
+- Groundpickupsecuresglove(attransfer.45),base/relayreceive,andgroundreturnpitcherglove noweachone mittSFX. AircatchkeepsoldmittSFX,airreturnpitcherarrivaladdsone. Persequenceflags preventrepeatduringholds. Noanimationduration/RNG/outcome changes(audioownRNGfrom93e6dd8).
+- Localground3buffers correctpickup/receive/returntimes,noduplicateandoldrace/out/input/glove passed;air2buffers catch+returnarrival/noduplicate/oldairflowpassed. AudiozeroRNGtest/buildpassed. Actualportraitgroundreturninspected. Buffercreationtimingnotacousticlistening/deviceaudiolatencyQA.
