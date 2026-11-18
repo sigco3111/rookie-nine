@@ -548,3 +548,6 @@
 ## 02:35 Nov19 - confirmed field-result phase labels
 - Resultbannerhelper nowsetsphase label forground/air/force/hit/walk afterplaycomplete,sooldreturnphasedoesnotlinger. StrikeoutNoutslabelkept. Nooutcome/timingchange.
 - Newpitch_result_phase_ui_test 10pitch1IPwalk/single/foul/HR/ground/air/ground verifiesresultlabelmatchesbanner,2H3ER/result/history/reloadconfirm. Localpassed;strikeoutlabelregression/buildpassed. Initial3IPtesttimedoutunderloadedtestChrome;ownorphanbrowserscleaned,scope1IP. Forcebranchchangedbutnotexercisebythisplan. Controlledclock/RNGnotnatural/deviceQA.
+
+## 02:55 Nov19 - force result-label regression
+- Newforce_result_phase_ui_test setup1Bsinglethen2Bforceout/safe verifiesresultbanner/phaseonlyafterpitcherreturn,existingrace/outs/basemask/models unchanged. Local/liveout4.233vsrunner4.573sec→1outmask1,safe5.038vs4.573→0outmask3passed. Actual390livephase+out/basespixels inspected. Testonlyendwait10secforcapture;normalruntimeunchanged. Firstcombinedrunhitexecutionlimit,ownorphanChromecleanedthenindividualruns passed. Buildsamebundle. ControlledRNG/clocknotnatural/deviceQA.
