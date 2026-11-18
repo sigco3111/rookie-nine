@@ -551,3 +551,7 @@
 
 ## 02:55 Nov19 - force result-label regression
 - Newforce_result_phase_ui_test setup1Bsinglethen2Bforceout/safe verifiesresultbanner/phaseonlyafterpitcherreturn,existingrace/outs/basemask/models unchanged. Local/liveout4.233vsrunner4.573sec→1outmask1,safe5.038vs4.573→0outmask3passed. Actual390livephase+out/basespixels inspected. Testonlyendwait10secforcapture;normalruntimeunchanged. Firstcombinedrunhitexecutionlimit,ownorphanChromecleanedthenindividualruns passed. Buildsamebundle. ControlledRNG/clocknotnatural/deviceQA.
+
+## 03:12 Nov19 - pitching ground-flight runner view
+- Ground-out-candidate ballflight nowuseswide76FOV/highinfieldview,matchingexistinghitandgroundrelayviews,sofirstbaserunnerisvisiblefromcontact. Aimnextpitchstillrestores46. No runner/balltrajectory/race/outcomechange.
+- Newpitch_ground_flight_camera_ui_test checksrunnerprojectsinsidescreeninflight,76FOV/y42,returnarrival/1out/nextFOV46. Localpassed;groundplan/buildpassed. Initialtestprojectionusedstalecameramatrix,correctedtestupdateMatrixWorldbeforeprojection,notgamecamera. Actual390flightpixelsinspected. Controlledclock/RNGnotnatural/deviceQA.
