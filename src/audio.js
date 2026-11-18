@@ -1,9 +1,12 @@
 let ctx = null;
+// Audio sample count must not consume the game's random outcome stream.
+let noiseSeed=0x6d2b79f5;
+function noiseRandom(){noiseSeed^=noiseSeed<<13;noiseSeed^=noiseSeed>>>17;noiseSeed^=noiseSeed<<5;return (noiseSeed>>>0)/4294967296;}
 const ac = () => { if (!ctx) { try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (ctx && ctx.state === 'suspended') ctx.resume(); return ctx; };
 export function unlock() { ac(); }
 function noise(dur, { type = 'highpass', freq = 1000, gain = 0.5, q = 1, sweep = 0 } = {}) {
   const c = ac(); if (!c) return; const n = Math.floor(c.sampleRate * dur); const b = c.createBuffer(1, n, c.sampleRate); const d = b.getChannelData(0);
-  for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+  for (let i = 0; i < n; i++) d[i] = (noiseRandom() * 2 - 1) * (1 - i / n);
   const s = c.createBufferSource(); s.buffer = b; const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
   if (sweep) f.frequency.linearRampToValueAtTime(freq + sweep, c.currentTime + dur);
   const g = c.createGain(); g.gain.value = gain; s.connect(f); f.connect(g); g.connect(c.destination); s.start();

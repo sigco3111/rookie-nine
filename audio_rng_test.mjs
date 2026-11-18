@@ -1,0 +1,5 @@
+import assert from 'node:assert/strict';
+let randomCalls=0,samples=[];const original=Math.random;Math.random=()=>{randomCalls++;return .5;};
+const param=()=>({value:0,setValueAtTime(){},exponentialRampToValueAtTime(){},linearRampToValueAtTime(){}});
+class Context{state='running';sampleRate=48000;currentTime=0;destination={};createBuffer(ch,n){const a=new Float32Array(n);samples.push(a);return {getChannelData:()=>a};}createBufferSource(){return {connect(){},start(){}};}createBiquadFilter(){return {frequency:param(),Q:param(),connect(){}};}createGain(){return {gain:param(),connect(){}};}createOscillator(){return {frequency:param(),connect(){},start(){},stop(){}};}}
+globalThis.window={AudioContext:Context};const {sfx}=await import('./src/audio.js');for(const k of ['swing','crack','mitt','cheer','ui','good','bad','out'])sfx[k]();assert.equal(randomCalls,0);assert.ok(samples.length===4);for(const a of samples){assert.ok(a.every(n=>Number.isFinite(n)&&n>=-1&&n<=1));assert.ok(a.some(n=>n<0)&&a.some(n=>n>0));}Math.random=original;console.log('all sound calls consume zero gameplay RNG; noise finite/bounded/nonconstant',samples.map(a=>a.length));
