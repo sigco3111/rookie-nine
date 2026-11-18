@@ -68,3 +68,9 @@ export function groundRace(plan,elapsed=0,speed=7){
  const receiveTime=elapsed+plan.approach+plan.transfer+plan.flight;
  return {runnerTime,receiveTime,safe:runnerTime<=receiveTime,margin:runnerTime-receiveTime};
 }
+
+// Grounded foul landing beyond the first/third-base foul line, no catch roll.
+export function foulBallStep(side,progress){
+ const u=Math.max(0,Math.min(1,progress)),sign=side<0?-1:1;
+ return {x:sign*30*u,y:.15+(1-u)*.85+Math.sin(Math.PI*u)*9,z:-14*u,landed:u>=1};
+}

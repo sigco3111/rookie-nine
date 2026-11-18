@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';import {groundOutPlan,groundOutPhase,groundRace} from './src/defense.js';
+import assert from 'node:assert/strict';import {groundOutPlan,groundOutPhase,groundRace,foulBallStep} from './src/defense.js';
 const ps=[[-24,-24],[-11,-36],[11,-36],[24,-24],[-48,-65],[0,-78],[48,-65]];
 for(const ball of [[0,-15],[25,-24],[-25,-25],[0,0]]){const original=JSON.stringify(ps),p=groundOutPlan(ps,ball);assert(p.collector!==p.receiver);assert.equal(JSON.stringify(ps),original);assert.deepEqual(p.base,[19.4,-19.4]);for(const [t,phase]of [[0,'approach'],[p.approach,'transfer'],[p.approach+p.transfer+.001,'throw'],[p.total,'receive']])assert.equal(groundOutPhase(p,t).phase,phase);assert(p.total<12);assert(Math.abs(groundOutPhase(p,p.total).k-1)<1e-8)}assert.equal(groundOutPlan([[0,0]],[1,1]),null);console.log('groundout nearest collector/distinct base receiver, phase boundaries, no mutation passed');
 
@@ -8,3 +8,5 @@ const fast=groundOutPlan([[18,-18],[19.4,-19.4],[0,-35]],[18,-18]),slow=groundOu
 
 const second=groundOutPlan(ps,[0,-16],[0,-38.8]);assert.deepEqual(second.base,[0,-38.8]);assert.notEqual(second.collector,second.receiver);const secondRace=groundRace(second,1.2,6);assert.equal(secondRace.runnerTime,Math.hypot(-19.4,-19.4)/6);assert.equal(secondRace.receiveTime,1.2+second.approach+second.transfer+second.flight);console.log('second-base force target/distinct receiver and same-length 1B-to-2B race passed');
 const homePlan=groundOutPlan([...ps,[0,1.6]],[0,-16],[0,0],7);assert.equal(homePlan.receiver,7);assert.notEqual(homePlan.collector,7);assert.deepEqual(homePlan.base,[0,0]);console.log('home force uses fixed catcher receiver, excludes catcher from collector passed');
+
+for(const side of [-1,1]){let prev=0;for(let i=0;i<=10;i++){const r=foulBallStep(side,i/10);assert(Math.abs(r.x)>=-r.z);assert(Math.abs(r.x)>=prev);prev=Math.abs(r.x);assert(r.y>=.149);}assert.equal(foulBallStep(side,1).landed,true);assert.deepEqual(foulBallStep(side,2),foulBallStep(side,1));}console.log('foul lands outside both foul lines, nonnegative height/clamped path passed');

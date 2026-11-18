@@ -1,4 +1,4 @@
-import { hitRunStep } from './defense.js';
+import { hitRunStep, foulBallStep } from './defense.js';
 import { advanceBases, forceTarget, forceResult } from './bases.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, OPP_COLORS } from './scene.js';
 import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut, airOutSequence, runHomeRun, showBaseRunners, showForcedRunners, runWalk } from './match.js';
@@ -81,6 +81,16 @@ export async function playPitching(p, m, hud) {
       const chase = defensivePursuit(o.fielders, bx + dx * .5, -dist * .9);
       o.ball.visible = true; let k = 0; const g2 = (dt) => { k += dt / dur; chase(k * dur); const s = Math.min(1, k);if(forceBase)showForcedRunners(o,bases,Math.min(1,s*dur*6/Math.hypot(19.4,19.4)),k*dur);if(raceSpeed){const pos=hitRunStep(1,s*dur*raceSpeed/Math.hypot(19.4,19.4));o.runner.position.set(pos.x,Math.abs(Math.sin(k*dur*14))*.12,pos.z);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=Math.sin(k*dur*14);o.runner.userData.legR.rotation.x=-Math.sin(k*dur*14);} o.ball.position.set(bx + dx * s * 0.5, kind==='out'&&!outAir?.15+Math.abs(Math.sin(s*Math.PI*4))*.5*(1-s):1.0 + Math.sin(Math.PI * s) * hi, -dist * s * 0.9); if(air){const glove=air.step(k*dur);o.ball.position.lerp(glove,Math.max(0,(s-.85)/.15));window.__airOutPlay?.({phase:'flight',k:s,t:k*dur,plan:air.plan,ball:o.ball,collector:o.fielders[air.plan.collector]});}const tg = o.ball.position; camera.lookAt(tg.x * 0.6, Math.max(0.8, tg.y * 0.7), Math.max(tg.z * 0.5, -40) + 4); camera.position.y = 3.1 + Math.min(4, tg.y * 0.1);
         if (s >= 1) { delTicker(g2); if(air)air.finish().then(()=>{cam();after('air');});else if(kind==='out'){o.batter.visible=true;completeGroundOut(o,hud,{runner:true,raceSpeed,runnerElapsed:dur,forceBase,forceMask:bases}).then(race=>{cam();if(forceBase){after(race.safe?'forceSafe':'forceOut');return;}after(race?.safe?'infieldHit':'ground');});}else if(kind==='hit'&&r.t!==4)completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases:r.t,priorBases:bases}).then(()=>{cam();after();});else if(kind==='hit'&&r.t===4){o.ball.scale.setScalar(1);resetDefense(o.fielders);runHomeRun(o,hud,bases).then(()=>{cam();after();});}else{o.ball.visible = false;o.ball.scale.setScalar(1);resetDefense(o.fielders);cam();after();} } }; tickers.add(g2); };
+    const foulBall=()=>new Promise(resolve=>{
+      const oldFov=camera.fov,side=bx<0?-1:1;let t=0;
+      hud.setPitchingActive?.(false,true);hud.setPitch('파울 · 라인 밖 타구');o.ball.visible=true;o.ball.scale.setScalar(2);
+      camera.fov=90;camera.updateProjectionMatrix();camera.position.set(0,48,38);camera.lookAt(0,0,-23);
+      const f=dt=>{t+=dt;const pos=foulBallStep(side,t/1.6);o.ball.position.set(pos.x,pos.y,pos.z);
+        if(pos.landed)hud.setPitch('파울 · 데드볼');
+        window.__foulPlay?.({ball:o.ball,t,side,landed:pos.landed,baseRunners:o.baseRunners});
+        if(t>=2){delTicker(f);o.ball.visible=false;o.ball.scale.setScalar(1);camera.fov=oldFov;camera.updateProjectionMatrix();cam();resolve();}
+      };tickers.add(f);
+    });
     const receivePitch=()=>new Promise(resolve=>{
       const catcher=o.catcher,start=o.ball.position.clone();let t=0,release=null;
       const arm=catcher.userData.armL.rotation.clone(),throwArm=catcher.userData.armR.rotation.clone(),pitArm=o.pitcher.userData.armL.rotation.clone();
@@ -107,7 +117,7 @@ export async function playPitching(p, m, hud) {
       sfx.crack(0.8); hud.flash();
       const ph = 0.26 + q * 0.006 - (p.velo - 40) * 0.0018 - edge * 0.05; // 인플레이 안타 확률
       if (chance(Math.max(0.08, ph * 100))) { const r = Math.random(); const rr = { kind: 'hit', t: r < 0.64 ? 1 : r < 0.88 ? 2 : r < 0.93 ? 3 : 4 }; if (rr.t === 4) sfx.cheer(1); fly('hit', rr, () => res(rr)); }
-      else if (chance(32 - (inZone ? 0 : 10))) res({ kind: 'foul' }); else fly('out', null, (fieldType) => res(fieldType==='forceOut'||fieldType==='forceSafe'?{kind:'force',safe:fieldType==='forceSafe',target:forceTarget(bases)}:fieldType==='infieldHit'?{kind:'hit',t:1,infield:true}:{ kind: 'out', fieldType }));
+      else if (chance(32 - (inZone ? 0 : 10))) {await foulBall();res({ kind: 'foul' });} else fly('out', null, (fieldType) => res(fieldType==='forceOut'||fieldType==='forceSafe'?{kind:'force',safe:fieldType==='forceSafe',target:forceTarget(bases)}:fieldType==='infieldHit'?{kind:'hit',t:1,infield:true}:{ kind: 'out', fieldType }));
     };
     tickers.add(f);
   });
