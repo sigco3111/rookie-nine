@@ -138,7 +138,7 @@ if (!USE_PROC) {
       const response=await fetch(base+'models/player.fbx',{...(attempt?{cache:'reload'}:{}),signal:controller.signal});
       if(!response.ok)throw new Error('player model HTTP '+response.status);
       const buf=await response.arrayBuffer();kBase=new FBXLoader().parse(buf,'./');
-    }catch(e){if(attempt===1){console.warn('player model load failed after retry',e);kBase=null;}}finally{clearTimeout(timeout);}
+    }catch(e){const status=document.getElementById('boot-status');if(status)status.textContent=attempt===0?'선수 자료를 다시 불러오고 있어요.':'기본 선수로 경기장을 준비하고 있어요.';if(attempt===1){console.warn('player model load failed after retry',e);kBase=null;}}finally{clearTimeout(timeout);}
   }
 }
 const css = (c) => '#' + new THREE.Color(c).getHexString();

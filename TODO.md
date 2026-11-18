@@ -503,3 +503,7 @@
 ## 22:24 Nov18 - model request timeout
 - Eachmodeldownloadattempt nowAbortController10sec coveringfetch+arrayBuffer,clearedfinally; existingmax2attempts thenfallback. Preventsnonrespondingfetch blockingbootstrapforever. Notstrict20secwallpromise(parse/renderoverhead/timertrottlingcanextend), noabortofsyncFBXparse/otherassetloads. No gameplaytimingchange.
 - model_timeout_ui_test injectspendingfetchPromise respectingAbortSignal,firsttimeout→actualsecondfile andtwotimeouts→fallback;localbothmixed3PA/result/reloadpassed. Real10sectimer,notshortened. Initialrequestinterceptionholdtesthungnavigation, replacedwithfetchboundarysimulation; testsdomreadywaitbefore#new. Buildpassed. Networkfaultsimulation notphysicalnetwork/deviceQA.
+
+## 22:40 Nov18 - visible startup state
+- Static HTML now shows a portrait loading card before JS/model initialization. Model first failure changes text to retry, second failure names procedural-player preparation; title rendering clears the overlay. No fabricated percentage, ETA or animation. Gameplay logic/asset timeout rules unchanged.
+- startup_loading_ui_test.mjs uses real 10-second AbortSignal waits for two simulated pending fetches, verifies initial/retry text, fallback title and no stale overlay. Local390x844 screenshots inspected: readable centered content, no cropping. Build and audio-RNG/ground-out-plan regressions passed. Not a physical-network or device-speed check; module/WebGL startup failures remain outside this change.
