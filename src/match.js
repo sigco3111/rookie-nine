@@ -83,6 +83,20 @@ export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1
     if(t>=plan.total){delTicker(f);ball.visible=false;ball.scale.setScalar(1);if(runner){o.runner.visible=false;o.batter.visible=oldBatter;}camera.fov=oldFov;camera.updateProjectionMatrix();o.pitcher.position.copy(pitcherHome);resetDefense(o.fielders);resolve();}
   };tickers.add(f);});
 }
+// A completed home run still visits every base before the score/result advances.
+export function runHomeRun(o,hud){
+  const runner=o.runner,oldBatter=o.batter.visible,oldFov=camera.fov;
+  runner.visible=true;o.batter.visible=false;o.ball.visible=false;
+  hud.setPitch('홈런 · 베이스 러닝');
+  camera.fov=76;camera.updateProjectionMatrix();camera.position.set(0,42,28);camera.lookAt(0,0,-28);
+  let t=0;const duration=3.6,hold=.35;
+  return new Promise(resolve=>{const f=dt=>{t+=dt;const pos=hitRunStep(4,t/duration);
+    runner.position.set(pos.x,pos.arrived?0:Math.abs(Math.sin(t*14))*.15,pos.z);runner.rotation.y=pos.yaw;
+    runner.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);runner.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);
+    window.__homeRunPlay?.({runner,t,duration,arrived:pos.arrived});
+    if(t>=duration+hold){delTicker(f);runner.visible=false;o.batter.visible=oldBatter;camera.fov=oldFov;camera.updateProjectionMatrix();resolve();}
+  };tickers.add(f);});
+}
 // Flight duration includes the collector's travel. Ball stays live until glove hold ends.
 export function airOutSequence(o,hud,landing,minDuration){
   const plan=airOutPlan(o.fielders.map(f=>[f.position.x,f.position.z]),landing,minDuration);
@@ -288,16 +302,7 @@ export async function playMatch(p, m, hud) {
       if (k >= 1) { delTicker(f); if(defenseOut==='ground')completeGroundOut(o,hud,{runner:true}).then(res);else if(air)air.finish().then(res);else if(defenseOut==='single'||defenseOut==='double')completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases:defenseOut==='double'?2:1}).then(res);else setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); resetFielders(); res(); }, 250); }
     }; tickers.add(f);
   });
-  const runBases = (kind) => new Promise((res) => {
-    hud.setPitch('베이스 러닝');
-    const pts = { single: [[0, 0], [19.4, -19.4]], double: [[0, 0], [19.4, -19.4], [0, -38.8]], hr: [[0, 0], [19.4, -19.4], [0, -38.8], [-19.4, -19.4], [0, 0]] }[kind] || [[0, 0], [19.4, -19.4]];
-    const rn = o.runner; rn.visible = true; o.batter.visible = false; let t = 0; const dur = 0.9 * (pts.length - 1);
-    camera.position.set(0, 14, 16); camera.lookAt(0, 0, -18);
-    const f = (dt) => { t += dt; const k = Math.min(0.9999, t / dur) * (pts.length - 1); const i = Math.floor(k), fr = k - i; const a = pts[i], b = pts[i + 1];
-      rn.position.set(a[0] + (b[0] - a[0]) * fr, Math.abs(Math.sin(t * 14)) * 0.15, a[1] + (b[1] - a[1]) * fr); rn.rotation.y = Math.atan2(b[0] - a[0], b[1] - a[1]); rn.userData.legL.rotation.x = Math.sin(t * 14); rn.userData.legR.rotation.x = -Math.sin(t * 14);
-      if (t >= dur) { delTicker(f); setTimeout(() => { rn.visible = false; o.batter.visible = true; res(); }, 300); } };
-    tickers.add(f);
-  });
+  const runBases = () => runHomeRun(o,hud);
   const resetFielders = () => resetDefense(o.fielders);
   const resetCam = () => { camera.position.set(-0.15, 1.8, 5.4); camera.lookAt(-0.25, -0.35, -9); setBatterPose(o.batter, 0); };
 

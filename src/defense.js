@@ -56,7 +56,7 @@ export function airOutStep(plan,t){
 
 // Runner visual progress follows an already selected hit, never an out roll.
 export function hitRunStep(bases,progress){
- const pts=[[0,0],[19.4,-19.4],[0,-38.8],[-19.4,-19.4]],count=bases===3?3:bases===2?2:1;
+ const pts=[[0,0],[19.4,-19.4],[0,-38.8],[-19.4,-19.4],[0,0]],count=bases===4?4:bases===3?3:bases===2?2:1;
  const distance=Math.max(0,Math.min(1,progress))*count;
  const leg=Math.min(count-1,Math.floor(distance)),k=distance-leg,a=pts[leg],b=pts[leg+1];
  return {x:a[0]+(b[0]-a[0])*k,z:a[1]+(b[1]-a[1])*k,yaw:Math.atan2(b[0]-a[0],b[1]-a[1]),arrived:progress>=1,bases:count};
