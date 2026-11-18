@@ -114,7 +114,7 @@ export async function playPitching(p, m, hud) {
 
   let bases = 0; // 1루/2루/3루 점유 비트
   for (let inn = 1; inn <= innings; inn++) {
-    hud.setScore(inn, my, S.er); let outs = 0; bases = 0;hud.setBases?.(bases);showBaseRunners(o,bases); const bn = (t, ms) => hud.banner(t, ms);
+    hud.setScore(inn, my, S.er);o.zone.visible=true;o.ret.visible=true;o.batter.visible=true;o.pitcher.visible=true;o.catcher.visible=true;o.ump.visible=true;for(const fd of o.fielders)fd.visible=true;cam();let outs = 0; bases = 0;hud.setBases?.(bases);showBaseRunners(o,bases); const bn = (t, ms) => hud.banner(t, ms);
     while (outs < 3) {
       const c = { b: 0, s: 0 }; hud.setCount(c, outs); let ended = false;
       bn(`${inn}회 ${outs}아웃  다음 타자`, 900); await wait(1000);
@@ -135,6 +135,12 @@ export async function playPitching(p, m, hud) {
         if (outs >= 3) break;
       }
     }
+    // Three outs end the defensive half before the automatic offense summary.
+    bases=0;hud.setBases?.(0);showBaseRunners(o,0);hud.setPitchingActive?.(false,true);hud.setPitch('공수 교대 · 우리 팀 공격');
+    o.ball.visible=false;o.runner.visible=false;o.zone.visible=false;o.ret.visible=false;
+    o.batter.visible=false;o.pitcher.visible=false;o.catcher.visible=false;o.ump.visible=false;for(const fd of o.fielders)fd.visible=false;
+    hud.setCount({b:0,s:0},3);resetDefense(o.fielders);
+    window.__inningChange?.({inning:inn,baseRunners:o.baseRunners,o});
     // 우리 팀 공격
     const lam = Math.max(0.1, 0.35 + (teamStrength(p) - 40) / 25); const add = Math.random() < lam * 0.7 ? (chance(25) ? 2 : 1) : 0; my += add;
     hud.banner(`${inn}회말 우리 팀 ${add}점`, 900); hud.setScore(inn, my, S.er); await wait(1000);
