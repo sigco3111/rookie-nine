@@ -105,7 +105,8 @@ export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1
 }
 // This return starts only after the ground-play race has finished.
 function returnGroundBall(o,hud,receiver){
- const arm=receiver.userData.armR.rotation.clone(),pitArm=o.pitcher.userData.armL.rotation.clone();
+ const arm=receiver.userData.armR.rotation.clone(),pitArm=o.pitcher.userData.armL.rotation.clone(),pitYaw=o.pitcher.rotation.y;
+ o.pitcher.rotation.y=Math.atan2(receiver.position.x-o.pitcher.position.x,receiver.position.z-o.pitcher.position.z);
  const point=(f,key)=>{f.userData.sync?.();f.updateWorldMatrix(true,true);return f.userData[key].getWorldPosition(new THREE.Vector3());};
  receiver.rotation.y=Math.atan2(o.pitcher.position.x-receiver.position.x,o.pitcher.position.z-receiver.position.z);
  const start=o.ball.position.clone(),duration=Math.max(.65,receiver.position.distanceTo(o.pitcher.position)/24);let t=0,release=null,caughtSound=false;
@@ -113,7 +114,7 @@ function returnGroundBall(o,hud,receiver){
  return new Promise(resolve=>{const f=dt=>{t+=dt;let k=0;
   if(t<.35){k=t/.35;receiver.userData.armR.rotation.x=arm.x-1.7*k;o.ball.position.copy(start).lerp(point(receiver,'throwHand'),k);}
   else{k=Math.min(1,(t-.35)/duration);receiver.userData.armR.rotation.x=arm.x-1.7+2.4*k;o.pitcher.userData.armL.rotation.x=pitArm.x-.4*k;if(!release)release=point(receiver,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;if(k>=1&&!caughtSound){caughtSound=true;sfx.mitt();}window.__groundReturn?.({phase:'return',t,k,ball:o.ball,target,receiver,pitcher:o.pitcher});}
-  if(t>=.35+duration+.3){delTicker(f);receiver.userData.armR.rotation.copy(arm);o.pitcher.userData.armL.rotation.copy(pitArm);resolve();}
+  if(t>=.35+duration+.3){delTicker(f);receiver.userData.armR.rotation.copy(arm);o.pitcher.userData.armL.rotation.copy(pitArm);o.pitcher.rotation.y=pitYaw;resolve();}
  };tickers.add(f);});
 }
 // Uncaught foul: shared by both roles, without fielder chase or runner advance.
@@ -187,19 +188,19 @@ export function airOutSequence(o,hud,landing,minDuration,returnPitcher=false){
     hud.setPitch('뜬공 포구');sfx.mitt();let t=0;o.ball.scale.setScalar(2);
     camera.position.set(landing[0]+10,13,landing[1]+19);camera.lookAt(landing[0],2,landing[1]);
     const throwTime=Math.max(.65,Math.hypot(landing[0]-pitcherHome.x,landing[1]-pitcherHome.z)/24),total=returnPitcher?1+throwTime+.3:.65;
-    const arm=o.pitcher.userData.armL.rotation.clone();let release=null,caughtSound=false;
+    const arm=o.pitcher.userData.armL.rotation.clone(),pitYaw=o.pitcher.rotation.y;let release=null,caughtSound=false;
     const point=(f,key)=>{f.userData.sync?.();f.updateWorldMatrix(true,true);return f.userData[key].getWorldPosition(new THREE.Vector3());};
     const f=dt=>{t+=dt;
       if(!returnPitcher||t<=.65){o.ball.position.copy(glove());window.__airOutPlay?.({phase:'caught',t,plan,ball:o.ball,collector});}
       else{
         // Restore pitcher to mound before receiving the return; collector stays at catch.
-        o.pitcher.position.copy(pitcherHome);collector.rotation.y=Math.atan2(pitcherHome.x-landing[0],pitcherHome.z-landing[1]);
+        o.pitcher.position.copy(pitcherHome);o.pitcher.rotation.y=Math.atan2(landing[0]-pitcherHome.x,landing[1]-pitcherHome.z);collector.rotation.y=Math.atan2(pitcherHome.x-landing[0],pitcherHome.z-landing[1]);
         camera.position.set(5,42,28);camera.lookAt(0,0,-28);
         if(t<1){const k=(t-.65)/.35;hud.setPitch('포구 후 · 투수에게 반환');collector.userData.armR.rotation.x=-2.1*k;o.ball.position.copy(glove()).lerp(point(collector,'throwHand'),k);}
         else{const k=Math.min(1,(t-1)/throwTime);collector.userData.armR.rotation.x=-2.1+2.8*k;o.pitcher.userData.armL.rotation.x=arm.x-.4*k;if(!release)release=point(collector,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;if(k>=1&&!caughtSound){caughtSound=true;sfx.mitt();}
           window.__airReturn?.({t,k,ball:o.ball,target,collector,pitcher:o.pitcher});}
       }
-      if(t>=total){delTicker(f);o.ball.visible=false;o.ball.scale.setScalar(1);o.pitcher.position.copy(pitcherHome);o.pitcher.userData.armL.rotation.copy(arm);resetDefense(o.fielders);resolve();}};tickers.add(f);
+      if(t>=total){delTicker(f);o.ball.visible=false;o.ball.scale.setScalar(1);o.pitcher.position.copy(pitcherHome);o.pitcher.userData.armL.rotation.copy(arm);o.pitcher.rotation.y=pitYaw;resetDefense(o.fielders);resolve();}};tickers.add(f);
   });
   return {plan,step,finish};
 }

@@ -555,3 +555,7 @@
 ## 03:12 Nov19 - pitching ground-flight runner view
 - Ground-out-candidate ballflight nowuseswide76FOV/highinfieldview,matchingexistinghitandgroundrelayviews,sofirstbaserunnerisvisiblefromcontact. Aimnextpitchstillrestores46. No runner/balltrajectory/race/outcomechange.
 - Newpitch_ground_flight_camera_ui_test checksrunnerprojectsinsidescreeninflight,76FOV/y42,returnarrival/1out/nextFOV46. Localpassed;groundplan/buildpassed. Initialtestprojectionusedstalecameramatrix,correctedtestupdateMatrixWorldbeforeprojection,notgamecamera. Actual390flightpixelsinspected. Controlledclock/RNGnotnatural/deviceQA.
+
+## 03:34 Nov19 - pitcher faces returning fielder
+- Ground/hitrelayandairreturns nowturnpitchertowardsenderduringreturn,glovetargettracksupdatedorientation;restoreoldyawafterhold. Existingreturntime/race/outcomeunchanged. Catcherreturnalreadycomesfromhome,nochange.
+- bat_pitcher_return_ui_test addsfacing-senderangleandfinalyaw0assertions. Localnormalhit/airandfallbackgroundpassed,gloveendpoint/input/FOV/resultchecksretained. Buildpassed;actual390returnframesinspectedthoughpitcherissmallwideview. Initialcombinedtesttimedout,ownorphanChromecleaned,individualrunspassed. Controlledclock/RNGnotnatural/deviceQA.
