@@ -68,7 +68,7 @@ export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1
   const pitcherCover=new THREE.Vector3(land[0]+clearDir.x,pitcherHome.y,land[1]+clearDir.z);
   if(runner){o.runner.visible=true;o.batter.visible=false;}
   camera.position.set((land[0]+plan.base[0])/2+12,Math.max(24,Math.abs(land[1]-plan.base[1])*.6),(land[1]+plan.base[1])/2+32);camera.lookAt((land[0]+plan.base[0])/2,1,(land[1]+plan.base[1])/2);
-  if((returnHit||race)&&runner){camera.fov=76;camera.updateProjectionMatrix();camera.position.set(0,42,28);camera.lookAt(0,0,-28);}
+  if((returnHit||race)&&runner){camera.fov=76;camera.updateProjectionMatrix();camera.position.set(0,42,28);camera.lookAt(0,0,-28);if(race){camera.position.x=5;camera.lookAt(5,0,-28);}}
   return new Promise(resolve=>{const f=dt=>{t+=dt;const state=groundOutPhase(plan,t),{phase,k}=state;
     if(phase!==lastPhase){lastPhase=phase;hud.setPitch((returnHit?{approach:'안타 타구 회수',transfer:'공 확보 · 중계 준비',throw:'내야로 중계 송구',receive:'중계 수신'}:{approach:'땅볼 처리 · 공으로 접근',transfer:'포구 · 송구 준비',throw:'1루 송구',receive:race?(race.safe?'1루 세이프 · 내야 안타':'1루 아웃'):'1루 포구'})[phase]);}
     if(phase==='approach'){
@@ -86,7 +86,7 @@ export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1
       }else{ball.position.copy(point(receiver));}
     }
     if(clearPitcher)o.pitcher.position.copy(pitcherHome).lerp(pitcherCover,Math.min(1,t/plan.approach));
-    if(runner){const u=Math.min(1,race?(t+runnerElapsed)/race.runnerTime:t/(returnHit?plan.total*.85:plan.total+.35)),pos=hitRunStep(returnHit?hitBases:1,u);o.runner.position.set(pos.x,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);o.runner.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);}
+    if(runner){const u=Math.min(1,race?(t+runnerElapsed)/race.runnerTime:t/(returnHit?plan.total*.85:plan.total+.35)),pos=hitRunStep(returnHit?hitBases:1,u);const through=race?Math.min(2,Math.max(0,t+runnerElapsed-race.runnerTime)*raceSpeed):0;o.runner.position.set(pos.x+through/Math.SQRT2,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z-through/Math.SQRT2);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);o.runner.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);}
     if(priorBases&&returnHit)showBaseRunners(o,priorBases,hitBases,Math.min(1,t/(plan.total*.85)),t);
     window.__defensePlay?.({phase,k,t,plan,ball,collector,receiver,returnHit,runner:runner?o.runner:null,hitBases,baseRunners:o.baseRunners,priorBases,race});
     if(t>=total){delTicker(f);ball.visible=false;ball.scale.setScalar(1);if(runner){o.runner.visible=false;o.batter.visible=oldBatter;}camera.fov=oldFov;camera.updateProjectionMatrix();o.pitcher.position.copy(pitcherHome);resetDefense(o.fielders);resolve(race);}
