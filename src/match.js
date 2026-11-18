@@ -295,8 +295,8 @@ export async function playMatch(p, m, hud) {
   const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
   const setRet = (x, y) => { cx = Math.max(-0.95, Math.min(0.95, x)); cy = Math.max(0.1, Math.min(1.7, y)); ret.position.set(cx, cy, 0.05); };
   const pt = (e) => { const r = renderer.domElement.getBoundingClientRect(); const v = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1 + 0.12); ray.setFromCamera(v, camera); const hit = new THREE.Vector3(); ray.ray.intersectPlane(plane, hit); if (hit) setRet(hit.x, hit.y); };
-  let down = false;
-  const onD = (e) => { down = true; pt(e); }, onM = (e) => { if (down || e.pointerType === 'mouse') pt(e); }, onU = () => { down = false; };
+  let down = false, aimActive=false;
+  const onD = (e) => { if(!aimActive)return;down = true; pt(e); }, onM = (e) => { if (aimActive && (down || e.pointerType === 'mouse')) pt(e); }, onU = () => { down = false; };
   const cv = renderer.domElement; cv.addEventListener('pointerdown', onD); cv.addEventListener('pointermove', onM); window.addEventListener('pointerup', onU);
   setRet(0, ZY);
   let swingReq = null; // 투구 시작 후 스윙 시각
@@ -307,7 +307,7 @@ export async function playMatch(p, m, hud) {
 
   // 한 번의 투구
   const pitchOnce = (count, scoringChance = false) => new Promise(async (res) => {
-    hud.setBattingActive?.(true);
+    aimActive=true;hud.setBattingActive?.(true);
     setBatterPose(o.batter, 0);
     o.zone.visible = true; o.ret.visible = true;
     const pt_ = PITCHES[Math.floor(Math.random() * (strength > 50 ? 4 : strength > 42 ? 3 : 2))];
@@ -344,7 +344,7 @@ export async function playMatch(p, m, hud) {
       if (st.t >= T + 0.2) { done = true; delTicker(f); finalize(); }
     };
     const finalize = () => {
-      hud.setTiming?.(null);
+      aimActive=false;down=false;hud.setTiming?.(null);
       pitching = null; sbOp(0.25); o.ball.visible = false; setBatterPose(o.batter, st.swingT != null ? 1 : 0);
       if (st.swingT == null) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
       const FRC = window.__force; const err = FRC ? 0 : st.swingT + 0.075 - T; // 0.075s = 스윙 시작~배트 컨택트 프레임(모캡 85번) 지연
