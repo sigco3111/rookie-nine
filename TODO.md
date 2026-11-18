@@ -526,3 +526,7 @@
 ## 00:26 Nov19 - native-clock batting ground sequence
 - Newnatural_bat_ground_ui_test leaves__dt undefined andsetTimeout untouched; forcesgroundcontact/RNG only. Local/live contactrun→approach/transfer/throw/receive/return→nextPA withvisiblebatter,hiddenrunner,zone/reticle andgloveendpoint passed. Buildpassed,runtimeunchanged.
 - Softwaredesktop local55.794/live54.724wallsec fromplaybutton throughnextpitch,232sampledframes,mean241.28/236.37ms,227gaps>50ms. Thisincludesscene/inningwaits; notisolatedplayduration. Clamp50msgameclock slowsunderpoorrendering,notchanged. Confirmsflowwithoutacceleratedclock, NOTmobileperformanceclearance oracceptablepaceclaim. Actual390nextPApixels inspected.
+
+## 00:46 Nov19 - catcher return arrival sound
+- Pitcher-role catcher→pitcher return nowplaysmitt onceonpitcherglovearrival, matchingground/airreturns. Separateflag preventsholdduplicates. Catchermittsoundstillfirstheldframe. No trajectory/count/probabilitychange.
+- pitch_catch_sound_ui_test assertsexactly1mittbeforearrival,2afterarrival/hold/nextpitch;localcalledstrike/ball/fallbackstrikepassed,gloveendpoint/countordering/throwunlockpassed. audio_rngtestbuildpassed. Actual390returnframe inspected. Buffer/timinginspectiononly,noacoustic/deviceQA.
