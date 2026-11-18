@@ -31,3 +31,15 @@ export function walkAdvance(mask,start){
  // Only the uninterrupted force chain from first base advances.
  return (mask&((1<<start)-1))===((1<<start)-1)?1:0;
 }
+
+// Defend the lead runner in the uninterrupted force chain. No tag is needed.
+export function forceTarget(mask){
+ if(!(mask&1))return 0;
+ return (mask&3)!==3?2:(mask&7)!==7?3:4;
+}
+export function forceResult(mask,safe){
+ const target=forceTarget(mask);if(!target)return {bases:mask&7,runs:0,outs:0};
+ const next=advanceBases(mask,'walk');
+ if(safe)return {...next,outs:0};
+ return {bases:target===4?next.bases:next.bases&~(1<<(target-1)),runs:0,outs:1};
+}

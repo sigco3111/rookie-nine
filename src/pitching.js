@@ -1,7 +1,7 @@
 import { hitRunStep } from './defense.js';
-import { advanceBases } from './bases.js';
+import { advanceBases, forceTarget, forceResult } from './bases.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, OPP_COLORS } from './scene.js';
-import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut, airOutSequence, runHomeRun, showBaseRunners, runWalk } from './match.js';
+import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut, airOutSequence, runHomeRun, showBaseRunners, showForcedRunners, runWalk } from './match.js';
 import { oppStrength, teamStrength, isRegular, cal, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
 import { sfx } from './audio.js';
@@ -77,10 +77,10 @@ export async function playPitching(p, m, hud) {
       if (bat.swing) { bat.at += dt / 0.22; setBatterPose(o.batter, bat.at); }
       if (t >= T + 0.15) { done = true; delTicker(f); fin(); }
     };
-    const fly = (kind, r, after) => { hud.setPitchingActive?.(false, true); hud.setPitch('타구 비행'); const dist = kind === 'out' ? 16 + Math.random() * 12 : kind === 'foul' ? 12 : [0, 26, 42, 58, 125][r.t]; const hi = kind === 'out' ? 7 : r && r.t === 4 ? 32 : 5 + (r ? r.t * 2 : 0); const dx = (Math.random() - 0.5) * (r && r.t === 4 ? 40 : 30); let dur = 0.9 + dist / 70;const outAir=kind==='out'&&dist>22;const air=outAir?airOutSequence(o,hud,[bx+dx*.5,-dist*.9],dur):null;if(air)dur=air.plan.duration;const forceSecond=kind==='out'&&!outAir&&bases===1;const raceSpeed=kind==='out'&&!outAir&&(bases===0||forceSecond)?6:0;if(raceSpeed){o.runner.visible=true;o.batter.visible=false;}
+    const fly = (kind, r, after) => { hud.setPitchingActive?.(false, true); hud.setPitch('타구 비행'); const dist = kind === 'out' ? 16 + Math.random() * 12 : kind === 'foul' ? 12 : [0, 26, 42, 58, 125][r.t]; const hi = kind === 'out' ? 7 : r && r.t === 4 ? 32 : 5 + (r ? r.t * 2 : 0); const dx = (Math.random() - 0.5) * (r && r.t === 4 ? 40 : 30); let dur = 0.9 + dist / 70;const outAir=kind==='out'&&dist>22;const air=outAir?airOutSequence(o,hud,[bx+dx*.5,-dist*.9],dur):null;if(air)dur=air.plan.duration;const forceBase=kind==='out'&&!outAir?forceTarget(bases):0;const raceSpeed=kind==='out'&&!outAir&&(bases===0||forceBase)?6:0;if(raceSpeed){o.runner.visible=true;o.batter.visible=false;}
       const chase = defensivePursuit(o.fielders, bx + dx * .5, -dist * .9);
-      o.ball.visible = true; let k = 0; const g2 = (dt) => { k += dt / dur; chase(k * dur); const s = Math.min(1, k);if(forceSecond)showBaseRunners(o,1,1,Math.min(1,s*dur*6/Math.hypot(19.4,19.4)),k*dur);if(raceSpeed){const pos=hitRunStep(1,s*dur*raceSpeed/Math.hypot(19.4,19.4));o.runner.position.set(pos.x,Math.abs(Math.sin(k*dur*14))*.12,pos.z);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=Math.sin(k*dur*14);o.runner.userData.legR.rotation.x=-Math.sin(k*dur*14);} o.ball.position.set(bx + dx * s * 0.5, kind==='out'&&!outAir?.15+Math.abs(Math.sin(s*Math.PI*4))*.5*(1-s):1.0 + Math.sin(Math.PI * s) * hi, -dist * s * 0.9); if(air){const glove=air.step(k*dur);o.ball.position.lerp(glove,Math.max(0,(s-.85)/.15));window.__airOutPlay?.({phase:'flight',k:s,t:k*dur,plan:air.plan,ball:o.ball,collector:o.fielders[air.plan.collector]});}const tg = o.ball.position; camera.lookAt(tg.x * 0.6, Math.max(0.8, tg.y * 0.7), Math.max(tg.z * 0.5, -40) + 4); camera.position.y = 3.1 + Math.min(4, tg.y * 0.1);
-        if (s >= 1) { delTicker(g2); if(air)air.finish().then(()=>{cam();after('air');});else if(kind==='out'){o.batter.visible=true;completeGroundOut(o,hud,{runner:true,raceSpeed,runnerElapsed:dur,forceSecond}).then(race=>{cam();if(forceSecond){after(race.safe?'forceSafe':'forceOut');return;}after(race?.safe?'infieldHit':'ground');});}else if(kind==='hit'&&r.t!==4)completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases:r.t,priorBases:bases}).then(()=>{cam();after();});else if(kind==='hit'&&r.t===4){o.ball.scale.setScalar(1);resetDefense(o.fielders);runHomeRun(o,hud,bases).then(()=>{cam();after();});}else{o.ball.visible = false;o.ball.scale.setScalar(1);resetDefense(o.fielders);cam();after();} } }; tickers.add(g2); };
+      o.ball.visible = true; let k = 0; const g2 = (dt) => { k += dt / dur; chase(k * dur); const s = Math.min(1, k);if(forceBase)showForcedRunners(o,bases,Math.min(1,s*dur*6/Math.hypot(19.4,19.4)),k*dur);if(raceSpeed){const pos=hitRunStep(1,s*dur*raceSpeed/Math.hypot(19.4,19.4));o.runner.position.set(pos.x,Math.abs(Math.sin(k*dur*14))*.12,pos.z);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=Math.sin(k*dur*14);o.runner.userData.legR.rotation.x=-Math.sin(k*dur*14);} o.ball.position.set(bx + dx * s * 0.5, kind==='out'&&!outAir?.15+Math.abs(Math.sin(s*Math.PI*4))*.5*(1-s):1.0 + Math.sin(Math.PI * s) * hi, -dist * s * 0.9); if(air){const glove=air.step(k*dur);o.ball.position.lerp(glove,Math.max(0,(s-.85)/.15));window.__airOutPlay?.({phase:'flight',k:s,t:k*dur,plan:air.plan,ball:o.ball,collector:o.fielders[air.plan.collector]});}const tg = o.ball.position; camera.lookAt(tg.x * 0.6, Math.max(0.8, tg.y * 0.7), Math.max(tg.z * 0.5, -40) + 4); camera.position.y = 3.1 + Math.min(4, tg.y * 0.1);
+        if (s >= 1) { delTicker(g2); if(air)air.finish().then(()=>{cam();after('air');});else if(kind==='out'){o.batter.visible=true;completeGroundOut(o,hud,{runner:true,raceSpeed,runnerElapsed:dur,forceBase,forceMask:bases}).then(race=>{cam();if(forceBase){after(race.safe?'forceSafe':'forceOut');return;}after(race?.safe?'infieldHit':'ground');});}else if(kind==='hit'&&r.t!==4)completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases:r.t,priorBases:bases}).then(()=>{cam();after();});else if(kind==='hit'&&r.t===4){o.ball.scale.setScalar(1);resetDefense(o.fielders);runHomeRun(o,hud,bases).then(()=>{cam();after();});}else{o.ball.visible = false;o.ball.scale.setScalar(1);resetDefense(o.fielders);cam();after();} } }; tickers.add(g2); };
     const receivePitch=()=>new Promise(resolve=>{
       const catcher=o.catcher,start=o.ball.position.clone();let t=0,release=null;
       const arm=catcher.userData.armL.rotation.clone(),throwArm=catcher.userData.armR.rotation.clone(),pitArm=o.pitcher.userData.armL.rotation.clone();
@@ -107,7 +107,7 @@ export async function playPitching(p, m, hud) {
       sfx.crack(0.8); hud.flash();
       const ph = 0.26 + q * 0.006 - (p.velo - 40) * 0.0018 - edge * 0.05; // 인플레이 안타 확률
       if (chance(Math.max(0.08, ph * 100))) { const r = Math.random(); const rr = { kind: 'hit', t: r < 0.64 ? 1 : r < 0.88 ? 2 : r < 0.93 ? 3 : 4 }; if (rr.t === 4) sfx.cheer(1); fly('hit', rr, () => res(rr)); }
-      else if (chance(32 - (inZone ? 0 : 10))) res({ kind: 'foul' }); else fly('out', null, (fieldType) => res(fieldType==='forceOut'||fieldType==='forceSafe'?{kind:'force',safe:fieldType==='forceSafe'}:fieldType==='infieldHit'?{kind:'hit',t:1,infield:true}:{ kind: 'out', fieldType }));
+      else if (chance(32 - (inZone ? 0 : 10))) res({ kind: 'foul' }); else fly('out', null, (fieldType) => res(fieldType==='forceOut'||fieldType==='forceSafe'?{kind:'force',safe:fieldType==='forceSafe',target:forceTarget(bases)}:fieldType==='infieldHit'?{kind:'hit',t:1,infield:true}:{ kind: 'out', fieldType }));
     };
     tickers.add(f);
   });
@@ -121,7 +121,7 @@ export async function playPitching(p, m, hud) {
       while (!ended) {
         const r = await throwBall(c);
         if (r.kind === 'ball') { c.b++; bn('볼', 500); } else if (r.kind === 'strike') { c.s++; bn('스트라이크', 600); } else if (r.kind === 'whiff') { c.s++; bn('헛스윙!', 600); } else if (r.kind === 'foul') { if (c.s < 2) c.s++; bn('파울', 500); }
-        else if(r.kind==='force'){if(!r.safe){outs++;sfx.out();}bases=r.safe?3:1;ended=true;bn(r.safe?'야수선택 · 1·2루 모두 세이프':'2루 포스 아웃 · 타자 1루',1000);}
+        else if(r.kind==='force'){const next=forceResult(bases,r.safe);outs+=next.outs;bases=next.bases;S.er+=next.runs;if(next.outs)sfx.out();ended=true;const name=r.target===4?'홈':`${r.target}루`;bn(r.safe?`${name} 세이프 · 야수선택${next.runs?' (1실점)':''}`:`${name} 포스 아웃`,1000);}
         else if (r.kind === 'out') { outs++; ended = true; sfx.out(); bn(r.fieldType==='air'?'뜬공 아웃':'땅볼 아웃', 900); }
         else { // 안타
           S.ha++;const adv=r.t,next=advanceBases(bases,adv);bases=next.bases;S.er+=next.runs;

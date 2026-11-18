@@ -25,12 +25,12 @@ export function defenseLookYaw(x,z,facing,targetX,targetZ){
 }
 
 // Ground-out completion plan. Outcome remains the caller's existing decision.
-export function groundOutPlan(positions,ball,returnBase=[19.4,-19.4]){
+export function groundOutPlan(positions,ball,returnBase=[19.4,-19.4],fixedReceiver=null){
  if(positions.length<2)return null;
  const base=[...returnBase];
- const ranked=positions.map(([x,z],index)=>({index,d:Math.hypot(x-ball[0],z-ball[1])})).sort((a,b)=>a.d-b.d);
+ const ranked=positions.map(([x,z],index)=>({index,d:Math.hypot(x-ball[0],z-ball[1])})).filter(p=>p.index!==fixedReceiver).sort((a,b)=>a.d-b.d);
  const collector=ranked[0].index;
- const receiver=positions.map(([x,z],index)=>({index,d:Math.hypot(x-base[0],z-base[1])})).filter(a=>a.index!==collector).sort((a,b)=>a.d-b.d)[0].index;
+ const receiver=fixedReceiver??positions.map(([x,z],index)=>({index,d:Math.hypot(x-base[0],z-base[1])})).filter(a=>a.index!==collector).sort((a,b)=>a.d-b.d)[0].index;
  const gather=Math.max(.35,ranked[0].d/7),cover=Math.hypot(positions[receiver][0]-base[0],positions[receiver][1]-base[1])/7;
  const approach=Math.max(gather,cover),transfer=.5,flight=Math.max(.45,Math.hypot(ball[0]-base[0],ball[1]-base[1])/24),hold=.4;
  return {collector,receiver,base,ball:[...ball],approach,transfer,flight,hold,total:approach+transfer+flight+hold};
