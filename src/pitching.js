@@ -48,13 +48,14 @@ export async function playPitching(p, m, hud) {
   const cv = renderer.domElement; cv.addEventListener('pointerdown', onD); cv.addEventListener('pointermove', onM); window.addEventListener('pointerup', onU); setRet(0, ZY);
   let selPitch = PT[0]; let throwNow = null;
   const types = avail(p);
-  hud.pitchPicker(types.map((t) => ({ id: t.id, n: t.n })), (id) => { selPitch = PT.find((x) => x.id === id); }, () => { if (throwNow) throwNow(); });
+  hud.pitchPicker(types.map((t) => ({ id: t.id, n: t.n })), (id) => { if(!aimActive)return;selPitch = types.find((x) => x.id === id)||selPitch;hud.setPitch(`${selPitch.n}  목표를 정하고 던지기!`); }, () => { if (throwNow) throwNow(); });
 
   hud.setPitchingActive?.(false);
 
   const throwBall = (count) => new Promise(async (res) => {
-    const pit = selPitch;aimActive=true;o.zone.visible=true;o.ret.visible=true;setRet(cx,cy);hud.setPitch(`${pit.n}  목표를 정하고 던지기!`);
+    aimActive=true;o.zone.visible=true;o.ret.visible=true;setRet(cx,cy);hud.setPitch(`${selPitch.n}  목표를 정하고 던지기!`);
     await new Promise((r) => { throwNow = () => { throwNow = null;aimActive=false;down=false;o.zone.visible=false;o.ret.visible=false;hud.setPitchingActive?.(false); r(); }; hud.setPitchingActive?.(true); });
+    const pit=selPitch;
     // 실제 위치: 목표 + 제구 흔들림
     const wob = Math.max(0.03, 0.34 - p.ctrl * 0.0032 - (traits.includes('cmd') ? 0.04 : 0) + (pit.brk ? 0.05 * (1 - p.brk * 0.006) : 0));
     const bx = cx + rnd(-wob, wob) * 1.6, by = cy + rnd(-wob, wob);

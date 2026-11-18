@@ -452,3 +452,7 @@
 ## 17:51 Nov18 - pitching aim locked outside ready state
 - Pitcher canvasaim now only accepts pointerdown/move while waitingforThrow; locking clears dragstate, hides target/zone from windup through ballflight/fielding/return, then nextpitch restores same targetandzone. Prevents moving chasecamera from turning incidentaldrag into nextpitchtarget. PitcherRNG/trajectory/difficulty and batting/swing unchanged.
 - Local actualwindup/flight/groundfielding/return injectedpointers cannot movegoal, reticle/zonehidden, nextready restoresgoal/showsaim/acceptsnewdrag. Existing1Bout/returnglove/count+inputchecks passed. Actual390portrait nextreadyinspected,1outandnewtargetvisible. Buildpassed. Controlledtime/RNG desktopheadless, notphysicaldevice/balanceQA.
+
+## 18:11 Nov18 - selected pitch applies to the immediate throw
+- Fixed preexisting selectionlag: throwBall capturedselPitch before waitingforinput, so selectingcurve whilefirstready stillthrewfastball. Now snapshotselectionafterthrowcommit. Readystatus updatesimmediatelywithselection, invalid/lockedselectionignored. No pitchformula/RNG/easybattingchanges.
+- Actualpitcher3yearbrk60, sameatbat selects curve→slide→fork→fast; each immediatepitch correctname/110,118,116,122kmh, expectedflightend2.0/1.625/1.75/1.5under.125steps. Actual390portraitcurveflightselectedoutline/name/speed inspected. ControlledRNG/render/time notnatural/deviceQA.
