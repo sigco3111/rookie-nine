@@ -562,3 +562,7 @@
 
 ## 03:53 Nov19 - full pitching return-direction regression
 - Newfull_pitch_return_direction_ui_test full19pitch3IP walk/single/foul/HR/ground/air/force/K acrossinningchanges assertsfacingreturningfielder32sampledreturnframesandrestoredyawbeforeeachpitch. Local/livepassed3IP3H1SO,played3:3→existingauto3:4,result/history/reloadconfirm. Buildsamebundle,actual390resultpixelsinspected. No runtimechange. ControlledRNG/acceleratedclock,notnatural/deviceQA;automaticdecidingrun/ERstilldisclosedunchanged.
+
+## 04:15 Nov19 - noncontact pitch next-aim regression
+- Extended pitch_catch_sound_ui_test asserts exact ball/strike/whiff result banner and next aim instruction after catcher return. Local three paths and live three paths passed; fallback local whiff also passed.17 release windup samples, hand release flight, mitt arrival/count ordering and exactly2mitt sounds retained. Actual390live whiff next-aim pixels inspected:1strike,throwenabled,aiminstruction. Banner assertion preceded image; screenshotdoesnotretainbriefbanner.
+- Initial suspected nonending phase residue disproved by actual test: next throw already replaces return phase. Discarded experimental game edit, runtime unchanged07b35e0/index-BK1hFrUR.js. Buildpassed. ControlledRNG/clock notdevice/natural/acousticQA.
