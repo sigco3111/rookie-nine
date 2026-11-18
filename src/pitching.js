@@ -1,6 +1,6 @@
 import { advanceBases } from './bases.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, OPP_COLORS } from './scene.js';
-import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut, airOutSequence, runHomeRun, showBaseRunners } from './match.js';
+import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut, airOutSequence, runHomeRun, showBaseRunners, runWalk } from './match.js';
 import { oppStrength, teamStrength, isRegular, cal, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
 import { sfx } from './audio.js';
@@ -111,7 +111,7 @@ export async function playPitching(p, m, hud) {
           bn(`${['', '안타', '2루타', '3루타', '홈런'][adv]} 허용${next.runs?` (${next.runs}실점)`:''}`,adv===4?1200:1100);sfx.cheer(adv===4?1.5:.8); ended = true;
         }
         hud.setCount(c, outs);
-        if (!ended && c.b >= 4) { ended = true; const next=advanceBases(bases,'walk');bases=next.bases;S.er+=next.runs;bn(next.runs?'밀어내기 볼넷 (1실점)':'볼넷',800); }
+        if (!ended && c.b >= 4) { ended = true;hud.setPitchingActive?.(false,true);await runWalk(o,hud,bases);cam();const next=advanceBases(bases,'walk');bases=next.bases;S.er+=next.runs;bn(next.runs?'밀어내기 볼넷 (1실점)':'볼넷',800); }
         else if (!ended && c.s >= 3) { ended = true; outs++; S.so++; sfx.out(); bn('삼진!', 1000); }
         hud.setScore(inn, my, S.er);hud.setBases?.(bases);showBaseRunners(o,bases);
         if (ended) await wait(900);

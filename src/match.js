@@ -1,4 +1,4 @@
-import { baseRunStep } from './bases.js';
+import { baseRunStep, walkAdvance } from './bases.js';
 import { defensePaths, defenseStep, defenseLookYaw, groundOutPlan, groundOutPhase, airOutPlan, airOutStep, hitRunStep } from './defense.js';
 import { TRAITS } from './data.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, OPP_COLORS } from './scene.js';
@@ -104,6 +104,18 @@ export function runHomeRun(o,hud,priorBases=0){
     if(priorBases)showBaseRunners(o,priorBases,4,t/duration,t);
     window.__homeRunPlay?.({runner,t,duration,arrived:pos.arrived,baseRunners:o.baseRunners,priorBases});
     if(t>=duration+hold){delTicker(f);runner.visible=false;o.batter.visible=oldBatter;camera.fov=oldFov;camera.updateProjectionMatrix();resolve();}
+  };tickers.add(f);});
+}
+// Walk advancement uses the force chain, never advances an unforced runner.
+export function runWalk(o,hud,mask){
+  const oldBatter=o.batter.visible,oldFov=camera.fov;let t=0;const duration=2.4,hold=.3;
+  o.runner.visible=true;o.batter.visible=false;o.ball.visible=false;hud.setPitch('볼넷 · 강제 진루');
+  camera.fov=76;camera.updateProjectionMatrix();camera.position.set(0,42,28);camera.lookAt(0,0,-28);
+  return new Promise(resolve=>{const f=dt=>{t+=dt;const u=Math.min(1,t/duration);
+    const move=(r,start,advance)=>{const pos=baseRunStep(start,advance,u);r.visible=!pos.scored;r.position.set(pos.x,pos.arrived?0:Math.abs(Math.sin(t*9))*.07,pos.z);r.rotation.y=pos.yaw;r.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*9)*.45;r.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*9)*.45;};
+    move(o.runner,0,1);o.baseRunners.forEach((r,i)=>{if(mask&(1<<i))move(r,i+1,walkAdvance(mask,i+1));else r.visible=false;});
+    window.__walkPlay?.({runner:o.runner,baseRunners:o.baseRunners,t,duration,mask});
+    if(t>=duration+hold){delTicker(f);o.runner.visible=false;o.batter.visible=oldBatter;camera.fov=oldFov;camera.updateProjectionMatrix();resolve();}
   };tickers.add(f);});
 }
 // Flight duration includes the collector's travel. Ball stays live until glove hold ends.

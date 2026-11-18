@@ -26,3 +26,8 @@ export function baseRunStep(start,advance,progress){
  const a=pts[i],b=pts[i+1];
  return {x:a[0]+(b[0]-a[0])*k,z:a[1]+(b[1]-a[1])*k,yaw:Math.atan2(b[0]-a[0],b[1]-a[1]),arrived:u>=1||advance===0,scored:end===4&&u>=1};
 }
+
+export function walkAdvance(mask,start){
+ // Only the uninterrupted force chain from first base advances.
+ return (mask&((1<<start)-1))===((1<<start)-1)?1:0;
+}
