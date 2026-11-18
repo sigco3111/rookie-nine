@@ -65,7 +65,7 @@ export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1
   const forceName=forceBase===4?'홈':`${forceBase}루`;
   const ball=o.ball,land=[ball.position.x,ball.position.z],positions=defenders.map(f=>[f.position.x,f.position.z]);
   const plan=groundOutPlan(positions,land,returnHit?[3,-41.8]:forceBase?[[0,0],[19.4,-19.4],[0,-38.8],[-19.4,-19.4],[0,0]][forceBase]:[19.4,-19.4],forceBase===4?defenders.length-1:null);if(!plan)return Promise.resolve();
-  const race=raceSpeed?groundRace(plan,runnerElapsed,raceSpeed):null;const hitRunTime=returnHit&&hitRunSpeed?hitBases*Math.hypot(19.4,19.4)/hitRunSpeed:0;const total=race?Math.max(plan.total,race.runnerTime-runnerElapsed+.25):hitRunTime?Math.max(plan.total,hitRunTime-runnerElapsed+.25):plan.total;
+  const race=raceSpeed?groundRace(plan,runnerElapsed,raceSpeed):null;const hitRunTime=runner&&hitRunSpeed?hitBases*Math.hypot(19.4,19.4)/hitRunSpeed:0;const total=race?Math.max(plan.total,race.runnerTime-runnerElapsed+.25):hitRunTime?Math.max(plan.total,hitRunTime-runnerElapsed+.25):plan.total;
   const collector=defenders[plan.collector],receiver=defenders[plan.receiver],start=ball.position.clone();
   const groundStart=start.clone();if(returnHit)groundStart.y=.15;
   const point=(f,glove=true)=>{f.userData.sync?.();f.updateWorldMatrix(true,true);return glove?f.userData.glove.localToWorld(new THREE.Vector3(0,0,.22)):(f.userData.throwHand||f.userData.armR).getWorldPosition(new THREE.Vector3());};
@@ -369,7 +369,7 @@ export async function playMatch(p, m, hud) {
   const flight = (h, defenseOut = '') => new Promise((res) => {
     hud.setBattingActive?.(false); hud.setPitch('타구 비행');
     o.zone.visible = false; o.ret.visible = false;
-    const hitBases=defenseOut==='double'?2:defenseOut==='single'?1:0,hitRunSpeed=9,hitRunTime=hitBases*Math.hypot(19.4,19.4)/hitRunSpeed,oldFov=camera.fov;
+    const hitBases=defenseOut==='double'?2:defenseOut==='single'||defenseOut==='ground'?1:0,hitRunSpeed=defenseOut==='ground'?6:9,hitRunTime=hitBases*Math.hypot(19.4,19.4)/hitRunSpeed,oldFov=camera.fov;
     if(hitBases){o.runner.visible=true;o.batter.visible=false;}
     const a = h.angle * Math.PI / 180; const dir = new THREE.Vector3(Math.sin(a), 0, -Math.cos(a));
     let dur = Math.max(0.9, Math.min(2.6, h.dst / 38 + 0.6)); const peak = Math.max(0.3, Math.min(30, h.dst * Math.tan(Math.max(0, h.launch) * Math.PI / 180) * 0.28));
@@ -387,7 +387,7 @@ export async function playMatch(p, m, hud) {
       if(air){const glove=air.step(t),blend=Math.max(0,(k-.85)/.15);o.ball.position.lerp(glove,blend);window.__airOutPlay?.({phase:'flight',t,k,plan:air.plan,ball:o.ball,collector:o.fielders[air.plan.collector]});}
       if (window.__flog) window.__flog(o.ball, camera, k);
       const tgt = o.ball.position; camera.position.lerp(new THREE.Vector3(tgt.x * 0.25, 2.6 + k * 2.5, Math.min(11, 5 + Math.max(0, -tgt.z) * 0.06)), 0.06); camera.lookAt(tgt.x * 0.6, 1 + k * 3, tgt.z * 0.65 - 3);if(hitBases){camera.fov=76;camera.updateProjectionMatrix();camera.position.set(0,42,28);camera.lookAt(0,0,-28);}
-      if (k >= 1) { delTicker(f); if(defenseOut==='ground')completeGroundOut(o,hud,{runner:true,returnPitcher:true}).then(res);else if(air)air.finish().then(res);else if(hitBases){o.batter.visible=true;completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases,runnerElapsed:dur,hitRunSpeed,returnPitcher:true}).then(()=>{camera.fov=oldFov;camera.updateProjectionMatrix();res();});}else setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); resetFielders(); res(); }, 250); }
+      if (k >= 1) { delTicker(f); if(defenseOut==='ground')completeGroundOut(o,hud,{runner:true,returnPitcher:true,runnerElapsed:dur,hitRunSpeed}).then(()=>{camera.fov=oldFov;camera.updateProjectionMatrix();res();});else if(air)air.finish().then(res);else if(hitBases){o.batter.visible=true;completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases,runnerElapsed:dur,hitRunSpeed,returnPitcher:true}).then(()=>{camera.fov=oldFov;camera.updateProjectionMatrix();res();});}else setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); resetFielders(); res(); }, 250); }
     }; tickers.add(f);
   });
   const runBases = () => runHomeRun(o,hud);
