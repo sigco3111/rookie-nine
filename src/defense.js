@@ -25,9 +25,9 @@ export function defenseLookYaw(x,z,facing,targetX,targetZ){
 }
 
 // Ground-out completion plan. Outcome remains the caller's existing decision.
-export function groundOutPlan(positions,ball){
+export function groundOutPlan(positions,ball,returnBase=[19.4,-19.4]){
  if(positions.length<2)return null;
- const base=[19.4,-19.4];
+ const base=[...returnBase];
  const ranked=positions.map(([x,z],index)=>({index,d:Math.hypot(x-ball[0],z-ball[1])})).sort((a,b)=>a.d-b.d);
  const collector=ranked[0].index;
  const receiver=positions.map(([x,z],index)=>({index,d:Math.hypot(x-base[0],z-base[1])})).filter(a=>a.index!==collector).sort((a,b)=>a.d-b.d)[0].index;
