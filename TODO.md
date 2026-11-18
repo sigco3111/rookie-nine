@@ -456,3 +456,7 @@
 ## 18:11 Nov18 - selected pitch applies to the immediate throw
 - Fixed preexisting selectionlag: throwBall capturedselPitch before waitingforinput, so selectingcurve whilefirstready stillthrewfastball. Now snapshotselectionafterthrowcommit. Readystatus updatesimmediatelywithselection, invalid/lockedselectionignored. No pitchformula/RNG/easybattingchanges.
 - Actualpitcher3yearbrk60, sameatbat selects curve→slide→fork→fast; each immediatepitch correctname/110,118,116,122kmh, expectedflightend2.0/1.625/1.75/1.5under.125steps. Actual390portraitcurveflightselectedoutline/name/speed inspected. ControlledRNG/render/time notnatural/deviceQA.
+
+## 18:33 Nov18 - batting-view pitcher hand release
+- Battingview opponentpitcher ball nowvisible atactualthrowinghand through24windupposes; snapshotsreleasepoint once then blendsintoexistingtrajectory forfirst.14sec. Previouswinduphiddenball/flightblendfollowedmovinghand. Pitchduration/target/odds/easybattingwindow/swingpose unchanged.
+- Local24winduphandcoincidences/post.14oldflightendpoint/firstcalledstrike passed; actualfull1PAgroundout→fielding/reset/result regressionpassed. Actual390portraitrelease inspected. InitialtestassumedfixedT/strikeunderRNG.99(curve/outside), correcteduseactualT andcontrolled.1inzone. Test-onlyhook exposesT; no productionformulachange. Controlledtime/RNG notnatural/deviceQA.

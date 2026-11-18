@@ -317,7 +317,10 @@ export async function playMatch(p, m, hud) {
     const by = window.__dbgIn ? ZY : inZone ? ZY + rnd(-ZH * 0.9, ZH * 0.9) : ZY + (chance(50) ? 1 : -1) * rnd(ZH * 1.2, ZH * 2.0);
     hud.setPitch(`${pt_.n} ${Math.round(105 + (1.5 - T) * 60 * (pt_.Tm === 1 ? 1.15 : 0.9))}km/h`);
     // 와인드업
-    for (let t = 0; t < 0.7; t += 0.03) { setPitcherPose(o.pitcher, t / 0.7 * 0.65); await wait(30); }
+    const handPoint=()=>{o.pitcher.userData.sync?.();o.pitcher.updateWorldMatrix(true,true);return o.pitcher.userData.throwHand.getWorldPosition(new THREE.Vector3());};
+    o.ball.visible=true;o.ball.scale.setScalar(1);
+    for (let t = 0; t < 0.7; t += 0.03) { setPitcherPose(o.pitcher, t / 0.7 * 0.65);o.ball.position.copy(handPoint());window.__batPitchRelease?.({phase:'windup',t,ball:o.ball,hand:handPoint()});await wait(30); }
+    const release=handPoint();
     hud.setTiming?.(0, 1 - 0.075 / T, 0);
     o.ball.visible = true;
     const st = { t: 0, swingT: null, swingAnim: 0 }; pitching = st; sbOp(1);
@@ -333,7 +336,8 @@ export async function playMatch(p, m, hud) {
       const x = bx * ss + pt_.c * Math.sin(Math.PI * Math.min(1, ss)) * 0.6 * (1 - ss * 0.2);
       const y = 1.7 + (by - 1.7) * ss - pt_.drop * Math.sin(Math.PI * Math.min(1, ss)) * 0.0 - pt_.drop * ss * ss * 0.5 + 0.0 + (pt_.drop ? pt_.drop * 0.5 * ss * ss * 0 : 0);
       o.ball.position.set(x, y + (pt_.drop * 0.5 * ss * ss) , -17.8 + 17.8 * ss);
-      if (st.t < 0.14) { const pu = o.pitcher.userData; if (pu.throwHand) { pu.sync(); const hp = pu.throwHand.getWorldPosition(new THREE.Vector3()); let k = st.t / 0.14; k = k * k * (3 - 2 * k); o.ball.position.lerp(hp, 1 - k); } } // 릴리스: 투수 손 위치에서 출발
+      const blend=Math.min(1,st.t/.14),smooth=blend*blend*(3-2*blend);o.ball.position.lerp(release,1-smooth);
+      window.__batPitchRelease?.({phase:'flight',t:st.t,T,ball:o.ball,release,blend:smooth});
       o.ball.rotation.z += dt * 20;
       if (st.swingAnim > 0) { st.swingAnim += dt / 0.22; setBatterPose(o.batter, st.swingAnim); }
       if (window.__dbgShot) window.__dbgShot(st, T, o, sN);
