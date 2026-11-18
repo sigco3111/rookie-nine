@@ -530,3 +530,6 @@
 ## 00:46 Nov19 - catcher return arrival sound
 - Pitcher-role catcher→pitcher return nowplaysmitt onceonpitcherglovearrival, matchingground/airreturns. Separateflag preventsholdduplicates. Catchermittsoundstillfirstheldframe. No trajectory/count/probabilitychange.
 - pitch_catch_sound_ui_test assertsexactly1mittbeforearrival,2afterarrival/hold/nextpitch;localcalledstrike/ball/fallbackstrikepassed,gloveendpoint/countordering/throwunlockpassed. audio_rngtestbuildpassed. Actual390returnframe inspected. Buffer/timinginspectiononly,noacoustic/deviceQA.
+
+## 01:08 Nov19 - same-session pitching to batting reset
+- Newrole_switch_match_ui_test runs9calledstrikes/3K/1IP→resultconfirm→title/newbatter→groundout/return/result withoutreload. Normal/fallback local/livepassed;7fielders visibleat homebeforebatpitch,oldpitchcatcherhidden,battervisible,returngloveendpoint,1AB0Hresult. Buildpassed,runtimeunchanged. Existingautomatic tie1run/ERstillpresentanddisclosed,notrulefix. Actual390resultpixels inspected. ControlledRNG/acceleratedclock,notnatural/deviceQA.
