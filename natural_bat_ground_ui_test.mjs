@@ -1,0 +1,21 @@
+import puppeteer from 'puppeteer-core';
+import fs from 'fs';
+import {spawn} from 'child_process';
+const server=process.env.TEST_URL?null:spawn(process.execPath,['node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','8123'],{stdio:'ignore'});
+const fontB64 = fs.readFileSync('node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-700-normal.woff2').toString('base64');
+const css = `@font-face{font-family:TKR;src:url(data:font/woff2;base64,${fontB64}) format('woff2');font-weight:100 900}*{font-family:TKR,sans-serif!important}`;
+const year=+(process.argv[2]||3), regular=process.argv[3]==='regular';
+const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const p = await b.newPage(); await p.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
+const errs = []; p.on('pageerror', (e) => {errs.push(e.message);console.log(e.message)}); p.on('console', (m) => { if (m.text().includes('UNI')) errs.push(m.text()); });
+await p.evaluateOnNewDocument((c) => { document.addEventListener('DOMContentLoaded', () => { const st = document.createElement('style'); st.textContent = c; document.head.appendChild(st); }); }, css);
+if(process.env.FAIL_MODEL){await p.setRequestInterception(true);p.on('request',r=>r.url().includes('/models/player.fbx')?r.abort():r.continue());}await p.goto(process.env.TEST_URL||'http://localhost:8123/'); await new Promise(r => setTimeout(r, 1500));
+await p.evaluate(() => document.querySelector('#new').click()); await new Promise(r => setTimeout(r, 300));
+await p.evaluate(() => document.querySelector('#go').click()); await new Promise(r => setTimeout(r, 800));
+await p.evaluate(()=>{const p=window.__game.P;p.week=7;p.ev.coach=p.ev.captain=p.ev.team=90;p.injury=null;Math.random=()=>.01;window.__game.skipWeeks(0);document.querySelector('.cmd').click();window.__rk.renderer.setPixelRatio(.5);window.__dbgIn=true;window.__force={angle:0,launch:3,v:35};window.__pitches=0;window.__steps=[];window.__gaps=[];let last=performance.now();const sample=n=>{window.__gaps.push(n-last);last=n;requestAnimationFrame(sample);};requestAnimationFrame(sample);
+window.__batPitchRelease=d=>{if(d.phase==='windup'&&d.t===0){window.__pitches++;Math.random=()=>.99;}};
+window.__dbgShot=(st,T,o)=>{if(window.__pitches===2){if(!window.__returned||!o.batter.visible||o.runner.visible||!o.zone.visible||!o.ret.visible)throw Error('not reset');window.__ready=true;return;}if(st.swingT==null&&st.t>=T-.075)document.querySelector('.swing').dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}));};
+window.__batHitRunFlight=d=>{if(!d.runner.visible||d.runner.position.length()<=0)throw Error('no flight runner');window.__flight=true;};window.__defensePlay=d=>{if(!window.__flight)throw Error('no contact run');if(window.__steps.at(-1)!==d.phase)window.__steps.push(d.phase);};window.__groundReturn=d=>{if(window.__steps.at(-1)!=='return')window.__steps.push('return');if(!document.querySelector('.swing').disabled)throw Error('input during return');if(d.k>=1){window.__returned=true;if(d.ball.position.distanceTo(d.target)>1e-6)throw Error('off glove');}};
+});
+await p.waitForSelector('#play');const begin=Date.now();await p.click('#play');await p.waitForFunction(()=>window.__ready,{timeout:150000});const state=await p.evaluate(()=>({steps:window.__steps,returned:window.__returned,pitches:window.__pitches,dt:window.__dt,frames:window.__gaps.length,meanMs:window.__gaps.reduce((a,b)=>a+b,0)/window.__gaps.length,over50:window.__gaps.filter(n=>n>50).length}));state.wallSeconds=(Date.now()-begin)/1000;if(state.steps.join(',')!=='approach,transfer,throw,receive,return'||!state.returned||state.pitches!==2||state.dt!==undefined)throw Error(JSON.stringify(state));await p.evaluate(()=>window.__rk.renderer.setPixelRatio(1));await p.screenshot({path:`/downloads/rookie9_natural_bat_reset${process.env.TEST_URL?'_live':''}.png`});console.log('native clock batting ground→return→nextPA',state);
+if(errs.length)throw Error(errs.join('|'));await b.close();if(server){const done=new Promise(r=>server.once('exit',r));server.kill('SIGTERM');await done;}

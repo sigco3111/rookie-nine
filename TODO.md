@@ -522,3 +522,7 @@
 ## 00:07 Nov19 - consecutive defense test finds hidden batter regression
 - New bat_return_sequence_ui_test regular ground→air→single found second-pitch batter.visible=false after67164a7. Flight hides batter for runner; ground completion captured hidden state and kept it. Restore intended batter visibility before ground completion, matching existing hit branch; no outcome/timing formula change.
 - Local normal/fallback 3PA/3pitch returns all reach glove before next pitch, fielders back home, batter/zone/reticle restored, runner hidden, 3AB1H result/history and reloadconfirm passed. Normal rerun captured actual secondpitch390portrait visible batter. Firsttwo test failures exposed samebug beforefix. Buildpassed; controlledRNG/clock notnatural/deviceQA.
+
+## 00:26 Nov19 - native-clock batting ground sequence
+- Newnatural_bat_ground_ui_test leaves__dt undefined andsetTimeout untouched; forcesgroundcontact/RNG only. Local/live contactrun→approach/transfer/throw/receive/return→nextPA withvisiblebatter,hiddenrunner,zone/reticle andgloveendpoint passed. Buildpassed,runtimeunchanged.
+- Softwaredesktop local55.794/live54.724wallsec fromplaybutton throughnextpitch,232sampledframes,mean241.28/236.37ms,227gaps>50ms. Thisincludesscene/inningwaits; notisolatedplayduration. Clamp50msgameclock slowsunderpoorrendering,notchanged. Confirmsflowwithoutacceleratedclock, NOTmobileperformanceclearance oracceptablepaceclaim. Actual390nextPApixels inspected.
