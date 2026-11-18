@@ -507,3 +507,7 @@
 ## 22:40 Nov18 - visible startup state
 - Static HTML now shows a portrait loading card before JS/model initialization. Model first failure changes text to retry, second failure names procedural-player preparation; title rendering clears the overlay. No fabricated percentage, ETA or animation. Gameplay logic/asset timeout rules unchanged.
 - startup_loading_ui_test.mjs uses real 10-second AbortSignal waits for two simulated pending fetches, verifies initial/retry text, fallback title and no stale overlay. Local390x844 screenshots inspected: readable centered content, no cropping. Build and audio-RNG/ground-out-plan regressions passed. Not a physical-network or device-speed check; module/WebGL startup failures remain outside this change.
+
+## 23:02 Nov18 - batting fielders return possession to pitcher
+- Batting ground outs, hit relays and air outs now reuse the existing pitcher-return sequence instead of hiding the ball immediately after reception. Waits for pitcher-glove arrival and hold before continuing the plate result; hit advancement and easy batting formulas unchanged.
+- bat_pitcher_return_ui_test.mjs independently forces single/ground/air: each verifies disabled swing and no early result during return, actual glove endpoint, restored FOV and expected hit/AB result. All three local passed; mixed regular3PA full batting regression and audio-RNG regression passed. Actual390portrait return frames inspected. Controlled RNG/accelerated clock, not natural/device QA. No base-rule/balance change.
