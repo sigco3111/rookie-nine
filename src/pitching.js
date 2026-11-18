@@ -142,14 +142,14 @@ export async function playPitching(p, m, hud) {
       }
     }
     // Three outs end the defensive half before the automatic offense summary.
-    bases=0;hud.setBases?.(0);showBaseRunners(o,0);hud.setPitchingActive?.(false,true);hud.setPitch('공수 교대 · 공격 중');
+    bases=0;hud.setBases?.(0);showBaseRunners(o,0);hud.setPitchingActive?.(false,true);hud.setPitch('공수 교대 · 우리 팀 자동 공격');
     o.ball.visible=false;o.runner.visible=false;o.zone.visible=false;o.ret.visible=false;
     o.batter.visible=false;o.pitcher.visible=false;o.catcher.visible=false;o.ump.visible=false;for(const fd of o.fielders)fd.visible=false;
     hud.setCount({b:0,s:0},3);resetDefense(o.fielders);
     window.__inningChange?.({inning:inn,baseRunners:o.baseRunners,o});
     // 우리 팀 공격
     const lam = Math.max(0.1, 0.35 + (teamStrength(p) - 40) / 25); const add = Math.random() < lam * 0.7 ? (chance(25) ? 2 : 1) : 0; my += add;
-    hud.banner(`${inn}회말 우리 팀 ${add}점`, 900); hud.setScore(inn, my, S.er); await wait(1000);
+    hud.setPitch(`우리 팀 자동 공격 · ${add}점`);hud.banner(`${inn}회말 자동 공격 · ${add}점`, 900); hud.setScore(inn, my, S.er); await wait(1000);
   }
   showBaseRunners(o,0);
   cv.removeEventListener('pointerdown', onD); cv.removeEventListener('pointermove', onM); window.removeEventListener('pointerup', onU); hud.removePicker(); window.dispatchEvent(new Event('resize'));
