@@ -16,3 +16,5 @@ for(let mask=0;mask<8;mask++){
  for(const safe of [false,true]){const r=forceResult(mask,safe);assert.equal(r.bases.toString(2).replaceAll('0','').length+r.runs+r.outs,mask.toString(2).replaceAll('0','').length+(target?1:0));if(!safe)assert.equal(r.runs,0);}
 }
 assert.deepEqual(forceResult(3,false),{bases:3,runs:0,outs:1});assert.deepEqual(forceResult(5,false),{bases:5,runs:0,outs:1});assert.deepEqual(forceResult(7,false),{bases:7,runs:0,outs:1});assert.deepEqual(forceResult(7,true),{bases:7,runs:1,outs:0});console.log('all8force targets/safe-out conservation, no force-out run, loaded safe score passed');
+
+for(const mask of [0,2,4,6])assert.deepEqual(adv(mask,'infield'),{bases:mask|1,runs:0});console.log('nonforced infield hit holds prior runners, adds first with no phantom run passed');

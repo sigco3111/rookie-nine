@@ -2,6 +2,8 @@
 // by the hit's base count; extra advances, tags and errors are not modeled.
 export function advanceBases(mask,kind){
  mask=mask&7;
+ // A timed infield hit with first empty does not force the lead runners.
+ if(kind==='infield'&&!(mask&1))return {bases:mask|1,runs:0};
  if(kind==='walk'){
   let next=mask,force=true,runs=0;
   for(let b=0;b<3&&force;b++){force=!!(mask&(1<<b));next|=1<<b;}
