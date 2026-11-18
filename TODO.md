@@ -484,3 +484,7 @@
 ## 20:37 Nov18 - batting automatic tie disclosure/fullgame resume
 - Battingmode preexistingcoinflipadds1finalpoint nowrecordedautomaticTiebreak/playedScore; banner no longerclaimsplayedextra innings. Sharedresult/historynote distinguishespitcher(ip) frombatting, battinghasnoERtext. No scoring/probability/evaluationchange; no actualextrainning added, olderrecordnotinferred.
 - Fullregularbatgame3PA/12pitches/3walks→0:0→automatic0:1/result/growth/save/reloadContinue/resultconfirmpassed. Actual390portraitnote/nextbuttoninspected. Initialyear3testopponentautoscores5becauseexistingstrengththreshold>1; usedyear1toexercise0:0tie. Thisisnotbalancefix. ControlledRNG/time notnatural/deviceQA.
+
+## 20:57 Nov18 - unaccelerated frame-clock flow sanity
+- New natural_pitch_flow_ui_test.mjs leaves__dt undefined andnativewalltimers, forcesRNG.5only; actualonepitchwindup→groundrace→pickup/throw/receive→return→1out/nextaim passedlocal+live. No gameplaycodechanged. Local26.951sec/live27.243sec walltime; live177sampledframes mean156.10ms/175gaps>50ms. Softwaredesktoprendererisslow; gameclampsdt50ms, so thisisflowunderunacceleratedclock NOTnaturaldevicepacing/performanceclearance. Actualdevicemustbecheckedlater. Simraceunchanged4.250receivevs4.573runner.
+- Liveactualnextpitch1outscreeninspectedafterfullresolutionrestore. Thisbatchonlyaddsreprotest/evidence; nochangedruntimebundle. No claimthatlongdelayisacceptablemobilepacing.
