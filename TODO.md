@@ -341,3 +341,6 @@
 
 ## 08:51 Nov 18
 - Recent-match history toggles latest8/all saved20 with explicit retention limit/no reconstruction. Existing dates/order/growth deltas unchanged. Both positions24 simulated games->saved20cap/reload/latest8/all20/date endpoints/scroll toggle/back/read-only passed,390x844 pitching portrait inspected. Initial test used wrong helper name autoMatch, corrected to existing simulateMatch and passed. Forced weeks/RNG and simulated results, not full direct/natural3year/device QA. Match outcomes/rewards/batting unchanged.
+
+## 09:12 Nov 18
+- Added latest12 weekly action history storing command name/date/messages and independent exact command-only stat/resource deltas at execution. Detail screen reopens after reload; hospital treatment labeled, old actions not inferred. Both-position12cap/dates/labels/copy/JSON/treatment and actual mental->week->reload->history/read-only/back passed; portrait inspected. Immediate command only, excludes match/weekend/event and individual shop purchase (existing separate report). RNG/will injected, not natural3year/device QA. Growth/reward/batting calculations unchanged.

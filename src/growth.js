@@ -1,4 +1,4 @@
-import { STAT_KEYS, PRACTICES, keysOf, STAT_NAME, practicesFor, TRAITS, INJURIES, EVENTS, ITEMS, itemsFor, itemDescription, TEAMS, PRO } from './data.js';
+import { STAT_KEYS, PRACTICES, OTHER_CMDS, keysOf, STAT_NAME, practicesFor, TRAITS, INJURIES, EVENTS, ITEMS, itemsFor, itemDescription, TEAMS, PRO } from './data.js';
 const clamp = (v, a = 0, b = 99) => Math.max(a, Math.min(b, Math.round(v)));
 export const rnd = (a, b) => a + Math.random() * (b - a);
 export const chance = (p) => Math.random() * 100 < p;
@@ -93,9 +93,11 @@ export function trainingRisk(p, pr, preview = true) {
 export function doCommand(p, id, arg) {
   const statBefore = Object.fromEntries(keysOf(p).map(k=>[k,p[k]]));
   const before = { cond: p.cond, money: p.money, study: p.study, tough: p.tough, will: p.will, ...p.ev };
+  const label=p.injury?'입원 치료':([...PRACTICES,...OTHER_CMDS].find(c=>c.id===id)?.name||id);
   const out = executeCommand(p, id, arg);
   const after = { cond: p.cond, money: p.money, study: p.study, tough: p.tough, will: p.will, ...p.ev };
   p.commandReport = { statFx: Object.fromEntries(keysOf(p).map(k=>[k,p[k]-statBefore[k]]).filter(([,v])=>v)), fx: Object.fromEntries(Object.keys(before).map(k => [k, after[k] - before[k]]).filter(([,v]) => v)), ...cal(p.week) };
+  p.commandHistory=[structuredClone({...p.commandReport,label,messages:[...out]}),...(p.commandHistory||[])].slice(0,12);
   return out;
 }
 function executeCommand(p, id, arg) {
