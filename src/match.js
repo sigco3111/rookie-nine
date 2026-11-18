@@ -1,5 +1,5 @@
 import { baseRunStep, walkAdvance } from './bases.js';
-import { defensePaths, defenseStep, defenseLookYaw, groundOutPlan, groundOutPhase, airOutPlan, airOutStep, hitRunStep, groundRace } from './defense.js';
+import { defensePaths, defenseStep, defenseLookYaw, groundOutPlan, groundOutPhase, airOutPlan, airOutStep, hitRunStep, groundRace, foulBallStep } from './defense.js';
 import { TRAITS } from './data.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, OPP_COLORS } from './scene.js';
 import { cal, battingWindow, oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
@@ -101,6 +101,18 @@ export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1
     window.__defensePlay?.({phase,k,t,plan,ball,collector,receiver,returnHit,runner:runner?o.runner:null,hitBases,baseRunners:o.baseRunners,priorBases,race,forceSecond:forceBase===2,forceBase,forceMask});
     if(t>=total){delTicker(f);ball.visible=false;ball.scale.setScalar(1);if(runner){o.runner.visible=false;o.batter.visible=oldBatter;}camera.fov=oldFov;camera.updateProjectionMatrix();o.pitcher.position.copy(pitcherHome);resetDefense(o.fielders);if(catcherRestore){o.catcher.position.copy(catcherRestore.position);o.catcher.rotation.copy(catcherRestore.rotation);for(const part of catcherRestore.parts){o.catcher.userData[part.key].rotation.copy(part.rotation);o.catcher.userData[part.key].elbow=part.elbow;}}resolve(race);}
   };tickers.add(f);});
+}
+// Uncaught foul: shared by both roles, without fielder chase or runner advance.
+export function runFoul(o,hud,side=1){
+ const oldFov=camera.fov,oldPosition=camera.position.clone(),oldQuaternion=camera.quaternion.clone();let t=0;
+ hud.setBattingActive?.(false);hud.setPitchingActive?.(false,true);hud.setPitch('파울 · 라인 밖 타구');
+ const zone=o.zone.visible,ret=o.ret.visible;o.zone.visible=false;o.ret.visible=false;o.ball.visible=true;o.ball.scale.setScalar(2);
+ camera.fov=90;camera.updateProjectionMatrix();camera.position.set(0,48,38);camera.lookAt(0,0,-23);
+ return new Promise(resolve=>{const f=dt=>{t+=dt;const pos=foulBallStep(side,t/1.6);o.ball.position.set(pos.x,pos.y,pos.z);
+  if(pos.landed)hud.setPitch('파울 · 데드볼');
+  window.__foulPlay?.({ball:o.ball,t,side,landed:pos.landed,baseRunners:o.baseRunners});
+  if(t>=2){delTicker(f);o.ball.visible=false;o.ball.scale.setScalar(1);o.zone.visible=zone;o.ret.visible=ret;camera.fov=oldFov;camera.updateProjectionMatrix();camera.position.copy(oldPosition);camera.quaternion.copy(oldQuaternion);resolve();}
+ };tickers.add(f);});
 }
 // A completed home run still visits every base before the score/result advances.
 export function runHomeRun(o,hud,priorBases=0){
@@ -361,11 +373,11 @@ export async function playMatch(p, m, hud) {
       if (r.kind === 'ball') { c.b++; hud.banner('볼', 600); }
       else if (r.kind === 'strike') { c.s++; hud.banner('스트라이크', 600); }
       else if (r.kind === 'whiff') { c.s++; hud.banner('헛스윙!', 700); }
-      else if (r.kind === 'foul') { if (c.s < 2) c.s++; hud.banner('파울', 600); }
+      else if (r.kind === 'foul') {await runFoul(o,hud,r.tm==='빠름'?-1:1);resetCam();if (c.s < 2) c.s++; hud.banner('파울', 600); }
       else {
         const h = r; const ang = Math.abs(h.angle); if (h.tm) hud.small(h.tm + (h.q > 0.75 ? ' · 완벽한 타구' : ''));
         let res_ = 'out', label = '';
-        if (ang > 46) { if (c.s < 2) c.s++; await flight({ ...h, angle: h.angle > 0 ? 55 : -55, dst: Math.min(h.dst, 60) }); hud.banner('파울', 600); hud.setCount(c); resetCam(); resetFielders(); continue; }
+        if (ang > 46) {await runFoul(o,hud,h.angle);if (c.s < 2) c.s++; hud.banner('파울', 600); hud.setCount(c); resetCam(); resetFielders(); continue; }
         const L = h.launch;
         if (L > 22 && L <= 50 && h.dst >= 88) { res_ = 'hr'; label = '홈런!!'; }
         else if (L < 8) { const pr = 0.2 + h.q * 0.4 + p.speed * 0.002 + (traits.includes('run') ? 0.06 : 0); res_ = chance(pr * 100) ? 'single' : 'out'; label = res_ === 'out' ? '땅볼 아웃' : '내야 안타'; }

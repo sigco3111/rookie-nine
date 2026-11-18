@@ -1,0 +1,22 @@
+import puppeteer from 'puppeteer-core';
+import fs from 'fs';
+import {spawn} from 'child_process';
+const server=process.env.TEST_URL?null:spawn(process.execPath,['node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','8123'],{stdio:'ignore'});
+const fontB64 = fs.readFileSync('node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-700-normal.woff2').toString('base64');
+const css = `@font-face{font-family:TKR;src:url(data:font/woff2;base64,${fontB64}) format('woff2');font-weight:100 900}*{font-family:TKR,sans-serif!important}`;
+const year=+(process.argv[2]||3), regular=process.argv[3]==='regular';
+const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', headless: 'new', args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const p = await b.newPage(); await p.setViewport({ width: 390, height: 844, isMobile: true, hasTouch: true });
+const errs = []; p.on('pageerror', (e) => {errs.push(e.message);console.log('ERROR',e.message)}); p.on('console', (m) => { if (m.text().includes('UNI')) errs.push(m.text()); });
+await p.evaluateOnNewDocument((c) => { document.addEventListener('DOMContentLoaded', () => { const st = document.createElement('style'); st.textContent = c; document.head.appendChild(st); }); }, css);
+await p.goto(process.env.TEST_URL||'http://localhost:8123/'); await new Promise(r => setTimeout(r, 1500));
+await p.evaluate(() => document.querySelector('#new').click()); await new Promise(r => setTimeout(r, 300));
+await p.evaluate(() => document.querySelector('#go').click()); await new Promise(r => setTimeout(r, 800));
+
+await p.evaluate(mode=>{const p=window.__game.P;p.week=7;Math.random=()=>.99;window.__game.skipWeeks(0);[...document.querySelectorAll('.cmd')].find(b=>b.innerText.includes('휴식')).click();window.__dbgIn=true;window.__dt=1/8;window.__fouls=0;window.__mode=mode;window.__force=mode==='angle'?{angle:-60,launch:15,v:45}:null;window.__dbgShot=(st,T)=>{if(st.swingT==null){window.__shotState={t:st.t,T};const w=window.__game.G.battingWindow(window.__game.P,Math.min(2,window.__fouls),false).timing;const delay=window.__fouls>=3||mode==='angle'?.01:w*1.15;if(st.t>=(mode==='angle'?T-.375:T-.075+delay)){if(window.__fouls>=3)window.__force={angle:-20,launch:3,v:45};document.querySelector('.swing').dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}));}}};window.__foulPlay=d=>{window.__lastFoul=d;if(d.t<=.126){window.__foulBefore=window.__fouls;console.log('foul start',window.__fouls);}const count=document.querySelectorAll('#cnt .dot.s.on').length;if(count!==Math.min(2,window.__foulBefore??0))throw Error('early count '+count+' expected '+window.__foulBefore);if(!document.querySelector('.swing').disabled)throw Error('swing input visible during foul');if(d.landed&&!window.__landed&&window.__foulBefore===window.__fouls){window.__landed=true;window.__dt=.00001;}};},process.env.MODE||'angle');
+console.log('starting match');await p.click('#play');
+for(let n=0;n<3;n++){
+ await p.waitForFunction(()=>window.__landed,{timeout:60000}).catch(async e=>{console.log('DEBUG',await p.evaluate(()=>({ui:document.querySelector('#ui').innerText,shot:window.__shotState,fouls:window.__fouls,ball:window.__lastFoul?.t})));await b.close();server?.kill();throw e;});if(n===0)await p.screenshot({path:`/downloads/rookie9_bat_foul_${process.env.MODE||'angle'}${process.env.TEST_URL?'_live':''}.png`});await p.evaluate(()=>{window.__fouls++;window.__landed=false;window.__dt=1/8;});
+}
+await p.waitForSelector('#ok',{timeout:60000});const result=await p.evaluate(()=>window.__game.P.pendingResult.result);if(result.ab!==1||result.hits!==0)throw Error(JSON.stringify(result));console.log('three batting fouls count cap/no early count/input hidden/full1PA',process.env.MODE||'angle',result);
+if(errs.length)throw Error(errs.join('|'));await b.close();if(server){const done=new Promise(r=>server.once('exit',r));server.kill('SIGTERM');await done;}
