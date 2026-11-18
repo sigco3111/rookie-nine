@@ -1,5 +1,7 @@
-import assert from 'node:assert/strict';import {groundOutPlan,groundOutPhase} from './src/defense.js';
+import assert from 'node:assert/strict';import {groundOutPlan,groundOutPhase,groundRace} from './src/defense.js';
 const ps=[[-24,-24],[-11,-36],[11,-36],[24,-24],[-48,-65],[0,-78],[48,-65]];
 for(const ball of [[0,-15],[25,-24],[-25,-25],[0,0]]){const original=JSON.stringify(ps),p=groundOutPlan(ps,ball);assert(p.collector!==p.receiver);assert.equal(JSON.stringify(ps),original);assert.deepEqual(p.base,[19.4,-19.4]);for(const [t,phase]of [[0,'approach'],[p.approach,'transfer'],[p.approach+p.transfer+.001,'throw'],[p.total,'receive']])assert.equal(groundOutPhase(p,t).phase,phase);assert(p.total<12);assert(Math.abs(groundOutPhase(p,p.total).k-1)<1e-8)}assert.equal(groundOutPlan([[0,0]],[1,1]),null);console.log('groundout nearest collector/distinct base receiver, phase boundaries, no mutation passed');
 
 const relay=groundOutPlan(ps,[0,-80],[0,-38.8]);assert.deepEqual(relay.base,[0,-38.8]);assert.notEqual(relay.collector,relay.receiver);assert.equal(relay.receiver,ps.map(([x,z],i)=>({i,d:Math.hypot(x,z+38.8)})).filter(v=>v.i!==relay.collector).sort((a,b)=>a.d-b.d)[0].i);console.log('hit relay target and distinct nearest receiver passed');
+
+const fast=groundOutPlan([[18,-18],[19.4,-19.4],[0,-35]],[18,-18]),slow=groundOutPlan(ps,[-8,-15]);assert.equal(groundRace(fast,1.2).safe,false);assert.equal(groundRace(slow,1.2).safe,true);const tie={approach:1,transfer:1,flight:1};assert(groundRace(tie,Math.hypot(19.4,19.4)/7-3).safe);assert(groundRace(fast,1.2,20).safe);console.log('ground race fast/slow/tie/runner speed passed');

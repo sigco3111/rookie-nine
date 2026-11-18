@@ -61,3 +61,10 @@ export function hitRunStep(bases,progress){
  const leg=Math.min(count-1,Math.floor(distance)),k=distance-leg,a=pts[leg],b=pts[leg+1];
  return {x:a[0]+(b[0]-a[0])*k,z:a[1]+(b[1]-a[1])*k,yaw:Math.atan2(b[0]-a[0],b[1]-a[1]),arrived:progress>=1,bases:count};
 }
+
+// One-base race in world-space seconds. Reception ties go to the runner.
+export function groundRace(plan,elapsed=0,speed=7){
+ const runnerTime=Math.hypot(19.4,19.4)/speed;
+ const receiveTime=elapsed+plan.approach+plan.transfer+plan.flight;
+ return {runnerTime,receiveTime,safe:runnerTime<=receiveTime,margin:runnerTime-receiveTime};
+}
