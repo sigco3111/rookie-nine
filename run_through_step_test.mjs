@@ -1,0 +1,3 @@
+import assert from 'node:assert/strict';
+import {runThroughStep} from './src/defense.js';
+for(const distance of [2,4]){const speed=6,end=distance/speed;assert.deepEqual(runThroughStep(-1,speed,distance),{through:0,moving:false});assert.deepEqual(runThroughStep(0,speed,distance),{through:0,moving:false});const mid=runThroughStep(end/2,speed,distance);assert.equal(mid.through,distance/2);assert(mid.moving);assert.deepEqual(runThroughStep(end,speed,distance),{through:distance,moving:false});assert.deepEqual(runThroughStep(end+1,speed,distance),{through:distance,moving:false});}console.log('2/4unit runout before/at arrival, mid, stop, after clamp passed');

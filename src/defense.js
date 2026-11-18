@@ -74,3 +74,9 @@ export function foulBallStep(side,progress){
  const u=Math.max(0,Math.min(1,progress)),sign=side<0?-1:1;
  return {x:sign*30*u,y:.15+(1-u)*.85+Math.sin(Math.PI*u)*9,z:-14*u,landed:u>=1};
 }
+
+// Visual extension after first base, independent of the race decision.
+export function runThroughStep(elapsed,speed,distance){
+ const through=Math.min(distance,Math.max(0,elapsed)*speed);
+ return {through,moving:through>0&&through<distance};
+}

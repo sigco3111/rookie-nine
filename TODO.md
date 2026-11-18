@@ -602,3 +602,7 @@
 
 ## 07:40 Nov19 - live out runout close inspection
 - Groundrace test rendersinspection-onlyrunnerclosecameraafteractualreturncapture. Liveoutpassedstoppedlegs/y0throughreturnandnextpitch1outempty,receive4.250vsrunner4.573 unchanged. Actualclosepixelsinspectedrunnerfeetgrounded/legsneutral/separatefromreceiver;notnormalgamecamera. Buildsameindex-DVDUn-eX.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
+
+## 08:02 Nov19 - isolate runout visual step
+- ExtractedrunThroughStep(elapsed,speed,distance)topuredefensehelper;sharedrunnerusesreturnedthrough/movingforbody/legsstop. Exactexisting2/4unitdistanceandstoppingconditionpreserved.Nooutcome/time/pacechange.
+- Newrun_through_step_test before/atarrival/mid/exactstop/afterclampbothdistancespassed;groundplanlogic,localbatgroundseparationandpitchoutreturnstoppedlegs/resultpassed. Buildpassed. Internalrefactornotnewfeature;controlledRNG/clocknotdeviceQA.

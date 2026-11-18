@@ -1,5 +1,5 @@
 import { baseRunStep, walkAdvance } from './bases.js';
-import { defensePaths, defenseStep, defenseLookYaw, groundOutPlan, groundOutPhase, airOutPlan, airOutStep, hitRunStep, groundRace, foulBallStep } from './defense.js';
+import { defensePaths, defenseStep, defenseLookYaw, groundOutPlan, groundOutPhase, airOutPlan, airOutStep, hitRunStep, groundRace, foulBallStep, runThroughStep } from './defense.js';
 import { TRAITS } from './data.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, OPP_COLORS } from './scene.js';
 import { cal, battingWindow, oppStrength, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
@@ -96,7 +96,7 @@ export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1
     }
     if(!pickupSound&&t>=plan.approach+plan.transfer*.45){pickupSound=true;sfx.mitt();}if(!receiveSound&&phase==='receive'){receiveSound=true;sfx.mitt();}
     if(clearPitcher)o.pitcher.position.copy(pitcherHome).lerp(pitcherCover,Math.min(1,t/plan.approach));
-    if(runner){const u=Math.min(1,race?(t+runnerElapsed)/race.runnerTime:hitRunTime?(t+runnerElapsed)/hitRunTime:t/(returnHit?plan.total*.85:plan.total+.35)),pos=hitRunStep(returnHit?hitBases:1,u);const through=race&&!forceBase?Math.min(2,Math.max(0,t+runnerElapsed-race.runnerTime)*raceSpeed):!returnHit&&hitRunTime?Math.min(4,Math.max(0,t+runnerElapsed-hitRunTime)*hitRunSpeed):0;o.runner.position.set(pos.x+through/Math.SQRT2,pos.arrived&&(!through||through>=(race?2:4))?0:Math.abs(Math.sin(t*14))*.12,pos.z-through/Math.SQRT2);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=pos.arrived&&(!through||through>=(race?2:4))?0:Math.sin(t*14);o.runner.userData.legR.rotation.x=pos.arrived&&(!through||through>=(race?2:4))?0:-Math.sin(t*14);}
+    if(runner){const u=Math.min(1,race?(t+runnerElapsed)/race.runnerTime:hitRunTime?(t+runnerElapsed)/hitRunTime:t/(returnHit?plan.total*.85:plan.total+.35)),pos=hitRunStep(returnHit?hitBases:1,u);const runout=race&&!forceBase?runThroughStep(t+runnerElapsed-race.runnerTime,raceSpeed,2):!returnHit&&hitRunTime?runThroughStep(t+runnerElapsed-hitRunTime,hitRunSpeed,4):{through:0,moving:false},through=runout.through,stopped=pos.arrived&&!runout.moving;o.runner.position.set(pos.x+through/Math.SQRT2,stopped?0:Math.abs(Math.sin(t*14))*.12,pos.z-through/Math.SQRT2);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=stopped?0:Math.sin(t*14);o.runner.userData.legR.rotation.x=stopped?0:-Math.sin(t*14);}
     if(forceBase){showForcedRunners(o,forceMask,Math.min(1,(t+runnerElapsed)/race.runnerTime),t);if(phase==='receive'&&!race.safe)o.baseRunners[forceBase-2].visible=false;}
     if(priorBases&&returnHit)showBaseRunners(o,priorBases,hitBases,Math.min(1,hitRunTime?(t+runnerElapsed)/hitRunTime:t/(plan.total*.85)),t);
     for(const fd of o.fielders)fd.userData.head.rotation.y=defenseLookYaw(fd.position.x,fd.position.z,fd.rotation.y,ball.position.x,ball.position.z);
