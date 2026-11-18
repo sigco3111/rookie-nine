@@ -59,7 +59,7 @@ export function showForcedRunners(o,mask,progress,t=0){
  r.position.set(pos.x,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z);r.rotation.y=pos.yaw;
  r.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);r.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);});
 }
-export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1,priorBases=0,raceSpeed=0,runnerElapsed=0,forceBase=0,forceMask=0}={}) {
+export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1,priorBases=0,raceSpeed=0,runnerElapsed=0,forceBase=0,forceMask=0,returnPitcher=false}={}) {
   const defenders=forceBase===4?[...o.fielders,o.catcher]:o.fielders;
   const catcherRestore=forceBase===4?{position:o.catcher.position.clone(),rotation:o.catcher.rotation.clone(),parts:['head','body','armL','armR','legL','legR'].map(key=>({key,rotation:o.catcher.userData[key].rotation.clone(),elbow:o.catcher.userData[key].elbow}))}:null;
   const forceName=forceBase===4?'홈':`${forceBase}루`;
@@ -99,8 +99,21 @@ export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1
     if(forceBase){showForcedRunners(o,forceMask,Math.min(1,(t+runnerElapsed)/race.runnerTime),t);if(phase==='receive'&&!race.safe)o.baseRunners[forceBase-2].visible=false;}
     if(priorBases&&returnHit)showBaseRunners(o,priorBases,hitBases,Math.min(1,t/(plan.total*.85)),t);
     window.__defensePlay?.({phase,k,t,plan,ball,collector,receiver,returnHit,runner:runner?o.runner:null,hitBases,baseRunners:o.baseRunners,priorBases,race,forceSecond:forceBase===2,forceBase,forceMask});
-    if(t>=total){delTicker(f);ball.visible=false;ball.scale.setScalar(1);if(runner){o.runner.visible=false;o.batter.visible=oldBatter;}camera.fov=oldFov;camera.updateProjectionMatrix();o.pitcher.position.copy(pitcherHome);resetDefense(o.fielders);if(catcherRestore){o.catcher.position.copy(catcherRestore.position);o.catcher.rotation.copy(catcherRestore.rotation);for(const part of catcherRestore.parts){o.catcher.userData[part.key].rotation.copy(part.rotation);o.catcher.userData[part.key].elbow=part.elbow;}}resolve(race);}
+    if(t>=total){delTicker(f);const finish=()=>{ball.visible=false;ball.scale.setScalar(1);if(runner){o.runner.visible=false;o.batter.visible=oldBatter;}camera.fov=oldFov;camera.updateProjectionMatrix();o.pitcher.position.copy(pitcherHome);resetDefense(o.fielders);if(catcherRestore){o.catcher.position.copy(catcherRestore.position);o.catcher.rotation.copy(catcherRestore.rotation);for(const part of catcherRestore.parts){o.catcher.userData[part.key].rotation.copy(part.rotation);o.catcher.userData[part.key].elbow=part.elbow;}}resolve(race);};if(returnPitcher){o.pitcher.position.copy(pitcherHome);returnGroundBall(o,hud,receiver).then(finish);}else finish();}
   };tickers.add(f);});
+}
+// This return starts only after the ground-play race has finished.
+function returnGroundBall(o,hud,receiver){
+ const arm=receiver.userData.armR.rotation.clone(),pitArm=o.pitcher.userData.armL.rotation.clone();
+ const point=(f,key)=>{f.userData.sync?.();f.updateWorldMatrix(true,true);return f.userData[key].getWorldPosition(new THREE.Vector3());};
+ receiver.rotation.y=Math.atan2(o.pitcher.position.x-receiver.position.x,o.pitcher.position.z-receiver.position.z);
+ const start=o.ball.position.clone(),duration=Math.max(.65,receiver.position.distanceTo(o.pitcher.position)/24);let t=0,release=null;
+ camera.position.set(5,42,28);camera.lookAt(0,0,-28);hud.setPitch('수신 후 · 투수에게 반환');
+ return new Promise(resolve=>{const f=dt=>{t+=dt;let k=0;
+  if(t<.35){k=t/.35;receiver.userData.armR.rotation.x=arm.x-1.7*k;o.ball.position.copy(start).lerp(point(receiver,'throwHand'),k);}
+  else{k=Math.min(1,(t-.35)/duration);receiver.userData.armR.rotation.x=arm.x-1.7+2.4*k;o.pitcher.userData.armL.rotation.x=pitArm.x-.4*k;if(!release)release=point(receiver,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;window.__groundReturn?.({phase:'return',t,k,ball:o.ball,target,receiver,pitcher:o.pitcher});}
+  if(t>=.35+duration+.3){delTicker(f);receiver.userData.armR.rotation.copy(arm);o.pitcher.userData.armL.rotation.copy(pitArm);resolve();}
+ };tickers.add(f);});
 }
 // Uncaught foul: shared by both roles, without fielder chase or runner advance.
 export function runFoul(o,hud,side=1){
