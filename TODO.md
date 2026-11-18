@@ -574,3 +574,6 @@
 ## 04:56 Nov19 - continuous fielder ball attention
 - Ground completion andground/airpitcherreturn nowupdateall7fieldersheadyawtowardactualballusingexisting±.6radattentionlimit. Previouslypursuit/airflightattentionstoppedatthesehandoffs. No bodymovement/path/race/outcomechange;resetDefenseclearsgazeasusual.
 - Extendedbat_pitcher_return_ui_test assertsall7returngazesandresultreset. Localnormalground/air/hitandfallbackgroundpassedwithgloveendpoint/pitcherfacing/input/FOV/resultchecks. Buildpassed,actual390returnpixelsinspected;wideviewheadsaretoosmallforpreciseangleQA. Controlledclock/RNGnotnatural/deviceQA.
+
+## 05:15 Nov19 - close return visual inspection
+- Returntestnowrendersinspection-onlyclosecameraafteractualgamecapture,withoutchanginggamecamera. Localground/liveairgaze+return+resetchecksandlooklogic/buildpassed,samebundle. Actualclosepixelsinspected:airfielderclear;groundrevealsbatter-runneroverlaps1Breceiverwhilewaitingforreturn. Newvisualissuefornextbatch;gameplayoutcomeunchanged. Wideviewhidthisissue. Groundclosecropisnotnormalgamecamera.
