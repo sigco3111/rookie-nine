@@ -584,3 +584,6 @@
 
 ## 05:58 Nov19 - pitching full flow after batting runout
 - Extendedfull_pitch_return_direction_ui_test checksall7fieldergazesinreturnhooks. Local/live19pitch3IPmixedwalk/single/foul/HR/ground/force/air/Kpassed32returnframes/pitcherfacingandnextyawreset/inningchange/result/history/reloadconfirm. Same3IP3H1SO,played3:3/3ER→existingauto3:4/4ER. Confirmsbattingrunoutdidnotalterthispitchingplan. Buildsameindex-0aO5wjLg.js;actualliveresultpixelsinspected. No runtimechange;controlledRNG/clocknotnatural/deviceQA.
+
+## 06:19 Nov19 - next batter reset after run-through
+- Extendedbat_return_sequence_ui_test assertsgroundreturnrunner>=4fromreceiverand7fieldergazerestorednextpitch. Local/live normal/fallback3PAground→air→singlepassedallreturns,battervisible/runnerhidden/zone-reticle/fieldershome/input/result3AB1H1:2/history/reloadconfirm. Buildsameindex-0aO5wjLg.js. Actual390livenextbatterpixelsinspectedvisiblebluebatter/swingUI. No runtimechange;controlledRNG/clocknotnatural/deviceQA.
