@@ -59,13 +59,13 @@ export function showForcedRunners(o,mask,progress,t=0){
  r.position.set(pos.x,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z);r.rotation.y=pos.yaw;
  r.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);r.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);});
 }
-export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1,priorBases=0,raceSpeed=0,runnerElapsed=0,forceBase=0,forceMask=0,returnPitcher=false}={}) {
+export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1,priorBases=0,raceSpeed=0,runnerElapsed=0,forceBase=0,forceMask=0,returnPitcher=false,hitRunSpeed=0}={}) {
   const defenders=forceBase===4?[...o.fielders,o.catcher]:o.fielders;
   const catcherRestore=forceBase===4?{position:o.catcher.position.clone(),rotation:o.catcher.rotation.clone(),parts:['head','body','armL','armR','legL','legR'].map(key=>({key,rotation:o.catcher.userData[key].rotation.clone(),elbow:o.catcher.userData[key].elbow}))}:null;
   const forceName=forceBase===4?'홈':`${forceBase}루`;
   const ball=o.ball,land=[ball.position.x,ball.position.z],positions=defenders.map(f=>[f.position.x,f.position.z]);
   const plan=groundOutPlan(positions,land,returnHit?[3,-41.8]:forceBase?[[0,0],[19.4,-19.4],[0,-38.8],[-19.4,-19.4],[0,0]][forceBase]:[19.4,-19.4],forceBase===4?defenders.length-1:null);if(!plan)return Promise.resolve();
-  const race=raceSpeed?groundRace(plan,runnerElapsed,raceSpeed):null;const total=race?Math.max(plan.total,race.runnerTime-runnerElapsed+.25):plan.total;
+  const race=raceSpeed?groundRace(plan,runnerElapsed,raceSpeed):null;const hitRunTime=returnHit&&hitRunSpeed?hitBases*Math.hypot(19.4,19.4)/hitRunSpeed:0;const total=race?Math.max(plan.total,race.runnerTime-runnerElapsed+.25):hitRunTime?Math.max(plan.total,hitRunTime-runnerElapsed+.25):plan.total;
   const collector=defenders[plan.collector],receiver=defenders[plan.receiver],start=ball.position.clone();
   const groundStart=start.clone();if(returnHit)groundStart.y=.15;
   const point=(f,glove=true)=>{f.userData.sync?.();f.updateWorldMatrix(true,true);return glove?f.userData.glove.localToWorld(new THREE.Vector3(0,0,.22)):(f.userData.throwHand||f.userData.armR).getWorldPosition(new THREE.Vector3());};
@@ -95,9 +95,9 @@ export function completeGroundOut(o,hud,{runner=false,returnHit=false,hitBases=1
       }else{ball.position.copy(point(receiver));}
     }
     if(clearPitcher)o.pitcher.position.copy(pitcherHome).lerp(pitcherCover,Math.min(1,t/plan.approach));
-    if(runner){const u=Math.min(1,race?(t+runnerElapsed)/race.runnerTime:t/(returnHit?plan.total*.85:plan.total+.35)),pos=hitRunStep(returnHit?hitBases:1,u);const through=race&&!forceBase?Math.min(2,Math.max(0,t+runnerElapsed-race.runnerTime)*raceSpeed):0;o.runner.position.set(pos.x+through/Math.SQRT2,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z-through/Math.SQRT2);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);o.runner.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);}
+    if(runner){const u=Math.min(1,race?(t+runnerElapsed)/race.runnerTime:hitRunTime?(t+runnerElapsed)/hitRunTime:t/(returnHit?plan.total*.85:plan.total+.35)),pos=hitRunStep(returnHit?hitBases:1,u);const through=race&&!forceBase?Math.min(2,Math.max(0,t+runnerElapsed-race.runnerTime)*raceSpeed):0;o.runner.position.set(pos.x+through/Math.SQRT2,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z-through/Math.SQRT2);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);o.runner.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);}
     if(forceBase){showForcedRunners(o,forceMask,Math.min(1,(t+runnerElapsed)/race.runnerTime),t);if(phase==='receive'&&!race.safe)o.baseRunners[forceBase-2].visible=false;}
-    if(priorBases&&returnHit)showBaseRunners(o,priorBases,hitBases,Math.min(1,t/(plan.total*.85)),t);
+    if(priorBases&&returnHit)showBaseRunners(o,priorBases,hitBases,Math.min(1,hitRunTime?(t+runnerElapsed)/hitRunTime:t/(plan.total*.85)),t);
     window.__defensePlay?.({phase,k,t,plan,ball,collector,receiver,returnHit,runner:runner?o.runner:null,hitBases,baseRunners:o.baseRunners,priorBases,race,forceSecond:forceBase===2,forceBase,forceMask});
     if(t>=total){delTicker(f);const finish=()=>{ball.visible=false;ball.scale.setScalar(1);if(runner){o.runner.visible=false;o.batter.visible=oldBatter;}camera.fov=oldFov;camera.updateProjectionMatrix();o.pitcher.position.copy(pitcherHome);resetDefense(o.fielders);if(catcherRestore){o.catcher.position.copy(catcherRestore.position);o.catcher.rotation.copy(catcherRestore.rotation);for(const part of catcherRestore.parts){o.catcher.userData[part.key].rotation.copy(part.rotation);o.catcher.userData[part.key].elbow=part.elbow;}}resolve(race);};if(returnPitcher){o.pitcher.position.copy(pitcherHome);returnGroundBall(o,hud,receiver).then(finish);}else finish();}
   };tickers.add(f);});
