@@ -152,7 +152,8 @@ export async function playPitching(p, m, hud) {
   }
   showBaseRunners(o,0);
   cv.removeEventListener('pointerdown', onD); cv.removeEventListener('pointermove', onM); window.removeEventListener('pointerup', onU); hud.removePicker(); window.dispatchEvent(new Event('resize'));
+  const playedScore={my,opp:S.er};const automaticTiebreak=my===S.er;
   let win = my > S.er; if (my === S.er) { win = chance(50 + p.ev.team * 0.1); if (win) my++; else S.er++; }
-  const r = { ip: innings, so: S.so, er: S.er, hitsAllowed: S.ha, my, opp: S.er, win, kind: m.kind, title: m.name + ' vs ' + opp, ab: 0, hits: 0, hr: 0, rbi: 0 };
+  const r = { automaticTiebreak,playedScore,ip: innings, so: S.so, er: S.er, hitsAllowed: S.ha, my, opp: S.er, win, kind: m.kind, title: m.name + ' vs ' + opp, ab: 0, hits: 0, hr: 0, rbi: 0 };
   applyMatchResult(p, r); return r;
 }
