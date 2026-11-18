@@ -536,3 +536,7 @@
 
 ## 01:28 Nov19 - role roundtrip reset
 - Extendedrole_switch_match_ui_test throughnewthirdpitcherafterbatresult,withoutreload. Local/live normal/fallback passed catcher/ump/7fielders visible,calledstrike→catcherreturn→pitcherglove→nextthrowready. Previouspitch3K/batgroundresultsstillpassed. Build/runtimesame. Actual390nextpitchUI inspected, no gamecodechange. Controlledclock/RNG,notnatural/deviceQA.
+
+## 01:47 Nov19 - immediate strikeout out-dot refresh
+- Thirdstrike increasedoutsafterHUDsetCount, leavingoldoutdotsduringstrikeoutbanner. Refreshcountafterconfirmedstrikeout,stillaftercatcherreturn. Nooutcome/stat/trajectorychange.
+- Newstrikeout_count_ui_test 3calledstrikes asserts0outduringreturns and1redoutdot whenstrikeoutbannerappears. Localpassed;actual390banner+reddot inspected. Roleroundtrip9strike3K/batground/newpitchregressionbuildpassed. Controlledclock/RNGnotnatural/deviceQA.
