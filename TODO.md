@@ -499,3 +499,7 @@
 ## 21:59 Nov18 - bounded player-model retry
 - Model fetch nowchecksHTTPstatus andtriesonceagain(cache reload) afterfetch/status/parsefailure, thenexistingproceduralfallback. Maximum2attempts/startup,procqueryskipsboth. No timer/backoff/timeoutadded; slow/hungnetwork stillbrowserfetchbound. Notguaranteedmodeldelivery orofflinecache. No gameplayformula/permissionschange.
 - model_retry_ui_test firstHTTP503→secondactualfile givesnormalmodel;twoHTTP503givesproceduralmodel;exactly2initialrequests. Bothlocalmixed3PAHR/double/K/results/history/reloadpassed. Buildpassed. Controlledfaults/RNG/time notnetwork/deviceperformanceQA.
+
+## 22:24 Nov18 - model request timeout
+- Eachmodeldownloadattempt nowAbortController10sec coveringfetch+arrayBuffer,clearedfinally; existingmax2attempts thenfallback. Preventsnonrespondingfetch blockingbootstrapforever. Notstrict20secwallpromise(parse/renderoverhead/timertrottlingcanextend), noabortofsyncFBXparse/otherassetloads. No gameplaytimingchange.
+- model_timeout_ui_test injectspendingfetchPromise respectingAbortSignal,firsttimeout→actualsecondfile andtwotimeouts→fallback;localbothmixed3PA/result/reloadpassed. Real10sectimer,notshortened. Initialrequestinterceptionholdtesthungnavigation, replacedwithfetchboundarysimulation; testsdomreadywaitbefore#new. Buildpassed. Networkfaultsimulation notphysicalnetwork/deviceQA.

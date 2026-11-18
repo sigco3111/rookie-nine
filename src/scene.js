@@ -133,11 +133,12 @@ const USE_PROC = new URLSearchParams(location.search).has('proc');
 if (!USE_PROC) {
   const base = import.meta.env.BASE_URL || './';
   for(let attempt=0;attempt<2&&!kBase;attempt++){
+    const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),10000);
     try{
-      const response=await fetch(base+'models/player.fbx',attempt?{cache:'reload'}:{});
+      const response=await fetch(base+'models/player.fbx',{...(attempt?{cache:'reload'}:{}),signal:controller.signal});
       if(!response.ok)throw new Error('player model HTTP '+response.status);
       const buf=await response.arrayBuffer();kBase=new FBXLoader().parse(buf,'./');
-    }catch(e){if(attempt===1){console.warn('player model load failed after retry',e);kBase=null;}}
+    }catch(e){if(attempt===1){console.warn('player model load failed after retry',e);kBase=null;}}finally{clearTimeout(timeout);}
   }
 }
 const css = (c) => '#' + new THREE.Color(c).getHexString();
