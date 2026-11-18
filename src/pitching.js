@@ -81,14 +81,23 @@ export async function playPitching(p, m, hud) {
       const chase = defensivePursuit(o.fielders, bx + dx * .5, -dist * .9);
       o.ball.visible = true; let k = 0; const g2 = (dt) => { k += dt / dur; chase(k * dur); const s = Math.min(1, k);if(raceSpeed){const pos=hitRunStep(1,s*dur*raceSpeed/Math.hypot(19.4,19.4));o.runner.position.set(pos.x,Math.abs(Math.sin(k*dur*14))*.12,pos.z);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=Math.sin(k*dur*14);o.runner.userData.legR.rotation.x=-Math.sin(k*dur*14);} o.ball.position.set(bx + dx * s * 0.5, kind==='out'&&!outAir?.15+Math.abs(Math.sin(s*Math.PI*4))*.5*(1-s):1.0 + Math.sin(Math.PI * s) * hi, -dist * s * 0.9); if(air){const glove=air.step(k*dur);o.ball.position.lerp(glove,Math.max(0,(s-.85)/.15));window.__airOutPlay?.({phase:'flight',k:s,t:k*dur,plan:air.plan,ball:o.ball,collector:o.fielders[air.plan.collector]});}const tg = o.ball.position; camera.lookAt(tg.x * 0.6, Math.max(0.8, tg.y * 0.7), Math.max(tg.z * 0.5, -40) + 4); camera.position.y = 3.1 + Math.min(4, tg.y * 0.1);
         if (s >= 1) { delTicker(g2); if(air)air.finish().then(()=>{cam();after('air');});else if(kind==='out'){o.batter.visible=true;completeGroundOut(o,hud,{runner:true,raceSpeed,runnerElapsed:dur}).then(race=>{cam();after(race?.safe?'infieldHit':'ground');});}else if(kind==='hit'&&r.t!==4)completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases:r.t,priorBases:bases}).then(()=>{cam();after();});else if(kind==='hit'&&r.t===4){o.ball.scale.setScalar(1);resetDefense(o.fielders);runHomeRun(o,hud,bases).then(()=>{cam();after();});}else{o.ball.visible = false;o.ball.scale.setScalar(1);resetDefense(o.fielders);cam();after();} } }; tickers.add(g2); };
-    const fin = () => {
+    const receivePitch=()=>new Promise(resolve=>{
+      const catcher=o.catcher,start=o.ball.position.clone();let t=0;const arm=catcher.userData.armL.rotation.clone();
+      o.ball.visible=true;hud.setPitch('포수 미트 수신');
+      const f=dt=>{t+=dt;catcher.userData.armL.rotation.x=arm.x-.25*Math.min(1,t/.2);catcher.userData.sync?.();catcher.updateWorldMatrix(true,true);
+        const glove=catcher.userData.glove.localToWorld(new THREE.Vector3(0,0,.22));o.ball.position.copy(start).lerp(glove,Math.min(1,t/.18));
+        window.__pitchCatch?.({ball:o.ball,catcher,t,held:t>=.18,glove});
+        if(t>=.5){delTicker(f);o.ball.visible=false;catcher.userData.armL.rotation.copy(arm);resolve();}
+      };tickers.add(f);
+    });
+    const fin = async () => {
       o.ball.visible = false; setBatterPose(o.batter, 0); setPitcherPose(o.pitcher, 0);
-      if (!willSwing) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
+      if (!willSwing) { await receivePitch();sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
       // 컨택 확률: 구속/변화구/코너 공략이 낮춘다
       const edge = Math.min(1, Math.max(Math.abs(bx) / ZW, Math.abs(by - ZY) / ZH));
       let pc = 0.66 - (p.velo - 40) * 0.0035 - pit.brk * (p.brk - 30) * 0.004 - edge * 0.16 + q * 0.007 - (inZone ? 0 : 0.2) - (traits.includes('aura') ? 0.04 : 0) - (traits.includes('bender') && pit.brk ? 0.05 : 0);
       pc = Math.max(0.06, Math.min(0.92, pc));
-      if (!chance(pc * 100)) { sfx.mitt(); res({ kind: 'whiff' }); return; }
+      if (!chance(pc * 100)) { await receivePitch();sfx.mitt(); res({ kind: 'whiff' }); return; }
       sfx.crack(0.8); hud.flash();
       const ph = 0.26 + q * 0.006 - (p.velo - 40) * 0.0018 - edge * 0.05; // 인플레이 안타 확률
       if (chance(Math.max(0.08, ph * 100))) { const r = Math.random(); const rr = { kind: 'hit', t: r < 0.64 ? 1 : r < 0.88 ? 2 : r < 0.93 ? 3 : 4 }; if (rr.t === 4) sfx.cheer(1); fly('hit', rr, () => res(rr)); }

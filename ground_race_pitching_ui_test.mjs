@@ -10,7 +10,7 @@ const p = await b.newPage(); await p.setViewport({ width: 390, height: 844, isMo
 const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.text().includes('UNI')) errs.push(m.text()); });
 await p.evaluateOnNewDocument((c) => { document.addEventListener('DOMContentLoaded', () => { const st = document.createElement('style'); st.textContent = c; document.head.appendChild(st); }); }, css);
 await p.goto(process.env.TEST_URL||'http://localhost:8123/'); await new Promise(r => setTimeout(r, 1500));
-await p.evaluate(() => document.querySelector('#new').click()); await new Promise(r => setTimeout(r, 300));
+await p.waitForSelector('#new');await p.evaluate(() => document.querySelector('#new').click()); await new Promise(r => setTimeout(r, 300));
 await p.evaluate(() => document.querySelector('#go').click()); await new Promise(r => setTimeout(r, 800));
 // Same scene: first give the old batter owned equipment, then create a pitcher.
 await p.evaluate(()=>{const p=window.__game.P;p.gear={bat:true,shoes:true};window.__game.skipWeeks(0);});
