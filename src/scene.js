@@ -121,7 +121,8 @@ function makeChibiProc({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, ski
   let batMesh = null;
   if (bat) { batMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.068, 0.95, 10), M(0xdeb887)); armR.add(batMesh); batMesh.position.set(0, 0.05, 0.1); }
   g.traverse((o) => { if (o.isMesh) o.castShadow = true; });
-  g.userData = { head, armL, armR, legL, legR, body, bat: batMesh, glove: armGlove, shoes: [shL, shR] };
+  const throwHand=new THREE.Object3D();throwHand.position.set(0,-.44,0);armR.add(throwHand);
+  g.userData = { head, armL, armR, legL, legR, body, throwHand,hasBat:!!bat,hasGlove:!!glove,bat: batMesh, glove: armGlove, shoes: [shL, shR] };
   return g;
 }
 
