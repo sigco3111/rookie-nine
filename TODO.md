@@ -651,3 +651,7 @@
 ## 12:32 Nov19 - batting result and automatic phase sync
 - BattingHUDnowmatchesconfirmedPAresult(+runs),followuphomein,own/opponentautomaticoffensepoints,andautomatictiebreakratherthanretainingpitcherreceipt/previousphase. Existingbanner/textoutcomes,scoreformula,timers,input,swing/easybatunchanged.
 - Batreturntestobservesresult→automaticphasesandcapturesconfirmedresult. Localground/air1AB0H6:7andhit1AB1H1RBI11:10passedreturn/gloves/gaze/yaw/FOV/resultsand0/2pointautolabels. Hitinitialexactlabeltestmissedlegitimate(+1점)suffix;changedprefixcheckthenpassed. Actual390ground/hitresultpixelsinspectedmatchingbanner/phaseandhiddeninput. Buildindex-CFvHLQxd.js. ControlledRNG/clocknotdevice/naturalQA.
+
+## 12:53 Nov19 - noncontact batting input lifecycle
+- HideSWING/hint/timing/zone/reticleatmatchstartautomaticplayandateachpitchfinalize,restoreonlynextpitch. Ball/looking/whiffHUDnowmatchesresult. Preventsstaleactionpromptsafterstrikeout/duringautomaticplay;aim/actualdoSwingalreadygated. Timingwindows/pose/outcomes/sleepsunchanged.
+- Newnoncontacttestlocalstrike/whiff3pitch→Kandball4pitch→walkpassedhiddenresults/automaticphases,nextpitchrestorecounts3/4,finalAB/hits1/0or0/0. Initialtestcaughtenabledcontrolsinthefirstautomaticinnings,alsocoveredbyentryhidefix. Localgroundreturnregressionpassedunchanged6:7/1AB0H. Actual390strike/whiffpixelsinspected1strike/noswing-guide-zone. Buildindex-CT7SXNiT.js. ControlledRNG/clocknotdevice/naturalQA.

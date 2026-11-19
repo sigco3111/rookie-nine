@@ -302,7 +302,7 @@ export async function playMatch(p, m, hud) {
   let down = false, aimActive=false;
   const onD = (e) => { if(!aimActive)return;down = true; pt(e); }, onM = (e) => { if (aimActive && (down || e.pointerType === 'mouse')) pt(e); }, onU = () => { down = false; };
   const cv = renderer.domElement; cv.addEventListener('pointerdown', onD); cv.addEventListener('pointermove', onM); window.addEventListener('pointerup', onU);
-  setRet(0, ZY);
+  setRet(0, ZY);hud.setBattingActive?.(false);o.zone.visible=false;o.ret.visible=false;
   let swingReq = null; // 투구 시작 후 스윙 시각
   let pitching = null; const sbOp = (a) => { const b = document.querySelector('.swing'); if (b) { b.style.opacity = a; b.style.transition = 'opacity .2s'; } };
   const doSwing = () => { if (pitching && pitching.swingT == null) { pitching.swingT = pitching.t; pitching.swingAnim = 0.0001; sfx.swing(); } };
@@ -348,7 +348,7 @@ export async function playMatch(p, m, hud) {
       if (st.t >= T + 0.2) { done = true; delTicker(f); finalize(); }
     };
     const finalize = () => {
-      aimActive=false;down=false;hud.setTiming?.(null);
+      aimActive=false;down=false;hud.setBattingActive?.(false);o.zone.visible=false;o.ret.visible=false;hud.setTiming?.(null);
       pitching = null; sbOp(0.25); o.ball.visible = false; setBatterPose(o.batter, st.swingT != null ? 1 : 0);
       if (st.swingT == null) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
       const FRC = window.__force; const err = FRC ? 0 : st.swingT + 0.075 - T; // 0.075s = 스윙 시작~배트 컨택트 프레임(모캡 85번) 지연
@@ -406,9 +406,9 @@ export async function playMatch(p, m, hud) {
       await wait(450);
       const r = await pitchOnce(c, !!base);
       if (r.tm && r.kind !== 'hit') hud.small(r.tm);
-      if (r.kind === 'ball') { c.b++; hud.banner('볼', 600); }
-      else if (r.kind === 'strike') { c.s++; hud.banner('스트라이크', 600); }
-      else if (r.kind === 'whiff') { c.s++; hud.banner('헛스윙!', 700); }
+      if (r.kind === 'ball') { c.b++;hud.setPitch('볼'); hud.banner('볼', 600); }
+      else if (r.kind === 'strike') { c.s++;hud.setPitch('스트라이크'); hud.banner('스트라이크', 600); }
+      else if (r.kind === 'whiff') { c.s++;hud.setPitch('헛스윙!'); hud.banner('헛스윙!', 700); }
       else if (r.kind === 'foul') {await runFoul(o,hud,r.tm==='빠름'?-1:1);resetCam();if (c.s < 2) c.s++; hud.banner('파울', 600); }
       else {
         const h = r; const ang = Math.abs(h.angle); if (h.tm) hud.small(h.tm + (h.q > 0.75 ? ' · 완벽한 타구' : ''));
