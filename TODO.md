@@ -816,3 +816,6 @@
 
 ## Nov20 03:20 - guarded restore foundation only
 - Opaque explicitcandidateplan+confirm,refusepending/rejected/unreadable;fullsourcesbackupexactreadback/freshID/stalesourcebeforeafterbackup/singletargetreadback/once. FocusedfaulttestsPASS. NOTmounted/nolivechange/norestoreUI;must handle reload/currentplayerwhenmounted. No semanticrepair/crosstabatomicityclaim.
+
+## Nov20 03:42 - explicit restore UI link
+- validnonpartial/nonrejectedcandidate→reviewconfirm/cancel;fullrawbackupreadback/stalesourceguard/singletarget. Titleonly;refusepending/rejected/unreadable;successPclear/titlefromdisk. Localactualfile/cancel/staleblock/confirm/backupraw/selectedP/reloadPASS,pixels390read. No autochoose/merge/repair/reset;backup-listUIabsent. Deploymentperparentreport.

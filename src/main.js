@@ -1,3 +1,4 @@
+import { createSchoolRestorer } from './school-restore.js';
 import { mountSchoolRecoveryPreview } from './school-import-preview-ui.js';
 import './school-import-preview-ui.css';
 import { UNIFORMS, STAT_NAME, grade, GRADE_COLOR, practicesFor, OTHER_CMDS, TRAITS, itemsFor, itemDescription, keysOf, traitGoals, requirementValue } from './data.js';
@@ -25,9 +26,9 @@ function drawSaveWarning(){const status=G.storageStatus(),sourceIssue=status.iss
 
 window.addEventListener('rookie9-storage',drawSaveWarning);saveWarning.querySelector('#retry-save').onclick=()=>{G.retryStorage();if(document.querySelector('#new'))titleScreen();};
 let recoveryPreview=null;
-saveWarning.querySelector('#preview-school').onclick=()=>{recoveryPreview?.destroy();recoveryPreview=mountSchoolRecoveryPreview(document.body,{onClose:()=>recoveryPreview=null});};
+saveWarning.querySelector('#preview-school').onclick=()=>{recoveryPreview?.destroy();recoveryPreview=mountSchoolRecoveryPreview(document.body,{onClose:()=>recoveryPreview=null,restorer:createSchoolRestorer({getItem:k=>localStorage.getItem(k),setItem:(k,v)=>localStorage.setItem(k,v)},()=>{if(!document.querySelector('.screen #new'))throw Error('진행 중인 화면에서는 복원할 수 없습니다. 메뉴에서 제목 화면으로 돌아간 뒤 다시 확인하세요.');return G.schoolRecoverySnapshot();}),onRestored:()=>{P=null;recoveryPreview?.destroy();recoveryPreview=null;G.retryStorage();titleScreen();}});};
 saveWarning.querySelector('#export-school').onclick=()=>{
- try{const data=G.schoolRecoverySnapshot(),blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='rookie9-school-recovery.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);saveWarning.querySelector('#export-school-status').textContent='다운로드를 요청했습니다. 파일 앱·다운로드 목록에서 저장됐는지 확인하세요. 원본은 바꾸지 않았고, 읽지 못한 원문은 파일에 상태만 남깁니다. 가져오기 기능은 아직 없습니다.';}
+ try{const data=G.schoolRecoverySnapshot(),blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='rookie9-school-recovery.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);saveWarning.querySelector('#export-school-status').textContent='다운로드를 요청했습니다. 파일 앱·다운로드 목록에서 저장됐는지 확인하세요. 원본은 바꾸지 않았고, 읽지 못한 원문은 파일에 상태만 남깁니다. 복구 파일 살펴보기에서 유효한 기록을 선택하고 별도로 확인할 수 있습니다.';}
  catch{saveWarning.querySelector('#export-school-status').textContent='파일을 준비하지 못했습니다. 이 창을 유지하고 다시 시도하세요.';}
 };
 
