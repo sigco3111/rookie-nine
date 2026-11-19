@@ -81,7 +81,7 @@ function makeChibiProc({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, ski
   // 몸통: 유니폼 상의 + 벨트 + 등번호
   const body = new THREE.Group(); body.position.set(0, 0.86, 0); g.add(body);
   add(body, new THREE.CylinderGeometry(0.22, 0.205, 0.2, 14), pants, 0, 0.02, 0).scale.z = 0.78;
-  const torso = add(body, new THREE.CylinderGeometry(0.27, 0.225, 0.6, 16), shirt, 0, 0.32, 0); torso.scale.z = 0.76;
+  const torso = add(body, new THREE.CylinderGeometry(0.27, 0.225, 0.6, 16), shirt, 0, 0.32, 0); torso.scale.z = 0.76;torso.material.userData.isShirt=true;
   add(body, new THREE.CylinderGeometry(0.228, 0.228, 0.06, 16), 0x2b2b2b, 0, 0.1, 0).scale.z = 0.78;
   add(body, new THREE.TorusGeometry(0.1, 0.03, 8, 14), 0xffffff, 0, 0.62, 0).rotation.x = Math.PI / 2;
   { const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c = cv.getContext('2d'); c.fillStyle = '#fff'; c.font = 'bold 44px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(num), 32, 34);
@@ -99,19 +99,19 @@ function makeChibiProc({ shirt = 0x2b6cb0, pants = 0xf2f2f2, cap = 0x1a365d, ski
   add(head, new THREE.BoxGeometry(0.065, 0.012, 0.012), 0x8a3b2e, 0, -0.115, 0.232);
   add(head, new THREE.SphereGeometry(0.262, 18, 12, 0, Math.PI * 2, 0, Math.PI * 0.64), 0x2a2018, 0, 0.02, -0.025);
   if (helmet) {
-    add(head, new THREE.SphereGeometry(0.285, 20, 14, 0, Math.PI * 2, 0, Math.PI * 0.52), cap, 0, 0.03, 0);
-    const fl = add(head, new THREE.SphereGeometry(0.15, 12, 10, 0, Math.PI, 0, Math.PI * 0.8), cap, -0.215, -0.06, 0.02); fl.rotation.y = -Math.PI / 2; fl.scale.set(0.5, 1, 1);
-    const bill = add(head, new THREE.CylinderGeometry(0.28, 0.28, 0.025, 16, 1, false, 0, Math.PI), cap, 0, 0.1, 0.03); bill.rotation.y = -Math.PI / 2; bill.scale.set(0.5, 1, 0.9);
+    add(head, new THREE.SphereGeometry(0.285, 20, 14, 0, Math.PI * 2, 0, Math.PI * 0.52), cap, 0, 0.03, 0).material.userData.isCap=true;
+    const fl = add(head, new THREE.SphereGeometry(0.15, 12, 10, 0, Math.PI, 0, Math.PI * 0.8), cap, -0.215, -0.06, 0.02); fl.material.userData.isCap=true;fl.rotation.y = -Math.PI / 2; fl.scale.set(0.5, 1, 1);
+    const bill = add(head, new THREE.CylinderGeometry(0.28, 0.28, 0.025, 16, 1, false, 0, Math.PI), cap, 0, 0.1, 0.03); bill.material.userData.isCap=true;bill.rotation.y = -Math.PI / 2; bill.scale.set(0.5, 1, 0.9);
   } else {
-    add(head, new THREE.SphereGeometry(0.275, 20, 14, 0, Math.PI * 2, 0, Math.PI * 0.5), cap, 0, 0.04, 0);
-    const brim = add(head, new THREE.CylinderGeometry(0.34, 0.34, 0.03, 18, 1, false, 0, Math.PI), cap, 0, 0.075, 0.02); brim.rotation.y = -Math.PI / 2; brim.scale.set(0.8, 1, 1);
+    add(head, new THREE.SphereGeometry(0.275, 20, 14, 0, Math.PI * 2, 0, Math.PI * 0.5), cap, 0, 0.04, 0).material.userData.isCap=true;
+    const brim = add(head, new THREE.CylinderGeometry(0.34, 0.34, 0.03, 18, 1, false, 0, Math.PI), cap, 0, 0.075, 0.02); brim.material.userData.isCap=true;brim.rotation.y = -Math.PI / 2; brim.scale.set(0.8, 1, 1);
     add(head, new THREE.SphereGeometry(0.045, 8, 8), 0xffffff, 0, 0.16, 0.245).scale.set(1, 1, 0.3);
   }
   // 팔: 소매 + 손(+글러브)
   let armGlove = null;
   const mkArm = (x) => { const piv = new THREE.Group(); piv.position.set(x, 1.38, 0);
-    add(piv, new THREE.SphereGeometry(0.095, 10, 8), shirt);
-    add(piv, new THREE.CylinderGeometry(0.078, 0.066, 0.4, 10), shirt, 0, -0.2, 0);
+    add(piv, new THREE.SphereGeometry(0.095, 10, 8), shirt).material.userData.isShirt=true;
+    add(piv, new THREE.CylinderGeometry(0.078, 0.066, 0.4, 10), shirt, 0, -0.2, 0).material.userData.isShirt=true;
     add(piv, new THREE.CylinderGeometry(0.07, 0.07, 0.04, 10), 0xffffff, 0, -0.38, 0);
     add(piv, new THREE.SphereGeometry(0.065, 10, 8), skin, 0, -0.44, 0);
     g.add(piv); return piv; };

@@ -632,3 +632,7 @@
 
 ## 10:47 Nov19 - catcher-return close evidence
 - Pitchcatchtestrendersinspection-onlyrightfieldercloseviewduringpausedreturn;localnormalstrike/livefallbackwhiffpassed7gazes/reset/release/glove/count/2mitt/nextaim. Actualclosepixelsinspectednormal/fallbackmodelshapesandhead/body,preciseyawstillnumericalnotanglemeasurement. Buildsameindex-BAfGSsZ6.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
+
+## 11:08 Nov19 - fallback uniform material tags
+- Proceduralfallbacktorso+4sleevepartsmarkedisShirt,cap/helmetpiecesisCap;setShirt/setUniformnowupdatesyear/teamcolorslikenormalmodel. Skin/pants/gearuntouched,socksexistinginitialcapcolorunchanged.
+- Localproc capuniformbat/pitall3yearscolorsmatched;addedshirtassertiontocaptest. Forcedmodel-failurewhiffreturn/gaze/count/soundresetpassed;actualclosefallbackpixelsinspectedyear3orangeinsteadred. Buildpassed. Notdevice/naturalQA.
