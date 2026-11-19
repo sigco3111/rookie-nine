@@ -742,3 +742,7 @@
 - Localactual3D K/forcedHR/walk eachonePA→controller→reload passed, exact school save bytes untouched. Accelerated controlledtests, not nativeclock/device/humanfeel. QA screenshot development label inspected.
 - School full3PAHR growth+exactresultreload+onceweek regression,4ending routes,storagefailure UI passed. EarlierHRharnessmissingflash caused timeout, fixedtest passed. Needpro pitching3D and real production UI/season.
 -20:15 deployed11c6a5f/index-DKWvKAFV verified. Live school3PA3HR/resultgrowth/exactreload/onceweek test passed; actual live result screenshot inspected readable390x844. Pro QA screenshot also inspected with development-only label; not presented as a playable pro menu.
+
+## Nov19 20:28 - pro3D one-opponent-PA pitching adapter
+- Optional appearance mode in pitching.js returns before school result/automatic offense. pro-pitching maps copiedcurrentpitcher/opponentcontext to session. No normal pro menu/import yet. Manual infield/forceSafe/forceOut mapped to pure engine/base/replay.
+- Actual3D localK/walk/single/HR→onePA save/reload and exact school bytes passed. Accelerated controlled test only. Force3Dadapterdedicatedteststillpending. Schoolrole-switch1IP3K→batgroundout→newpitcher/restoredcatcherumpfieldersreturnpassed. Pro/domain/storage/controller120seed/base/replay suites and build pass. QA image pixels inspected, development label; generated basic pitcher not trainedpitcherUIclaim.

@@ -1,6 +1,6 @@
 // Common pro-match engine preparation. Not connected to a menu or the 3D renderer.
 // Caller supplies rules and opponent, so this does not decide club admission or season length.
-import { advanceBases } from './bases.js';
+import { advanceBases, forceResult } from './bases.js';
 const copy=v=>structuredClone(v),clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 function assertTeam(team){
  if(!team||!Array.isArray(team.batters)||team.batters.length!==9||new Set(team.batters.map(p=>p.id)).size!==9||team.batters.some(p=>p.pos!=='bat')||team.pitcher?.pos!=='pit')throw Error('타자 9명과 선발 투수가 필요합니다.');
@@ -30,11 +30,11 @@ export function stepClubAppearance(input,manual){
  const defense=s.teams[def].batters.reduce((a,p)=>a+p.abilities.field,0)/9;
  const c=appearanceChances(batter,pitcher,defense);let kind=manual;
  if(kind===undefined){const r=random(s);kind=r<c.bb?'walk':r<c.bb+c.hr?4:r<c.bb+c.hr+c.hit?(random(s)<.23?2:1):random(s)<c.k?'k':'out';}
- if(!['walk','k','out',1,2,3,4].includes(kind))throw Error('타석 결과를 확인하세요.');
+ if(!['walk','k','out','infield','forceSafe','forceOut',1,2,3,4].includes(kind))throw Error('타석 결과를 확인하세요.');
  let runs=0;
  if(kind!=='walk')row.ab++;
  if(kind==='k'||kind==='out'){s.outs++;pit.outs++;if(kind==='k')pit.so++;}
- else {const next=advanceBases(s.bases,kind);s.bases=next.bases;runs=next.runs;row.rbi+=runs;pit.er+=runs;s.scores[side]+=runs;if(typeof kind==='number'){row.hits++;pit.hitsAllowed++;if(kind===4)row.hr++;}}
+ else {const forced=kind==='forceSafe'||kind==='forceOut',next=forced?forceResult(s.bases,kind==='forceSafe'):advanceBases(s.bases,kind==='infield'&&(s.bases&1)?1:kind);if(forced&&!((s.bases&1)))throw Error('포스 상황이 아닙니다.');if(next.outs){s.outs+=next.outs;pit.outs+=next.outs;}s.bases=next.bases;runs=next.runs;row.rbi+=runs;pit.er+=runs;s.scores[side]+=runs;if(typeof kind==='number'||kind==='infield'){row.hits++;pit.hitsAllowed++;if(kind===4)row.hr++;}}
  s.events.push({inning:s.inning,side,batter:batter.id,pitcher:pitcher.id,kind,rolled:manual===undefined,runs,outs:s.outs,bases:s.bases});s.order[side]++;
  // Both clubs finish each inning. No walk-off, errors or runner substitutions in this prototype.
  if(s.outs===3){s.outs=0;s.bases=0;if(side===0)s.side=1;else if(s.inning>=s.innings&&s.scores[0]!==s.scores[1])s.done=true;else {s.side=0;s.inning++;}}

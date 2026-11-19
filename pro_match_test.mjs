@@ -21,3 +21,6 @@ const disk=new Map(),io={getItem:k=>disk.get(k)??null,setItem:(k,v)=>disk.set(k,
 for(const mutate of [s=>s.scores[0]++,s=>s.state++,s=>s.events[0].runs++,s=>s.order[0]++,s=>s.events[0].rolled='yes']){const bad=structuredClone(interrupted);mutate(bad);assert.throws(()=>M.validateClubSession(bad));}
 console.log('pro checkpoint replay validation/store reload/result commit/tamper preservation passed');
 const changed=structuredClone(pending);changed.pending.session=structuredClone(interrupted);changed.pending.session.teams[0].batters[0].abilities.meet++;assert.throws(()=>validateClub(changed));
+
+let forced=session(45);forced=M.stepClubAppearance(forced,'walk');forced=M.stepClubAppearance(forced,'forceOut');assert.equal(forced.outs,1);assert.equal(forced.players[0].home1.hits,0);forced=M.stepClubAppearance(forced,'forceSafe');assert.equal(forced.bases,3);forced=M.stepClubAppearance(forced,'infield');assert.equal(forced.players[0].home3.hits,1);assert.equal(forced.bases,7);forced=M.stepClubAppearance(forced,'forceSafe');assert.equal(forced.scores[0],1);assert.deepEqual(M.validateClubSession(forced),forced);assert.throws(()=>M.stepClubAppearance(session(3),'forceOut'));
+console.log('forceOut/forceSafe/infield base occupancy and replay passed');

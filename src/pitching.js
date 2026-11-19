@@ -15,11 +15,12 @@ const PT = [
 ];
 const avail = (p) => PT.filter((x) => x.id === 'fast' || (x.id === 'curve' && p.brk >= 30) || (x.id === 'slide' && p.brk >= 40) || (x.id === 'fork' && p.brk >= 55));
 
-export async function playPitching(p, m, hud) {
+export async function playPitching(p, m, hud, appearance = null) {
+  if(appearance&&(!Number.isInteger(appearance.inning)||appearance.inning<1||!Number.isInteger(appearance.bases)||appearance.bases<0||appearance.bases>7||!Number.isInteger(appearance.outs)||appearance.outs<0||appearance.outs>2||!Number.isFinite(appearance.strength)||!Array.isArray(appearance.scores)||appearance.scores.length!==2))throw Error('투구 출전 정보를 확인하세요.');
   const { o, tickers, delTicker, wait } = internals();
   tickers.clear(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; o.ball.visible = false;
-  const opp = TEAMS[Math.floor(Math.random() * TEAMS.length)]; const regular = isRegular(p);
-  const innings = regular ? 3 : 1; const strength = oppStrength(p); const traits = p.traits;
+  const opp = appearance?.opponent || TEAMS[Math.floor(Math.random() * TEAMS.length)]; const regular = isRegular(p);
+  const innings = regular ? 3 : 1; const strength = appearance ? appearance.strength : oppStrength(p); const traits = p.traits;
   const S = { so: 0, er: 0, ha: 0, outsTotal: 0 };
   let my = 0;
   // 장면: 마운드 뒤에서 타석을 본다. 타자는 상대(붉은 팀), 투수는 사용자
@@ -29,8 +30,8 @@ export async function playPitching(p, m, hud) {
   const year = cal(p.week).year;
   setUniform(o.pitcher, year); applyEquipment(o.pitcher, p.gear);
   applyEquipment(o.batter);
-  setShirt(o.batter, OPP_COLORS[TEAMS.indexOf(opp) % OPP_COLORS.length]);
-  applyEquipment(o.runner);setShirt(o.runner, OPP_COLORS[TEAMS.indexOf(opp) % OPP_COLORS.length]);o.runner.visible=false;
+  setShirt(o.batter, OPP_COLORS[Math.max(0,TEAMS.indexOf(opp)) % OPP_COLORS.length]);
+  applyEquipment(o.runner);setShirt(o.runner, OPP_COLORS[Math.max(0,TEAMS.indexOf(opp)) % OPP_COLORS.length]);o.runner.visible=false;
   for(const r of o.baseRunners){applyEquipment(r);setShirt(r,OPP_COLORS[TEAMS.indexOf(opp)%OPP_COLORS.length]);}showBaseRunners(o,0);
   resetDefense(o.fielders);
   for (const fd of o.fielders) { fd.visible = true; setUniform(fd, year); }
@@ -40,7 +41,7 @@ export async function playPitching(p, m, hud) {
   o.catcher.visible = true; o.ump.visible = true; o.pitcher.userData.armL.rotation.set(-1.2, 0, 0.3);
   const cam = () => { camera.position.set(0.1, 3.1, -24.8); camera.fov = 46; camera.updateProjectionMatrix(); camera.lookAt(-0.05, 0.95, 0); { const n = scene.getObjectByName('net'); if (n) n.visible = false; } };
   cam();
-  hud.setTitle(`${m.name} vs ${opp} (${regular ? '선발' : '구원'} 투수)`);
+  hud.setTitle(appearance?`${p.name} · ${m.name} vs ${opp}`:`${m.name} vs ${opp} (${regular ? '선발' : '구원'} 투수)`);
   let cx = 0, cy = ZY; const ray = new THREE.Raycaster(); const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
   const setRet = (x, y) => { cx = Math.max(-0.8, Math.min(0.8, x)); cy = Math.max(0.2, Math.min(1.6, y)); o.ret.position.set(cx, cy, -0.05); };
   const pt = (e) => { const r = renderer.domElement.getBoundingClientRect(); const v = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1 + 0.1); ray.setFromCamera(v, camera); const h = new THREE.Vector3(); if (ray.ray.intersectPlane(plane, h)) setRet(h.x, h.y); };
@@ -119,7 +120,26 @@ export async function playPitching(p, m, hud) {
     tickers.add(f);
   });
 
-  let bases = 0; // 1루/2루/3루 점유 비트
+  let bases = appearance?.bases||0; // 1루/2루/3루 점유 비트
+  if(appearance){
+    try{
+      showBaseRunners(o,bases);hud.setBases?.(bases);hud.setScore(appearance.inning,appearance.scores[0],appearance.scores[1]);
+      const c={b:0,s:0};hud.setCount(c,appearance.outs);
+      for(let guard=0;guard<60;guard++){
+        const r=await throwBall(c);
+        if(r.kind==='ball'){c.b++;hud.setPitch('볼');}
+        else if(r.kind==='strike'||r.kind==='whiff'){c.s++;hud.setPitch(r.kind==='strike'?'스트라이크':'헛스윙!');}
+        else if(r.kind==='foul'){if(c.s<2)c.s++;hud.setPitch('파울');}
+        else return r;
+        hud.setCount(c,appearance.outs);
+        if(c.b>=4){hud.setPitchingActive?.(false,true);await runWalk(o,hud,bases);return {kind:'walk'};}
+        if(c.s>=3)return {kind:'k'};
+      }
+      throw Error('타석 진행 한도를 넘었습니다. 이전 기록에서 다시 시도하세요.');
+    }finally{
+      cv.removeEventListener('pointerdown',onD);cv.removeEventListener('pointermove',onM);window.removeEventListener('pointerup',onU);hud.removePicker();hud.setPitchingActive?.(false,true);window.dispatchEvent(new Event('resize'));
+    }
+  }
   for (let inn = 1; inn <= innings; inn++) {
     hud.setScore(inn, my, S.er);o.zone.visible=true;o.ret.visible=true;o.batter.visible=true;o.pitcher.visible=true;o.catcher.visible=true;o.ump.visible=true;for(const fd of o.fielders)fd.visible=true;cam();let outs = 0; bases = 0;hud.setBases?.(bases);showBaseRunners(o,bases); const bn = (t, ms) => hud.banner(t, ms);const resultBanner=(t,ms)=>{hud.setPitch(t);bn(t,ms);};
     while (outs < 3) {
