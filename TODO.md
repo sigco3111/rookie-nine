@@ -643,3 +643,7 @@
 ## 11:50 Nov19 - breaking pitch catcher-return integration
 - CatchsoundtestPITCHselectscurve/slide/forkandunlocksalltypesatbrk60;assertsallpitchbuttonslockduringwindup/flight/catch/returnandrestoreafterreturnwithselectednamepreserved. Perpitchcapturesavoidcollision.
 - Local/livecurve-calledstrike,slider-ball,fork-fallbackwhiffpassedrelease/gloves/7gaze/reset/returnbeforecount/exact2mitt/nextinput. Localdefaultfastpassedtoo. Actual390livecurve-returnandfork-confirmedpixelsinspectedselectedoutline/lock→ready/one-strike. Buildsameindex-DP4uEBi-.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
+
+## 12:19 Nov19 - explicit pitcher glove receipt phase
+- Catcher/ground/airreturnnowchangesHUDto투수미트수신exactlyonceontheexistingmitt-soundarrival,retainingexistinghold/nextinput/count/outcome/path/timing. No batting/swing changes.
+- Extended3soundtestsassertlabelontargetarrivalandcapturereceiptbeforecount/input. Localcatcher/groundout/airoutpassedgloves/countorder/soundtotals2/3/2andnextready. Actual390all3receiptpixelsinspectedlabelandlockedinput;ground/airwideviewballsmall,endpointassertionnotpixelproof. Somecombinedrunsinterruptedby120seclimit;afterstaleprocesscleanupindividualrunsallpassed. Buildindex-B1vxF_bQ.js. ControlledRNG/clocknotdevice/naturalQA.

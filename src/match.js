@@ -114,7 +114,7 @@ function returnGroundBall(o,hud,receiver){
  camera.position.set(5,42,28);camera.lookAt(0,0,-28);hud.setPitch('수신 후 · 투수에게 반환');
  return new Promise(resolve=>{const f=dt=>{t+=dt;let k=0;
   if(t<.35){k=t/.35;receiver.userData.armR.rotation.x=arm.x-1.7*k;o.ball.position.copy(start).lerp(point(receiver,'throwHand'),k);}
-  else{k=Math.min(1,(t-.35)/duration);receiver.userData.armR.rotation.x=arm.x-1.7+2.4*k;o.pitcher.userData.armL.rotation.x=pitArm.x-.4*k;if(!release)release=point(receiver,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;if(k>=1&&!caughtSound){caughtSound=true;sfx.mitt();}for(const fd of o.fielders)fd.userData.head.rotation.y=defenseLookYaw(fd.position.x,fd.position.z,fd.rotation.y,o.ball.position.x,o.ball.position.z);window.__groundReturn?.({phase:'return',t,k,ball:o.ball,target,receiver,pitcher:o.pitcher});}
+  else{k=Math.min(1,(t-.35)/duration);receiver.userData.armR.rotation.x=arm.x-1.7+2.4*k;o.pitcher.userData.armL.rotation.x=pitArm.x-.4*k;if(!release)release=point(receiver,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;if(k>=1&&!caughtSound){caughtSound=true;sfx.mitt();hud.setPitch('투수 미트 수신');}for(const fd of o.fielders)fd.userData.head.rotation.y=defenseLookYaw(fd.position.x,fd.position.z,fd.rotation.y,o.ball.position.x,o.ball.position.z);window.__groundReturn?.({phase:'return',t,k,ball:o.ball,target,receiver,pitcher:o.pitcher});}
   if(t>=.35+duration+.3){delTicker(f);receiver.userData.armR.rotation.copy(arm);o.pitcher.userData.armL.rotation.copy(pitArm);o.pitcher.rotation.y=pitYaw;resolve();}
  };tickers.add(f);});
 }
@@ -198,7 +198,7 @@ export function airOutSequence(o,hud,landing,minDuration,returnPitcher=false){
         o.pitcher.position.copy(pitcherHome);o.pitcher.rotation.y=Math.atan2(landing[0]-pitcherHome.x,landing[1]-pitcherHome.z);collector.rotation.y=Math.atan2(pitcherHome.x-landing[0],pitcherHome.z-landing[1]);
         camera.position.set(5,42,28);camera.lookAt(0,0,-28);
         if(t<1){const k=(t-.65)/.35;hud.setPitch('포구 후 · 투수에게 반환');collector.userData.armR.rotation.x=-2.1*k;o.ball.position.copy(glove()).lerp(point(collector,'throwHand'),k);}
-        else{const k=Math.min(1,(t-1)/throwTime);collector.userData.armR.rotation.x=-2.1+2.8*k;o.pitcher.userData.armL.rotation.x=arm.x-.4*k;if(!release)release=point(collector,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;if(k>=1&&!caughtSound){caughtSound=true;sfx.mitt();}
+        else{const k=Math.min(1,(t-1)/throwTime);collector.userData.armR.rotation.x=-2.1+2.8*k;o.pitcher.userData.armL.rotation.x=arm.x-.4*k;if(!release)release=point(collector,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,k);o.ball.position.y+=Math.sin(Math.PI*k)*2;if(k>=1&&!caughtSound){caughtSound=true;sfx.mitt();hud.setPitch('투수 미트 수신');}
           for(const fd of o.fielders)fd.userData.head.rotation.y=defenseLookYaw(fd.position.x,fd.position.z,fd.rotation.y,o.ball.position.x,o.ball.position.z);
           window.__airReturn?.({t,k,ball:o.ball,target,collector,pitcher:o.pitcher});}
       }
