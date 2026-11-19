@@ -622,3 +622,6 @@
 
 ## 09:46 Nov19 - complete automatic offense score branches
 - InningtestOFFENSE_POINTSgeneralizes0/1/2draws;ZERO_OFFENSEcompatkept. Local/live2point→empty2nd2:0passedlabels/hide/lock/restore. Actual390live2pointphase/banner,3outs,emptybases2:0inspected. Prior0/1flowevidenceaboveremains;thiscompletescurrent3summarybranches,notallgameQA. Buildsameindex-B5xFmXsW.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
+
+## 10:08 Nov19 - angled batting ground return regression
+- BatreturntestANGLEcontrolsforcedballhorizontalangleanddistinctcapturepaths. Local/live±35groundpassed1Brelay/return/glove/pitcherfacing/7gazes/reset/input/FOV/runner>=4separation/result1AB0H. Actual390livebothreturnpixelsinspectedleft/rightcollectorplacementsandseparaterunner. Buildsameindex-B5xFmXsW.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
