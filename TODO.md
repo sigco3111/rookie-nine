@@ -713,3 +713,7 @@
 
 ## 18:03 Nov19 - storage write fault transparency
 - Reproducedsilentquotaexceptionweek1memory/week0disk. Pendinglatestwritequeue/player+HoF+delete,topwarning+retry,HoFpendingnotfalsesaved. Faultretrykeepswarning/recoveryexactP/reload/oneHoFpassed;normalending4/full144batpassed. Actual390warninghome+endingchecked. Noability/ruleschange. Notdurabilitywhenwritesdenied/closedtab/crosstab. Progress75%.
+
+## 18:23 Nov19 - unsaved same-tab continuation
+- loadpreferslatestpendingplayer/deletion,nottheoldonsdisk. Faultmenu/title/continuePexact+warningkept,unitqueueddelete/newplayer/twoHoFretrypass. Normalending4/144batpassed. JSBV3UPLfL/CSSDyhpIlXV.
+- Parent18:20scopequestion:75%onlygrowthcandidate,noproclub/graduateplayerroster. Originalplannothermodenextrun/juniorrivalreusebroaderthanimplementedbonustraitcarry. Parenthasoriginalsource/findings,notnewscopeinstruction.

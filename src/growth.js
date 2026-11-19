@@ -27,7 +27,7 @@ function writeStorage(key, value) {
 export const storageStatus = () => ({ ok: pendingStorage.size===0, pending: [...pendingStorage.keys()].map(k=>k===HOF?'명예의 전당':'선수 기록') });
 export function retryStorage() { for(const [key,value] of [...pendingStorage])writeStorage(key,value);return storageStatus().ok; }
 export function save(p) { ensureGrowthBaseline(p); return writeStorage(KEY, JSON.stringify(p)); }
-export function load() { try { return JSON.parse(localStorage.getItem(KEY)); } catch { return null; } }
+export function load() { try { return JSON.parse(pendingStorage.has(KEY)?pendingStorage.get(KEY):localStorage.getItem(KEY)); } catch { return null; } }
 export function clearSave() { return writeStorage(KEY,null); }
 export function hof() { try { return JSON.parse(pendingStorage.get(HOF)??localStorage.getItem(HOF)) || []; } catch { return []; } }
 export function pushHof(e) { const h = hof(); h.push(e);return writeStorage(HOF, JSON.stringify(h)); }
