@@ -157,3 +157,7 @@
 
 ## Nov20 03:43 restore stage wording correction
 - Parent caught read-only foundation text still shown above live confirmation. Updated mounted restore preview to say file has been read and nothing changed yet, but explicit confirmation replaces chosen target. Read-only API warning remains for its own consumers. Actual confirmation pixels re-inspected and focused restore UI test passed.
+
+## Nov20 04:02 local original-backup access
+- Title now has original backup list and exact JSON download. Only rookie9.school.backup.* enumerated; malformed backup still downloadable unchanged. Read denial and disappearance/change distinguished, download rechecks exact raw before creating file. No delete/restore or unrelated storage keys shown. Current source/pending state not altered.
+- Focused pure + actual UI tests pass own prefix/read denial/malformed exact bytes/downloaded file comparison/stale download block/no writes/320–430/close. Actual390x844 list inspected. This closes user access to originals preserved by restoration; no claim device Downloads behavior or semantic repair validated. Further school recovery expansion deferred while pro core is resumed.

@@ -1,3 +1,4 @@
+import { mountSchoolBackups } from './school-backups-ui.js';
 import { createSchoolRestorer } from './school-restore.js';
 import { mountSchoolRecoveryPreview } from './school-import-preview-ui.js';
 import './school-import-preview-ui.css';
@@ -45,11 +46,12 @@ function titleScreen() {
     <div class="sub">3D 야구 · 주간 훈련 · 성장 모드</div>
     ${resumable ? `<button class="btn big" id="cont">${sv.done ? '졸업 결과 다시 보기' : `이어하기 (${sv.name} · ${G.cal(sv.week).year}학년 ${G.cal(sv.week).month}월)`}</button>` : ''}
     <button class="btn big alt" id="new">새 선수 만들기</button>
-    <button class="btn gray" id="hof">명예의 전당 (${h.length})</button></div>`));
+    <button class="btn gray" id="hof">명예의 전당 (${h.length})</button><button class="btn gray" id="school-backups">원문 백업 보기</button></div>`));
   el.querySelector('#new').disabled=playerBlocked;el.querySelector('#hof').disabled=hofBlocked;
   el.querySelector('#new').onclick = createScreen;
   if (resumable) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingMatch) { clear(); showHome(P.pos, P); const q = P.pendingMatch; matchPrompt(q.match, q.msgs, new Set(q.previousTraits), () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingEvent) { clear(); showHome(P.pos, P); eventChoiceModal(P.pendingEvent); } else if (P.pendingEventResult) { clear(); showHome(P.pos, P); eventResultModal(P.pendingEventResult); } else if (P.pendingLearned) { clear(); showHome(P.pos, P); learnedModal(P.pendingLearned); } else if (P.review) { clear(); showHome(P.pos, P); yearReviewModal(P.review.msgs || []); } else homeScreen(); };
   el.querySelector('#hof').onclick = hofScreen;
+  el.querySelector('#school-backups').onclick=()=>mountSchoolBackups(document.body,localStorage);
 }
 
 function hofScreen() {

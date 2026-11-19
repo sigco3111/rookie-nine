@@ -819,3 +819,6 @@
 
 ## Nov20 03:42 - explicit restore UI link
 - validnonpartial/nonrejectedcandidate→reviewconfirm/cancel;fullrawbackupreadback/stalesourceguard/singletarget. Titleonly;refusepending/rejected/unreadable;successPclear/titlefromdisk. Localactualfile/cancel/staleblock/confirm/backupraw/selectedP/reloadPASS,pixels390read. No autochoose/merge/repair/reset;backup-listUIabsent. Deploymentperparentreport.
+
+## Nov20 04:02 - local original backups accessible
+- Title→ownprefixlist+exactJSONdownload,malformedrawpreserved/denial/staleguard/norestore-nodelete/noirrelevantkeys. Pure+actualdownloadUI/320-430/no-writePASS,pixels390read. School recovery expansion paused;resume pro corepolicy-independent work.
