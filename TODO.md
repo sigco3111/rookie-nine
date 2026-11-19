@@ -732,3 +732,7 @@
 - All9batters/starter pure PA engine and explicit opponent/innings/seed, shared bases and own/opponent box score, manual outcome hook for later3D integration. Ties continue; bounded run does not fabricate result. No default season/admission policy selected.
 - Pending checkpoint stores RNG/order/bases/score/events; replay validation checks it against frozen own roster. Completeboxscores require10players/RBIandERscoreagreement. No main.js imports or live visual change; not playable pro mode yet.
 -120seed games+manualwalk/HR/K+exactresume+archiveisolation+completeinvalidrecords passed; actualChromium10checkpoints/30PA/reload exact/resultonce/corruptpreserve passed. Unit/storage2clubs24gameregression/build passed. Next common save warning/conflict UI and3D adapter, then admission policy/menu/season remain.
+
+## Nov19 19:44 - common adapter controller and fictional roster filler
+- Fill missing roles with tagged generated base players without admission policy; preserve current choices/graduate stats. Asynccontroller supplies copied current players/context to future3D renderer, saves returned PA once;busy/error/missingoutcome/staleasync/pendingwriteguard.
+- Unit tests and actualChromium15callbackPA/reload each/cancel/auto finish/graduate unchanged passed. These are adapter callback tests, NOT real3D batting/pitching tests. No runtime/main.js import or visual change. School difficulty unchanged. Need actual3Dhook+save/error/conflict UI, then admission/menu/season.
