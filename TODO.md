@@ -807,3 +807,6 @@
 
 ## Nov20 02:18 - outgoing school value guard
 - Validateincomingserializedwritebeforetouchdisk/pending;badvalue→separaterejectedWritesexport/warning,validqueuepreserved,retrynotclearrejected,later-valid-saveclear. Badgradnotappendqueue. Focusedpure/UI+existingqueue/sourceguard/event/quota-gradUIpass. No semanticreplayclaim. Fonttestharnesscorrectedbeforevisualreport.
+
+## Nov20 02:39 - warning distinction and import preview foundation
+- Sourceproblem vs outgoingrejectexplicitwarning/pixels390inspected;outgoing+exportUIpass. Pure8MBrecoveryenvelopepreview validatesallrawcandidates independently/nochoice/nomerge/nowrite/norepair. TestsPASS. PreviewNOTmounted/importNOTimplemented. Deploymentperreport.
