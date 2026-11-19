@@ -851,3 +851,6 @@
 
 ## Nov20 07:10 season records
 - Readonlyseason summaries,W/L/runs/schedulecounts,all-seasonfilterforplayer+game rows,explicitseasonlabels;legacy/incompleteunrecorded preserved. Pureaggregate/playerreconcile+empty/partial/legacy/readonly PASS;recordsUI+normalUI6+1games/2seasons/filter6-1-7/rawexact PASS;390pixelsread. Nextnormalpitching/device boundary.
+
+## Nov20 07:30 normal-entry direct pitching
+- Focused normal-menu trainedstarterdirectpitch local+LIVE normalclock/no dt/rng/time acceleration PASS;selectedcurve/throwhit-targets/navlocks/320-430containment/manualevent+prefix/reloadcheckpoint/result/sourceexact. Ratio.5software,notrealphone/fullnormalclockgame;aimdrag sentbutcoordinateeffectnotasserted. ActualLIVE390pixelsread. No productionchange. Nextjuniors/rivalsjoin.
