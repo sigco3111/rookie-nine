@@ -822,3 +822,6 @@
 
 ## Nov20 04:02 - local original backups accessible
 - Title→ownprefixlist+exactJSONdownload,malformedrawpreserved/denial/staleguard/norestore-nodelete/noirrelevantkeys. Pure+actualdownloadUI/320-430/no-writePASS,pixels390read. School recovery expansion paused;resume pro corepolicy-independent work.
+
+## Nov20 04:23 - admission transaction foundation
+- Explicitexistingdestinationprepare/confirm/copiedgraduate/staleroot/singleroot/quotaretry;no draft/shareddefault/transfer. FocusedtestsPASS. NoUI/mainhook/policydecision.
