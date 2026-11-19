@@ -778,3 +778,6 @@
 ## Nov19 23:13 - pregame fixture and selected lineup actual3D integration
 - prepareClubFixture atomicfrozenlineup+session/rootwrite;explicitcallerfixture(id/opp/name/innings/seed),invalidnowrite/quota/retry/samependingresume/differentpendingreject. Pro-mode pregame ifnopending.
 - ActualUItrainedbat+starterchoose/save→pregame/start→actualselectedbat/pit3D→UI/auto/result/schoolbytes bothpass. Scopedunitatomicguards pass. Actualpixelssetup+selectedpitreadable390. Notmain/admission/season;test3inningsnotpolicy. Harnesspost-removalassertfixed,notgamedefect.
+
+## Nov19 23:34 - dedicated pro pitching force/infield link checked
+- Real prepared3D pitching overlay homeforceout/safe+secondforceout/safe+infieldsafe(nonforced2B)→onecheckpoint/UI/ledger/exactreload/schoolpreserve pass. Noearlycommitduringreceive;safehome1ER/nohit;outnoER;infield1hit/nonforcedhold. Actualpixels390homeout+safereturninspected. Controlleddraw/acceleratedNOTphonehuman. Testsetupdoublebaselineassertcorrected to delta;productionunchanged. No runtime/fullcareerrepeat. Admission/normalentry/season/policy remain open.
