@@ -804,3 +804,6 @@
 
 ## Nov20 01:58 - nested resume record checks
 - Nestedmatch/result/event/learned/review/yearhistorystructurechecks;optionallegacyabsentallowed/rawpreserved. Allcurrentevent+batpit/yeartransitionpurePASS;actual6pendingUIreloadresumes+malformedblockPASS;existingquota/gradrecoveryUIpass. Notsemanticreplay/exhaustivelegacy. No visualchange/fullcareerrepeat.
+
+## Nov20 02:18 - outgoing school value guard
+- Validateincomingserializedwritebeforetouchdisk/pending;badvalue→separaterejectedWritesexport/warning,validqueuepreserved,retrynotclearrejected,later-valid-saveclear. Badgradnotappendqueue. Focusedpure/UI+existingqueue/sourceguard/event/quota-gradUIpass. No semanticreplayclaim. Fonttestharnesscorrectedbeforevisualreport.
