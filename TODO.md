@@ -790,3 +790,7 @@
 
 ## Nov20 00:34 - graduate bridge preview only
 - Readonlysuppliedarchive→abilities/traits/draft/highschoolstats/currentproregistration;invalidrowwarn/notmutate/missingstatsunrecorded. No destination/admit/copy/transfer/mainhook. Focusedbatpit/invalid/nonarray/readonly/schoolproexact/320-430/destroyPASS,pixels390read. Schoolcorruptsaveauditstilloutstanding.
+
+## Nov20 00:55 - school read audit foundation, risk NOT fixed yet
+- load/hof currently conflate unreadable/corrupt withmissing;hofnonarrayaccepted→possibleoverwriteonnewsave/archiveappend. Parentinformed,notactualuserdata-lossclaim.
+- New nonmutating school-record-read.js explicitstates/rawpreserve/coreplayerarchivechecks;batpit/legacy/malformed/unreadable/nowritePASS. NOTgrowth/mainimported,nestedpendingconsistencynotvalidated. NEXTwriteguard+readerrorUI+recovery+queuecompatibility.
