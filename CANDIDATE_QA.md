@@ -58,3 +58,9 @@
 - Scoped ending result and match explanation to word-based Korean wrapping. Ending headline balances its lines. No rules/save/stat changes.
 - Synthetic first-pick ending and resumed regular-batter match fixtures at320/360/390/430px: no clipped text/horizontal overflow/single-character lines. Actual390px ending and match prompt pixels checked. Fixtures are layout checks, not earned progression.
 - Ending resume regression: bat/pit with/without last-week learned trait, twice reload exact player+text, one HoF entry and new-player flow passed locally.
+
+## Varied pitching inside mixed career 2026-11-19 16:26 KST
+- MIXED=1 VARIED=1 POS=pit CHECKPOINT route local/deployed: each year's direct game includes four-ball walk, singles, foul, home run allowed, ground/air outs, second-base force outs and one strikeout. Result labels logged. No player-stat/week injection; selected RNG produces the intended outcomes, with accelerated time/render reduction and scripted aim/buttons.
+- Each game3IP/3HA/1SO. Year1:0:3/3ER; years2/3:3:4, played3:3 with automatic tiebreak final point included in ER, matching existing disclosed rule.
+- Direct result delta and pre-confirm reload,144weeks, all-match ledger/player/HoF totals, one HoF entry, ending reload and inheritance passed. Final20-game totals94IP91HA51SO9W11L,OVR71/score86. Exact saved-player checkpoints between direct games as earlier check.
+- Actual deployed year3 result and ending inspected. Existing long-career pitcher route now includes fair-contact/walk/foul/runner/force outcomes, but not all outcomes or native input/random/device clearance. Estimated first-candidate progress stays about75%, since natural play, real-phone and policy/balance work remain.

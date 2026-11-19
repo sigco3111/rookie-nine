@@ -690,3 +690,7 @@
 
 ## 15:58 Nov19 - scoped Korean word wrapping
 - Endingresultbalancedkeep-all;matchdescription+restartnotekeep-all. Synthetic320/360/390/430firstpick+regularbatresume: nooverflow/singlecharline;actual390pixelschecked. Localendingresume4routespassed. Noformula/savedatachange. JSindex-sKm7PEFd/CSSindex-DGcw16Tq.
+
+## 16:26 Nov19 - varied pitcher mixed career
+- MIXEDVARIEDpitlocal/liveeachyearwalk/single/foul/HR/ground/air/2Bforce/K→3IP3HA1SO. Year10:3/3ER;year2+3played3:3autoTBfinal3:4/4ER. Directdelta/reload144ledger/P/HoFone/inheritancepassed. Final20games94IP91HA51SO9W11LOVR71score86.
+- Exactcheckpointcarry/scriptedaim/RNG/debugtime/notnaturaldevice. Actual390liveyear3result+endingchecked. BuildsameJSsKm7PEFd/CSSDGcw16Tq. Firstcandidateestimate75%unchanged.
