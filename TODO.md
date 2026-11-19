@@ -663,3 +663,7 @@
 ## 13:34 Nov19 - batting runner and clutch context
 - SmallHUDrowduringPAshows주자있음/없음andgold찬스효과적용onlywhenbothactive. ClearedafterPA;nofictionalbaseoccupancyforthisabstractbattingrunner. Nooutcome/window/inputchange.
 - Localrunner+trait/empty+trait/runner+notraitlabelandactualboundarycontactpassed;noncontactKfullgameverifiescontextabsentduringautomaticplayandnextpitchrestore. Actual390contextpixelsinspectedreadablebelowcountwithoutoverlap;buildindex-BLv0ow_e.js. ControlledRNG/clocknotdevice/naturalQA.
+
+## 13:54 Nov19 - first full UI career integration baseline
+- Newcareer_ui_integration_testclicks144actualweeklycommands+allmodals,seed42,automaticmatches,withoutskipWeeks/statinjection. Local/livebat/pitpassed:21/20matches,30/24events,4/11treatmentweeks,2yearreviews+final,oneHoF,inheritancenewweek0.
+- Reload24/48/72/96/120/144exactplayerJSONandendingnoduplicate. Actual390livebothendingpixelsinspectedrank/record/buttons. Notdirectmatchcareer,natural/deviceorbalanceQA;PRNGreseedsonreload. Bothrank1score88isreviewleadnotbalanceproof. AddedCANDIDATE_QArequired/deferredmatrix. Buildsameindex-BLv0ow_e.js,nogamechange.
