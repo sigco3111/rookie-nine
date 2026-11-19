@@ -758,3 +758,7 @@
 ## Nov19 21:28 - local pro backup list/export/restore preparation
 - New pro-backups.js/ui/css list two versions/export exact JSON/explicit restore+confirm/current-save guard backup. Neverauto-delete/upload; refusepending/corrupt-current/stalecomparison. Mainunchangeduntilbackupreadbackverified. Import/corruptmainrepairnotincluded.
 - Scopedunitlist/export/restore/undocopy/quota/race/corrupt and browserdownloadexact/cancel/restoreguard/schoolisolation/320–430 pass.2previewactualpixelsreadable. No full3D/career rerun. BuildsameghBQ-Ogm;notmountedproductionyet. Nextinternalintegrationorforceprotest,policyunresolved.
+
+## Nov19 21:49 - common pendinggame screen linked to controller/save notice
+- pro-session-ui.js/css optionalcomponent inning/side/score/base/currentplayers/rosterstats/directcallback/auto/resultconfirm/back. No mainimport/normalmenu/admissionpolicy/season.
+- ScopedrealDOMcallback checkpoint/remount/cancel/auto/resultonce/320–430 +alongside save notice quota→3controlsblocked→retryunblocked pass. Actualpreview+resultpixelsreadable. No3D/longcareerregressionrepeat. BuildunchangedghBQ-Ogm. Next renderer-screen lifecycle or pendingpolicy rosterUI.
