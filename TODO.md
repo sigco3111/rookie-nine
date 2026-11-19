@@ -857,3 +857,7 @@
 
 ## Nov20 07:50 school cast foundation
 - OriginalNov16planrecovered:graduatesreusejunior/rivalnextcareer,notjustinitialbonus. Independentexplicitroles/snapshot/stableID/duplicatebadguards + preparedjuniorweek48once+1sharedtraining/rivalaggregateability helpers,puretestsPASS/buildunchanged. Mechanicsimplementationdefaults,NOTwiredmenu/save/gameyet/NOTjoincomplete. Nextsafeoptionalsavevalidation+createselectpreviewthenweekly/matchintegration.
+
+## Nov20 08:15 school cast integrated
+- Optionalnormalcreatecastselectors/preview/cancel+duplicateguards,capturedarchive/sourcechecks,legacycompatibleoptionalvalidation. Junioractualtrainingweek48+once/report,max+1;Octoberfinalweekrivalaggregateopponentactualauto+directbatpitHUD,name+strength. Menuexplainscopies/conditions,noautoselect/original-prochange/notindividualrosterduel.
+- Pureguard/realcommandbothpos/report/RNG/auto-matchPASS;inheritance/pending/outgoingregressionsPASS;normalUIcreate/reload/controlledboundarytraining/rivalprompt/directbatpitstartup→interruptreload→autoresult/sourceexact/320-430PASS;390pixelsread/HUDduplicatefixed. Notnatural144week/fullrivaldirectgame/phonefeel. Nextcompletecast-boundary directoutcome andbroadercareerregression/balance.

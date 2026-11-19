@@ -1,3 +1,4 @@
+import { applyJuniorTraining, schoolRivalContext } from './school-cast.js';
 import { readSchoolRecord, decodeSchoolRecord } from './school-record-read.js';
 import { STAT_KEYS, PRACTICES, OTHER_CMDS, keysOf, STAT_NAME, practicesFor, TRAITS, INJURIES, EVENTS, ITEMS, itemsFor, itemDescription, TEAMS, PRO } from './data.js';
 const clamp = (v, a = 0, b = 99) => Math.max(a, Math.min(b, Math.round(v)));
@@ -64,12 +65,13 @@ export function trainingMastery(p, id) {
 // 이번 주가 시합 주인지: {kind:'league'|'tour', round}
 export function matchOfWeek(p) {
   const c = cal(p.week);
-  if (c.wk === 4 && [5, 6, 9, 10].includes(c.month)) return { kind: 'league', name: '리그전' };
+  if (c.wk === 4 && [5, 6, 9, 10].includes(c.month)) return { kind: 'league', name: rivalForMatch(p)?`리그전 · ${rivalForMatch(p).name}의 팀`:'리그전' };
   if (c.month === 7 && c.wk >= 2) { const key = c.year + ':sum'; if (p.tour.includes(key + ':out')) return null; return { kind: 'tour', name: '여름 대회 ' + (c.wk - 1) + '회전', key }; }
   if (c.month === 11 && c.wk === 3) { const key = c.year + ':fall'; return { kind: 'tour', name: '가을 대회', key }; }
   return null;
 }
-export const oppStrength = (p) => { const c = cal(p.week); return 38 + (c.year - 1) * 9 + (c.month % 4) * 2 + Math.random() * 8; };
+export const rivalForMatch = p => p.week%48===27?schoolRivalContext(p):null;
+export const oppStrength = (p) => { const rival=rivalForMatch(p);if(rival)return rival.strength;const c = cal(p.week); return 38 + (c.year - 1) * 9 + (c.month % 4) * 2 + Math.random() * 8; };
 export function battingAssist(p, strikes = 0, scoringChance = false) {
   const has = (id) => p.traits.includes(id);
   return { timing: (has('avg') ? 0.02 : 0) + (strikes === 2 && has('grit') ? 0.02 : 0), radius: (has('walk') ? 0.02 : 0) + (scoringChance && has('clutch') ? 0.025 : 0) };
@@ -157,6 +159,7 @@ function executeCommand(p, id, arg) {
       if (pr.tough) p.tough = clamp(p.tough + pr.tough);
       if (pr.money) p.money += pr.money;
       for (const k in (pr.eval || {})) addEv(p, k, pr.eval[k]);
+      const shared=applyJuniorTraining(p,pr);if(shared)out.push(`${shared.name} 후배와 합동훈련: ${STAT_NAME[shared.key]} +${shared.amount}`);
       const cost = pr.cost > 0 ? pr.cost * (bad('sleep') ? 1.3 : 1) : pr.cost;
       p.cond = clamp(p.cond - cost);
       if (pr.cureBad) { const b = p.traits.find((t) => !TRAITS[t].good); if (b && chance(60)) { p.traits = p.traits.filter((t) => t !== b); out.push(`${TRAITS[b].name} 치료!`); } }

@@ -1,3 +1,5 @@
+import { mountSchoolCastSelection } from './school-cast-select-ui.js';
+import { castPlayer } from './school-cast.js';
 import { mountProHub } from './pro-hub.js';
 import { createProStore } from './pro-storage.js';
 import { mountSchoolBackups } from './school-backups-ui.js';
@@ -77,19 +79,20 @@ function hofScreen() {
 }
 
 function createScreen() {
-  clear();
+  clear();const graduates=structuredClone(G.hof());
   const BUILDS = { bat: [['contact', '교타형', '미트가 높다. 안타 장인'], ['slugger', '장타형', '파워가 높다. 한 방'], ['runner', '준족형', '주력·수비가 높다'], ['allround', '만능형', '고르게 높다']],
     pit: [['power', '강속구형', '구속이 높다. 힘으로 승부'], ['contact', '제구형', '컨트롤이 높다. 코너 공략'], ['runner', '변화구형', '변화구 위력이 높다'], ['allround', '만능형', '고르게 높다']] };
   let pos = 'bat'; let builds = BUILDS.bat; let sel = 'contact';
-  const el = show($(`<div class="screen"><div class="title" style="margin-top:3vh;font-size:26px">선수 만들기</div>
+  const el = show($(`<div class="screen create-screen"><div class="title" style="margin-top:3vh;font-size:26px">선수 만들기</div>
     <div class="panel"><div style="font-size:13px;margin-bottom:6px">이름</div><input class="input" id="nm" maxlength="8" value="신인" /></div>
     <div class="panel"><div style="font-size:13px;margin-bottom:6px">포지션</div><div class="build" id="pos"><button data-p="bat" class="sel"><b>타자</b><br><small>직접 타격, 미트/파워가 핵심</small></button><button data-p="pit"><b>투수</b><br><small>직접 투구, 구속/제구/변화구</small></button></div></div>
     <div class="panel"><div style="font-size:13px;margin-bottom:6px">타입</div><div class="build" id="bd"></div></div>
-    ${G.hof().length ? `<div class="panel"><div style="font-size:13px;margin-bottom:6px">선배의 가르침 (명예의 전당 계승)</div><select class="input" id="inh"><option value="">계승 안 함</option>${G.hof().map((e, i) => ({ e, i })).sort((a, b) => b.e.ovr - a.e.ovr).slice(0, 6).map(({ e, i }) => `<option value="${i}">${e.name} (${e.pos === 'pit' ? '투수' : '타자'} 종합 ${e.ovr})</option>`).join('')}</select><small id="inhd" style="opacity:.8">선배의 노하우로 전 능력치 소폭 상승, 같은 포지션이면 특수능력 계승.</small></div>` : ''}
+    ${graduates.length ? `<div class="panel"><div style="font-size:13px;margin-bottom:6px">선배의 가르침 (명예의 전당 계승)</div><select class="input" id="inh"><option value="">계승 안 함</option>${graduates.map((e, i) => ({ e, i })).sort((a, b) => b.e.ovr - a.e.ovr).slice(0, 6).map(({ e, i }) => `<option value="${i}">${e.name} (${e.pos === 'pit' ? '투수' : '타자'} 종합 ${e.ovr})</option>`).join('')}</select><small id="inhd" style="opacity:.8">선배의 노하우로 전 능력치 소폭 상승, 같은 포지션이면 특수능력 계승.</small></div>` : ''}
     <div class="spacer"></div><button class="btn big" id="go">입학하기</button><button class="btn gray" id="bk">뒤로</button></div>`));
+  const castHost=document.createElement('div');el.querySelector('#go').before(castHost);const castSelection=graduates.length?mountSchoolCastSelection(castHost,graduates):null;const createError=document.createElement('p');createError.setAttribute('role','alert');createError.id='create-error';castHost.append(createError);castHost.addEventListener('change',()=>{createError.textContent='';});
   const drawInheritance = () => {
     const select=el.querySelector('#inh'), note=el.querySelector('#inhd');if(!select)return;
-    const e=select.value===''?null:G.hof()[+select.value],info=G.inheritanceInfo(e,pos);
+    const e=select.value===''?null:graduates[+select.value],info=G.inheritanceInfo(e,pos);
     note.style.display='block';note.style.marginTop='8px';
     note.textContent=info?`${e.name} 선배: 전 능력 +${info.bonus} · 의지 +5 · 감독 +6. ${info.trait?`계승 특능: ${TRAITS[info.trait].name}`:e.pos===pos?'계승할 특능 없음':'포지션이 달라 특능은 계승하지 않습니다.'}`:'계승 없이 시작합니다. 선배를 고르면 입학 전 보너스를 확인할 수 있습니다.';
   };
@@ -99,7 +102,7 @@ function createScreen() {
   drawB();
   el.querySelectorAll('#pos button').forEach((b) => b.onclick = () => { pos = b.dataset.p; builds = BUILDS[pos]; sel = 'contact'; drawInheritance(); el.querySelectorAll('#pos button').forEach((x) => x.classList.toggle('sel', x === b)); drawB(); });
   el.querySelector('#bk').onclick = titleScreen;
-  el.querySelector('#go').onclick = () => { P = G.newPlayer(el.querySelector('#nm').value.trim() || '신인', sel, pos); { const sv = el.querySelector('#inh'); if (sv && sv.value !== '') { const e = G.hof()[+sv.value]; const info = G.inheritanceInfo(e,pos), b = info.bonus; for (const k of keysOf(P)) P[k] += b; P.will += 5; P.ev.coach += 6; P.log.unshift(`${e.name} 선배의 가르침을 받았다. (능력치 +${b})`); if (info.trait && !P.traits.includes(info.trait)) { P.traits.push(info.trait); P.log.unshift('선배의 특수능력을 이어받았다!'); } } } G.save(P); homeScreen(); };
+  el.querySelector('#go').onclick = () => { try{const cast=castSelection?.capture();if(cast?.junior||cast?.rival||el.querySelector('#inh')?.value){G.hof();const status=G.storageStatus();if(status.issues.some(i=>i.record==='명예의 전당')||status.pending.includes('명예의 전당'))throw Error('졸업 명단 저장을 먼저 확인하세요. 원본과 대기 기록은 보존했습니다.');} P = G.newPlayer(el.querySelector('#nm').value.trim() || '신인', sel, pos); { const sv = el.querySelector('#inh'); if (sv && sv.value !== '') { const e = graduates[+sv.value]; const info = G.inheritanceInfo(e,pos), b = info.bonus; for (const k of keysOf(P)) P[k] += b; P.will += 5; P.ev.coach += 6; P.log.unshift(`${e.name} 선배의 가르침을 받았다. (능력치 +${b})`); if (info.trait && !P.traits.includes(info.trait)) { P.traits.push(info.trait); P.log.unshift('선배의 특수능력을 이어받았다!'); } } } if(cast&&(cast.junior||cast.rival))P.schoolCast=cast;G.save(P); homeScreen();}catch(e){createError.textContent=e.message;createError.scrollIntoView({block:'nearest'});} };
 }
 
 function statsHtml(showCommand = false) {
@@ -265,9 +268,15 @@ function goalsModal(all = false) {
   m.querySelector('#goalview').onclick=()=>{m.remove();goalsModal(!all);};
   m.querySelector('#backgoal').onclick=()=>{m.remove();detailModal();};
 }
+function schoolCastModal(){
+ const modal=show($('<div class="modal"><div class="panel"><h2>다회차 선수</h2><div class="cast-info"></div><button class="btn" style="width:100%">닫기</button></div></div>')),body=modal.querySelector('.cast-info');
+ for(const role of ['junior','rival']){const p=castPlayer(P,role),line=document.createElement('p');line.style.cssText='font-size:14px;line-height:1.6';line.textContent=p?`${role==='junior'?'후배':'라이벌'} ${p.name} · ${p.pos==='pit'?'투수':'타자'}: `+(role==='junior'?(P.week<48?'2학년부터 합류합니다.':'합류 중. 공유 능력 50 이상인 컨디션 소모 훈련에서 주 1회 최대 +1.'):'매년 10월 마지막 주 리그전에 상대 팀 전력으로 반영됩니다. 개인별 타순 대결은 아닙니다.'):`${role==='junior'?'후배':'라이벌'} 합류 없음`;body.append(line);}
+ const note=document.createElement('small');note.textContent='입학할 때 고른 사본입니다. 고교 원본과 프로 명단은 그대로 두며 이 회차에서 역할을 바꾸지 않습니다.';body.append(note);modal.querySelector('button').onclick=()=>modal.remove();
+}
 function menuModal() {
-  const m = show($(`<div class="modal"><div class="panel"><h2>메뉴</h2><div style="display:grid;gap:8px"><button class="btn" id="x">계속하기</button><button class="btn alt" id="t">타이틀로</button><button class="btn warn" id="r">이 선수 포기하고 초기화</button></div></div></div>`));
+  const m = show($(`<div class="modal"><div class="panel"><h2>메뉴</h2><div style="display:grid;gap:8px"><button class="btn" id="x">계속하기</button><button class="btn alt" id="cast-info">다회차 선수</button><button class="btn alt" id="t">타이틀로</button><button class="btn warn" id="r">이 선수 포기하고 초기화</button></div></div></div>`));
   m.querySelector('#x').onclick = () => m.remove();
+  m.querySelector('#cast-info').onclick=()=>{m.remove();schoolCastModal();};
   m.querySelector('#t').onclick = () => { G.save(P); titleScreen(); };
   m.querySelector('#r').onclick = () => { if (prompt('정말 삭제합니까? "초기화"를 입력하세요') === '초기화') { G.clearSave(); titleScreen(); } };
 }

@@ -1,3 +1,4 @@
+import { validateSchoolCast } from './school-cast.js';
 // Non-mutating, fail-closed reads. Missing, unreadable and invalid are distinct states.
 import { keysOf, TRAITS } from './data.js';
 const object=v=>!!v&&typeof v==='object'&&!Array.isArray(v);
@@ -19,6 +20,8 @@ function pendingError(p){
  return null;
 }
 function playerError(p){
+ if(p?.schoolCast!=null){try{validateSchoolCast(p.schoolCast);}catch{return '다회차 선수 사본';}}
+ if(p?.schoolCastTrainingWeek!=null&&(!Number.isInteger(p.schoolCastTrainingWeek)||p.schoolCastTrainingWeek<48||p.schoolCastTrainingWeek>p.week||!p.schoolCast?.junior))return '후배 합동훈련 기록';
  if(!object(p)||typeof p.name!=='string'||!['bat','pit'].includes(p.pos))return '선수 기본 정보';
  if(!Number.isInteger(p.week)||p.week<0||p.week>144||typeof p.done!=='boolean')return '선수 진행 정보';
  if(keysOf(p).some(k=>!finite(p[k],0,99)))return '선수 능력';

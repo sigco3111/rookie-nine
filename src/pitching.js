@@ -2,7 +2,7 @@ import { hitRunStep, defenseLookYaw } from './defense.js';
 import { advanceBases, forceTarget, forceResult } from './bases.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, OPP_COLORS } from './scene.js';
 import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut, airOutSequence, runHomeRun, showBaseRunners, showForcedRunners, runWalk, runFoul } from './match.js';
-import { oppStrength, teamStrength, isRegular, cal, rnd, chance, applyMatchResult } from './growth.js';
+import { oppStrength, rivalForMatch, teamStrength, isRegular, cal, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
 import { sfx } from './audio.js';
 
@@ -19,7 +19,7 @@ export async function playPitching(p, m, hud, appearance = null) {
   if(appearance&&(!Number.isInteger(appearance.inning)||appearance.inning<1||!Number.isInteger(appearance.bases)||appearance.bases<0||appearance.bases>7||!Number.isInteger(appearance.outs)||appearance.outs<0||appearance.outs>2||!Number.isFinite(appearance.strength)||!Array.isArray(appearance.scores)||appearance.scores.length!==2))throw Error('투구 출전 정보를 확인하세요.');
   const { o, tickers, delTicker, wait } = internals();
   tickers.clear(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; o.ball.visible = false;
-  const opp = appearance?.opponent || TEAMS[Math.floor(Math.random() * TEAMS.length)]; const regular = isRegular(p);
+  const opp = appearance?.opponent || (!appearance&&rivalForMatch(p)?rivalForMatch(p).name+'의 팀':null) || TEAMS[Math.floor(Math.random() * TEAMS.length)]; const regular = isRegular(p);
   const innings = regular ? 3 : 1; const strength = appearance ? appearance.strength : oppStrength(p); const traits = p.traits;
   const S = { so: 0, er: 0, ha: 0, outsTotal: 0 };
   let my = 0;
@@ -32,7 +32,7 @@ export async function playPitching(p, m, hud, appearance = null) {
   applyEquipment(o.batter);
   setShirt(o.batter, OPP_COLORS[Math.max(0,TEAMS.indexOf(opp)) % OPP_COLORS.length]);
   applyEquipment(o.runner);setShirt(o.runner, OPP_COLORS[Math.max(0,TEAMS.indexOf(opp)) % OPP_COLORS.length]);o.runner.visible=false;
-  for(const r of o.baseRunners){applyEquipment(r);setShirt(r,OPP_COLORS[TEAMS.indexOf(opp)%OPP_COLORS.length]);}showBaseRunners(o,0);
+  for(const r of o.baseRunners){applyEquipment(r);setShirt(r,OPP_COLORS[Math.max(0,TEAMS.indexOf(opp))%OPP_COLORS.length]);}showBaseRunners(o,0);
   resetDefense(o.fielders);
   for (const fd of o.fielders) { fd.visible = true; setUniform(fd, year); }
   if (!o.catcher) { o.catcher = makeChibi({ shirt: 0x333a44, pants: 0x333a44, cap: 0x222222, glove: true }); o.catcher.rotation.y = Math.PI; o.catcher.position.set(0, 0, 1.6); o.catcher.scale.set(1.0, 0.8, 1.0); o.catcher.userData.armL.rotation.set(-1.4, 0, 0.2); o.g.add(o.catcher);
@@ -41,7 +41,8 @@ export async function playPitching(p, m, hud, appearance = null) {
   o.catcher.visible = true; o.ump.visible = true; o.pitcher.userData.armL.rotation.set(-1.2, 0, 0.3);
   const cam = () => { camera.position.set(0.1, 3.1, -24.8); camera.fov = 46; camera.updateProjectionMatrix(); camera.lookAt(-0.05, 0.95, 0); { const n = scene.getObjectByName('net'); if (n) n.visible = false; } };
   cam();
-  hud.setTitle(appearance?`${p.name} · ${m.name} vs ${opp}`:`${m.name} vs ${opp} (${regular ? '선발' : '구원'} 투수)`);
+  const displayName=!appearance&&rivalForMatch(p)?'라이벌 리그전':m.name;
+  hud.setTitle(appearance?`${p.name} · ${displayName} vs ${opp}`:`${displayName} vs ${opp} (${regular ? '선발' : '구원'} 투수)`);
   let cx = 0, cy = ZY; const ray = new THREE.Raycaster(); const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
   const setRet = (x, y) => { cx = Math.max(-0.8, Math.min(0.8, x)); cy = Math.max(0.2, Math.min(1.6, y)); o.ret.position.set(cx, cy, -0.05); };
   const pt = (e) => { const r = renderer.domElement.getBoundingClientRect(); const v = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1 + 0.1); ray.setFromCamera(v, camera); const h = new THREE.Vector3(); if (ray.ray.intersectPlane(plane, h)) setRet(h.x, h.y); };
@@ -176,6 +177,6 @@ export async function playPitching(p, m, hud, appearance = null) {
   cv.removeEventListener('pointerdown', onD); cv.removeEventListener('pointermove', onM); window.removeEventListener('pointerup', onU); hud.removePicker(); window.dispatchEvent(new Event('resize'));
   const playedScore={my,opp:S.er};const automaticTiebreak=my===S.er;
   let win = my > S.er; if (my === S.er) { win = chance(50 + p.ev.team * 0.1); if (win) my++; else S.er++; }
-  const r = { automaticTiebreak,playedScore,ip: innings, so: S.so, er: S.er, hitsAllowed: S.ha, my, opp: S.er, win, kind: m.kind, title: m.name + ' vs ' + opp, ab: 0, hits: 0, hr: 0, rbi: 0 };
+  const r = { automaticTiebreak,playedScore,ip: innings, so: S.so, er: S.er, hitsAllowed: S.ha, my, opp: S.er, win, kind: m.kind, title: displayName + ' vs ' + opp, ab: 0, hits: 0, hr: 0, rbi: 0 };
   applyMatchResult(p, r); return r;
 }
