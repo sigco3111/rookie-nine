@@ -801,3 +801,6 @@
 
 ## Nov20 01:36 - school original/pending export
 - No-writeexactraw/state+pendingwrites+pendinggraduatesnapshot;unreadablehasnoraw. Warningdownloadbutton/browseractualfileJSONverified/clone/no-write/pixels390PASS. Notrestore/import/repair;UIaskscheckDownloads. Deploymentperreport.
+
+## Nov20 01:58 - nested resume record checks
+- Nestedmatch/result/event/learned/review/yearhistorystructurechecks;optionallegacyabsentallowed/rawpreserved. Allcurrentevent+batpit/yeartransitionpurePASS;actual6pendingUIreloadresumes+malformedblockPASS;existingquota/gradrecoveryUIpass. Notsemanticreplay/exhaustivelegacy. No visualchange/fullcareerrepeat.
