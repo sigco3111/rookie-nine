@@ -766,3 +766,7 @@
 ## Nov19 22:10 - real direct appearance HUD/lifecycle
 - Newpro-direct-ui/js-css actualbat/pitHUD+input+scores/count/banner/contact, hidescallerprosession, adapter→controllerresult, cleanupandhome-scenerestore. Notmainimportyet.
 - Scopedactual3DbatK+pitK onePA/controller/save/reload/schoolbytes/overlaycleanup pass acceleratedcontrollednotdevicehuman.2pixels390x844inspected. No fullcareers/old3Dcasesrerun. Nextsession-screen+actualoverlay+noticenavigationmajorlink. BuildsameghBQ-Ogm.
+
+## Nov19 22:32 - prepared mode major link
+- pro-mode.js session/actualdirectoverlay/notice/backupnavigation/cleanup assembled independentofadmissionpolicy. Actualbat+pitPA→sameUIcheckpoint, navblocked, backupreturn, autofinish/resultonce, destroy/schoolrawunchanged integration pass.
+- Pixelcheckfoundshadow/see-throughpanel;scopedsolidfullheightmode/transparentonlydirect/hidenav/removeshadowsfixedandupdateddirect-return-resultpixelsread. Notmainimport/normalmenu/season/admission yet. BuildsameghBQ-Ogm. Controlledacceleratednotdevicehuman.
