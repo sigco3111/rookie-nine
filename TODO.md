@@ -639,3 +639,7 @@
 
 ## 11:29 Nov19 - fallback role-switch team color regression
 - Role-switchtestassertsshirtmaterialsexistandall7battingdefendersred,thenall7newpitchdefendersyear1blueinthesamescene. Local/liveforcedfallbackpitch3K→newbatgroundreturn→newpitchcatchreturn/nextreadypassedcolors/visibility/input/endpoint/results. Actual390liveroundtrippixelsinspectedbluepitcher/catcherandtealbatter. Buildsameindex-DP4uEBi-.js,nogamechange;existingautomatictiepoint/ERunchanged. ControlledRNG/clocknotdevice/naturalQA.
+
+## 11:50 Nov19 - breaking pitch catcher-return integration
+- CatchsoundtestPITCHselectscurve/slide/forkandunlocksalltypesatbrk60;assertsallpitchbuttonslockduringwindup/flight/catch/returnandrestoreafterreturnwithselectednamepreserved. Perpitchcapturesavoidcollision.
+- Local/livecurve-calledstrike,slider-ball,fork-fallbackwhiffpassedrelease/gloves/7gaze/reset/returnbeforecount/exact2mitt/nextinput. Localdefaultfastpassedtoo. Actual390livecurve-returnandfork-confirmedpixelsinspectedselectedoutline/lock→ready/one-strike. Buildsameindex-DP4uEBi-.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
