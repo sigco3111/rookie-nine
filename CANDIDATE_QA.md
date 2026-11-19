@@ -46,3 +46,10 @@
 - INTERRUPT=1 career test: reload one instance of each pending type within a real144-command UI career: event choice/result at week1, match choice/result week7, learned-trait notice week34bat/46pit, year review week48.
 - Local/deployed both positions preserve exact player JSON after each reload. Whole career then finishes with all-match ledger equal to player/HoF, one archived player and inheritance. Batter19games57AB19H4HR6RBI10W9L; pitcher21games105IP96HA78SO15W6L.
 - Fixed/restarted seed, scripted commands, automatic games. Does not cover browser termination during a mutation, mid-direct-game restart, all event branches or every pending instance.
+
+## Mid-direct-game restart integrated check 2026-11-19 15:52 KST
+- RESTART=1 MIXED=1, local/deployed both positions: year1week7 reload during pitch flight, year2week55 after at least one strike count, year3week103 after a completed strikeout/appearance. No week or player-stat injection.
+- Each interrupted attempt leaves player JSON unchanged except persisted pendingMatch.started=true. Reload restores that exact pre-game state with the explicit warning that pitch/appearance/score is not restored and training is not applied again. Existing behavior is restart from match start, not pitch-exact resume.
+- Then one completed direct game each year, automatic remainder,144 weeks, full match ledger=player=HoF, one HoF entry, ending reload and inheritance passed. Deployed bat60AB15H4HR5RBI8W12L; pit94IP82HA75SO9W11L. Abandoned partial attempts do not add completed-match records to the checked route.
+- CHECKPOINT file option splits this slow test after direct games, copies exact serialized player save into a fresh browser, and carries ledger/test counters forward. Local pitcher and deployed both used this split. The PRNG resets on reload, scripted no-swing/strikeout policy, reduced rendering and accelerated time remain. Does not validate all mid-play phases, mobile background lifecycle, disk failure, cross-tab races or natural play.
+- Actual390px deployed restart prompt and pitcher ending inspected. Existing Korean word splitting remains a UI tidy item; controls/warning readable.

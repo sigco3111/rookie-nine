@@ -683,3 +683,7 @@
 ## 15:19 Nov19 - six pending states inside complete careers
 - INTERRUPTcareeroptionreloadsonceeachchoice/eventresult/matchchoice/matchresult/learned/yearreview;exactPJSONsurviveslocal/livebat+pitthrough144weeks/ledger/HoF/inheritance. Livebat19games57AB19H4HR6RBI10W9L,pit21games105IP96HA78SO15W6L. Actual390liveeventresult+pitendinginspected.
 - Seedreset/scriptedauto,natural/device/middirectgame/allbranchesnotdone. Sameindex-BLv0ow_e.jsbuild,nogamechange. CandidateQAupdated.
+
+## 15:52 Nov19 - mid-direct restart inside 3year career
+- RESTART+MIXEDlocal/livebat+pit: year1pitchflight/year2strikecount/year3completedPAreload→exactpregameP+startedflag/warning, nosecondtraining. Then3completedgames/144weeks/allledger/P/HoF/oneentry/inheritancepassed. Livebat60AB15H4HR5RBI8W12L,pit94IP82HA75SO9W11L.
+- Slowpitrunsexceeded120s;CHECKPOINTsplitsafterdirectgames,samePserializedintoafreshbrowser+ledgercountercarry. ControlledRNG/dt/timers/.1rendering,natural/device/allphasesnotdone. Actual390livewarning+pitendingchecked,wordsplitstillpending. Buildsamebundle,noruntimechange.
