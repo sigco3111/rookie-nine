@@ -619,3 +619,6 @@
 
 ## 09:25 Nov19 - zero automatic offense regression
 - InningtestZERO_OFFENSEswitchesoffensenon-scoringdrawonlyathalfinning;assertsexact0/1pointsummaryandnextscore. Localnormal/livefallbackloaded→3outs→auto0→empty2nd0:0passedfield/input/runnerball/gazerestore. Actual390live0pointphase+banner,3outs,emptybases0:0pixelsinspected. Buildsameindex-B5xFmXsW.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
+
+## 09:46 Nov19 - complete automatic offense score branches
+- InningtestOFFENSE_POINTSgeneralizes0/1/2draws;ZERO_OFFENSEcompatkept. Local/live2point→empty2nd2:0passedlabels/hide/lock/restore. Actual390live2pointphase/banner,3outs,emptybases2:0inspected. Prior0/1flowevidenceaboveremains;thiscompletescurrent3summarybranches,notallgameQA. Buildsameindex-B5xFmXsW.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
