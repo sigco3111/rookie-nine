@@ -655,3 +655,7 @@
 ## 12:53 Nov19 - noncontact batting input lifecycle
 - HideSWING/hint/timing/zone/reticleatmatchstartautomaticplayandateachpitchfinalize,restoreonlynextpitch. Ball/looking/whiffHUDnowmatchesresult. Preventsstaleactionpromptsafterstrikeout/duringautomaticplay;aim/actualdoSwingalreadygated. Timingwindows/pose/outcomes/sleepsunchanged.
 - Newnoncontacttestlocalstrike/whiff3pitch→Kandball4pitch→walkpassedhiddenresults/automaticphases,nextpitchrestorecounts3/4,finalAB/hits1/0or0/0. Initialtestcaughtenabledcontrolsinthefirstautomaticinnings,alsocoveredbyentryhidefix. Localgroundreturnregressionpassedunchanged6:7/1AB0H. Actual390strike/whiffpixelsinspected1strike/noswing-guide-zone. Buildindex-CT7SXNiT.js. ControlledRNG/clocknotdevice/naturalQA.
+
+## 13:12 Nov19 - connect clutch trait to existing runner context
+- FoundplateAppearance(inn,base)calleromittedrunner,soscoringChancealwaysfalseandclutchradiusbonusneverapplied. Passesexistingrunnerflagonly. Existing+0.025bonus/basewindow/formulasunchanged;doesnotguaranteehit.
+- Newactualcontactboundarytestnoforcedhit,meet20/aimoffset.29:base.276vsclutch.301. All4runner/traitcombinationspassed:onlybothproducefaircontactflight,other3foul;timingnearcenter. Actual390localfairflight/foulpixelsinspected. Notstatisticalbalance/natural/deviceQA. Buildindex-DGWlJ1nv.js.

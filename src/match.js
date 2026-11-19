@@ -439,7 +439,7 @@ export async function playMatch(p, m, hud) {
     const lam = Math.max(0.1, 0.35 + (teamStrength(p) - 40) / 25);
     runner = chance(35) ? 1 : 0; // 앞 타자 출루
     if (pas.includes(inn)) {
-      const r = await plateAppearance(inn);
+      const r = await plateAppearance(inn, runner);
       let sc = 0; s.ab += r.res === 'walk' ? 0 : 1;
       if (r.res === 'hr') { s.hits++; s.hr++; sc = 1 + runner; s.rbi += sc; s.runs++; }
       else if (r.res === 'double') { s.hits++; if (runner && chance(75)) { sc = 1; s.rbi++; } }
