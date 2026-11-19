@@ -813,3 +813,6 @@
 
 ## Nov20 03:00 - readonly recovery file inspect UI
 - warning→localfilepicker→candidates+notices/nochoose/nomerge/norestore. Asyncstaletoken/sizeguard/textContent. Actualfilecontrolvalid/invalidclear/literalname/no-storage/320-430/closePASS,pixels390read. No upload/import/repair. Restore requires separate guarded design.
+
+## Nov20 03:20 - guarded restore foundation only
+- Opaque explicitcandidateplan+confirm,refusepending/rejected/unreadable;fullsourcesbackupexactreadback/freshID/stalesourcebeforeafterbackup/singletargetreadback/once. FocusedfaulttestsPASS. NOTmounted/nolivechange/norestoreUI;must handle reload/currentplayerwhenmounted. No semanticrepair/crosstabatomicityclaim.
