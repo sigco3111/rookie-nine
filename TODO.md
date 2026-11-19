@@ -798,3 +798,6 @@
 ## Nov20 01:17 - school overwrite guard integration
 - growthrealdisksourcevalidatedbeforeeachsave/delete/hofwrite;invalid/unreadableblock/preserveexact/queueplayer+separategraduateappend/retryvalidarchiveonce. load/hofstatevalidation. Titlebadsourcebuttonsdisabled+distinctpersistentwarning/retry/noautoerase. Getteraccessdenialhandled.
 - Pureguard+queue+readtestsPASS;quota→same-tabcontinue/retry/reload/graduationHofUIregressionPASS;corrupttitle/directpaths/rawexact/validsourceretryonceUIpass;actualwarning390pixelsread. NOTcorruptrepair/download/import/fullnestedeventvalidation/exhaustivelegacy. Actualuserlossnotconfirmed. Deploymentperparentreport.
+
+## Nov20 01:36 - school original/pending export
+- No-writeexactraw/state+pendingwrites+pendinggraduatesnapshot;unreadablehasnoraw. Warningdownloadbutton/browseractualfileJSONverified/clone/no-write/pixels390PASS. Notrestore/import/repair;UIaskscheckDownloads. Deploymentperreport.

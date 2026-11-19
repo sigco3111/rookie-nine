@@ -30,6 +30,11 @@ function writeStorage(key, value) {
   catch { pendingStorage.set(key,value);storageNotice();return false; }
 }
 export const storageStatus = () => ({ ok: pendingStorage.size===0&&readIssues.size===0&&pendingHof.length===0, pending: [...new Set([...pendingStorage.keys(),...(pendingHof.length?[HOF]:[])])].map(storageLabel), issues:[...readIssues].map(([key,r])=>({record:storageLabel(key),state:r.state,error:r.error})) });
+// Snapshot both original sources and same-tab unsaved work without changing either.
+export function schoolRecoverySnapshot(){
+ const sources={};for(const [name,key]of [['player',KEY],['hof',HOF]]){const r=diskRecord(key);sources[name]={state:r.state,...(Object.hasOwn(r,'raw')?{raw:r.raw}:{}),...(r.error?{error:r.error}:{})};}
+ return {schema:1,kind:'rookie9-school-recovery',sources,pendingWrites:[...pendingStorage].map(([key,raw])=>({record:key===HOF?'hof':'player',raw})),pendingGraduates:structuredClone(pendingHof)};
+}
 export function retryStorage() {
  for(const key of [KEY,HOF])diskRecord(key);
  for(const [key,value] of [...pendingStorage])writeStorage(key,value);

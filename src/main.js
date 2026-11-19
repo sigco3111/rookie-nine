@@ -17,11 +17,16 @@ const barColor = (v) => GRADE_COLOR[grade(v)];
 const evName = { coach: '감독', captain: '캡틴', team: '팀메이트', scout: '스카우트' };
 // Keep the warning outside cleared game screens and never imply an unsuccessful write is saved.
 const saveWarning=document.createElement('div');saveWarning.id='save-warning';saveWarning.setAttribute('role','alert');saveWarning.hidden=true;
-saveWarning.innerHTML='<b>저장하지 못했습니다</b><div class="save-detail"></div><small>이 창을 닫거나 새로고침하면 최근 진행을 잃을 수 있습니다. 저장 공간·브라우저 설정을 확인한 뒤 다시 시도하세요.</small><button class="btn warn" id="retry-save">저장 다시 시도</button>';
+saveWarning.innerHTML='<b>저장하지 못했습니다</b><div class="save-detail"></div><small>이 창을 닫거나 새로고침하면 최근 진행을 잃을 수 있습니다. 저장 공간·브라우저 설정을 확인한 뒤 다시 시도하세요.</small><button class="btn warn" id="retry-save">저장 다시 시도</button><button class="btn gray" id="export-school">원문·대기 기록 내려받기</button><small id="export-school-status" role="status"></small>';
 document.body.appendChild(saveWarning);
 function drawSaveWarning(){const status=G.storageStatus();saveWarning.hidden=status.ok;saveWarning.querySelector('b').textContent=status.issues.length?'저장 기록 확인이 필요합니다':'저장하지 못했습니다';saveWarning.querySelector('.save-detail').textContent=[...status.pending,...status.issues.map(i=>`${i.record}: ${i.error}`)].join(' · ');saveWarning.querySelector('small').textContent=status.issues.length?'원본은 삭제·초기화하지 않았습니다. 덮어쓰기를 멈췄습니다. 브라우저 설정을 확인한 뒤 다시 시도하세요. 대기 중인 새 기록은 이 창을 닫으면 잃을 수 있습니다.':'이 창을 닫거나 새로고침하면 최근 진행을 잃을 수 있습니다. 저장 공간·브라우저 설정을 확인한 뒤 다시 시도하세요.';const note=document.querySelector('#hof-save-note');if(note)note.textContent=status.pending.includes('명예의 전당')?'명예의 전당 저장 대기 중입니다. 위의 저장 안내를 확인하세요.':'선수는 명예의 전당에 저장되었습니다.';}
 
 window.addEventListener('rookie9-storage',drawSaveWarning);saveWarning.querySelector('#retry-save').onclick=()=>{G.retryStorage();if(document.querySelector('#new'))titleScreen();};
+saveWarning.querySelector('#export-school').onclick=()=>{
+ try{const data=G.schoolRecoverySnapshot(),blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='rookie9-school-recovery.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);saveWarning.querySelector('#export-school-status').textContent='다운로드를 요청했습니다. 파일 앱·다운로드 목록에서 저장됐는지 확인하세요. 원본은 바꾸지 않았고, 읽지 못한 원문은 파일에 상태만 남깁니다. 가져오기 기능은 아직 없습니다.';}
+ catch{saveWarning.querySelector('#export-school-status').textContent='파일을 준비하지 못했습니다. 이 창을 유지하고 다시 시도하세요.';}
+};
+
 
 
 function titleScreen() {
