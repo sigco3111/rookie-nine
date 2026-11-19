@@ -825,3 +825,6 @@
 
 ## Nov20 04:23 - admission transaction foundation
 - Explicitexistingdestinationprepare/confirm/copiedgraduate/staleroot/singleroot/quotaretry;no draft/shareddefault/transfer. FocusedtestsPASS. NoUI/mainhook/policydecision.
+
+## Nov20 04:44 - optional explicitdestination admission UI
+- Readonlydefaultretained;callerdestinationenablesprepare→summaryconfirm/cancel→saved/pending/registration;noautolineup. ActualUIcancel/confirm/readonlysource/pro0/reload/320-430/destroyPASS;defaultpreview+controllerPASS;pixels390read. NOTmainmenu/policydecision.
