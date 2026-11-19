@@ -727,3 +727,8 @@
 - pro-storage.js prepares separate multi-club root/single-write ledger+totals/pending snapshot persistence; replay validation/corrupt-original preservation/revision stale-call and retry-disk-change guards. Uses integer outs, keeps school stats.
 - pro_storage_test + pro_domain_test + growth storage_queue_test pass. Actual Chromium localStorage2clubs/24games+reload each/quota retry/duplicate and exact school save unchanged pass. Build unchanged index-BV3UPLfL.
 - Still not imported into running game. Need shared warning/retry UI and conflict handling; club allocation remains unresolved. Admission/menu/direct engine/season still pending. No visual change in this batch.
+
+## Nov19 19:26 - common pro match-session prototype
+- All9batters/starter pure PA engine and explicit opponent/innings/seed, shared bases and own/opponent box score, manual outcome hook for later3D integration. Ties continue; bounded run does not fabricate result. No default season/admission policy selected.
+- Pending checkpoint stores RNG/order/bases/score/events; replay validation checks it against frozen own roster. Completeboxscores require10players/RBIandERscoreagreement. No main.js imports or live visual change; not playable pro mode yet.
+-120seed games+manualwalk/HR/K+exactresume+archiveisolation+completeinvalidrecords passed; actualChromium10checkpoints/30PA/reload exact/resultonce/corruptpreserve passed. Unit/storage2clubs24gameregression/build passed. Next common save warning/conflict UI and3D adapter, then admission policy/menu/season remain.

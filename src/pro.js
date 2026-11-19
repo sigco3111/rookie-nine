@@ -53,12 +53,18 @@ export function applyClubResult(club,result) {
   const stats=result.players||{};
   for(const [id,row] of Object.entries(stats)){
     if(!participants.has(id))throw Error('출전하지 않은 선수 기록입니다.');
+    if(!row||typeof row!=='object'||Array.isArray(row))throw Error('선수 기록이 올바르지 않습니다.');
     for(const [key,n]of Object.entries(row))if(!['ab','hits','hr','rbi','outs','so','hitsAllowed','er'].includes(key)||!Number.isSafeInteger(n)||n<0)throw Error('선수 기록이 올바르지 않습니다.');
     if((row.hits||0)>(row.ab||0)||(row.hr||0)>(row.hits||0))throw Error('안타와 타수 기록이 다릅니다.');
     const role=id===game.pitcher.id?'pit':'bat';const allowed=role==='pit'?['outs','so','hitsAllowed','er']:['ab','hits','hr','rbi'];if(Object.keys(row).some(key=>!allowed.includes(key)))throw Error('포지션과 기록 항목이 다릅니다.');
   }
+  if(result.complete){
+    if(Object.keys(stats).length!==participants.size||[...participants].some(id=>!stats[id]))throw Error('전체 출전자 기록이 필요합니다.');
+    let rbi=0;for(const p of game.batters){const row=stats[p.id];if(['ab','hits','hr','rbi'].some(k=>!Number.isSafeInteger(row[k]))||row.hr>row.rbi)throw Error('타격 기록이 올바르지 않습니다.');rbi+=row.rbi;}
+    const row=stats[game.pitcher.id];if(['outs','so','hitsAllowed','er'].some(k=>!Number.isSafeInteger(row[k]))||row.so>row.outs||row.er!==result.opp||rbi!==result.my)throw Error('팀 점수와 선수 기록이 다릅니다.');
+  }
   const next=copy(club);next.record.games++;next.record[result.my>result.opp?'wins':'losses']++;next.record.runsFor+=result.my;next.record.runsAgainst+=result.opp;
   for(const p of next.roster)if(participants.has(p.id)){p.pro.games++;for(const [key,n]of Object.entries(stats[p.id]||{}))p.pro[key]+=n;}
-  next.history.push({id:result.id,season:game.season,number:game.number,opponent:game.opponent,my:result.my,opp:result.opp,participants:[...participants],players:copy(stats)});
+  next.history.push({id:result.id,season:game.season,number:game.number,opponent:game.opponent,my:result.my,opp:result.opp,participants:[...participants],complete:!!result.complete,players:copy(stats)});
   next.applied.push(result.id);next.pending=null;return {club:next,applied:true};
 }

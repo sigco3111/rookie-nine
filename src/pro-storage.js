@@ -1,6 +1,7 @@
 // Preparation only. One root write holds all clubs, snapshots and result ledgers.
 import { PRO_SCHEMA, applyClubResult, setLineup } from './pro.js';
 import { keysOf } from './data.js';
+import { validateClubSession } from './pro-match.js';
 export const PRO_KEY='rookie9.pro.v1';
 const clone=v=>structuredClone(v);
 const fail=()=>{throw Error('프로 기록을 확인할 수 없습니다. 원본은 변경하지 않았습니다.');};
@@ -30,6 +31,7 @@ export function validateClub(club){
     if(!id(p.id)||!id(p.opponent)||club.applied.includes(p.id)||p.season!==club.season||p.number!==club.record.games+1||!Array.isArray(p.batters)||p.batters.length!==9)fail();
     const expected=club.lineup.map(i=>club.roster.find(p=>p.id===i));const pitcher=club.roster.find(v=>v.id===club.starter);
     if(expected.some(v=>!v)||!pitcher||JSON.stringify(expected)!==JSON.stringify(p.batters)||JSON.stringify(pitcher)!==JSON.stringify(p.pitcher))fail();
+    if(p.session){const session=validateClubSession(p.session);if(session.gameId!==p.id||JSON.stringify(session.teams[0].batters)!==JSON.stringify(p.batters)||JSON.stringify(session.teams[0].pitcher)!==JSON.stringify(p.pitcher))fail();}
   }
   return clone(club);
 }
