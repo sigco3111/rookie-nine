@@ -36,3 +36,8 @@
 - Batter mixed varied route local/deployed: year1 direct0H/3AB, year2 controlled3H/3RBI, year3 controlled3HR/6RBI. Final20-game ledger60AB21H7HR14RBI10W10L matches player and HoF. Forced fair balls, fixed random and accelerated time, not natural batting.
 - Pitcher mixed route deployed:20-game ledger94IP82HA75SO9W11L matches player and HoF. Direct games remain9K each, varied pitcher contact still pending.
 - Both finish144 weeks, reviews, ending reload and inheritance with no runtime errors. This closes tested-route final-ledger accounting only. Broader event/seed and natural/device checks still open.
+
+## Native-random normal-clock sample 2026-11-19 14:55 KST
+- New normal_random_pitch_ui_test uses actual UI rest weeks to first match, no week/stat injection, no random override, no forced ball or debug timestep, no shortened waits. Inputs are scripted; batter swings from internal timing callback. This is not human play feel.
+- Local bat first foul transition sampled; deployed bat foul→dead ball→next pitch confirmed. Local pitcher airout→return→next ready; deployed pitcher called strike→catcher return→next ready. Each only one pitch, not full natural career.
+- Software desktop at390x844 and0.5pixel ratio: mean frame gaps140–152ms, most over50ms. Wall flows roughly12–21s. Game's existing50ms timestep cap means clock is NOT real-time at this frame rate. Do not call this smooth normal-speed/mobile clearance. Phone performance remains an explicit blocker to that criterion.

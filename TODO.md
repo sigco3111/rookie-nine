@@ -675,3 +675,7 @@
 ## 14:37 Nov19 - full match ledger and varied batting carryover
 - Careerledgercapturesallresultsbeforeconfirm,sumsfinalP+HoFfields. Variedbatlocal/liveyear1K/year2forced3H3RBI/year3forced3HR6RBI→20game60AB21H7HR14RBI10W10Lmatched. Livepit20game94IP82HA75SO9W11Lmatched. Ending/reload/HoF/inheritancepassed. Actual390livebatending10W10L7HR89scoreinspected.
 - ControlledRNG/forcedballs/debugtime,naturalplaynotdone;pitchdirectstillall9K. CandidateQAupdatedpartialchecks. Buildsameindex-BLv0ow_e.js,nogamechange.
+
+## 14:55 Nov19 - native random, normal-clock one-pitch sample
+- NewtestUIresttofirstmatchwithoutweek/stats/RNG/forcedball/dt/timerchanges. Scriptedbatcallbacktimingstillused. Livebatfoul→deadball→nextpitch;localpitairout→return→ready/livepitcalledstrike→catchreturn→ready passed. Actual390live1strike/nextinputpixelsinspected.
+- Softwaredesktop.5pixelratio140–152msmeanframegap/most>50ms,12–21swall. Existing50msdtcapmeansslowgameclock;NOTsmoothrealtimenormalspeed/device/humanfeelclearance. Fullnaturalcareerremains. Buildsameindex-BLv0ow_e.js,nogamechange.
