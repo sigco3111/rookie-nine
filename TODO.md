@@ -840,3 +840,7 @@
 
 ## Nov20 06:07 - persisted schedule identity
 - Optional club.schedule exactcallerlist/id/season/startGame validated,normalstorecannotreplace/remove;legacyaccepted. Modeusesstoredlist/noexternalneeded andvalidatespendingentry. Quota/retry/reload2games/seed-orderguard+persistedactualUI+storageatomicPASS. No defaultseason/rolloveryet. Parent06:01oneownclubimplementationdefault allowed/notusertaste;noquestionblock. Estimate60–65%/5–8daysjudgment,13:35refine.
+
+## Nov20 06:30 normal pro entry
+- Title→hub→explicit ownclub creation(10fictionalbaseplayers/3innings6games)→archiveconfirmed admission→lineup→persisted schedule/resume/direct3Dbatting/results/6records/exit-reenter reachable. Oneownclub/default6games are delegated implementationdefaults notuserpreferences. Schooldraft/source preserved. No autoadmit/autolineup.
+- Purequota/retry/6games/reload/frozenlist and normalUI/sourceexact/320-430 + corruptpro/no-create,quotaUIretry,invalidarchiveblocked PASS. Actual390pixels inspected. Buildpass. Firstsixgamesonly/nextseasonnotready stated. Next safe explicit rollover + normalpitching/device boundaries. No phonefeel/balancecompletion claim.

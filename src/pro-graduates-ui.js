@@ -6,7 +6,7 @@ export function mountProGraduates(parent,entries,store,{destinationClubId=null}=
  const el=document.createElement('section');el.className='pro-graduates';parent.append(el);let removed=false,message='',selection=null;const admission=createProAdmission(store);
  const add=(tag,value,target=el)=>{const e=document.createElement(tag);e.textContent=value;target.append(e);return e;};
  function draw(){
-  if(removed)return;el.replaceChildren();add('h2','졸업 선수 확인');add('p',destinationClubId?'호출자가 지정한 구단으로 입단 내용을 확인합니다. 고교 지명 기록으로 자동 배정하지 않습니다.':'프로 입단 전 능력과 고교 기록을 확인합니다. 이 화면에서는 입단·복사·이적을 하지 않습니다.');if(message)add('p',message).setAttribute('role','status');
+  if(removed)return;el.replaceChildren();add('h2','졸업 선수 확인');add('p',destinationClubId?'현재 구단으로 입단 내용을 확인합니다. 고교 지명 이력과 실제 입단은 별개입니다.':'프로 입단 전 능력과 고교 기록을 확인합니다. 이 화면에서는 입단·복사·이적을 하지 않습니다.');if(message)add('p',message).setAttribute('role','status');
   if(!Array.isArray(entries)){add('p','졸업 명단을 읽을 수 없습니다. 원본 기록을 확인하세요.').setAttribute('role','alert');return;}
   const loaded=store.load();if(!loaded.ok){add('p',loaded.error).setAttribute('role','alert');return;}
   if(!entries.length){add('p','아직 졸업한 선수가 없습니다.');return;}
