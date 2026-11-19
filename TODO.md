@@ -848,3 +848,6 @@
 ## Nov20 06:50 - next season persistent transition
 - Completedsavedseason→preview/cancel/confirm→archiveoldschedule+season+new6games one atomicwrite,retainroster/cumulative/results. Exactroot/stale/pending/conflict guards,normalwritescannotchange season/archive. Archivedprefix/order/boundary/ID/seasonlabelvalidation added,legacyaccepted.
 - Pure12games/2seasons→3rd/reload/quotaretry/guards PASS; normalUI6→cancel→quota-confirm/retry→2season/reload→7thgame/7records/oldsix+scheduleexact/sourcebytespreserved PASS. Actual430confirm/newseasonpixelsread. Notfullleague/contracts/probalance; nextseason summary/history display andnormalpitch/device.
+
+## Nov20 07:10 season records
+- Readonlyseason summaries,W/L/runs/schedulecounts,all-seasonfilterforplayer+game rows,explicitseasonlabels;legacy/incompleteunrecorded preserved. Pureaggregate/playerreconcile+empty/partial/legacy/readonly PASS;recordsUI+normalUI6+1games/2seasons/filter6-1-7/rawexact PASS;390pixelsread. Nextnormalpitching/device boundary.
