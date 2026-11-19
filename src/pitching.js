@@ -1,4 +1,4 @@
-import { hitRunStep } from './defense.js';
+import { hitRunStep, defenseLookYaw } from './defense.js';
 import { advanceBases, forceTarget, forceResult } from './bases.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, OPP_COLORS } from './scene.js';
 import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut, airOutSequence, runHomeRun, showBaseRunners, showForcedRunners, runWalk, runFoul } from './match.js';
@@ -98,8 +98,9 @@ export async function playPitching(p, m, hud) {
         else if(t<.8){hud.setPitch('포수 · 투수에게 반환');const u=(t-.5)/.3;catcher.userData.armR.rotation.x=throwArm.x-1.8*u;o.ball.position.copy(glove).lerp(point(catcher,'throwHand'),u);}
         else{const u=Math.min(1,(t-.8)/.7);catcher.userData.armR.rotation.x=throwArm.x-1.8+2*u;o.pitcher.userData.armL.rotation.x=pitArm.x-.4*u;
           if(!release)release=point(catcher,'throwHand');const target=point(o.pitcher,'glove');o.ball.position.copy(release).lerp(target,u);o.ball.position.y+=Math.sin(Math.PI*u)*2;if(u>=1&&!returnSound){returnSound=true;sfx.mitt();}
+          for(const fd of o.fielders)fd.userData.head.rotation.y=defenseLookYaw(fd.position.x,fd.position.z,fd.rotation.y,o.ball.position.x,o.ball.position.z);
           window.__pitchReturn?.({ball:o.ball,pitcher:o.pitcher,t,u,target});}
-        if(t>=1.7){delTicker(f);o.ball.visible=false;catcher.userData.armL.rotation.copy(arm);catcher.userData.armR.rotation.copy(throwArm);o.pitcher.userData.armL.rotation.copy(pitArm);resolve();}
+        if(t>=1.7){delTicker(f);for(const fd of o.fielders)fd.userData.head.rotation.y=0;o.ball.visible=false;catcher.userData.armL.rotation.copy(arm);catcher.userData.armR.rotation.copy(throwArm);o.pitcher.userData.armL.rotation.copy(pitArm);resolve();}
       };tickers.add(f);
     });
     const fin = async () => {

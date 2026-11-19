@@ -625,3 +625,7 @@
 
 ## 10:08 Nov19 - angled batting ground return regression
 - BatreturntestANGLEcontrolsforcedballhorizontalangleanddistinctcapturepaths. Local/live±35groundpassed1Brelay/return/glove/pitcherfacing/7gazes/reset/input/FOV/runner>=4separation/result1AB0H. Actual390livebothreturnpixelsinspectedleft/rightcollectorplacementsandseparaterunner. Buildsameindex-B5xFmXsW.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
+
+## 10:27 Nov19 - fielder attention on catcher return
+- Pitcherrolecatcher→pitcherreturnnowupdates7fielderheadyawtowardballusingexistingattentionlimit,zerosgazeafterholdbeforenextpitch. No body/path/timing/count/soundchange.
+- Extendedpitch_catch_soundtestasserts7returngazesandnextreset;localstrike/ball/fallbackwhiffpassedrelease/glove/countorder/exact2mitt/result/nextaimchecks.Buildpassed,actual390returnpixelsinspected;fieldersoffcamera,gazeisassertionevidencenotpictureproof. ControlledRNG/clocknotdevice/naturalQA.
