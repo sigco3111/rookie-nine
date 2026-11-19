@@ -1,3 +1,4 @@
+import { clubFixtureProgress } from './pro-fixture-progress.js';
 import { mountProFixtures } from './pro-fixtures-ui.js';
 // Policy-neutral prepared-club mode. The caller owns admission and season scheduling.
 import { mountProRecords } from './pro-records-ui.js';
@@ -17,7 +18,7 @@ export function mountPreparedProMode(parent,storage,store,clubId,{onBack=()=>{},
  button('명단 편성',()=>showRoster());button('구단 기록',()=>showRecords());
  const notice=mountProSaveNotice(store,{parent:shell,onRecovered:()=>showGame()});
  function clear(){active?.destroy();active=null;content.replaceChildren();}
- function showGame(){if(removed||direct)return;clear();const club=store.load().data?.clubs.find(c=>c.id===clubId);if(!club?.pending&&fixtures!==null){active=mountProFixtures(content,store,clubId,fixtures,{onStart:()=>showGame()});return;}if(!club?.pending){active=mountProGameSetup(content,store,clubId,{fixture,onStart:()=>showGame()});return;}active=mountProSession(content,store,clubId,{onBack,onResult,playDirect:async ctx=>{direct=true;for(const b of nav.children)b.disabled=true;try{return await playProDirect(ctx,{parent:shell});}finally{direct=false;for(const b of nav.children)b.disabled=false;}}});}
+ function showGame(){if(removed||direct)return;clear();const club=store.load().data?.clubs.find(c=>c.id===clubId);let resolved=fixtures;try{if(club?.schedule){if(fixtures!==null&&JSON.stringify(fixtures)!==JSON.stringify(club.schedule.fixtures))throw Error('저장된 경기 목록과 전달된 목록이 다릅니다.');resolved=club.schedule.fixtures;}if(club&&resolved!==null)clubFixtureProgress(club,resolved);}catch(e){const p=document.createElement('p');p.textContent=e.message;p.setAttribute('role','alert');content.append(p);return;}if(!club?.pending&&resolved!==null){active=mountProFixtures(content,store,clubId,resolved,{onStart:()=>showGame()});return;}if(!club?.pending){active=mountProGameSetup(content,store,clubId,{fixture,onStart:()=>showGame()});return;}active=mountProSession(content,store,clubId,{onBack,onResult,playDirect:async ctx=>{direct=true;for(const b of nav.children)b.disabled=true;try{return await playProDirect(ctx,{parent:shell});}finally{direct=false;for(const b of nav.children)b.disabled=false;}}});}
  function showRecords(){if(removed||direct)return;clear();active=mountProRecords(content,store,clubId);}
  function showRoster(){if(removed||direct)return;clear();active=mountProRoster(content,store,clubId);}
  function showBackups(){if(removed||direct)return;clear();active=mountProBackups(content,storage,store,{onRestore:()=>notice.refresh()});}

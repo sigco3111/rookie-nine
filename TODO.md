@@ -837,3 +837,6 @@
 
 ## Nov20 05:46 - explicit fixture progress UI
 - Prepared optionalfixturesarray→progress/explicitnextprepare/resultnavnext/donenoreplay;singlefixturecompatible. Actual2games/resumestore/result/next/done/2records/schoolrawPASS;pureguards/buildpass;390pixelsread. Test1inningnotpolicy;normalentry/seasonpersistenceabsent.
+
+## Nov20 06:07 - persisted schedule identity
+- Optional club.schedule exactcallerlist/id/season/startGame validated,normalstorecannotreplace/remove;legacyaccepted. Modeusesstoredlist/noexternalneeded andvalidatespendingentry. Quota/retry/reload2games/seed-orderguard+persistedactualUI+storageatomicPASS. No defaultseason/rolloveryet. Parent06:01oneownclubimplementationdefault allowed/notusertaste;noquestionblock. Estimate60–65%/5–8daysjudgment,13:35refine.
