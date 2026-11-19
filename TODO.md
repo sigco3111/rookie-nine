@@ -722,3 +722,8 @@
 - Newscopefirstcompletionapproved18:23sourceinPRO_MODE_PLAN. Prior75%/3–5daysnotapplicable;working50–55%/7–12daysjudgmentpendingimplementation/devicerisk,refineNov20~13:35.
 - Purepro.jspreparesgraduatetoimmutablecopy/abilitytraitmapping/legacyID/school-prostatseparation/9slotsstarter/snapshotpending/resultIDidempotency+recordvalidation;pro_domain_testpassed. Notmenupersistence/directengine/seasonimplemented. Existingbuildunchanged.
 - Parent18:41keepsoneclubvsdraftedclubschoiceunresolveduntil06userreport. Nochoicehardcoded;commonpreponly. PRO_MODE_PLANremainingintegration/gatesdocumentsit. NoUIchanges/pixelsnotapplicablethisbatch.
+
+## Nov19 19:05 - pro storage preparation, not a playable mode
+- pro-storage.js prepares separate multi-club root/single-write ledger+totals/pending snapshot persistence; replay validation/corrupt-original preservation/revision stale-call and retry-disk-change guards. Uses integer outs, keeps school stats.
+- pro_storage_test + pro_domain_test + growth storage_queue_test pass. Actual Chromium localStorage2clubs/24games+reload each/quota retry/duplicate and exact school save unchanged pass. Build unchanged index-BV3UPLfL.
+- Still not imported into running game. Need shared warning/retry UI and conflict handling; club allocation remains unresolved. Admission/menu/direct engine/season still pending. No visual change in this batch.
