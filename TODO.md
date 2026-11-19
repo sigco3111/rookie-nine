@@ -629,3 +629,6 @@
 ## 10:27 Nov19 - fielder attention on catcher return
 - Pitcherrolecatcher→pitcherreturnnowupdates7fielderheadyawtowardballusingexistingattentionlimit,zerosgazeafterholdbeforenextpitch. No body/path/timing/count/soundchange.
 - Extendedpitch_catch_soundtestasserts7returngazesandnextreset;localstrike/ball/fallbackwhiffpassedrelease/glove/countorder/exact2mitt/result/nextaimchecks.Buildpassed,actual390returnpixelsinspected;fieldersoffcamera,gazeisassertionevidencenotpictureproof. ControlledRNG/clocknotdevice/naturalQA.
+
+## 10:47 Nov19 - catcher-return close evidence
+- Pitchcatchtestrendersinspection-onlyrightfieldercloseviewduringpausedreturn;localnormalstrike/livefallbackwhiffpassed7gazes/reset/release/glove/count/2mitt/nextaim. Actualclosepixelsinspectednormal/fallbackmodelshapesandhead/body,preciseyawstillnumericalnotanglemeasurement. Buildsameindex-BAfGSsZ6.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
