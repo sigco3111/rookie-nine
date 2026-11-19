@@ -19,8 +19,9 @@ const evName = { coach: '감독', captain: '캡틴', team: '팀메이트', scout
 const saveWarning=document.createElement('div');saveWarning.id='save-warning';saveWarning.setAttribute('role','alert');saveWarning.hidden=true;
 saveWarning.innerHTML='<b>저장하지 못했습니다</b><div class="save-detail"></div><small>이 창을 닫거나 새로고침하면 최근 진행을 잃을 수 있습니다. 저장 공간·브라우저 설정을 확인한 뒤 다시 시도하세요.</small><button class="btn warn" id="retry-save">저장 다시 시도</button>';
 document.body.appendChild(saveWarning);
-function drawSaveWarning(){const status=G.storageStatus();saveWarning.hidden=status.ok;saveWarning.querySelector('.save-detail').textContent=status.pending.join(' · ');const note=document.querySelector('#hof-save-note');if(note)note.textContent=status.pending.includes('명예의 전당')?'명예의 전당 저장 대기 중입니다. 위의 저장 안내를 확인하세요.':'선수는 명예의 전당에 저장되었습니다.';}
-window.addEventListener('rookie9-storage',drawSaveWarning);saveWarning.querySelector('#retry-save').onclick=()=>G.retryStorage();
+function drawSaveWarning(){const status=G.storageStatus();saveWarning.hidden=status.ok;saveWarning.querySelector('b').textContent=status.issues.length?'저장 기록 확인이 필요합니다':'저장하지 못했습니다';saveWarning.querySelector('.save-detail').textContent=[...status.pending,...status.issues.map(i=>`${i.record}: ${i.error}`)].join(' · ');saveWarning.querySelector('small').textContent=status.issues.length?'원본은 삭제·초기화하지 않았습니다. 덮어쓰기를 멈췄습니다. 브라우저 설정을 확인한 뒤 다시 시도하세요. 대기 중인 새 기록은 이 창을 닫으면 잃을 수 있습니다.':'이 창을 닫거나 새로고침하면 최근 진행을 잃을 수 있습니다. 저장 공간·브라우저 설정을 확인한 뒤 다시 시도하세요.';const note=document.querySelector('#hof-save-note');if(note)note.textContent=status.pending.includes('명예의 전당')?'명예의 전당 저장 대기 중입니다. 위의 저장 안내를 확인하세요.':'선수는 명예의 전당에 저장되었습니다.';}
+
+window.addEventListener('rookie9-storage',drawSaveWarning);saveWarning.querySelector('#retry-save').onclick=()=>{G.retryStorage();if(document.querySelector('#new'))titleScreen();};
 
 
 function titleScreen() {
@@ -28,11 +29,14 @@ function titleScreen() {
   const sv = G.load();
   const resumable = sv && (!sv.done || sv.result);
   const h = G.hof();
+  drawSaveWarning();
+  const playerBlocked=G.storageStatus().issues.some(i=>i.record==='선수 기록'),hofBlocked=G.storageStatus().issues.some(i=>i.record==='명예의 전당');
   const el = show($(`<div class="screen"><div class="title">${ic('ball')} 루키나인<div style="font-size:15px;font-weight:700;margin-top:4px">3년의 고교야구, 한 명의 선수를 키우자</div></div><div class="spacer"></div>
     <div class="sub">3D 야구 · 주간 훈련 · 성장 모드</div>
     ${resumable ? `<button class="btn big" id="cont">${sv.done ? '졸업 결과 다시 보기' : `이어하기 (${sv.name} · ${G.cal(sv.week).year}학년 ${G.cal(sv.week).month}월)`}</button>` : ''}
     <button class="btn big alt" id="new">새 선수 만들기</button>
     <button class="btn gray" id="hof">명예의 전당 (${h.length})</button></div>`));
+  el.querySelector('#new').disabled=playerBlocked;el.querySelector('#hof').disabled=hofBlocked;
   el.querySelector('#new').onclick = createScreen;
   if (resumable) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingMatch) { clear(); showHome(P.pos, P); const q = P.pendingMatch; matchPrompt(q.match, q.msgs, new Set(q.previousTraits), () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingEvent) { clear(); showHome(P.pos, P); eventChoiceModal(P.pendingEvent); } else if (P.pendingEventResult) { clear(); showHome(P.pos, P); eventResultModal(P.pendingEventResult); } else if (P.pendingLearned) { clear(); showHome(P.pos, P); learnedModal(P.pendingLearned); } else if (P.review) { clear(); showHome(P.pos, P); yearReviewModal(P.review.msgs || []); } else homeScreen(); };
   el.querySelector('#hof').onclick = hofScreen;

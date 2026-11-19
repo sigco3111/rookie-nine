@@ -794,3 +794,7 @@
 ## Nov20 00:55 - school read audit foundation, risk NOT fixed yet
 - load/hof currently conflate unreadable/corrupt withmissing;hofnonarrayaccepted→possibleoverwriteonnewsave/archiveappend. Parentinformed,notactualuserdata-lossclaim.
 - New nonmutating school-record-read.js explicitstates/rawpreserve/coreplayerarchivechecks;batpit/legacy/malformed/unreadable/nowritePASS. NOTgrowth/mainimported,nestedpendingconsistencynotvalidated. NEXTwriteguard+readerrorUI+recovery+queuecompatibility.
+
+## Nov20 01:17 - school overwrite guard integration
+- growthrealdisksourcevalidatedbeforeeachsave/delete/hofwrite;invalid/unreadableblock/preserveexact/queueplayer+separategraduateappend/retryvalidarchiveonce. load/hofstatevalidation. Titlebadsourcebuttonsdisabled+distinctpersistentwarning/retry/noautoerase. Getteraccessdenialhandled.
+- Pureguard+queue+readtestsPASS;quota→same-tabcontinue/retry/reload/graduationHofUIregressionPASS;corrupttitle/directpaths/rawexact/validsourceretryonceUIpass;actualwarning390pixelsread. NOTcorruptrepair/download/import/fullnestedeventvalidation/exhaustivelegacy. Actualuserlossnotconfirmed. Deploymentperparentreport.

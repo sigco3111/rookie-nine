@@ -1,3 +1,4 @@
+import { readSchoolRecord, decodeSchoolRecord } from './school-record-read.js';
 import { STAT_KEYS, PRACTICES, OTHER_CMDS, keysOf, STAT_NAME, practicesFor, TRAITS, INJURIES, EVENTS, ITEMS, itemsFor, itemDescription, TEAMS, PRO } from './data.js';
 const clamp = (v, a = 0, b = 99) => Math.max(a, Math.min(b, Math.round(v)));
 export const rnd = (a, b) => a + Math.random() * (b - a);
@@ -18,19 +19,31 @@ export const ovr = (p) => p.pos === 'pit' ? Math.round((p.velo * 1.3 + p.ctrl * 
 export const cal = (w) => { const y = 1 + Math.floor(w / 48); const m = ((Math.floor(w / 4) + 3) % 12) + 1; return { year: y, month: m, wk: (w % 4) + 1 }; };
 export const condLabel = (c) => c >= 80 ? ['절호조', '#ff5a5f'] : c >= 60 ? ['호조', '#ff8a3d'] : c >= 40 ? ['보통', '#f4c20d'] : c >= 20 ? ['부진', '#3aa0e8'] : ['절부진', '#6b7280'];
 
-const pendingStorage = new Map();
+const pendingStorage = new Map(), readIssues = new Map(), pendingHof = [];
+const storageLabel=key=>key===HOF?'명예의 전당':'선수 기록';
+function diskRecord(key){let r;try{r=readSchoolRecord(localStorage,key,key===HOF?'hof':'player');}catch{r={ok:false,state:'unreadable',error:'브라우저에서 저장 공간에 접근하지 못했습니다. 설정을 확인한 뒤 다시 시도하세요.'};}if(r.ok)readIssues.delete(key);else readIssues.set(key,r);return r;}
 function storageNotice() { if (typeof window !== 'undefined') window.dispatchEvent(new Event('rookie9-storage')); }
 function writeStorage(key, value) {
+  // Always check the real source before replacing it, even if latest progress is queued.
+  if(!diskRecord(key).ok){pendingStorage.set(key,value);storageNotice();return false;}
   try { if(value===null)localStorage.removeItem(key);else localStorage.setItem(key,value);pendingStorage.delete(key);storageNotice();return true; }
   catch { pendingStorage.set(key,value);storageNotice();return false; }
 }
-export const storageStatus = () => ({ ok: pendingStorage.size===0, pending: [...pendingStorage.keys()].map(k=>k===HOF?'명예의 전당':'선수 기록') });
-export function retryStorage() { for(const [key,value] of [...pendingStorage])writeStorage(key,value);return storageStatus().ok; }
+export const storageStatus = () => ({ ok: pendingStorage.size===0&&readIssues.size===0&&pendingHof.length===0, pending: [...new Set([...pendingStorage.keys(),...(pendingHof.length?[HOF]:[])])].map(storageLabel), issues:[...readIssues].map(([key,r])=>({record:storageLabel(key),state:r.state,error:r.error})) });
+export function retryStorage() {
+ for(const key of [KEY,HOF])diskRecord(key);
+ for(const [key,value] of [...pendingStorage])writeStorage(key,value);
+ if(pendingHof.length&&diskRecord(HOF).ok){const entries=pendingHof.splice(0);const h=hof();h.push(...entries);writeStorage(HOF,JSON.stringify(h));}
+ storageNotice();return storageStatus().ok;
+}
 export function save(p) { ensureGrowthBaseline(p); return writeStorage(KEY, JSON.stringify(p)); }
-export function load() { try { return JSON.parse(pendingStorage.has(KEY)?pendingStorage.get(KEY):localStorage.getItem(KEY)); } catch { return null; } }
+export function load() {const disk=diskRecord(KEY);if(pendingStorage.has(KEY)){const r=decodeSchoolRecord(pendingStorage.get(KEY),'player');return r.ok?r.data:null;}return disk.ok?disk.data:null;}
 export function clearSave() { return writeStorage(KEY,null); }
-export function hof() { try { return JSON.parse(pendingStorage.get(HOF)??localStorage.getItem(HOF)) || []; } catch { return []; } }
-export function pushHof(e) { const h = hof(); h.push(e);return writeStorage(HOF, JSON.stringify(h)); }
+export function hof() {const disk=diskRecord(HOF);if(pendingStorage.has(HOF)){const r=decodeSchoolRecord(pendingStorage.get(HOF),'hof');return r.ok?r.data:[];}return disk.ok?disk.data:[];}
+export function pushHof(e) {
+ if(!diskRecord(HOF).ok){pendingHof.push(structuredClone(e));storageNotice();return false;}
+ const h=hof();h.push(e);return writeStorage(HOF,JSON.stringify(h));
+}
 
 export const level = (p, id) => { const n = p.cnt[id] || 0; return n >= 16 ? 3 : n >= 7 ? 2 : 1; };
 const LV_MUL = [0, 1, 1.3, 1.6];
