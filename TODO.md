@@ -762,3 +762,7 @@
 ## Nov19 21:49 - common pendinggame screen linked to controller/save notice
 - pro-session-ui.js/css optionalcomponent inning/side/score/base/currentplayers/rosterstats/directcallback/auto/resultconfirm/back. No mainimport/normalmenu/admissionpolicy/season.
 - ScopedrealDOMcallback checkpoint/remount/cancel/auto/resultonce/320–430 +alongside save notice quota→3controlsblocked→retryunblocked pass. Actualpreview+resultpixelsreadable. No3D/longcareerregressionrepeat. BuildunchangedghBQ-Ogm. Next renderer-screen lifecycle or pendingpolicy rosterUI.
+
+## Nov19 22:10 - real direct appearance HUD/lifecycle
+- Newpro-direct-ui/js-css actualbat/pitHUD+input+scores/count/banner/contact, hidescallerprosession, adapter→controllerresult, cleanupandhome-scenerestore. Notmainimportyet.
+- Scopedactual3DbatK+pitK onePA/controller/save/reload/schoolbytes/overlaycleanup pass acceleratedcontrollednotdevicehuman.2pixels390x844inspected. No fullcareers/old3Dcasesrerun. Nextsession-screen+actualoverlay+noticenavigationmajorlink. BuildsameghBQ-Ogm.
