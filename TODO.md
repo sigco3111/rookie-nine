@@ -854,3 +854,6 @@
 
 ## Nov20 07:30 normal-entry direct pitching
 - Focused normal-menu trainedstarterdirectpitch local+LIVE normalclock/no dt/rng/time acceleration PASS;selectedcurve/throwhit-targets/navlocks/320-430containment/manualevent+prefix/reloadcheckpoint/result/sourceexact. Ratio.5software,notrealphone/fullnormalclockgame;aimdrag sentbutcoordinateeffectnotasserted. ActualLIVE390pixelsread. No productionchange. Nextjuniors/rivalsjoin.
+
+## Nov20 07:50 school cast foundation
+- OriginalNov16planrecovered:graduatesreusejunior/rivalnextcareer,notjustinitialbonus. Independentexplicitroles/snapshot/stableID/duplicatebadguards + preparedjuniorweek48once+1sharedtraining/rivalaggregateability helpers,puretestsPASS/buildunchanged. Mechanicsimplementationdefaults,NOTwiredmenu/save/gameyet/NOTjoincomplete. Nextsafeoptionalsavevalidation+createselectpreviewthenweekly/matchintegration.
