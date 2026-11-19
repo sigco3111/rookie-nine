@@ -784,3 +784,6 @@
 
 ## Nov19 23:53 - club records prepared UI
 - Readonlyaggregate/proplayertotals/reversehistory/expandindividualrows withpreparedmodenav. Missinglegacystat=unrecorded,inningsintegerouts. Empty→2enginegames/result→reactiveview/reload/readonly/schoolpreserve/320-430/destroy pass. Actualaggregate+detail390pixels inspected. No season/admissionpolicy/normalentry/livechange.
+
+## Nov20 00:16 - pro batting ground race
+- appearanceonlygroundphysicalrace/force→forceSafe/forceOut/infieldengine;freshbattinghomeforceinitializescatcher/ump. Actual3Dhomeout/safe+nonforced2Binfield→UI/checkpoint/statdelta/reload/schoolpreservepass. Receivephasebeforecommit;390homeout/safepixelsinspected. Schoolgroundfull1PA+proHRregressionpass. Acceleratednotdevice/balance;constantspeed6provisional. Mainentry/admission/seasonnotdone.

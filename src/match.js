@@ -1,4 +1,4 @@
-import { baseRunStep, walkAdvance } from './bases.js';
+import { baseRunStep, walkAdvance, forceTarget } from './bases.js';
 import { defensePaths, defenseStep, defenseLookYaw, groundOutPlan, groundOutPhase, airOutPlan, airOutStep, hitRunStep, groundRace, foulBallStep, runThroughStep } from './defense.js';
 import { TRAITS } from './data.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, OPP_COLORS } from './scene.js';
@@ -370,9 +370,11 @@ export async function playMatch(p, m, hud, appearance = null) {
   });
 
   // 타구 연출 후 결과 판정
-  const flight = (h, defenseOut = '') => new Promise((res) => {
+  const flight = (h, defenseOut = '', priorBases = 0) => new Promise((res) => {
     hud.setBattingActive?.(false); hud.setPitch('타구 비행');
     o.zone.visible = false; o.ret.visible = false;
+    const forceBase=appearance&&defenseOut==='ground'?forceTarget(priorBases):0;
+    if(forceBase===4){if(!o.catcher){o.catcher=makeChibi({shirt:0x333a44,pants:0x333a44,cap:0x222222,glove:true});o.catcher.position.set(0,0,1.6);o.catcher.rotation.y=Math.PI;o.catcher.scale.set(1,.8,1);o.catcher.userData.armL.rotation.set(-1.4,0,.2);o.g.add(o.catcher);o.ump=makeChibi({shirt:0x111111,pants:0x555555,cap:0x111111});o.ump.position.set(.7,0,3);o.ump.rotation.y=Math.PI;o.g.add(o.ump);}o.catcher.visible=true;o.ump.visible=true;}
     const hitBases=defenseOut==='double'?2:defenseOut==='single'||defenseOut==='ground'?1:0,hitRunSpeed=defenseOut==='ground'?6:9,hitRunTime=hitBases*Math.hypot(19.4,19.4)/hitRunSpeed,oldFov=camera.fov;
     if(hitBases){o.runner.visible=true;o.batter.visible=false;}
     const a = h.angle * Math.PI / 180; const dir = new THREE.Vector3(Math.sin(a), 0, -Math.cos(a));
@@ -384,6 +386,7 @@ export async function playMatch(p, m, hud, appearance = null) {
     const f = (dt) => {
       chase(t);
       t += dt; const k = Math.min(1, t / dur);
+      if(forceBase)showForcedRunners(o,priorBases,Math.min(1,t*6/Math.hypot(19.4,19.4)),t);
       if(hitBases){const pos=hitRunStep(hitBases,Math.min(1,t/hitRunTime));o.runner.position.set(pos.x,pos.arrived?0:Math.abs(Math.sin(t*14))*.12,pos.z);o.runner.rotation.y=pos.yaw;o.runner.userData.legL.rotation.x=pos.arrived?0:Math.sin(t*14);o.runner.userData.legR.rotation.x=pos.arrived?0:-Math.sin(t*14);window.__batHitRunFlight?.({t,hitBases,runner:o.runner});}
       const d = h.dst * k; let y = 1 + 4 * peak * k * (1 - k) - (h.launch < 8 ? 0.9 * k : 0);
       if (h.launch < 8) y = 0.15 + Math.abs(Math.sin(k * Math.PI * 4)) * 0.5 * (1 - k);
@@ -391,7 +394,7 @@ export async function playMatch(p, m, hud, appearance = null) {
       if(air){const glove=air.step(t),blend=Math.max(0,(k-.85)/.15);o.ball.position.lerp(glove,blend);window.__airOutPlay?.({phase:'flight',t,k,plan:air.plan,ball:o.ball,collector:o.fielders[air.plan.collector]});}
       if (window.__flog) window.__flog(o.ball, camera, k);
       const tgt = o.ball.position; camera.position.lerp(new THREE.Vector3(tgt.x * 0.25, 2.6 + k * 2.5, Math.min(11, 5 + Math.max(0, -tgt.z) * 0.06)), 0.06); camera.lookAt(tgt.x * 0.6, 1 + k * 3, tgt.z * 0.65 - 3);if(hitBases){camera.fov=76;camera.updateProjectionMatrix();camera.position.set(0,42,28);camera.lookAt(0,0,-28);}
-      if (k >= 1) { delTicker(f); if(defenseOut==='ground'){o.batter.visible=true;completeGroundOut(o,hud,{runner:true,returnPitcher:true,runnerElapsed:dur,hitRunSpeed}).then(()=>{camera.fov=oldFov;camera.updateProjectionMatrix();res();});}else if(air)air.finish().then(res);else if(hitBases){o.batter.visible=true;completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases,runnerElapsed:dur,hitRunSpeed,returnPitcher:true}).then(()=>{camera.fov=oldFov;camera.updateProjectionMatrix();res();});}else setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); resetFielders(); res(); }, 250); }
+      if (k >= 1) { delTicker(f); if(defenseOut==='ground'){o.batter.visible=true;completeGroundOut(o,hud,{runner:true,returnPitcher:true,runnerElapsed:dur,hitRunSpeed,...(appearance?{raceSpeed:6,forceBase,forceMask:priorBases}:{})}).then(race=>{camera.fov=oldFov;camera.updateProjectionMatrix();res(race);});}else if(air)air.finish().then(res);else if(hitBases){o.batter.visible=true;completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases,runnerElapsed:dur,hitRunSpeed,returnPitcher:true}).then(()=>{camera.fov=oldFov;camera.updateProjectionMatrix();res();});}else setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); resetFielders(); res(); }, 250); }
     }; tickers.add(f);
   });
   const runBases = () => runHomeRun(o,hud,appearance?.bases||0);
@@ -417,11 +420,13 @@ export async function playMatch(p, m, hud, appearance = null) {
         if (ang > 46) {await runFoul(o,hud,h.angle);if (c.s < 2) c.s++; hud.banner('파울', 600); hud.setCount(c); resetCam(); resetFielders(); continue; }
         const L = h.launch;
         if (L > 22 && L <= 50 && h.dst >= 88) { res_ = 'hr'; label = '홈런!!'; }
+        else if (L < 8&&appearance) { res_='out';label='땅볼'; }
         else if (L < 8) { const pr = 0.2 + h.q * 0.4 + p.speed * 0.002 + (traits.includes('run') ? 0.06 : 0); res_ = chance(pr * 100) ? 'single' : 'out'; label = res_ === 'out' ? '땅볼 아웃' : '내야 안타'; }
         else if (L <= 22) { const pr = 0.5 + h.q * 0.35; if (chance(pr * 100)) { res_ = h.dst > 62 && chance(50 + p.speed * 0.3) ? 'double' : 'single'; label = res_ === 'double' ? '2루타!' : '안타!'; } else label = '라인드라이브 잡힘'; }
         else if (L <= 50) { if (h.dst > 70 && chance(h.q * 55 + 15)) { res_ = 'double'; label = '2루타!'; } else { label = '뜬공 아웃'; } }
         else label = '내야 플라이 아웃';
-        await flight(h,res_==='out'?(L<8?'ground':'air'):res_==='hr'?'':res_);
+        const race=await flight(h,res_==='out'?(L<8?'ground':'air'):res_==='hr'?'':res_,base);
+        if(appearance&&L<8&&race){res_=forceTarget(base)?(race.safe?'forceSafe':'forceOut'):(race.safe?'infield':'out');label=forceTarget(base)?(race.safe?'야수선택':'포스 아웃'):(race.safe?'내야 안타':'땅볼 아웃');}
         if (res_ === 'hr') await runBases(res_);
         resetCam();
         return { res: res_, label };
