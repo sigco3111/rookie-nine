@@ -636,3 +636,6 @@
 ## 11:08 Nov19 - fallback uniform material tags
 - Proceduralfallbacktorso+4sleevepartsmarkedisShirt,cap/helmetpiecesisCap;setShirt/setUniformnowupdatesyear/teamcolorslikenormalmodel. Skin/pants/gearuntouched,socksexistinginitialcapcolorunchanged.
 - Localproc capuniformbat/pitall3yearscolorsmatched;addedshirtassertiontocaptest. Forcedmodel-failurewhiffreturn/gaze/count/soundresetpassed;actualclosefallbackpixelsinspectedyear3orangeinsteadred. Buildpassed. Notdevice/naturalQA.
+
+## 11:29 Nov19 - fallback role-switch team color regression
+- Role-switchtestassertsshirtmaterialsexistandall7battingdefendersred,thenall7newpitchdefendersyear1blueinthesamescene. Local/liveforcedfallbackpitch3K→newbatgroundreturn→newpitchcatchreturn/nextreadypassedcolors/visibility/input/endpoint/results. Actual390liveroundtrippixelsinspectedbluepitcher/catcherandtealbatter. Buildsameindex-DP4uEBi-.js,nogamechange;existingautomatictiepoint/ERunchanged. ControlledRNG/clocknotdevice/naturalQA.
