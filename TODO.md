@@ -828,3 +828,6 @@
 
 ## Nov20 04:44 - optional explicitdestination admission UI
 - Readonlydefaultretained;callerdestinationenablesprepare→summaryconfirm/cancel→saved/pending/registration;noautolineup. ActualUIcancel/confirm/readonlysource/pro0/reload/320-430/destroyPASS;defaultpreview+controllerPASS;pixels390read. NOTmainmenu/policydecision.
+
+## Nov20 05:05 - admission→records major link
+- UnadmittedgraduateUIconfirmboth→rosterselection→pregame→actualselectedbat/pit3D→sameUI/checkpoint/autofinish/result→records+independentreload/team1+bothgraduate1game/archive-schoolrawexactPASS. Actualpitch/records390pixelsread. Controlledacceleratednotphonehuman;explicitinjectedclub/test3inningsnotpolicy. Normalentry/seasonstillabsent.
