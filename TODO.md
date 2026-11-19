@@ -667,3 +667,7 @@
 ## 13:54 Nov19 - first full UI career integration baseline
 - Newcareer_ui_integration_testclicks144actualweeklycommands+allmodals,seed42,automaticmatches,withoutskipWeeks/statinjection. Local/livebat/pitpassed:21/20matches,30/24events,4/11treatmentweeks,2yearreviews+final,oneHoF,inheritancenewweek0.
 - Reload24/48/72/96/120/144exactplayerJSONandendingnoduplicate. Actual390livebothendingpixelsinspectedrank/record/buttons. Notdirectmatchcareer,natural/deviceorbalanceQA;PRNGreseedsonreload. Bothrank1score88isreviewleadnotbalanceproof. AddedCANDIDATE_QArequired/deferredmatrix. Buildsameindex-BLv0ow_e.js,nogamechange.
+
+## 14:18 Nov19 - mixed direct/auto career baseline
+- CareerMIXEDoptionplaysfirstmatchperyearweeks7/55/103thenremainderauto;noper-week/statinjection. Local/livebat+pit144weeks/ending/HoF/inheritancepassed. DirectimmediateAB/IP/hits/HA/SO/WLdeltaandpreconfirmreloadexactPchecked.
+- Controlledbat3K/0H4:10each;pit3IP9K0:1each(autoTB). Livebat68OVR8W12L60AB15H,pit71OVR9W11L94IP82HA75SO;20matcheseach. Debugdt/shortwaits/fixedgamerandom,naturalorvariedinplaynotdone. Actual390liveendingrecordsinspected;titlewordwrappingstillpending. Buildsameindex-BLv0ow_e.js,nogamechange. CandidateQAupdatedremainingpartialcriteria.

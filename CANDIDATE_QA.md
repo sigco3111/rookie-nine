@@ -22,3 +22,11 @@
 - Double plays, tag-up, errors and tactical base-running exceptions remain outside current implementation.
 - Save is browser-local. No verified cross-device sync.
 - Detailed art/content expansion is separate from fixing the core candidate path.
+
+## Mixed career check 2026-11-19 14:18 KST
+- Local and deployed, both positions, same no-week/stat-injection UI career. One direct game in each year at weeks7/55/103, automatic remainder.
+- Controlled direct batter: three called-strikeout appearances per game,0 hits,4:10. Controlled pitcher:3 innings/9 strikeouts per game,0:1 automatic-tiebreak loss. Debug timestep, shortened waits and fixed per-game random. NOT natural direct play or varied in-play coverage.
+- Immediate career AB/IP, hits/hits-allowed, strikeouts and win/loss deltas match each result. Reload before each direct result confirmation preserves exact player JSON. Then weeks through144, reviews, one HoF entry and inheritance passed.
+- Deployed batter ending68OVR/8W12L,60AB15H; pitcher71OVR/9W11L,94IP82HA75SO. Each20 matches including3 direct. No runtime errors.
+- Remaining mixed-career coverage: fair contact/runner and varied pitching outcomes inside a long career, exact final totals summed across every match, saved pending events and mid-game restart. Do not mark the whole mixed/direct criterion complete yet.
+- UI tidy pending from parent: ending first-pick text leaves last Korean character on a separate line at390px. No gameplay block.

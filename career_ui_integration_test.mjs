@@ -9,10 +9,21 @@ try{
  await p.evaluateOnNewDocument(c=>document.addEventListener('DOMContentLoaded',()=>{const s=document.createElement('style');s.textContent=c;document.head.append(s)}),css);
  await p.goto(process.env.TEST_URL||'http://localhost:8123/');await p.waitForSelector('#new');await p.click('#new');await p.click(`[data-p="${pos}"]`);await p.click('#go');
  async function setup(){await p.evaluate(seed=>{let n=seed;Math.random=()=>{n=(1664525*n+1013904223)>>>0;return n/4294967296;};window.__rk.renderer.setPixelRatio(.25);},seed);}
- await setup();const log=[],reloads=[];const modalCounts={};
+ await setup();const log=[],reloads=[],direct=[];const modalCounts={};
  for(let step=0;step<800;step++){
   const state=await p.evaluate(()=>({week:window.__game.P.week,done:window.__game.P.done,again:!!document.querySelector('#again'),pending:document.querySelector('.modal')?.innerText.slice(0,70)}));
   if(state.again)break;
+  const year=Math.floor(state.week/48)+1;
+  if(process.env.MIXED&&await p.$('#auto')&&!direct.some(d=>d.year===year)){
+   const before=await p.evaluate(()=>{const p=window.__game.P;return {ab:p.ab,hits:p.hits,so:p.so,wins:p.wins,losses:p.losses};});
+   await p.evaluate(pos=>{window.__dt=.5;window.__careerTimer=window.setTimeout;window.setTimeout=(fn,ms,...a)=>window.__careerTimer(fn,Math.min(ms,10),...a);Math.random=()=>pos==='pit'?.99:.01;},pos);
+   await p.click('#play');if(pos==='pit')await p.evaluate(()=>{window.__careerPitch=setInterval(()=>{const b=document.querySelector('#throw');if(b&&!b.disabled)b.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}));},20);});
+   await p.waitForFunction(()=>!!document.querySelector('#ok'),{timeout:90000,polling:30}).catch(async e=>{throw Error('direct game failed year'+year+':'+e.message)});
+   const after=await p.evaluate(()=>{const p=window.__game.P;return {r:p.pendingResult.result,ab:p.ab,hits:p.hits,so:p.so,wins:p.wins,losses:p.losses,history:p.matchHistory[0]};});
+   const r=after.r;if(after.ab-before.ab!==(pos==='pit'?r.ip:r.ab)||after.hits-before.hits!==(pos==='pit'?r.hitsAllowed:r.hits)||after.so-before.so!==(pos==='pit'?r.so:0)||after.wins+after.losses-before.wins-before.losses!==1)throw Error('direct delta mismatch '+JSON.stringify({before,after}));
+   const snap=await p.evaluate(()=>JSON.stringify(window.__game.P));await p.reload();await p.waitForSelector('#cont');await p.click('#cont');await p.waitForSelector('#ok');if(await p.evaluate(()=>JSON.stringify(window.__game.P))!==snap)throw Error('direct result reload changed');await setup();
+   direct.push({year,week:state.week,before,after});console.log('direct game carried',pos,year,r);continue;
+  }
   const action=await p.evaluate(()=>{
    for(const sel of ['#auto','#ok','#oklearned','#okrv','#okev','.modal [data-c]']){const el=document.querySelector(sel);if(el){el.click();return {type:sel,week:window.__game.P.week};}}
    const q=window.__game.P;if(q.done)throw Error('done without ending');
@@ -30,8 +41,8 @@ try{
  }
  await p.waitForSelector('#again');const end=await p.evaluate(()=>({p:window.__game.P,h:window.__game.G.hof()}));if(end.p.week!==144||!end.p.done||end.h.length!==1||end.p.yearHistory.length!==2||end.h[0].yearReviews.length!==3)throw Error('bad ending '+JSON.stringify(end));
  for(const [k,v]of Object.entries(end.p)){if(typeof v==='number'&&!Number.isFinite(v))throw Error('nonfinite '+k);}
- await p.evaluate(()=>window.__rk.renderer.setPixelRatio(1));await p.screenshot({path:`/downloads/rookie9_career_${pos}_ending${process.env.TEST_URL?'_live':''}.png`});
+ await p.evaluate(()=>window.__rk.renderer.setPixelRatio(1));await p.screenshot({path:`/downloads/rookie9_career_${pos}${process.env.MIXED?'_mixed':''}_ending${process.env.TEST_URL?'_live':''}.png`});
  await p.reload();await p.waitForSelector('#cont');await p.click('#cont');await p.waitForSelector('#again');if(await p.evaluate(()=>window.__game.G.hof().length)!==1)throw Error('duplicate hof');
  await p.click('#again');await p.waitForSelector('#inh');await p.click(`[data-p="${pos}"]`);await p.select('#inh','0');await p.click('#go');await p.waitForSelector('#stat');const next=await p.evaluate(()=>window.__game.P);if(next.week!==0||next.done||!next.log.some(x=>x.includes('선배의 가르침')))throw Error('inheritance not applied');
- const report={pos,seed,mode:'UI commands, seeded random, automatic matches, no week/stat injection',modalCounts,reloads,week:end.p.week,stats:{ovr:end.h[0].ovr,wins:end.p.wins,losses:end.p.losses,ab:end.p.ab,hits:end.p.hits,traits:end.p.traits,result:end.p.result},events:end.p.eventHistory?.length,matchHistory:end.p.matchHistory?.length,yearReviews:end.h[0].yearReviews.length,inheritance:next.log.slice(0,2),errors:errs};fs.writeFileSync(`/downloads/rookie9_career_${pos}_report${process.env.TEST_URL?'_live':''}.json`,JSON.stringify(report,null,2));if(errs.length)throw Error(errs.join('|'));console.log(JSON.stringify(report,null,2));
+ if(process.env.MIXED&&direct.length!==3)throw Error('missing direct years');const report={pos,seed,direct,mode:process.env.MIXED?'UI career with one controlled direct game per year, seeded auto remainder, no week/stat injection':'UI commands, seeded random, automatic matches, no week/stat injection',modalCounts,reloads,week:end.p.week,stats:{ovr:end.h[0].ovr,wins:end.p.wins,losses:end.p.losses,ab:end.p.ab,hits:end.p.hits,traits:end.p.traits,result:end.p.result},events:end.p.eventHistory?.length,matchHistory:end.p.matchHistory?.length,yearReviews:end.h[0].yearReviews.length,inheritance:next.log.slice(0,2),errors:errs};fs.writeFileSync(`/downloads/rookie9_career_${pos}${process.env.MIXED?'_mixed':''}_report${process.env.TEST_URL?'_live':''}.json`,JSON.stringify(report,null,2));if(errs.length)throw Error(errs.join('|'));console.log(JSON.stringify(report,null,2));
 }finally{await b.close();if(server){const done=new Promise(r=>server.once('exit',r));server.kill('SIGTERM');await done;}}
