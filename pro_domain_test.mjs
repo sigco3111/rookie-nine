@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';import * as P from './src/pro.js';
+const entry=(name,pos='bat')=>({name,pos,build:'contact',stats:[62,58,45,44,43,50],traits:['clutch'],career:pos==='bat'?{ab:85,hits:30,hr:4}:{ip:80,so:50},date:123,rank:1,team:'가상 구단'});
+const archive=entry('졸업');const original=JSON.stringify(archive);let club=P.newClub({id:'club-1',name:'우리 구단'});
+assert.throws(()=>P.playerFromGraduate({...archive,stats:[NaN]}));
+club=P.admitGraduate(club,archive).club;assert.equal(P.admitGraduate(club,archive).added,false);assert.equal(JSON.stringify(archive),original);assert.equal(club.roster[0].abilities.meet,62);assert.equal(club.roster[0].pro.ab,0);assert.equal(club.roster[0].school.ab,85);
+for(let i=1;i<9;i++)club=P.admitGraduate(club,entry('졸업'+i)).club;club=P.admitGraduate(club,entry('투수','pit')).club;
+const batters=club.roster.filter(p=>p.pos==='bat').map(p=>p.id),starter=club.roster.find(p=>p.pos==='pit').id;
+assert.throws(()=>P.setLineup(club,{batters:Array(9).fill(batters[0]),starter}));assert.throws(()=>P.setLineup(club,{batters,starter:batters[0]}));
+club=P.setLineup(club,{batters,starter});club=P.beginClubGame(club,{id:'s1-g1',opponent:'상대'});const snap=JSON.stringify(club.pending);assert.equal(JSON.stringify(P.beginClubGame(club,{id:'s1-g1',opponent:'상대'}).pending),snap);assert.throws(()=>P.setLineup(club,{batters,starter}));
+const disk=JSON.stringify(club);club=JSON.parse(disk);assert.equal(JSON.stringify(club.pending),snap);
+const result={id:'s1-g1',my:3,opp:1,players:{[batters[0]]:{ab:3,hits:2,hr:1,rbi:2},[starter]:{ip:3,so:4,hitsAllowed:2,er:1}}};
+assert.throws(()=>P.applyClubResult(club,{...result,id:'wrong'}));assert.throws(()=>P.applyClubResult(club,{...result,players:{other:{ab:1}}}));assert.throws(()=>P.applyClubResult(club,{...result,players:{[batters[0]]:{ab:1,hits:2}}}));
+const first=P.applyClubResult(club,result);assert.equal(first.applied,true);const second=P.applyClubResult(first.club,result);assert.equal(second.applied,false);assert.deepEqual(first.club,second.club);assert.equal(first.club.record.wins,1);assert.equal(first.club.record.games,1);assert.equal(first.club.roster[0].pro.hits,2);assert.equal(first.club.roster[0].school.ab,85);assert.equal(JSON.stringify(club),disk);console.log('pro domain admission/snapshot/lineup/result idempotency/isolated school records passed');

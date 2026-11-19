@@ -717,3 +717,8 @@
 ## 18:23 Nov19 - unsaved same-tab continuation
 - loadpreferslatestpendingplayer/deletion,nottheoldonsdisk. Faultmenu/title/continuePexact+warningkept,unitqueueddelete/newplayer/twoHoFretrypass. Normalending4/144batpassed. JSBV3UPLfL/CSSDyhpIlXV.
 - Parent18:20scopequestion:75%onlygrowthcandidate,noproclub/graduateplayerroster. Originalplannothermodenextrun/juniorrivalreusebroaderthanimplementedbonustraitcarry. Parenthasoriginalsource/findings,notnewscopeinstruction.
+
+## 18:43 Nov19 - pro-club shared domain preparation
+- Newscopefirstcompletionapproved18:23sourceinPRO_MODE_PLAN. Prior75%/3–5daysnotapplicable;working50–55%/7–12daysjudgmentpendingimplementation/devicerisk,refineNov20~13:35.
+- Purepro.jspreparesgraduatetoimmutablecopy/abilitytraitmapping/legacyID/school-prostatseparation/9slotsstarter/snapshotpending/resultIDidempotency+recordvalidation;pro_domain_testpassed. Notmenupersistence/directengine/seasonimplemented. Existingbuildunchanged.
+- Parent18:41keepsoneclubvsdraftedclubschoiceunresolveduntil06userreport. Nochoicehardcoded;commonpreponly. PRO_MODE_PLANremainingintegration/gatesdocumentsit. NoUIchanges/pixelsnotapplicablethisbatch.
