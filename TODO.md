@@ -781,3 +781,6 @@
 
 ## Nov19 23:34 - dedicated pro pitching force/infield link checked
 - Real prepared3D pitching overlay homeforceout/safe+secondforceout/safe+infieldsafe(nonforced2B)→onecheckpoint/UI/ledger/exactreload/schoolpreserve pass. Noearlycommitduringreceive;safehome1ER/nohit;outnoER;infield1hit/nonforcedhold. Actualpixels390homeout+safereturninspected. Controlleddraw/acceleratedNOTphonehuman. Testsetupdoublebaselineassertcorrected to delta;productionunchanged. No runtime/fullcareerrepeat. Admission/normalentry/season/policy remain open.
+
+## Nov19 23:53 - club records prepared UI
+- Readonlyaggregate/proplayertotals/reversehistory/expandindividualrows withpreparedmodenav. Missinglegacystat=unrecorded,inningsintegerouts. Empty→2enginegames/result→reactiveview/reload/readonly/schoolpreserve/320-430/destroy pass. Actualaggregate+detail390pixels inspected. No season/admissionpolicy/normalentry/livechange.
