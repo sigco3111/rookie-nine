@@ -613,3 +613,6 @@
 ## 08:43 Nov19 - explicit automatic offense handoff
 - Pitcherhalfinningphaseandscorebannerexplicitlyname우리팀자동공격ratherthanjust공격중. Newsummaryphaseincludesaddpoints. Automaticoffenseformula/inputscope/timingunchanged.
 - Inningtestassertshandoffandautomatic-summarylabels,loaded3outs→emptyfield/disabledthrow→restoredempty2ndinningpassedlocal1:0. Buildpassed;actual390summarypixelsinspected. ControlledRNG/clocknotdevice/naturalQA.
+
+## 09:04 Nov19 - fallback automatic offense handoff
+- InningtestFAIL_MODELblocksplayerassetandassertsKenneyabsent;afterautomaticoffensechecksrunner/ballhiddenand7gazesreset. Local/livefallbackloaded→3outs→auto1point→empty2ndinning1:0passedlabels/fieldhide/throwlock/restore. Actual390livefallbacksummarypixelsinspectedbanner+phase/3outs/emptybases/score. Buildsameindex-B5xFmXsW.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
