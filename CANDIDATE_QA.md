@@ -108,3 +108,21 @@
 |pit|rest|99991|36|45|0|9-10|
 
 - Again8of8focused/balanced routes firstpick, rest3undrafted/1lowerround. Across both policy batches16of16trained firstpick, rest4of8drafted. This is evidence that these selected trained policies readily reach the highest draft band, not a balanced-distribution claim or instruction to make batting harder. No gameplay tuning. More gameplay is needed before deciding whether broad graduation thresholds should change. First candidate estimate remains75%.
+
+## Unaccelerated full-game window 2026-11-19 17:23 KST
+- FULL=1 normal_random_pitch_ui_test extends single-pitch test to95second game-completion window. Native RNG, no forced ball, no timestep or timer changes, scripted per-pitch timing/swing or throw input. This remains software desktop at390x844/pixel ratio0.5, not human timing/mobile hardware.
+- Deployed batter:95.44seconds/680frames/140.17ms mean gap,676gaps>50ms, result not reached; screenshot inning5/1:3 fair-ball flight. Local pitcher:95.40seconds/568frames/167.83ms mean,565gaps>50ms, result not reached; screenshot inning1/0:0 with1B+2B runners/ball flight. Earlier pitch outcomes and returns/next input progressed. Neither is full-game clearance or evidence of a deadlock. Existing50ms delta cap slows the game clock in this rendering environment.
+- Actual pixels inspected. No runtime or difficulty changes. Need multi-window retained-browser normal-clock test to reach result, plus actual-device signal separately.
+
+## Candidate gate list, current as of 17:23
+### Required before calling this a first candidate
+- Finish representative native-random/unaccelerated batter and pitcher games, then verify result carry/save/next week. Scripted controls still must be labeled; human feel is a separate gate.
+- Actual-phone portrait/touch/loading/frame pacing/audio-after-gesture. Main will offer a short device-specific check, not ask the user to repeat a full career. No phone result yet.
+- Review balance goal with observed trained-policy first-pick saturation. Current24automated UI careers show trained16/16firstpick and rest4/8drafted. A convenient policy sample, not a target distribution. No tune until intended challenge and more play evidence support it; preserve easy batting.
+- Resolve any reproducible crash/progression stop/lost or duplicate save/inconsistent action-score-record/unreadable primary control found in the remaining checks. Previously checked paths pass, not proof that none exist.
+### Follow-up unless it breaks the above core
+- More assets/content/animation polish, larger event variation, broad statistical balance beyond obvious progression problems.
+- Full9inning/all-player/tactics, doubleplay/tagup/error/steal/bunt expansion. Not included in previously explained first-candidate estimate.
+- Cloud/cross-device saves. Current local-browser save and match-from-start restart are disclosed limits, not silent pitch-level resume promises.
+### Outlook
+- First-candidate management estimate stays about75%(70–80judgment range), implementation54/60+validation20/40 rounded. Not elapsed-time fraction or objective measurement. The3–5additional-day planning estimate fromNov19requires later refinement; a phone issue could extend it. User makes final completion decision.

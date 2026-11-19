@@ -702,3 +702,7 @@
 ## 17:05 Nov19 - continuous QA random+alternate events
 - CONTINUOUSpersistssessionPRNGacrossreloads;live12morebat/pit×3policies×seeds2026/99991eventchoiceweek%options,144ledger/P/HoFone/inheritancepassed. Localbatrest2026+pitbalanced99991exactmatch. Actual390undraftedbat53score+balancedpit85scoreinspected.
 - 8/8trainedfirstpickagain,rest3undrafted1lowround. Combined16/16trainedfirstpick/rest4of8drafted,selectedpolicyoutcomesnotfairnessproof. Noformulatune. Userphonepathgivenparentwithsaveoverwritecaution;parentwillask. Progress75%unchanged.
+
+## 17:23 Nov19 - native full-game window and candidate gates
+- FULL=1nativeRNG/nodt/noforced/notimer95swindow:livebatinning5fairflight140msmeanframes/localpitinning1twoonfairflight168ms. Neitherresultreached,notfullgamepass/notdeadlockproof/NOTphoneperformance. Actual390pixelschecked. Needretainedbrowsermultiwindowcompletion.
+- CandidateQArequired/followupgatesseparated;phonecheckmainwilloffer,policyfirstpicksaturationuntuned. Progress75%unchanged. Build/runtimeunchanged.
