@@ -861,3 +861,9 @@
 ## Nov20 08:15 school cast integrated
 - Optionalnormalcreatecastselectors/preview/cancel+duplicateguards,capturedarchive/sourcechecks,legacycompatibleoptionalvalidation. Junioractualtrainingweek48+once/report,max+1;Octoberfinalweekrivalaggregateopponentactualauto+directbatpitHUD,name+strength. Menuexplainscopies/conditions,noautoselect/original-prochange/notindividualrosterduel.
 - Pureguard/realcommandbothpos/report/RNG/auto-matchPASS;inheritance/pending/outgoingregressionsPASS;normalUIcreate/reload/controlledboundarytraining/rivalprompt/directbatpitstartup→interruptreload→autoresult/sourceexact/320-430PASS;390pixelsread/HUDduplicatefixed. Notnatural144week/fullrivaldirectgame/phonefeel. Nextcompletecast-boundary directoutcome andbroadercareerregression/balance.
+
+## Nov20 08:38 - completed rivalry and sequential career coverage
+- Extended normal creation/cast test with COMPLETE=1: actual school direct3D bat3PA/pitch3innings27throws, result→reload result→confirm→week28→reload, one history entry/sourceexact. Local bothpositions and LIVEpit passed. Accelerated dt/timers/controlledRNG/lowrenderresolution; not realphone/normalclock feel. Actual390resultpixels inspected.
+- Added six sequential144week enginecareers (bothpositions/3seeds), actualcommands/autogames/events/save-load everyweek/yearreviews/graduation once.126matches/266juniorassists/sourcearchiveprefix+proexact PASS. Separate no-cast sixcareers130matches PASS. This is not all144normalUIweeks.
+- Balance finding: simple rest/study/basic strategy reaches all99 in all12careers, bothwithandwithoutcast. First allstatcap withcast107-142weeks, without117-137weeks. RNGpathsdiverge due rivalry draws, so not causalpairedmeasure. Existing growth pacing needs review; no retune shipped and no balancecompletion claim.
+- Sharedpro prepared3D UI regression and match/replay/storage tests PASS; build unchanged runtime6586a6d. Tests/docs only.
