@@ -447,21 +447,21 @@ export async function playMatch(p, m, hud) {
       if (r.res === 'walk') { sc = 0; }
       my += sc;
       if (r.res === 'hr') sfx.cheer(2); else if (sc || r.res === 'single' || r.res === 'double') sfx.cheer(1); else if (r.res === 'k' || r.res === 'out') sfx.out();
-      hud.banner(r.label + (sc ? ` (+${sc}점)` : ''), 1500); hud.setScore(inn, my, oppRuns); await wait(1700);
+      hud.setPitch(r.label + (sc ? ` (+${sc}점)` : ''));hud.banner(r.label + (sc ? ` (+${sc}점)` : ''), 1500); hud.setScore(inn, my, oppRuns); await wait(1700);
       // 출루 후 득점
-      if (['single', 'double', 'walk'].includes(r.res) && chance(35 + p.speed * 0.2)) { await runFollowupScore(o,hud,r.res==='double'?2:1);resetCam();s.runs++; my++; hud.banner('후속 안타로 홈인!', 1100); hud.setScore(inn, my, oppRuns); await wait(1200); }
+      if (['single', 'double', 'walk'].includes(r.res) && chance(35 + p.speed * 0.2)) { await runFollowupScore(o,hud,r.res==='double'?2:1);resetCam();s.runs++; my++; hud.setPitch('후속 안타로 홈인!');hud.banner('후속 안타로 홈인!', 1100); hud.setScore(inn, my, oppRuns); await wait(1200); }
     } else {
       const add = Math.random() < lam * 0.7 ? (chance(25) ? 2 : 1) : 0; my += add;
-      hud.banner(`${inn}회 우리 팀 ${add}점`, 900); hud.setScore(inn, my, oppRuns); await wait(950);
+      hud.setPitch(`우리 팀 자동 공격 · ${add}점`);hud.banner(`${inn}회 우리 팀 ${add}점`, 900); hud.setScore(inn, my, oppRuns); await wait(950);
     }
     const oa = Math.random() < Math.max(0.1, 0.28 + (strength - 40) / 28) ? (chance(25) ? 2 : 1) : 0; oppRuns += oa;
-    hud.banner(`${inn}회 상대 ${oa}점`, 900); hud.setScore(inn, my, oppRuns); await wait(950);
+    hud.setPitch(`상대 자동 공격 · ${oa}점`);hud.banner(`${inn}회 상대 ${oa}점`, 900); hud.setScore(inn, my, oppRuns); await wait(950);
   }
   // 정리
   cv.removeEventListener('pointerdown', onD); cv.removeEventListener('pointermove', onM); window.removeEventListener('pointerup', onU); window.removeEventListener('keydown', key);
   hud.offSwing();
   const playedScore={my,opp:oppRuns},automaticTiebreak=my===oppRuns;
-  let win = my > oppRuns; if (my === oppRuns) { win = chance(50 + p.ev.team * 0.1); if (win) my++; else oppRuns++; hud.banner('동점 자동 결정 · ' + (win ? '승리' : '패배'), 1400); await wait(1500); }
+  let win = my > oppRuns; if (my === oppRuns) { win = chance(50 + p.ev.team * 0.1); if (win) my++; else oppRuns++; hud.setPitch('동점 자동 결정 · ' + (win ? '승리' : '패배'));hud.banner('동점 자동 결정 · ' + (win ? '승리' : '패배'), 1400); await wait(1500); }
   const r = { automaticTiebreak,playedScore,ab: s.ab, hits: s.hits, hr: s.hr, rbi: s.rbi, my, opp: oppRuns, win, kind: m.kind, title: m.name + ' vs ' + opp };
   applyMatchResult(p, r);
   return r;

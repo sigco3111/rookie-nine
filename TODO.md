@@ -647,3 +647,7 @@
 ## 12:19 Nov19 - explicit pitcher glove receipt phase
 - Catcher/ground/airreturnnowchangesHUDto투수미트수신exactlyonceontheexistingmitt-soundarrival,retainingexistinghold/nextinput/count/outcome/path/timing. No batting/swing changes.
 - Extended3soundtestsassertlabelontargetarrivalandcapturereceiptbeforecount/input. Localcatcher/groundout/airoutpassedgloves/countorder/soundtotals2/3/2andnextready. Actual390all3receiptpixelsinspectedlabelandlockedinput;ground/airwideviewballsmall,endpointassertionnotpixelproof. Somecombinedrunsinterruptedby120seclimit;afterstaleprocesscleanupindividualrunsallpassed. Buildindex-B1vxF_bQ.js. ControlledRNG/clocknotdevice/naturalQA.
+
+## 12:32 Nov19 - batting result and automatic phase sync
+- BattingHUDnowmatchesconfirmedPAresult(+runs),followuphomein,own/opponentautomaticoffensepoints,andautomatictiebreakratherthanretainingpitcherreceipt/previousphase. Existingbanner/textoutcomes,scoreformula,timers,input,swing/easybatunchanged.
+- Batreturntestobservesresult→automaticphasesandcapturesconfirmedresult. Localground/air1AB0H6:7andhit1AB1H1RBI11:10passedreturn/gloves/gaze/yaw/FOV/resultsand0/2pointautolabels. Hitinitialexactlabeltestmissedlegitimate(+1점)suffix;changedprefixcheckthenpassed. Actual390ground/hitresultpixelsinspectedmatchingbanner/phaseandhiddeninput. Buildindex-CFvHLQxd.js. ControlledRNG/clocknotdevice/naturalQA.
