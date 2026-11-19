@@ -844,3 +844,7 @@
 ## Nov20 06:30 normal pro entry
 - Title→hub→explicit ownclub creation(10fictionalbaseplayers/3innings6games)→archiveconfirmed admission→lineup→persisted schedule/resume/direct3Dbatting/results/6records/exit-reenter reachable. Oneownclub/default6games are delegated implementationdefaults notuserpreferences. Schooldraft/source preserved. No autoadmit/autolineup.
 - Purequota/retry/6games/reload/frozenlist and normalUI/sourceexact/320-430 + corruptpro/no-create,quotaUIretry,invalidarchiveblocked PASS. Actual390pixels inspected. Buildpass. Firstsixgamesonly/nextseasonnotready stated. Next safe explicit rollover + normalpitching/device boundaries. No phonefeel/balancecompletion claim.
+
+## Nov20 06:50 - next season persistent transition
+- Completedsavedseason→preview/cancel/confirm→archiveoldschedule+season+new6games one atomicwrite,retainroster/cumulative/results. Exactroot/stale/pending/conflict guards,normalwritescannotchange season/archive. Archivedprefix/order/boundary/ID/seasonlabelvalidation added,legacyaccepted.
+- Pure12games/2seasons→3rd/reload/quotaretry/guards PASS; normalUI6→cancel→quota-confirm/retry→2season/reload→7thgame/7records/oldsix+scheduleexact/sourcebytespreserved PASS. Actual430confirm/newseasonpixelsread. Notfullleague/contracts/probalance; nextseason summary/history display andnormalpitch/device.

@@ -24,7 +24,7 @@ export function mountProSaveNotice(store,{parent=document.body,onStatus=()=>{},o
   else {selected=null;title.textContent='프로 진행을 저장하지 못했습니다';detail.textContent='최신 진행은 이 창에만 있습니다. 창을 닫거나 새로고침하면 잃을 수 있습니다. 저장 공간·브라우저 설정을 확인한 뒤 다시 시도하세요. 고교 육성 기록은 별도입니다.';}
   onStatus({blocked:!state.ok||status.conflict,pending:status.pending,ok:el.hidden});
  }
- button.onclick=()=>{store.retry();draw();};const unsubscribe=store.subscribe(draw);
+ button.onclick=()=>{const pending=store.status().pending,ok=store.retry();draw();if(pending&&ok)onRecovered({ok:true,retried:true});};const unsubscribe=store.subscribe(draw);
  const storageChanged=e=>{if(e.key===PRO_KEY||e.key===null){selected=null;draw();}};window.addEventListener('storage',storageChanged);
  const beforeUnload=e=>{if(store.status().pending){e.preventDefault();e.returnValue='';}};window.addEventListener('beforeunload',beforeUnload);draw();
  return {element:el,refresh:draw,destroy(){removed=true;unsubscribe();window.removeEventListener('storage',storageChanged);window.removeEventListener('beforeunload',beforeUnload);el.remove();}};

@@ -1,4 +1,4 @@
-import { validateClubSchedule } from './pro-schedule.js';
+import { validateClubSchedule, validateScheduleHistory } from './pro-schedule.js';
 // Preparation only. One root write holds all clubs, snapshots and result ledgers.
 import { PRO_SCHEMA, applyClubResult, setLineup } from './pro.js';
 import { keysOf } from './data.js';
@@ -35,6 +35,7 @@ export function validateClub(club){
     if(p.session){const session=validateClubSession(p.session);if(session.gameId!==p.id||JSON.stringify(session.teams[0].batters)!==JSON.stringify(p.batters)||JSON.stringify(session.teams[0].pitcher)!==JSON.stringify(p.pitcher))fail();}
   }
   if(club.schedule!=null)validateClubSchedule(club);
+  validateScheduleHistory(club);
   return clone(club);
 }
 export function emptyProSave(){return {schema:PRO_SCHEMA,revision:0,clubs:[],selected:null};}
@@ -53,7 +54,16 @@ export function createProStore(storage){
     catch{return {ok:false,data:null,pending:hasPending,error:'프로 기록을 읽을 수 없습니다. 원본을 보존했습니다.'};}
   }
   function flush(){try{if(storage.getItem(PRO_KEY)!==baseRaw){conflict=true;return false;}storage.setItem(PRO_KEY,pending);hasPending=false;conflict=false;return true;}catch{return false;}}
-  function save(data){const current=load();if(!current.ok||data.revision!==current.data.revision)fail();for(const club of current.data.clubs)if(club.schedule&&JSON.stringify(data.clubs?.find(c=>c.id===club.id)?.schedule)!==JSON.stringify(club.schedule))fail();const valid=validateProSave(data);valid.revision++;if(!hasPending)baseRaw=storage.getItem(PRO_KEY);pending=JSON.stringify(valid);hasPending=true;const ok=flush();notice();return {ok,data:load().data};}
+  function save(data,transitionClubId=null){const current=load();if(!current.ok||data.revision!==current.data.revision)fail();for(const club of current.data.clubs){const next=data.clubs?.find(c=>c.id===club.id);if(club.id!==transitionClubId&&(club.season!==next?.season||JSON.stringify(club.scheduleHistory??[])!==JSON.stringify(next?.scheduleHistory??[])||(club.schedule&&JSON.stringify(next?.schedule)!==JSON.stringify(club.schedule))))fail();}const valid=validateProSave(data);valid.revision++;if(!hasPending)baseRaw=storage.getItem(PRO_KEY);pending=JSON.stringify(valid);hasPending=true;const ok=flush();notice();return {ok,data:load().data};}
+  function rollover(clubId,schedule,{expectedRoot,confirmed=false}={}){
+    const state=load();if(!state.ok||hasPending||statusPendingConflict()||!confirmed||JSON.stringify(state.data)!==expectedRoot)throw Error('시즌 전환 내용을 다시 확인하세요.');
+    const index=state.data.clubs.findIndex(c=>c.id===clubId),club=state.data.clubs[index];
+    if(!club||club.pending||!club.schedule||!club.schedule.fixtures.length||!validateClubSchedule(club).done)throw Error('저장된 일정을 먼저 마치세요.');
+    const next={...club,season:club.season+1,scheduleHistory:[...(club.scheduleHistory??[]),clone(club.schedule)],schedule:clone(schedule)};
+    if(next.schedule?.season!==next.season||next.schedule?.startGame!==club.record.games||!next.schedule?.fixtures?.length||validateClubSchedule(next).completed!==0)fail();
+    state.data.clubs[index]=next;return save(state.data,clubId);
+  }
+  function statusPendingConflict(){if(hasPending){try{if(storage.getItem(PRO_KEY)!==baseRaw)conflict=true;}catch{}}return conflict;}
   function result(clubId,outcome){const state=load();if(!state.ok)fail();const index=state.data.clubs.findIndex(c=>c.id===clubId);if(index<0)fail();const applied=applyClubResult(state.data.clubs[index],outcome);if(!applied.applied)return {ok:!hasPending,applied:false,data:state.data};state.data.clubs[index]=applied.club;return {...save(state.data),applied:true};}
   function recoveryOptions(){
     if(!hasPending||!conflict)return null;
@@ -81,5 +91,5 @@ export function createProStore(storage){
       hasPending=false;pending=undefined;conflict=false;notice();return {ok:true,backupKey,data:selected};
     }catch(error){notice();return {ok:false,backupKey,error:'복구를 마치지 못했습니다. 두 기록을 덮어쓰지 말고 다시 확인하세요.'};}
   }
-  return {load,save,result,recover,recoveryOptions,retry(){const ok=!hasPending||flush();notice();return ok;},subscribe(fn){listeners.add(fn);return ()=>listeners.delete(fn);},status(){if(hasPending){try{if(storage.getItem(PRO_KEY)!==baseRaw)conflict=true;}catch{}}return {pending:hasPending,conflict};}};
+  return {load,save:data=>save(data),rollover,result,recover,recoveryOptions,retry(){const ok=!hasPending||flush();notice();return ok;},subscribe(fn){listeners.add(fn);return ()=>listeners.delete(fn);},status(){if(hasPending){try{if(storage.getItem(PRO_KEY)!==baseRaw)conflict=true;}catch{}}return {pending:hasPending,conflict};}};
 }
