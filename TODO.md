@@ -867,3 +867,8 @@
 - Added six sequential144week enginecareers (bothpositions/3seeds), actualcommands/autogames/events/save-load everyweek/yearreviews/graduation once.126matches/266juniorassists/sourcearchiveprefix+proexact PASS. Separate no-cast sixcareers130matches PASS. This is not all144normalUIweeks.
 - Balance finding: simple rest/study/basic strategy reaches all99 in all12careers, bothwithandwithoutcast. First allstatcap withcast107-142weeks, without117-137weeks. RNGpathsdiverge due rivalry draws, so not causalpairedmeasure. Existing growth pacing needs review; no retune shipped and no balancecompletion claim.
 - Sharedpro prepared3D UI regression and match/replay/storage tests PASS; build unchanged runtime6586a6d. Tests/docs only.
+
+## Nov20 08:55 - actual head-to-head and fixture states
+- Added read-only opponent projection by stored opponent name, actual result totals perseason/allseasons, current pending excluded from completed counts; previous unscheduled results retained/labeled. No synthetic league table or otherclubs-v-otherclubs claims.
+- Normal club schedule shows opponent cards and expandable full list with actualscore/completed vs upcoming state. Records shares same projection and existing seasonfilter. Readonly UI no new storage schema or permission.
+- Pureempty/pending/completed/reconcile/reload/twoseasons/legacy passed. Normal3games UI/currentuncompletednotcounted/list3done3scheduled/reload/seasonfilter/no writes/sourceexact/320-430 passed. Existing normalentry6+1/seasonquota and seasonprojection regressions passed. Actual390pixelsread readable.

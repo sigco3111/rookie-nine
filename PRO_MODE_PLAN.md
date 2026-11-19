@@ -223,3 +223,7 @@
 ## Nov20 08:38 - school cast completion checks and pacing issue
 - Direct rivalry school games now tested to final result for bat3PA and pit3innings, result reload and single confirmation/nextweek persistence. LIVEpitch passed. Accelerated controlled checks, not phonefeel or normalclock play.
 - 12 sequential engine careers, 6 with roles and 6 without, save/reload eachweek and archive prefix/pro preservation passed. The basic/study/rest strategy reached99 in every run before graduation. No balance change was made; use a deliberate pacing measurement before changing rewards. These small seeded samples are not proof that all strategies or seeds behave alike.
+
+## Nov20 08:55 - opponent results rather than invented standings
+- Schedule and records show our club's real saved head-to-head wins/losses/runs by opponent name, with explicit no-other-club-game/no-league-ranking note. Expandable schedule shows completed score and unplayed plan states. Existing season filter applies to shared read-only opponent projection. Does not create a full league simulation.
+- Empty/pending/record sums/reload/two-season separation/legacy/no-write and normal UI3games+pendingexclusion+list/reload/filter/source-preserve/portrait320-430 tests pass;390pixels inspected. Existing normalentry6+1/seasonrollover/quota and season-record tests pass. Build and diff check pass.
