@@ -380,6 +380,13 @@ async function startMatch(m) {
     banner: (t, ms) => { bn.innerHTML = `<div class="banner">${t}</div>`; clearTimeout(api._t); api._t = setTimeout(() => bn.innerHTML = '', ms); },
     onSwing: (f) => { swFn = f; }, offSwing: () => { swFn = null; },
   };
+  api.setBattingContext = (context) => {
+    let row=hud.querySelector('#battingcontext');
+    if(!context){row?.remove();return;}
+    if(!row){row=$('<div id="battingcontext" style="display:table;margin-top:3px;padding:4px 8px;background:#102039dd;border-radius:8px;font-size:11px;font-weight:900;color:#c4d2e4"></div>');hud.appendChild(row);}
+    row.textContent=context.runner?(context.clutch?'주자 있음 · 찬스 효과 적용':'주자 있음'):'주자 없음';
+    row.style.color=context.clutch?'#ffd23f':'#c4d2e4';
+  };
   api.setBases = (mask) => {
     let row=hud.querySelector('#bases');if(!row){row=$('<div id="bases" style="display:flex;gap:5px;width:max-content;margin-top:3px;padding:4px 7px;background:#102039dd;border-radius:8px;font-size:11px;font-weight:900"></div>');hud.appendChild(row);}
     row.setAttribute('aria-label',`주자: ${[1,2,3].filter(b=>mask&(1<<(b-1))).map(b=>b+'루').join(', ')||'없음'}`);

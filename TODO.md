@@ -659,3 +659,7 @@
 ## 13:12 Nov19 - connect clutch trait to existing runner context
 - FoundplateAppearance(inn,base)calleromittedrunner,soscoringChancealwaysfalseandclutchradiusbonusneverapplied. Passesexistingrunnerflagonly. Existing+0.025bonus/basewindow/formulasunchanged;doesnotguaranteehit.
 - Newactualcontactboundarytestnoforcedhit,meet20/aimoffset.29:base.276vsclutch.301. All4runner/traitcombinationspassed:onlybothproducefaircontactflight,other3foul;timingnearcenter. Actual390localfairflight/foulpixelsinspected. Notstatisticalbalance/natural/deviceQA. Buildindex-DGWlJ1nv.js.
+
+## 13:34 Nov19 - batting runner and clutch context
+- SmallHUDrowduringPAshows주자있음/없음andgold찬스효과적용onlywhenbothactive. ClearedafterPA;nofictionalbaseoccupancyforthisabstractbattingrunner. Nooutcome/window/inputchange.
+- Localrunner+trait/empty+trait/runner+notraitlabelandactualboundarycontactpassed;noncontactKfullgameverifiescontextabsentduringautomaticplayandnextpitchrestore. Actual390contextpixelsinspectedreadablebelowcountwithoutoverlap;buildindex-BLv0ow_e.js. ControlledRNG/clocknotdevice/naturalQA.

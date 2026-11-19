@@ -399,7 +399,7 @@ export async function playMatch(p, m, hud) {
 
   // 타석
   const plateAppearance = async (inn, base) => {
-    const c = { b: 0, s: 0 }; let guard = 0;
+    const c = { b: 0, s: 0 }; let guard = 0;hud.setBattingContext?.({runner:!!base,clutch:!!base&&traits.includes('clutch')});
     hud.setCount(c); resetCam();
     hud.banner(`${inn}회 ${s.ab + 1}번째 타석`, 1100); await wait(1200);
     while (guard++ < 30) {
@@ -439,7 +439,7 @@ export async function playMatch(p, m, hud) {
     const lam = Math.max(0.1, 0.35 + (teamStrength(p) - 40) / 25);
     runner = chance(35) ? 1 : 0; // 앞 타자 출루
     if (pas.includes(inn)) {
-      const r = await plateAppearance(inn, runner);
+      const r = await plateAppearance(inn, runner);hud.setBattingContext?.(null);
       let sc = 0; s.ab += r.res === 'walk' ? 0 : 1;
       if (r.res === 'hr') { s.hits++; s.hr++; sc = 1 + runner; s.rbi += sc; s.runs++; }
       else if (r.res === 'double') { s.hits++; if (runner && chance(75)) { sc = 1; s.rbi++; } }
