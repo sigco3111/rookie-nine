@@ -44,13 +44,14 @@ export function validateProSave(root){
 }
 // In-memory pending state is authoritative until retry succeeds. Never silently turn unreadable data into a blank save.
 export function createProStore(storage){
-  let pending,hasPending=false,baseRaw=null,conflict=false;
+  let pending,hasPending=false,baseRaw=null,conflict=false;const listeners=new Set();
+  const notice=()=>{for(const fn of listeners)fn();};
   function load(){
     try{const raw=hasPending?pending:storage.getItem(PRO_KEY);return {ok:true,data:raw===null?emptyProSave():validateProSave(JSON.parse(raw)),pending:hasPending};}
     catch{return {ok:false,data:null,pending:hasPending,error:'프로 기록을 읽을 수 없습니다. 원본을 보존했습니다.'};}
   }
   function flush(){try{if(storage.getItem(PRO_KEY)!==baseRaw){conflict=true;return false;}storage.setItem(PRO_KEY,pending);hasPending=false;conflict=false;return true;}catch{return false;}}
-  function save(data){const current=load();if(!current.ok||data.revision!==current.data.revision)fail();const valid=validateProSave(data);valid.revision++;if(!hasPending)baseRaw=storage.getItem(PRO_KEY);pending=JSON.stringify(valid);hasPending=true;return {ok:flush(),data:load().data};}
+  function save(data){const current=load();if(!current.ok||data.revision!==current.data.revision)fail();const valid=validateProSave(data);valid.revision++;if(!hasPending)baseRaw=storage.getItem(PRO_KEY);pending=JSON.stringify(valid);hasPending=true;const ok=flush();notice();return {ok,data:load().data};}
   function result(clubId,outcome){const state=load();if(!state.ok)fail();const index=state.data.clubs.findIndex(c=>c.id===clubId);if(index<0)fail();const applied=applyClubResult(state.data.clubs[index],outcome);if(!applied.applied)return {ok:!hasPending,applied:false,data:state.data};state.data.clubs[index]=applied.club;return {...save(state.data),applied:true};}
-  return {load,save,result,retry(){return !hasPending||flush();},status(){return {pending:hasPending,conflict};}};
+  return {load,save,result,retry(){const ok=!hasPending||flush();notice();return ok;},subscribe(fn){listeners.add(fn);return ()=>listeners.delete(fn);},status(){if(hasPending){try{if(storage.getItem(PRO_KEY)!==baseRaw)conflict=true;}catch{}}return {pending:hasPending,conflict};}};
 }

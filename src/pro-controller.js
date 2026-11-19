@@ -2,7 +2,7 @@
 import { validateClubSession, createClubSession, stepClubAppearance, runClubAuto, clubSessionResult } from './pro-match.js';
 const copy=v=>structuredClone(v);
 export function createProController(store,clubId){
- function read(){const state=store.load();if(!state.ok)throw Error(state.error);const club=state.data.clubs.find(c=>c.id===clubId);if(!club?.pending)throw Error('대기 중인 구단 경기가 없습니다.');return {root:state.data,club};}
+ function read(){if(store.status().conflict)throw Error('다른 창의 기록과 충돌했습니다. 진행을 멈추고 저장 안내를 확인하세요.');const state=store.load();if(!state.ok)throw Error(state.error);const club=state.data.clubs.find(c=>c.id===clubId);if(!club?.pending)throw Error('대기 중인 구단 경기가 없습니다.');return {root:state.data,club};}
  function saveSession(root,club,session){club.pending.session=session;const saved=store.save(root);return {saved:saved.ok,session:copy(session)};}
  function session(){const {club}=read();if(!club.pending.session)throw Error('경기 준비를 먼저 마치세요.');return validateClubSession(club.pending.session);}
  let busy=false;

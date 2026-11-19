@@ -1,0 +1,5 @@
+.pro-save-notice{position:fixed;z-index:1100;top:calc(8px + env(safe-area-inset-top));left:8px;right:8px;box-sizing:border-box;border:2px solid #ff9393;border-radius:12px;padding:12px;background:#521c26f5;color:white;box-shadow:0 4px 18px #0008;line-height:1.5;word-break:keep-all;overflow-wrap:anywhere;max-height:calc(100dvh - 16px);overflow:auto}
+.pro-save-notice[hidden]{display:none}
+.pro-save-notice strong{display:block;font-size:16px}
+.pro-save-notice p{margin:7px 0 10px;font-size:13px}
+.pro-save-notice button{width:100%;font-size:14px;padding:10px}

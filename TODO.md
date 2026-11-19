@@ -746,3 +746,7 @@
 ## Nov19 20:28 - pro3D one-opponent-PA pitching adapter
 - Optional appearance mode in pitching.js returns before school result/automatic offense. pro-pitching maps copiedcurrentpitcher/opponentcontext to session. No normal pro menu/import yet. Manual infield/forceSafe/forceOut mapped to pure engine/base/replay.
 - Actual3D localK/walk/single/HR→onePA save/reload and exact school bytes passed. Accelerated controlled test only. Force3Dadapterdedicatedteststillpending. Schoolrole-switch1IP3K→batgroundout→newpitcher/restoredcatcherumpfieldersreturnpassed. Pro/domain/storage/controller120seed/base/replay suites and build pass. QA image pixels inspected, development label; generated basic pitcher not trainedpitcherUIclaim.
+
+## Nov19 20:47 - pro storage warnings and conflict command guard
+- Added store subscription; controller blocksauto/direct/finish for diskconflict before retry. Pending neweststate and externaldisk both retained. Pro notice pending/retry/conflict/readerror states, no destructive reset/overwrite. Notmountedmainyet.
+- ActualDOMwidth320–430/pendingretry/conflict/corruptpreservation/destroy passed. Fixed QAviewportafterfirsttinyimage; re-inspected3screenshotsreadable390x844. Need productionmount/unload/recoverychoiceflow. Unitcontroller/storage/domain120seedreplay pass;buildsameindex-ghBQ-Ogm. No live change.
