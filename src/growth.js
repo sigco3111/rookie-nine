@@ -18,11 +18,19 @@ export const ovr = (p) => p.pos === 'pit' ? Math.round((p.velo * 1.3 + p.ctrl * 
 export const cal = (w) => { const y = 1 + Math.floor(w / 48); const m = ((Math.floor(w / 4) + 3) % 12) + 1; return { year: y, month: m, wk: (w % 4) + 1 }; };
 export const condLabel = (c) => c >= 80 ? ['절호조', '#ff5a5f'] : c >= 60 ? ['호조', '#ff8a3d'] : c >= 40 ? ['보통', '#f4c20d'] : c >= 20 ? ['부진', '#3aa0e8'] : ['절부진', '#6b7280'];
 
-export function save(p) { ensureGrowthBaseline(p); try { localStorage.setItem(KEY, JSON.stringify(p)); } catch (e) {} }
-export function load() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
-export function clearSave() { try { localStorage.removeItem(KEY); } catch (e) {} }
-export function hof() { try { return JSON.parse(localStorage.getItem(HOF)) || []; } catch (e) { return []; } }
-export function pushHof(e) { const h = hof(); h.push(e); try { localStorage.setItem(HOF, JSON.stringify(h)); } catch (x) {} }
+const pendingStorage = new Map();
+function storageNotice() { if (typeof window !== 'undefined') window.dispatchEvent(new Event('rookie9-storage')); }
+function writeStorage(key, value) {
+  try { if(value===null)localStorage.removeItem(key);else localStorage.setItem(key,value);pendingStorage.delete(key);storageNotice();return true; }
+  catch { pendingStorage.set(key,value);storageNotice();return false; }
+}
+export const storageStatus = () => ({ ok: pendingStorage.size===0, pending: [...pendingStorage.keys()].map(k=>k===HOF?'명예의 전당':'선수 기록') });
+export function retryStorage() { for(const [key,value] of [...pendingStorage])writeStorage(key,value);return storageStatus().ok; }
+export function save(p) { ensureGrowthBaseline(p); return writeStorage(KEY, JSON.stringify(p)); }
+export function load() { try { return JSON.parse(localStorage.getItem(KEY)); } catch { return null; } }
+export function clearSave() { return writeStorage(KEY,null); }
+export function hof() { try { return JSON.parse(pendingStorage.get(HOF)??localStorage.getItem(HOF)) || []; } catch { return []; } }
+export function pushHof(e) { const h = hof(); h.push(e);return writeStorage(HOF, JSON.stringify(h)); }
 
 export const level = (p, id) => { const n = p.cnt[id] || 0; return n >= 16 ? 3 : n >= 7 ? 2 : 1; };
 const LV_MUL = [0, 1, 1.3, 1.6];

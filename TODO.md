@@ -710,3 +710,6 @@
 ## 17:51 Nov19 - native-random batting results
 - Live1AB1H1:5loss47.58s/local3AB1H3:2win93.84s,noRNG/dt/timer/forcechanges,scriptedtiming. Bothresultreloadexact+confirmoneweekpassed. Actual390resultschecked.139–141mssoftwareframesnotphone/humanfeelclearance.
 - NullcountHUDtestfixedafterresult. Longpitretentionexperimentnotreliable,testonlyremoved/noactivebrowser. Normalfullpitcherstillpending. Progress75%/runtimeunchanged.
+
+## 18:03 Nov19 - storage write fault transparency
+- Reproducedsilentquotaexceptionweek1memory/week0disk. Pendinglatestwritequeue/player+HoF+delete,topwarning+retry,HoFpendingnotfalsesaved. Faultretrykeepswarning/recoveryexactP/reload/oneHoFpassed;normalending4/full144batpassed. Actual390warninghome+endingchecked. Noability/ruleschange. Notdurabilitywhenwritesdenied/closedtab/crosstab. Progress75%.

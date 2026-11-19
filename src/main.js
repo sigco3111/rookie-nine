@@ -15,6 +15,13 @@ const clear = () => { ui.innerHTML = ''; };
 const show = (el) => { ui.appendChild(el); return el; };
 const barColor = (v) => GRADE_COLOR[grade(v)];
 const evName = { coach: '감독', captain: '캡틴', team: '팀메이트', scout: '스카우트' };
+// Keep the warning outside cleared game screens and never imply an unsuccessful write is saved.
+const saveWarning=document.createElement('div');saveWarning.id='save-warning';saveWarning.setAttribute('role','alert');saveWarning.hidden=true;
+saveWarning.innerHTML='<b>저장하지 못했습니다</b><div class="save-detail"></div><small>이 창을 닫거나 새로고침하면 최근 진행을 잃을 수 있습니다. 저장 공간·브라우저 설정을 확인한 뒤 다시 시도하세요.</small><button class="btn warn" id="retry-save">저장 다시 시도</button>';
+document.body.appendChild(saveWarning);
+function drawSaveWarning(){const status=G.storageStatus();saveWarning.hidden=status.ok;saveWarning.querySelector('.save-detail').textContent=status.pending.join(' · ');const note=document.querySelector('#hof-save-note');if(note)note.textContent=status.pending.includes('명예의 전당')?'명예의 전당 저장 대기 중입니다. 위의 저장 안내를 확인하세요.':'선수는 명예의 전당에 저장되었습니다.';}
+window.addEventListener('rookie9-storage',drawSaveWarning);saveWarning.querySelector('#retry-save').onclick=()=>G.retryStorage();
+
 
 function titleScreen() {
   clear(); showHome(typeof P !== 'undefined' && P ? P.pos : 'bat', typeof P !== 'undefined' ? P : null);
@@ -428,7 +435,7 @@ function endingScreen() {
   const r = P.result;
   const el = show($(`<div class="screen"><div class="title" style="font-size:28px">졸업 · 드래프트</div><div class="panel" style="text-align:center"><div class="ending-result">${r.text}</div>${r.rank ? `<div>${r.team}</div>` : ''}<div style="margin-top:8px">종합 ${r.ovr} · 평가점수 ${r.score}</div><div>${P.wins}승 ${P.losses}패 · ${P.pos === 'pit' ? `${P.ab}이닝 · ${P.so || 0}탈삼진` : `홈런 ${P.hr}`}</div></div>
     <div class="panel">${statsHtml()}<div class="ev" style="margin-top:6px">${P.traits.filter((t) => TRAITS[t].good).map((t) => `<span class="tr">${TRAITS[t].name}</span>`).join('')}</div></div>
-    <div class="spacer"></div><div class="panel log">선수는 명예의 전당에 저장되었습니다.</div><button class="btn alt" id="finalyears">학년별 성장 돌아보기</button><button class="btn big" id="again">새 선수로 다시 시작</button><button class="btn gray" id="hof">명예의 전당</button></div>`));
+    <div class="spacer"></div><div class="panel log" id="hof-save-note">${G.storageStatus().pending.includes('명예의 전당')?'명예의 전당 저장 대기 중입니다. 위의 저장 안내를 확인하세요.':'선수는 명예의 전당에 저장되었습니다.'}</div><button class="btn alt" id="finalyears">학년별 성장 돌아보기</button><button class="btn big" id="again">새 선수로 다시 시작</button><button class="btn gray" id="hof">명예의 전당</button></div>`));
   el.querySelector('#finalyears').onclick = () => yearHistoryModal(true);
   el.querySelector('#again').onclick = () => { G.clearSave(); createScreen(); };
   el.querySelector('#hof').onclick = hofScreen;
