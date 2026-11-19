@@ -787,3 +787,6 @@
 
 ## Nov20 00:16 - pro batting ground race
 - appearanceonlygroundphysicalrace/force→forceSafe/forceOut/infieldengine;freshbattinghomeforceinitializescatcher/ump. Actual3Dhomeout/safe+nonforced2Binfield→UI/checkpoint/statdelta/reload/schoolpreservepass. Receivephasebeforecommit;390homeout/safepixelsinspected. Schoolgroundfull1PA+proHRregressionpass. Acceleratednotdevice/balance;constantspeed6provisional. Mainentry/admission/seasonnotdone.
+
+## Nov20 00:34 - graduate bridge preview only
+- Readonlysuppliedarchive→abilities/traits/draft/highschoolstats/currentproregistration;invalidrowwarn/notmutate/missingstatsunrecorded. No destination/admit/copy/transfer/mainhook. Focusedbatpit/invalid/nonarray/readonly/schoolproexact/320-430/destroyPASS,pixels390read. Schoolcorruptsaveauditstilloutstanding.
