@@ -770,3 +770,7 @@
 ## Nov19 22:32 - prepared mode major link
 - pro-mode.js session/actualdirectoverlay/notice/backupnavigation/cleanup assembled independentofadmissionpolicy. Actualbat+pitPA→sameUIcheckpoint, navblocked, backupreturn, autofinish/resultonce, destroy/schoolrawunchanged integration pass.
 - Pixelcheckfoundshadow/see-throughpanel;scopedsolidfullheightmode/transparentonlydirect/hidenav/removeshadowsfixedandupdateddirect-return-resultpixelsread. Notmainimport/normalmenu/season/admission yet. BuildsameghBQ-Ogm. Controlledacceleratednotdevicehuman.
+
+## Nov19 22:51 - existing-club roster UI
+- Existingroster9slots/starter/abilitysourcecards/pending-save-conflictlock/revisioncheck in pro-roster-ui, preparedmode nav added, NOadmissionpolicy/mainimport/season.
+- Scopedbrowsertrainedbat+starter/save/duplicateunchanged/reload/pendinglock/archivebytes/320–430passed,actualpreviewreadable390. Nextlineup→newpending→actualselected3Dintegration atnextlink;notclaimcomplete.
