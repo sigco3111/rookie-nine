@@ -41,3 +41,8 @@
 - New normal_random_pitch_ui_test uses actual UI rest weeks to first match, no week/stat injection, no random override, no forced ball or debug timestep, no shortened waits. Inputs are scripted; batter swings from internal timing callback. This is not human play feel.
 - Local bat first foul transition sampled; deployed bat foul→dead ball→next pitch confirmed. Local pitcher airout→return→next ready; deployed pitcher called strike→catcher return→next ready. Each only one pitch, not full natural career.
 - Software desktop at390x844 and0.5pixel ratio: mean frame gaps140–152ms, most over50ms. Wall flows roughly12–21s. Game's existing50ms timestep cap means clock is NOT real-time at this frame rate. Do not call this smooth normal-speed/mobile clearance. Phone performance remains an explicit blocker to that criterion.
+
+## Pending-state integrated reload 2026-11-19 15:19 KST
+- INTERRUPT=1 career test: reload one instance of each pending type within a real144-command UI career: event choice/result at week1, match choice/result week7, learned-trait notice week34bat/46pit, year review week48.
+- Local/deployed both positions preserve exact player JSON after each reload. Whole career then finishes with all-match ledger equal to player/HoF, one archived player and inheritance. Batter19games57AB19H4HR6RBI10W9L; pitcher21games105IP96HA78SO15W6L.
+- Fixed/restarted seed, scripted commands, automatic games. Does not cover browser termination during a mutation, mid-direct-game restart, all event branches or every pending instance.

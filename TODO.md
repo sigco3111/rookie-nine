@@ -679,3 +679,7 @@
 ## 14:55 Nov19 - native random, normal-clock one-pitch sample
 - NewtestUIresttofirstmatchwithoutweek/stats/RNG/forcedball/dt/timerchanges. Scriptedbatcallbacktimingstillused. Livebatfoul→deadball→nextpitch;localpitairout→return→ready/livepitcalledstrike→catchreturn→ready passed. Actual390live1strike/nextinputpixelsinspected.
 - Softwaredesktop.5pixelratio140–152msmeanframegap/most>50ms,12–21swall. Existing50msdtcapmeansslowgameclock;NOTsmoothrealtimenormalspeed/device/humanfeelclearance. Fullnaturalcareerremains. Buildsameindex-BLv0ow_e.js,nogamechange.
+
+## 15:19 Nov19 - six pending states inside complete careers
+- INTERRUPTcareeroptionreloadsonceeachchoice/eventresult/matchchoice/matchresult/learned/yearreview;exactPJSONsurviveslocal/livebat+pitthrough144weeks/ledger/HoF/inheritance. Livebat19games57AB19H4HR6RBI10W9L,pit21games105IP96HA78SO15W6L. Actual390liveeventresult+pitendinginspected.
+- Seedreset/scriptedauto,natural/device/middirectgame/allbranchesnotdone. Sameindex-BLv0ow_e.jsbuild,nogamechange. CandidateQAupdated.
