@@ -831,3 +831,6 @@
 
 ## Nov20 05:05 - admission→records major link
 - UnadmittedgraduateUIconfirmboth→rosterselection→pregame→actualselectedbat/pit3D→sameUI/checkpoint/autofinish/result→records+independentreload/team1+bothgraduate1game/archive-schoolrawexactPASS. Actualpitch/records390pixelsread. Controlledacceleratednotphonehuman;explicitinjectedclub/test3inningsnotpolicy. Normalentry/seasonstillabsent.
+
+## Nov20 05:25 - explicit fixturelist progress foundation
+- Callerlistunique/enginerules/prefixhistory/pendingexactguard→nextatomicprepare/donerefusereplay. 3enginegames/reload/badlist/order/pendingrules/inputexactPASS. No seasonlength/opponentgen/nextseason/listpersistpolicy. Historicalcompletedrulefingerprintsnotstored;notfullscheduleidentityproof. UI next.
