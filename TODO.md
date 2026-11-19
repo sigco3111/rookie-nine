@@ -687,3 +687,6 @@
 ## 15:52 Nov19 - mid-direct restart inside 3year career
 - RESTART+MIXEDlocal/livebat+pit: year1pitchflight/year2strikecount/year3completedPAreload→exactpregameP+startedflag/warning, nosecondtraining. Then3completedgames/144weeks/allledger/P/HoF/oneentry/inheritancepassed. Livebat60AB15H4HR5RBI8W12L,pit94IP82HA75SO9W11L.
 - Slowpitrunsexceeded120s;CHECKPOINTsplitsafterdirectgames,samePserializedintoafreshbrowser+ledgercountercarry. ControlledRNG/dt/timers/.1rendering,natural/device/allphasesnotdone. Actual390livewarning+pitendingchecked,wordsplitstillpending. Buildsamebundle,noruntimechange.
+
+## 15:58 Nov19 - scoped Korean word wrapping
+- Endingresultbalancedkeep-all;matchdescription+restartnotekeep-all. Synthetic320/360/390/430firstpick+regularbatresume: nooverflow/singlecharline;actual390pixelschecked. Localendingresume4routespassed. Noformula/savedatachange. JSindex-sKm7PEFd/CSSindex-DGcw16Tq.

@@ -53,3 +53,8 @@
 - Then one completed direct game each year, automatic remainder,144 weeks, full match ledger=player=HoF, one HoF entry, ending reload and inheritance passed. Deployed bat60AB15H4HR5RBI8W12L; pit94IP82HA75SO9W11L. Abandoned partial attempts do not add completed-match records to the checked route.
 - CHECKPOINT file option splits this slow test after direct games, copies exact serialized player save into a fresh browser, and carries ledger/test counters forward. Local pitcher and deployed both used this split. The PRNG resets on reload, scripted no-swing/strikeout policy, reduced rendering and accelerated time remain. Does not validate all mid-play phases, mobile background lifecycle, disk failure, cross-tab races or natural play.
 - Actual390px deployed restart prompt and pitcher ending inspected. Existing Korean word splitting remains a UI tidy item; controls/warning readable.
+
+## Korean wrap tidy 2026-11-19 15:58 KST
+- Scoped ending result and match explanation to word-based Korean wrapping. Ending headline balances its lines. No rules/save/stat changes.
+- Synthetic first-pick ending and resumed regular-batter match fixtures at320/360/390/430px: no clipped text/horizontal overflow/single-character lines. Actual390px ending and match prompt pixels checked. Fixtures are layout checks, not earned progression.
+- Ending resume regression: bat/pit with/without last-week learned trait, twice reload exact player+text, one HoF entry and new-player flow passed locally.

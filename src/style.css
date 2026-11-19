@@ -70,3 +70,6 @@ table.mini{width:100%;border-collapse:collapse;font-size:13px}table.mini td{padd
 #pi{margin-left:auto;max-width:100%;box-sizing:border-box;word-break:keep-all;overflow-wrap:break-word;line-height:1.35}
 
 .banner{box-sizing:border-box;max-width:100%;padding-inline:12px;word-break:keep-all;overflow-wrap:break-word;font-size:clamp(24px,7.5vw,38px)}
+
+.ending-result{font-size:22px;font-weight:900;line-height:1.45;word-break:keep-all;overflow-wrap:break-word;text-wrap:balance}
+.match-copy{word-break:keep-all;overflow-wrap:break-word;line-height:1.55}

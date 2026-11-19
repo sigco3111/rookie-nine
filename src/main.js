@@ -341,7 +341,7 @@ function matchPrompt(m, msgs, previousTraits, cont) {
     G.save(P);
     resultModal(r, msgs, cont);
   };
-  const mod = show($(`<div class="modal"><div class="panel"><h2>${ic('ball')} ${m.name}</h2><p>${P.pos === 'pit' ? (G.isRegular(P) ? '선발로 등판합니다. 3이닝을 직접 던집니다.' : '아직 후보입니다. 구원으로 1이닝만 던집니다.') : (G.isRegular(P) ? '레귤러로 출전합니다. 타석 3번을 직접 칠 수 있어요.' : '아직 후보입니다. 대타로 1타석만 기회가 옵니다.')}</p><p style="font-size:12px;color:#b5c6dd">${q.started ? '중단된 경기를 경기 시작 전부터 다시 진행합니다.<br>중단 전 투구·타석·점수는 복구되지 않습니다.' : '선택 전 재접속해도 같은 경기를 이어서 선택합니다.'}<br>이번 주 훈련은 다시 적용되지 않습니다.</p><div style="display:grid;gap:8px"><button class="btn big" id="play">직접 플레이</button><button class="btn gray" id="auto">자동 진행</button></div></div></div>`));
+  const mod = show($(`<div class="modal"><div class="panel"><h2>${ic('ball')} ${m.name}</h2><p class="match-copy">${P.pos === 'pit' ? (G.isRegular(P) ? '선발로 등판합니다. 3이닝을 직접 던집니다.' : '아직 후보입니다. 구원으로 1이닝만 던집니다.') : (G.isRegular(P) ? '레귤러로 출전합니다. 타석 3번을 직접 칠 수 있어요.' : '아직 후보입니다. 대타로 1타석만 기회가 옵니다.')}</p><p class="match-copy" style="font-size:12px;color:#b5c6dd">${q.started ? '중단된 경기를 경기 시작 전부터 다시 진행합니다.<br>중단 전 투구·타석·점수는 복구되지 않습니다.' : '선택 전 재접속해도 같은 경기를 이어서 선택합니다.'}<br>이번 주 훈련은 다시 적용되지 않습니다.</p><div style="display:grid;gap:8px"><button class="btn big" id="play">직접 플레이</button><button class="btn gray" id="auto">자동 진행</button></div></div></div>`));
   mod.querySelector('#auto').onclick = () => { mod.remove(); const r = G.simulateMatch(P, m); report(r); };
   mod.querySelector('#play').onclick = async () => { q.started = true; G.save(P); mod.remove(); const r = await startMatch(m); report(r); };
 }
@@ -426,7 +426,7 @@ function resultModal(r, msgs, cont) {
 function endingScreen() {
   clear(); showHome(typeof P !== 'undefined' && P ? P.pos : 'bat', typeof P !== 'undefined' ? P : null);
   const r = P.result;
-  const el = show($(`<div class="screen"><div class="title" style="font-size:28px">졸업 · 드래프트</div><div class="panel" style="text-align:center"><div style="font-size:22px;font-weight:900">${r.text}</div>${r.rank ? `<div>${r.team}</div>` : ''}<div style="margin-top:8px">종합 ${r.ovr} · 평가점수 ${r.score}</div><div>${P.wins}승 ${P.losses}패 · ${P.pos === 'pit' ? `${P.ab}이닝 · ${P.so || 0}탈삼진` : `홈런 ${P.hr}`}</div></div>
+  const el = show($(`<div class="screen"><div class="title" style="font-size:28px">졸업 · 드래프트</div><div class="panel" style="text-align:center"><div class="ending-result">${r.text}</div>${r.rank ? `<div>${r.team}</div>` : ''}<div style="margin-top:8px">종합 ${r.ovr} · 평가점수 ${r.score}</div><div>${P.wins}승 ${P.losses}패 · ${P.pos === 'pit' ? `${P.ab}이닝 · ${P.so || 0}탈삼진` : `홈런 ${P.hr}`}</div></div>
     <div class="panel">${statsHtml()}<div class="ev" style="margin-top:6px">${P.traits.filter((t) => TRAITS[t].good).map((t) => `<span class="tr">${TRAITS[t].name}</span>`).join('')}</div></div>
     <div class="spacer"></div><div class="panel log">선수는 명예의 전당에 저장되었습니다.</div><button class="btn alt" id="finalyears">학년별 성장 돌아보기</button><button class="btn big" id="again">새 선수로 다시 시작</button><button class="btn gray" id="hof">명예의 전당</button></div>`));
   el.querySelector('#finalyears').onclick = () => yearHistoryModal(true);
