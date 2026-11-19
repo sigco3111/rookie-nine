@@ -774,3 +774,7 @@
 ## Nov19 22:51 - existing-club roster UI
 - Existingroster9slots/starter/abilitysourcecards/pending-save-conflictlock/revisioncheck in pro-roster-ui, preparedmode nav added, NOadmissionpolicy/mainimport/season.
 - Scopedbrowsertrainedbat+starter/save/duplicateunchanged/reload/pendinglock/archivebytes/320–430passed,actualpreviewreadable390. Nextlineup→newpending→actualselected3Dintegration atnextlink;notclaimcomplete.
+
+## Nov19 23:13 - pregame fixture and selected lineup actual3D integration
+- prepareClubFixture atomicfrozenlineup+session/rootwrite;explicitcallerfixture(id/opp/name/innings/seed),invalidnowrite/quota/retry/samependingresume/differentpendingreject. Pro-mode pregame ifnopending.
+- ActualUItrainedbat+starterchoose/save→pregame/start→actualselectedbat/pit3D→UI/auto/result/schoolbytes bothpass. Scopedunitatomicguards pass. Actualpixelssetup+selectedpitreadable390. Notmain/admission/season;test3inningsnotpolicy. Harnesspost-removalassertfixed,notgamedefect.
