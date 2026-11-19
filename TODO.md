@@ -834,3 +834,6 @@
 
 ## Nov20 05:25 - explicit fixturelist progress foundation
 - Callerlistunique/enginerules/prefixhistory/pendingexactguard→nextatomicprepare/donerefusereplay. 3enginegames/reload/badlist/order/pendingrules/inputexactPASS. No seasonlength/opponentgen/nextseason/listpersistpolicy. Historicalcompletedrulefingerprintsnotstored;notfullscheduleidentityproof. UI next.
+
+## Nov20 05:46 - explicit fixture progress UI
+- Prepared optionalfixturesarray→progress/explicitnextprepare/resultnavnext/donenoreplay;singlefixturecompatible. Actual2games/resumestore/result/next/done/2records/schoolrawPASS;pureguards/buildpass;390pixelsread. Test1inningnotpolicy;normalentry/seasonpersistenceabsent.
