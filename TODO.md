@@ -706,3 +706,7 @@
 ## 17:23 Nov19 - native full-game window and candidate gates
 - FULL=1nativeRNG/nodt/noforced/notimer95swindow:livebatinning5fairflight140msmeanframes/localpitinning1twoonfairflight168ms. Neitherresultreached,notfullgamepass/notdeadlockproof/NOTphoneperformance. Actual390pixelschecked. Needretainedbrowsermultiwindowcompletion.
 - CandidateQArequired/followupgatesseparated;phonecheckmainwilloffer,policyfirstpicksaturationuntuned. Progress75%unchanged. Build/runtimeunchanged.
+
+## 17:51 Nov19 - native-random batting results
+- Live1AB1H1:5loss47.58s/local3AB1H3:2win93.84s,noRNG/dt/timer/forcechanges,scriptedtiming. Bothresultreloadexact+confirmoneweekpassed. Actual390resultschecked.139–141mssoftwareframesnotphone/humanfeelclearance.
+- NullcountHUDtestfixedafterresult. Longpitretentionexperimentnotreliable,testonlyremoved/noactivebrowser. Normalfullpitcherstillpending. Progress75%/runtimeunchanged.

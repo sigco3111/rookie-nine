@@ -126,3 +126,9 @@
 - Cloud/cross-device saves. Current local-browser save and match-from-start restart are disclosed limits, not silent pitch-level resume promises.
 ### Outlook
 - First-candidate management estimate stays about75%(70–80judgment range), implementation54/60+validation20/40 rounded. Not elapsed-time fraction or objective measurement. The3–5additional-day planning estimate fromNov19requires later refinement; a phone issue could extend it. User makes final completion decision.
+
+## Native-random batting result reached 2026-11-19 17:51 KST
+- No forced ball/timestep/timer/RNG override, scripted timing input only, software desktop390x844/pixelratio0.5. Deployed batter completed1AB1H,1:5 loss in47.58s(mean141msframes); local batter completed3AB1H,3:2win in93.84s(mean139msframes). Different native-random careers, not a local/live identical-result comparison.
+- Both result JSON survives reload exactly; confirmation advances exactly one week. Actual result pixels inspected. This closes one representative native-random batting result/reload/confirmation route, not human timing feel/phone performance or every batting outcome.
+- Corrected test reading missing count HUD after result, optional query returns null; earlier reached result triggered a test-only null-element error, not game error.
+- Long pitcher session experiments failed to retain browser state across observation windows reliably (test viewport reconnection reloaded page, then attempted persistence route lost process). Those attempts are not gameplay failures or completion evidence. Experimental script removed, no retained browser left. Pitcher normal full-game result still required. Progress remains75%.
