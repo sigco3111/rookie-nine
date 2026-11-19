@@ -750,3 +750,7 @@
 ## Nov19 20:47 - pro storage warnings and conflict command guard
 - Added store subscription; controller blocksauto/direct/finish for diskconflict before retry. Pending neweststate and externaldisk both retained. Pro notice pending/retry/conflict/readerror states, no destructive reset/overwrite. Notmountedmainyet.
 - ActualDOMwidth320–430/pendingretry/conflict/corruptpreservation/destroy passed. Fixed QAviewportafterfirsttinyimage; re-inspected3screenshotsreadable390x844. Need productionmount/unload/recoverychoiceflow. Unitcontroller/storage/domain120seedreplay pass;buildsameindex-ghBQ-Ogm. No live change.
+
+## Nov19 21:08 - conflict backup/explicit selection and unload guard
+- Recoverlocal/disk writes+readsback bothrawversions to separate local backup before switch, rechecks competingraw, selectedrevision higher; quota/race/corrupt preserve pending. UI summaries/choice/confirm/cancel, no automatic overwrite. Backuplist/export/restoreUIstillmissing;notmountedproduction.
+- beforeunload standardbrowserwarningrequest whilepending (browser/mobilemayignore;notguarantee). Unitbothchoices/rawbackup/quota-backup+main/race/corrupt;realDOMcancel/confirm/fail/success/unload passed.2screenshotsactualpixelsreadable. Buildsameindex-ghBQ-Ogm.

@@ -3,3 +3,7 @@
 .pro-save-notice strong{display:block;font-size:16px}
 .pro-save-notice p{margin:7px 0 10px;font-size:13px}
 .pro-save-notice button{width:100%;font-size:14px;padding:10px}
+.pro-save-notice button+button{margin-top:7px}
+.pro-save-notice button{white-space:normal;word-break:keep-all;overflow-wrap:anywhere;line-height:1.45}
+.pro-save-notice [hidden]{display:none}
+.pro-save-notice .recovery-message:empty{display:none}

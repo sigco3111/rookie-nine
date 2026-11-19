@@ -53,5 +53,31 @@ export function createProStore(storage){
   function flush(){try{if(storage.getItem(PRO_KEY)!==baseRaw){conflict=true;return false;}storage.setItem(PRO_KEY,pending);hasPending=false;conflict=false;return true;}catch{return false;}}
   function save(data){const current=load();if(!current.ok||data.revision!==current.data.revision)fail();const valid=validateProSave(data);valid.revision++;if(!hasPending)baseRaw=storage.getItem(PRO_KEY);pending=JSON.stringify(valid);hasPending=true;const ok=flush();notice();return {ok,data:load().data};}
   function result(clubId,outcome){const state=load();if(!state.ok)fail();const index=state.data.clubs.findIndex(c=>c.id===clubId);if(index<0)fail();const applied=applyClubResult(state.data.clubs[index],outcome);if(!applied.applied)return {ok:!hasPending,applied:false,data:state.data};state.data.clubs[index]=applied.club;return {...save(state.data),applied:true};}
-  return {load,save,result,retry(){const ok=!hasPending||flush();notice();return ok;},subscribe(fn){listeners.add(fn);return ()=>listeners.delete(fn);},status(){if(hasPending){try{if(storage.getItem(PRO_KEY)!==baseRaw)conflict=true;}catch{}}return {pending:hasPending,conflict};}};
+  function recoveryOptions(){
+    if(!hasPending||!conflict)return null;
+    const summarize=r=>({revision:r.revision,clubs:r.clubs.map(c=>({name:c.name,games:c.record.games,wins:c.record.wins,losses:c.record.losses,pending:!!c.pending}))});
+    const external=storage.getItem(PRO_KEY);
+    return {local:summarize(validateProSave(JSON.parse(pending))),disk:external===null?null:summarize(validateProSave(JSON.parse(external)))};
+  }
+  function recover(choice){
+    if(!['local','disk'].includes(choice)||!hasPending||!conflict)throw Error('복구할 충돌 기록이 없습니다.');
+    const external=storage.getItem(PRO_KEY),local=pending;
+    // Both versions must be readable before either can become the selected save.
+    const localData=validateProSave(JSON.parse(local));let diskData=null;
+    if(external!==null)diskData=validateProSave(JSON.parse(external));
+    if(choice==='disk'&&!diskData)throw Error('다른 창의 저장 기록이 없습니다.');
+    const backup=JSON.stringify({schema:1,createdAt:Date.now(),local,external,choice});
+    const backupKey=PRO_KEY+'.recovery.'+Date.now()+'.'+Math.random().toString(36).slice(2);
+    try{
+      if(storage.getItem(backupKey)!==null)throw Error('백업 식별자가 겹칩니다.');
+      storage.setItem(backupKey,backup);
+      if(storage.getItem(backupKey)!==backup)throw Error('두 기록의 백업을 확인하지 못했습니다.');
+      if(storage.getItem(PRO_KEY)!==external)throw Error('백업 중 다른 창의 기록이 바뀌었습니다.');
+      const selected=clone(choice==='local'?localData:diskData);selected.revision=Math.max(localData.revision,diskData?.revision||0)+1;
+      const selectedRaw=JSON.stringify(validateProSave(selected));storage.setItem(PRO_KEY,selectedRaw);
+      if(storage.getItem(PRO_KEY)!==selectedRaw)throw Error('복구 저장을 확인하지 못했습니다.');
+      hasPending=false;pending=undefined;conflict=false;notice();return {ok:true,backupKey,data:selected};
+    }catch(error){notice();return {ok:false,backupKey,error:'복구를 마치지 못했습니다. 두 기록을 덮어쓰지 말고 다시 확인하세요.'};}
+  }
+  return {load,save,result,recover,recoveryOptions,retry(){const ok=!hasPending||flush();notice();return ok;},subscribe(fn){listeners.add(fn);return ()=>listeners.delete(fn);},status(){if(hasPending){try{if(storage.getItem(PRO_KEY)!==baseRaw)conflict=true;}catch{}}return {pending:hasPending,conflict};}};
 }
