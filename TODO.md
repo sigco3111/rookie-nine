@@ -754,3 +754,7 @@
 ## Nov19 21:08 - conflict backup/explicit selection and unload guard
 - Recoverlocal/disk writes+readsback bothrawversions to separate local backup before switch, rechecks competingraw, selectedrevision higher; quota/race/corrupt preserve pending. UI summaries/choice/confirm/cancel, no automatic overwrite. Backuplist/export/restoreUIstillmissing;notmountedproduction.
 - beforeunload standardbrowserwarningrequest whilepending (browser/mobilemayignore;notguarantee). Unitbothchoices/rawbackup/quota-backup+main/race/corrupt;realDOMcancel/confirm/fail/success/unload passed.2screenshotsactualpixelsreadable. Buildsameindex-ghBQ-Ogm.
+
+## Nov19 21:28 - local pro backup list/export/restore preparation
+- New pro-backups.js/ui/css list two versions/export exact JSON/explicit restore+confirm/current-save guard backup. Neverauto-delete/upload; refusepending/corrupt-current/stalecomparison. Mainunchangeduntilbackupreadbackverified. Import/corruptmainrepairnotincluded.
+- Scopedunitlist/export/restore/undocopy/quota/race/corrupt and browserdownloadexact/cancel/restoreguard/schoolisolation/320–430 pass.2previewactualpixelsreadable. No full3D/career rerun. BuildsameghBQ-Ogm;notmountedproductionyet. Nextinternalintegrationorforceprotest,policyunresolved.

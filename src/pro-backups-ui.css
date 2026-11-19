@@ -1,0 +1,5 @@
+.pro-backups{font-family:inherit;color:#e4edff;word-break:keep-all;overflow-wrap:anywhere;line-height:1.5;padding:12px;box-sizing:border-box}
+.pro-backups h2{font-size:22px;margin:8px 0 12px}.pro-backups h3{font-size:16px;margin:6px 0}.pro-backups p{font-size:13px;margin:8px 0}
+.pro-backup-card{padding:12px;border:1px solid #697b9c;border-radius:12px;margin-top:14px;background:#152740}
+.pro-backups button{display:block;width:100%;box-sizing:border-box;border:0;border-radius:10px;padding:11px 8px;margin-top:8px;background:#385de3;color:white;font-size:14px;font-weight:700;white-space:normal;word-break:keep-all;line-height:1.4}
+.pro-backups [role=alert]{color:#ffafb9;border:1px solid #ef8190;border-radius:8px;padding:8px}
