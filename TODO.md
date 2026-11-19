@@ -810,3 +810,6 @@
 
 ## Nov20 02:39 - warning distinction and import preview foundation
 - Sourceproblem vs outgoingrejectexplicitwarning/pixels390inspected;outgoing+exportUIpass. Pure8MBrecoveryenvelopepreview validatesallrawcandidates independently/nochoice/nomerge/nowrite/norepair. TestsPASS. PreviewNOTmounted/importNOTimplemented. Deploymentperreport.
+
+## Nov20 03:00 - readonly recovery file inspect UI
+- warning→localfilepicker→candidates+notices/nochoose/nomerge/norestore. Asyncstaletoken/sizeguard/textContent. Actualfilecontrolvalid/invalidclear/literalname/no-storage/320-430/closePASS,pixels390read. No upload/import/repair. Restore requires separate guarded design.
