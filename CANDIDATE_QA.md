@@ -64,3 +64,25 @@
 - Each game3IP/3HA/1SO. Year1:0:3/3ER; years2/3:3:4, played3:3 with automatic tiebreak final point included in ER, matching existing disclosed rule.
 - Direct result delta and pre-confirm reload,144weeks, all-match ledger/player/HoF totals, one HoF entry, ending reload and inheritance passed. Final20-game totals94IP91HA51SO9W11L,OVR71/score86. Exact saved-player checkpoints between direct games as earlier check.
 - Actual deployed year3 result and ending inspected. Existing long-career pitcher route now includes fair-contact/walk/foul/runner/force outcomes, but not all outcomes or native input/random/device clearance. Estimated first-candidate progress stays about75%, since natural play, real-phone and policy/balance work remain.
+
+
+## Policy/seed UI comparison 2026-11-19 16:44 KST
+- Deployed12 complete UI careers: bat/pit × focused/balanced/rest × seeds7/123.144weeks, all-match ledger=player=HoF, one HoF, final reload/inheritance all passed. Local pit/rest7 and bat/balanced123 reproduce exact final stats and ledger totals. Actual390px undrafted pit/rest7 and first-pick bat/balanced123 inspected.
+- Focused is prior offense/velocity-control policy; balanced cycles8practice/support options with study<42 and condition<45 priorities; rest always rests except forced injury care. All pick first event option. Seed resets at six scheduled reloads. Commands through UI, all games automatic, no week/stat injection, not native human/random or a representative balance distribution.
+
+|Position|Policy|Seed|OVR|Draft score|Rank|W-L|
+|---|---|---:|---:|---:|---:|---|
+|bat|balanced|123|79|99|1|15-7|
+|bat|balanced|7|78|97|1|13-7|
+|bat|focused|123|68|90|1|11-10|
+|bat|focused|7|69|89|1|12-7|
+|bat|rest|123|44|59|32|2-16|
+|bat|rest|7|37|60|27|13-9|
+|pit|balanced|123|67|87|1|20-4|
+|pit|balanced|7|69|84|1|12-8|
+|pit|focused|123|71|90|1|20-1|
+|pit|focused|7|72|92|1|20-3|
+|pit|rest|123|37|60|30|15-4|
+|pit|rest|7|37|37|0|7-12|
+
+- Findings to investigate, not a retune decision: all8focused/balanced routes first pick;3of4rest routes lower-round,1undrafted. Rest pitcher sameOVR37 but score37or60 with7or15wins, so events/evaluations and random auto games have material effect. Balanced batter reaches78–79OVR versus focused68–69, while focused pitcher71–72 exceeds balanced67–69.2seeds cannot establish fairness/difficulty; broader continuous-PRNG seeds/event choices needed. No gameplay formulas changed, easy batting preserved. Estimated first-candidate progress stays75%.

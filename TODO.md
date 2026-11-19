@@ -694,3 +694,7 @@
 ## 16:26 Nov19 - varied pitcher mixed career
 - MIXEDVARIEDpitlocal/liveeachyearwalk/single/foul/HR/ground/air/2Bforce/K→3IP3HA1SO. Year10:3/3ER;year2+3played3:3autoTBfinal3:4/4ER. Directdelta/reload144ledger/P/HoFone/inheritancepassed. Final20games94IP91HA51SO9W11LOVR71score86.
 - Exactcheckpointcarry/scriptedaim/RNG/debugtime/notnaturaldevice. Actual390liveyear3result+endingchecked. BuildsameJSsKm7PEFd/CSSDGcw16Tq. Firstcandidateestimate75%unchanged.
+
+## 16:44 Nov19 - policy/seed UI careers
+- Live12careersbat/pit×focused/balanced/rest×seed7/123all144/ledger/P/HoFone/inheritancepassed. Localpitrest7+batbalanced123exactmatch. Actual390pitundrafted37score+batfirstpick99scoreinspected.
+- All8focused/balancedfirstpick;rest3/4lowround1undrafted. PitrestsameOVR37score37vs60/autowins7vs15suggestevents/evals/randomsensitive;notbalancedclearance. 2seedsresetatsixreloads/firsteventoption/allauto/scripted. Noformulatune/easybatunchanged. Candidateestimate75%unchanged.
