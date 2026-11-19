@@ -616,3 +616,6 @@
 
 ## 09:04 Nov19 - fallback automatic offense handoff
 - InningtestFAIL_MODELblocksplayerassetandassertsKenneyabsent;afterautomaticoffensechecksrunner/ballhiddenand7gazesreset. Local/livefallbackloaded→3outs→auto1point→empty2ndinning1:0passedlabels/fieldhide/throwlock/restore. Actual390livefallbacksummarypixelsinspectedbanner+phase/3outs/emptybases/score. Buildsameindex-B5xFmXsW.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
+
+## 09:25 Nov19 - zero automatic offense regression
+- InningtestZERO_OFFENSEswitchesoffensenon-scoringdrawonlyathalfinning;assertsexact0/1pointsummaryandnextscore. Localnormal/livefallbackloaded→3outs→auto0→empty2nd0:0passedfield/input/runnerball/gazerestore. Actual390live0pointphase+banner,3outs,emptybases0:0pixelsinspected. Buildsameindex-B5xFmXsW.js,nogamechange. ControlledRNG/clocknotdevice/naturalQA.
