@@ -86,3 +86,25 @@
 |pit|rest|7|37|37|0|7-12|
 
 - Findings to investigate, not a retune decision: all8focused/balanced routes first pick;3of4rest routes lower-round,1undrafted. Rest pitcher sameOVR37 but score37or60 with7or15wins, so events/evaluations and random auto games have material effect. Balanced batter reaches78–79OVR versus focused68–69, while focused pitcher71–72 exceeds balanced67–69.2seeds cannot establish fairness/difficulty; broader continuous-PRNG seeds/event choices needed. No gameplay formulas changed, easy batting preserved. Estimated first-candidate progress stays75%.
+
+
+## Continuous PRNG and alternate events 2026-11-19 17:05 KST
+- CONTINUOUS=1 persists test PRNG state in sessionStorage after each draw and restores at setup after scheduled reloads, instead of reseeding.12additional deployedUIcareers: bat/pit×3policies×seeds2026/99991. Event option index=week modulo option count, rather than always first option. Native game logic still consumes draws outside setup during page construction; this is a seeded QA stream, not natural randomness proof.
+- All144weeks/ledger=player=HoF/one archive/reload/inheritance passed. Local bat/rest2026 and pit/balanced99991 exactly match final stats/sums. Actual390px undrafted batter and balanced pitcher ending inspected.
+
+|Position|Policy|Seed|OVR|Score|Rank|W-L|
+|---|---|---:|---:|---:|---:|---|
+|bat|balanced|2026|82|102|1|11-8|
+|bat|balanced|99991|75|97|1|16-3|
+|bat|focused|2026|69|91|1|18-4|
+|bat|focused|99991|66|89|1|16-5|
+|bat|rest|2026|37|53|0|5-13|
+|bat|rest|99991|36|59|20|13-7|
+|pit|balanced|2026|70|88|1|17-3|
+|pit|balanced|99991|69|85|1|10-6|
+|pit|focused|2026|69|87|1|15-3|
+|pit|focused|99991|66|86|1|14-3|
+|pit|rest|2026|37|40|0|10-10|
+|pit|rest|99991|36|45|0|9-10|
+
+- Again8of8focused/balanced routes firstpick, rest3undrafted/1lowerround. Across both policy batches16of16trained firstpick, rest4of8drafted. This is evidence that these selected trained policies readily reach the highest draft band, not a balanced-distribution claim or instruction to make batting harder. No gameplay tuning. More gameplay is needed before deciding whether broad graduation thresholds should change. First candidate estimate remains75%.

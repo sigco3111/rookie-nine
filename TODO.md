@@ -698,3 +698,7 @@
 ## 16:44 Nov19 - policy/seed UI careers
 - Live12careersbat/pit×focused/balanced/rest×seed7/123all144/ledger/P/HoFone/inheritancepassed. Localpitrest7+batbalanced123exactmatch. Actual390pitundrafted37score+batfirstpick99scoreinspected.
 - All8focused/balancedfirstpick;rest3/4lowround1undrafted. PitrestsameOVR37score37vs60/autowins7vs15suggestevents/evals/randomsensitive;notbalancedclearance. 2seedsresetatsixreloads/firsteventoption/allauto/scripted. Noformulatune/easybatunchanged. Candidateestimate75%unchanged.
+
+## 17:05 Nov19 - continuous QA random+alternate events
+- CONTINUOUSpersistssessionPRNGacrossreloads;live12morebat/pit×3policies×seeds2026/99991eventchoiceweek%options,144ledger/P/HoFone/inheritancepassed. Localbatrest2026+pitbalanced99991exactmatch. Actual390undraftedbat53score+balancedpit85scoreinspected.
+- 8/8trainedfirstpickagain,rest3undrafted1lowround. Combined16/16trainedfirstpick/rest4of8drafted,selectedpolicyoutcomesnotfairnessproof. Noformulatune. Userphonepathgivenparentwithsaveoverwritecaution;parentwillask. Progress75%unchanged.
