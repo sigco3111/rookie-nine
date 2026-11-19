@@ -736,3 +736,8 @@
 ## Nov19 19:44 - common adapter controller and fictional roster filler
 - Fill missing roles with tagged generated base players without admission policy; preserve current choices/graduate stats. Asynccontroller supplies copied current players/context to future3D renderer, saves returned PA once;busy/error/missingoutcome/staleasync/pendingwriteguard.
 - Unit tests and actualChromium15callbackPA/reload each/cancel/auto finish/graduate unchanged passed. These are adapter callback tests, NOT real3D batting/pitching tests. No runtime/main.js import or visual change. School difficulty unchanged. Need actual3Dhook+save/error/conflict UI, then admission/menu/season.
+
+## Nov19 20:15 - actual3D single-batting adapter
+- Optional onePA context in existing batting renderer returns before school applyMatchResult; pro-batting maps it into controller. No entrypoint/import/menu for pro yet. Copied actual batter abilities/traits/gear, opponent strength/name, base mask/score. School default unchanged.
+- Localactual3D K/forcedHR/walk eachonePA→controller→reload passed, exact school save bytes untouched. Accelerated controlledtests, not nativeclock/device/humanfeel. QA screenshot development label inspected.
+- School full3PAHR growth+exactresultreload+onceweek regression,4ending routes,storagefailure UI passed. EarlierHRharnessmissingflash caused timeout, fixedtest passed. Needpro pitching3D and real production UI/season.

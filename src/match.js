@@ -280,11 +280,12 @@ export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배
   tickers.clear(); tickers.add(f);
 }
 
-export async function playMatch(p, m, hud) {
-  const o = ensureG();showBaseRunners(o,0); const y = cal(p.week).year; setUniform(o.batter, y); applyEquipment(o.batter, p.gear); if (o.runner) { setUniform(o.runner, y); applyEquipment(o.runner, p.gear); } applyEquipment(o.pitcher); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.5, 0, 0.2); o.batter.rotation.y = Math.PI / 2 - 1.4; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
-  const opp = TEAMS[Math.floor(Math.random() * TEAMS.length)]; { const oc = OPP_COLORS[TEAMS.indexOf(opp) % OPP_COLORS.length]; setShirt(o.pitcher, oc); o.fielders.forEach((f) => setShirt(f, oc)); }
+export async function playMatch(p, m, hud, appearance = null) {
+  if(appearance&&(!Number.isInteger(appearance.inning)||appearance.inning<1||!Number.isInteger(appearance.bases)||appearance.bases<0||appearance.bases>7||!Number.isFinite(appearance.strength)||!appearance.opponent||!Array.isArray(appearance.scores)||appearance.scores.length!==2||appearance.scores.some(n=>!Number.isSafeInteger(n)||n<0)))throw Error('타석 정보를 확인하세요.');
+  const o = ensureG();showBaseRunners(o,appearance?.bases||0); const y = cal(p.week).year; setUniform(o.batter, y); applyEquipment(o.batter, p.gear); if (o.runner) { setUniform(o.runner, y); applyEquipment(o.runner, p.gear); } applyEquipment(o.pitcher); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.5, 0, 0.2); o.batter.rotation.y = Math.PI / 2 - 1.4; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
+  const opp = appearance?.opponent || TEAMS[Math.floor(Math.random() * TEAMS.length)]; { const oc = OPP_COLORS[Math.max(0,TEAMS.indexOf(opp)) % OPP_COLORS.length]; setShirt(o.pitcher, oc); o.fielders.forEach((f) => setShirt(f, oc)); }
   const regular = isRegular(p);
-  const strength = oppStrength(p);
+  const strength = appearance ? appearance.strength : oppStrength(p);
   const traits = p.traits;
   const s = { ab: 0, hits: 0, hr: 0, rbi: 0, runs: 0 };
   let my = 0, oppRuns = 0;
@@ -292,7 +293,7 @@ export async function playMatch(p, m, hud) {
   const innings = 5;
   camera.position.set(-0.15, 1.8, 5.4); camera.lookAt(-0.25, -0.35, -9);
   setPitcherPose(o.pitcher, 0);
-  hud.setTitle(`${m.name} vs ${opp}${regular ? '' : ' (대타 출전)'}`);
+  hud.setTitle(appearance?`${p.name} · ${m.name} vs ${opp}`:`${m.name} vs ${opp}${regular ? '' : ' (대타 출전)'}`);
   const ret = o.ret;
   // 입력
   let cx = 0, cy = ZY;
@@ -393,7 +394,7 @@ export async function playMatch(p, m, hud) {
       if (k >= 1) { delTicker(f); if(defenseOut==='ground'){o.batter.visible=true;completeGroundOut(o,hud,{runner:true,returnPitcher:true,runnerElapsed:dur,hitRunSpeed}).then(()=>{camera.fov=oldFov;camera.updateProjectionMatrix();res();});}else if(air)air.finish().then(res);else if(hitBases){o.batter.visible=true;completeGroundOut(o,hud,{returnHit:true,runner:true,hitBases,runnerElapsed:dur,hitRunSpeed,returnPitcher:true}).then(()=>{camera.fov=oldFov;camera.updateProjectionMatrix();res();});}else setTimeout(() => { o.ball.visible = false; o.ball.scale.setScalar(1); resetFielders(); res(); }, 250); }
     }; tickers.add(f);
   });
-  const runBases = () => runHomeRun(o,hud);
+  const runBases = () => runHomeRun(o,hud,appearance?.bases||0);
   const resetFielders = () => resetDefense(o.fielders);
   const resetCam = () => { camera.position.set(-0.15, 1.8, 5.4); camera.lookAt(-0.25, -0.35, -9); setBatterPose(o.batter, 0); };
 
@@ -427,12 +428,21 @@ export async function playMatch(p, m, hud) {
       }
       setBatterPose(o.batter, 0);
       hud.setCount(c);
-      if (c.b >= 4) {hud.setBattingActive?.(false);await runWalk(o,hud,0);resetCam();return { res: 'walk', label: '볼넷' };}
+      if (c.b >= 4) {hud.setBattingActive?.(false);await runWalk(o,hud,appearance?.bases||0);resetCam();return { res: 'walk', label: '볼넷' };}
       if (c.s >= 3) return { res: 'k', label: '삼진 아웃' };
     }
     return { res: 'out', label: '아웃' };
   };
 
+  if(appearance){
+    try{
+      hud.setScore(appearance.inning,appearance.scores[0],appearance.scores[1]);
+      const result=await plateAppearance(appearance.inning,appearance.bases);
+      return result;
+    }finally{
+      cv.removeEventListener('pointerdown',onD);cv.removeEventListener('pointermove',onM);window.removeEventListener('pointerup',onU);window.removeEventListener('keydown',key);hud.offSwing();hud.setBattingActive?.(false);hud.setBattingContext?.(null);
+    }
+  }
   let runner = 0;
   for (let inn = 1; inn <= innings; inn++) {
     hud.setScore(inn, my, oppRuns); hud.setCount({ b: 0, s: 0 });
