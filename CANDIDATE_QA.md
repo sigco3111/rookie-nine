@@ -30,3 +30,9 @@
 - Deployed batter ending68OVR/8W12L,60AB15H; pitcher71OVR/9W11L,94IP82HA75SO. Each20 matches including3 direct. No runtime errors.
 - Remaining mixed-career coverage: fair contact/runner and varied pitching outcomes inside a long career, exact final totals summed across every match, saved pending events and mid-game restart. Do not mark the whole mixed/direct criterion complete yet.
 - UI tidy pending from parent: ending first-pick text leaves last Korean character on a separate line at390px. No gameplay block.
+
+## Match ledger check 2026-11-19 14:37 KST
+- Every result was copied before confirmation into a test-only ledger; sums compared with final player totals and HoF career fields, not just the retained20-row recent history.
+- Batter mixed varied route local/deployed: year1 direct0H/3AB, year2 controlled3H/3RBI, year3 controlled3HR/6RBI. Final20-game ledger60AB21H7HR14RBI10W10L matches player and HoF. Forced fair balls, fixed random and accelerated time, not natural batting.
+- Pitcher mixed route deployed:20-game ledger94IP82HA75SO9W11L matches player and HoF. Direct games remain9K each, varied pitcher contact still pending.
+- Both finish144 weeks, reviews, ending reload and inheritance with no runtime errors. This closes tested-route final-ledger accounting only. Broader event/seed and natural/device checks still open.

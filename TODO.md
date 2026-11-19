@@ -671,3 +671,7 @@
 ## 14:18 Nov19 - mixed direct/auto career baseline
 - CareerMIXEDoptionplaysfirstmatchperyearweeks7/55/103thenremainderauto;noper-week/statinjection. Local/livebat+pit144weeks/ending/HoF/inheritancepassed. DirectimmediateAB/IP/hits/HA/SO/WLdeltaandpreconfirmreloadexactPchecked.
 - Controlledbat3K/0H4:10each;pit3IP9K0:1each(autoTB). Livebat68OVR8W12L60AB15H,pit71OVR9W11L94IP82HA75SO;20matcheseach. Debugdt/shortwaits/fixedgamerandom,naturalorvariedinplaynotdone. Actual390liveendingrecordsinspected;titlewordwrappingstillpending. Buildsameindex-BLv0ow_e.js,nogamechange. CandidateQAupdatedremainingpartialcriteria.
+
+## 14:37 Nov19 - full match ledger and varied batting carryover
+- Careerledgercapturesallresultsbeforeconfirm,sumsfinalP+HoFfields. Variedbatlocal/liveyear1K/year2forced3H3RBI/year3forced3HR6RBI→20game60AB21H7HR14RBI10W10Lmatched. Livepit20game94IP82HA75SO9W11Lmatched. Ending/reload/HoF/inheritancepassed. Actual390livebatending10W10L7HR89scoreinspected.
+- ControlledRNG/forcedballs/debugtime,naturalplaynotdone;pitchdirectstillall9K. CandidateQAupdatedpartialchecks. Buildsameindex-BLv0ow_e.js,nogamechange.
