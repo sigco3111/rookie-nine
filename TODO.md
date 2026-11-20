@@ -971,3 +971,7 @@
 ## Nov20 15:49 - keep camera stable when viewport changes
 - Common resize no longer overwritesactivepitch/othermatchsceneFOV;aspect+renderersizeupdate,home/cleanuprestoresresponsive lens. Regressionreproduced46→62beforefixafterwaitingactualresize,notjustviewporttoolreturn.
 - Four normal entry routes×320/390/430coordinates+viewportresize/restore+saveunchangedPASS LOCAL;actualpreparedPAhomeFOVreturnbothposPASS;pixels320pit/430batread. LIVE next. No pause/phone verification claim.
+
+## Nov20 15:53 - physical-device gate excluded by user
+- User15:51:39 approved excluding actual-phone quality verification from this milestone. Browser coordinate input/viewport/save/gameprogress and critical bug fixes remain. Deviceperformance/heat/OS/audio are UNVERIFIED, notpassed.
+- Additionaldeferrals(balancefine-tuning/extraaudiovisualpolish/redundantmatrix)arePROPOSALonly,pendinguserdecision. Estimate4–6dayswithoutdevice;recommendednarrower2–4daysconditional,notdeadline/newfeaturescope. Parentownsuseranswer. Run impact tests first and group integration checks at meaningful checkpoints, never repeat completed longflows per wake.
