@@ -1,3 +1,4 @@
+import {growthPacingText} from './training-gain.js';
 import { mountSchoolCastSelection } from './school-cast-select-ui.js';
 import { castPlayer } from './school-cast.js';
 import { mountProHub } from './pro-hub.js';
@@ -190,7 +191,7 @@ function commandHistoryModal() {
   m.querySelector('#backcommands').onclick=()=>{m.remove();detailModal();};
 }
 function masteryModal() {
-  const m=show($(`<div class="modal"><div class="panel"><h2>훈련 숙련도</h2><p style="font-size:13px;color:#b5c6dd">같은 훈련을 반복하면 성장 계산의 숙련 배율이 올라갑니다. 실제 능력 상승량은 컨디션·특성·현재 능력·무작위에 따라 달라집니다.</p><div style="max-height:53vh;overflow:auto" id="masterylist">${practicesFor(P).map(pr=>{
+  const m=show($(`<div class="modal"><div class="panel"><h2>훈련 숙련도</h2><p class="growth-pacing-note" style="font-size:12px;color:#c0ded9">${growthPacingText(P)}</p><p style="font-size:13px;color:#b5c6dd">같은 훈련을 반복하면 성장 계산의 숙련 배율이 올라갑니다. 실제 능력 상승량은 컨디션·특성·현재 능력·무작위에 따라 달라집니다.</p><div style="max-height:53vh;overflow:auto" id="masterylist">${practicesFor(P).map(pr=>{
     const t=G.trainingMastery(P,pr.id), start=t.level===1?0:t.level===2?7:16;
     return `<div data-training="${pr.id}" style="background:#20375e;border-radius:10px;padding:12px;margin:8px 0"><b>${pr.name} · Lv${t.level}</b><span style="float:right;color:#ffd23f">×${t.multiplier.toFixed(1)}</span><div class="bar" style="margin:8px 0"><i style="width:${t.next?100*(t.count-start)/(t.next-start):100}%;background:#66e692"></i></div><small>${t.count}회 완료 · ${t.next?`Lv${t.level+1}까지 ${t.remaining}회 (누적 ${t.next}회)`:'최고 레벨 도달'}</small></div>`;
   }).join('')}</div><p style="font-size:12px;color:#b5c6dd">완료 횟수는 정상 실행된 훈련만 셉니다. 입원·연습 금지로 실행하지 못한 주는 제외됩니다. 레벨 상승은 다음 훈련부터 적용됩니다. 리프레쉬는 회복·치료용이며 숙련 배율로 회복량이 늘지 않습니다.</p><button class="btn" id="backmastery" style="width:100%">상세 능력으로</button></div></div>`));

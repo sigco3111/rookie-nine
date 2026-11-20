@@ -1,3 +1,4 @@
+import {trainingGainV2} from './training-gain.js';
 import { applyJuniorTraining, schoolRivalContext } from './school-cast.js';
 import { readSchoolRecord, decodeSchoolRecord } from './school-record-read.js';
 import { STAT_KEYS, PRACTICES, OTHER_CMDS, keysOf, STAT_NAME, practicesFor, TRAITS, INJURIES, EVENTS, ITEMS, itemsFor, itemDescription, TEAMS, PRO } from './data.js';
@@ -10,7 +11,7 @@ export function newPlayer(name, build, pos = 'bat') {
   const base = pos === 'pit' ? { velo: 30, ctrl: 30, brk: 30, speed: 30, field: 30, stamina: 30 } : { meet: 30, power: 30, speed: 30, arm: 30, field: 30, stamina: 30 };
   const bonus = (pos === 'pit' ? { power: { velo: 12, stamina: 4 }, contact: { ctrl: 12, brk: 4 }, runner: { brk: 12, ctrl: 4 }, allround: { velo: 5, ctrl: 5, brk: 5, stamina: 5 } } : { contact: { meet: 12, speed: 4 }, slugger: { power: 12, arm: 4 }, runner: { speed: 12, field: 4 }, allround: { meet: 5, power: 5, speed: 5, field: 5, arm: 3 } })[build];
   for (const k in bonus) base[k] += bonus[k];
-  return { name, build, pos, so: 0, ...base, cond: 70, will: 30, tough: 20, money: 50, study: 40, week: 0, traits: [],
+  return { growthRules:2, name, build, pos, so: 0, ...base, cond: 70, will: 30, tough: 20, money: 50, study: 40, week: 0, traits: [],
     ev: { coach: 30, captain: 30, team: 30, scout: 15 }, cnt: {}, injury: null, banWeeks: 0, insured: false,
     wins: 0, losses: 0, hits: 0, ab: 0, hr: 0, rbi: 0, tour: [], log: ['입학했다. 3년 뒤 프로 지명을 목표로!'], pendingMatch: null, done: false, result: null };
 }
@@ -154,7 +155,7 @@ function executeCommand(p, id, arg) {
       const cmul = 0.6 + p.cond / 100 * 0.7; // 컨디션이 좋을수록 효율
       let mul = 0.5 * trainingMastery(p, id).multiplier * cmul * (bad('lazy') ? 0.7 : 1) * rnd(0.85, 1.2);
       const gained = [];
-      for (const k in pr.gain) { if (typeof p[k] !== 'number') continue; const before = p[k]; const g = Math.max(pr.gain[k] > 0 && Math.random() < 0.6 ? 1 : 0, Math.round(pr.gain[k] * mul * (p[k] > 60 ? 0.5 : 1))); if (g) { p[k] = clamp(p[k] + g); const actual = p[k] - before; if (actual) gained.push(`${STAT_NAME[k]} +${actual}`); } }
+      for (const k in pr.gain) { if (typeof p[k] !== 'number') continue; const before = p[k]; const g = p.growthRules===2?trainingGainV2({base:pr.gain[k],multiplier:mul,current:p[k],basic:id==='basic',roll:Math.random()}):Math.max(pr.gain[k] > 0 && Math.random() < 0.6 ? 1 : 0, Math.round(pr.gain[k] * mul * (p[k] > 60 ? 0.5 : 1))); if (g) { p[k] = clamp(p[k] + g); const actual = p[k] - before; if (actual) gained.push(`${STAT_NAME[k]} +${actual}`); } }
       if (pr.will) { const before = p.will; p.will = clamp(p.will + Math.round(pr.will * mul)); if (p.will > before) gained.push(`의지 +${p.will - before}`); }
       if (pr.tough) p.tough = clamp(p.tough + pr.tough);
       if (pr.money) p.money += pr.money;

@@ -945,3 +945,7 @@
 ## Nov20 13:45 - preserve old games while adding new auto trait effects
 - New8teammanagedgamesonlyrules2addsmodestautomaticrun/clutch/grit/fast/cmd/benderbonuses;schooldirectfeelunchanged. Pendingunmarkedoldgames+legacy6+fixedAI-vs-AIretain1. Updatedscopepermode/version,neverchangesoldstats/results.
 - Prefrozenold13PA/finalfixtureexact,90newgames/replay,actualChromiumrules1+2tenreloadcheckpoints,oldpending→nextversiontransition,normal14UI56+rollover,old6UIandquotaregressionpass. Numericalbalanceandactualphoneareseparategates. Latestestimateunchanged65–70%5–8days.
+
+## Nov20 14:10 - new career training budget correction
+- NewcareersonlygrowthRules2fractional/no60%floor/highstatstaper/basic*.4. Equalbudgetbasicnolongertotalgain-perconditionleader;olderunmarkedcareerEXACToldrules/RNGandsavedabilitiesretain. UIshowswhichrule. Newv2576meanbasic69.6vsspecialist72.8/target8577.5/balanced71.9;allbasic99zero. Firstpickstillcommon50/96basic/95target85,NOTbalancecomplete/draftunchanged.
+- Beforeeditold5commandsfixture/RNGexact;newgainexpectation/cap/unknownversionreject,normalUInew-oldnotice/readonly/reload320–430,LOCALbothpos144→14league→inheritancePASS. Newtrainingnotrealhuman/phoneapproval. BulkJSONnotcommitted. SeePRO_MODE_PLANforinterruptedtestrecoveryandlimits.

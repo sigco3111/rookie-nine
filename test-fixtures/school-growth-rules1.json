@@ -1,0 +1,219 @@
+{
+  "before": {
+    "name": "기존 성장 호환",
+    "build": "contact",
+    "pos": "bat",
+    "so": 0,
+    "meet": 80,
+    "power": 30,
+    "speed": 34,
+    "arm": 30,
+    "field": 30,
+    "stamina": 30,
+    "cond": 70,
+    "will": 30,
+    "tough": 20,
+    "money": 50,
+    "study": 40,
+    "week": 0,
+    "traits": [],
+    "ev": {
+      "coach": 30,
+      "captain": 30,
+      "team": 30,
+      "scout": 15
+    },
+    "cnt": {},
+    "injury": null,
+    "banWeeks": 0,
+    "insured": false,
+    "wins": 0,
+    "losses": 0,
+    "hits": 0,
+    "ab": 0,
+    "hr": 0,
+    "rbi": 0,
+    "tour": [],
+    "log": [
+      "입학했다. 3년 뒤 프로 지명을 목표로!"
+    ],
+    "pendingMatch": null,
+    "done": false,
+    "result": null
+  },
+  "commands": [
+    "basic",
+    "rest",
+    "bat",
+    "mental",
+    "basic"
+  ],
+  "seed": 714,
+  "after": {
+    "name": "기존 성장 호환",
+    "build": "contact",
+    "pos": "bat",
+    "so": 0,
+    "meet": 84,
+    "power": 33,
+    "speed": 36,
+    "arm": 32,
+    "field": 32,
+    "stamina": 32,
+    "cond": 76,
+    "will": 33,
+    "tough": 20,
+    "money": 50,
+    "study": 40,
+    "week": 5,
+    "traits": [],
+    "ev": {
+      "coach": 36,
+      "captain": 30,
+      "team": 30,
+      "scout": 16
+    },
+    "cnt": {
+      "basic": 2,
+      "rest": 1,
+      "bat": 1,
+      "mental": 1
+    },
+    "injury": null,
+    "banWeeks": 0,
+    "insured": false,
+    "wins": 0,
+    "losses": 0,
+    "hits": 0,
+    "ab": 0,
+    "hr": 0,
+    "rbi": 0,
+    "tour": [],
+    "log": [
+      "입학했다. 3년 뒤 프로 지명을 목표로!"
+    ],
+    "pendingMatch": null,
+    "done": false,
+    "result": null,
+    "snap": {
+      "meet": 80,
+      "power": 30,
+      "speed": 34,
+      "arm": 30,
+      "field": 30,
+      "stamina": 30,
+      "will": 30,
+      "tough": 20
+    },
+    "snapOvr": 42,
+    "commandReport": {
+      "statFx": {
+        "meet": 1,
+        "power": 1,
+        "speed": 1,
+        "arm": 1,
+        "field": 1,
+        "stamina": 1
+      },
+      "fx": {
+        "cond": -10,
+        "coach": 2
+      },
+      "year": 1,
+      "month": 5,
+      "wk": 1
+    },
+    "commandHistory": [
+      {
+        "statFx": {
+          "meet": 1,
+          "power": 1,
+          "speed": 1,
+          "arm": 1,
+          "field": 1,
+          "stamina": 1
+        },
+        "fx": {
+          "cond": -10,
+          "coach": 2
+        },
+        "year": 1,
+        "month": 5,
+        "wk": 1,
+        "label": "기초훈련",
+        "messages": [
+          "기초훈련: 미트 +1, 파워 +1, 주력 +1, 송구 +1, 수비 +1, 체력 +1"
+        ]
+      },
+      {
+        "statFx": {
+          "meet": 1
+        },
+        "fx": {
+          "cond": -8,
+          "will": 3,
+          "scout": 1
+        },
+        "year": 1,
+        "month": 4,
+        "wk": 4,
+        "label": "멘탈훈련",
+        "messages": [
+          "멘탈훈련: 미트 +1, 의지 +3"
+        ]
+      },
+      {
+        "statFx": {
+          "meet": 1,
+          "power": 1
+        },
+        "fx": {
+          "cond": -14,
+          "coach": 2
+        },
+        "year": 1,
+        "month": 4,
+        "wk": 3,
+        "label": "배팅연습",
+        "messages": [
+          "배팅연습: 미트 +1, 파워 +1"
+        ]
+      },
+      {
+        "statFx": {},
+        "fx": {
+          "cond": 36
+        },
+        "year": 1,
+        "month": 4,
+        "wk": 2,
+        "label": "휴식",
+        "messages": [
+          "푹 쉬어서 컨디션이 회복됐다."
+        ]
+      },
+      {
+        "statFx": {
+          "meet": 1,
+          "power": 1,
+          "speed": 1,
+          "arm": 1,
+          "field": 1,
+          "stamina": 1
+        },
+        "fx": {
+          "cond": -10,
+          "coach": 2
+        },
+        "year": 1,
+        "month": 4,
+        "wk": 1,
+        "label": "기초훈련",
+        "messages": [
+          "기초훈련: 미트 +1, 파워 +1, 주력 +1, 송구 +1, 수비 +1, 체력 +1"
+        ]
+      }
+    ]
+  },
+  "randomState": 4064991215
+}
