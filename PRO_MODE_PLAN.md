@@ -276,3 +276,7 @@
 ## Nov20 12:21 season completion recap
 - Currentcompleted14roundandarchivedseasonrecordshavereadonlyrecapactualrank(sharedifnecessary),record,runsandregularschedulefirstteam(s). No playofftitle,rewardsorabilitygrowthinvented. Missing/incompleteleague→norecap;previoussameidentitycompletedseasonwincomparisonwhenavailable. Current/archivepureequivalence+actual56enginegames→rollover→recap/8rowtable/readonly/320-430PASS;390pixelsread.
 - Jointgrowth/evaluationcandidatecontinuesisolatedexperimentonly. Positiveevaluationgainstaperedabove60/80inthetemporarycopy;576careerspass,butbasic95/96firstpickpersistsandrestundrafted79/96significantshift. Notchosenproductionbehavior;no currentplayerorformula change. Needtargetexperiencejudgmentratherthancountingmoreseedsasprogress.
+
+## Nov20 12:40 roster selection preview
+- Normal roster selects now show chosen player's3primary actual abilities immediately, clear saved-vs-unsaved status, unique batter count/starter presence, duplicate inlinewarning and active/reserve badges in fullroster. No auto swap/autoassign; same explicit save/backendvalidation retained. Draft preview never writes club/school/archive; no implied tactical recommendation or invented ability.
+- Component selection→save→badduplicate rejection/remount/pendinglock/rolebadge/sourceisolation and normalmenu preview/duplicate/blank/no-write/320–430 tests pass. Actual390normalmenu screenshot read: trainedbatter81/75/62vsbasic48/45/48, amberunsavedstatus. No realdevice/nativepickerfeel claim. UIonly, no balance or storage schema change.

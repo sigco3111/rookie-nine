@@ -927,3 +927,7 @@
 ## Nov20 12:21 - completed league recap, not synthetic championship
 - AddedreadonlyleagueSeasonRecap/showLeagueRecap oncompletedcurrentfixtureandchosenarchivedrecords. Actualfinalrank/sharedrank/winslosses/runs/topteamswithnoplayoffschampionclaim;previouscompletedownidentityseasonwincomparisonifavailable. Nullforincomplete/missinglegacy;no sourcewrite/reward/statgain. Actual56engine→season2→pastrecappixels390/8rows/readonly/320-430PASS;purecurrent+archiveequalcheckPASS.
 - JointUNSHIPPEDexperiment EVALUATION_TAPER=1 addstemporarypositiveevaluationdiminishingabove60/80whilekeepingnegativefx.576careersallweeks/repeat/sourceexactPASS. basic95/96firstpickstill;balanced59/96,rest0/96firstpickand79/96undrafted. Unvalidateddrasticrestimpactvspriorrestmean,nobalancecandidateaccepted/noproductiongrowth-evalchange. Keepdiagnosticnotproductiontune. Do notmistakechoosingexamplethresholdsforuserdesire.
+
+## Nov20 12:40 - roster choice feedback
+- Normalpro roster now shows actualprimaryabilities under each choice, saved/unsavedstate and distinctselectedbattercount/starter, immediate duplicatewarning plus rosteractive/reservebadges. Explicit save remains; no autoselect/swap/inventedrating or statmigration.
+- Component + normalmenu impacttests preview/no-write/save/reject/reload/pendinglock/sourcebytes/320–430 pass;actual390pixelsread. Firstcompletion estimate stillpending13:35scopeandquality review; do not change percent for this UI alone.

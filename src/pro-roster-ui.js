@@ -2,19 +2,34 @@ import { setLineup } from './pro.js';
 import { STAT_NAME,keysOf } from './data.js';
 export function mountProRoster(parent,store,clubId){
  const el=document.createElement('section');el.className='pro-roster';parent.append(el);let removed=false,message='';
+ const add=(tag,text,target=el)=>{const e=document.createElement(tag);e.textContent=text;target.append(e);return e;};
  function draw(){
-  if(removed)return;el.replaceChildren();const state=store.load(),title=document.createElement('h2');title.textContent='출전 명단 편성';el.append(title);
-  if(!state.ok){el.append(document.createTextNode(state.error));return;}const club=state.data.clubs.find(c=>c.id===clubId);if(!club){el.append(document.createTextNode('구단을 확인하세요.'));return;}
+  if(removed)return;el.replaceChildren();const state=store.load();add('h2','출전 명단 편성');
+  if(!state.ok){add('p',state.error);return;}const club=state.data.clubs.find(c=>c.id===clubId);if(!club){add('p','구단을 확인하세요.');return;}
   const status=store.status(),locked=!!club.pending||status.pending||status.conflict;
-  const info=document.createElement('p');info.textContent=club.pending?'진행 중인 경기를 마친 뒤 편성을 바꿀 수 있습니다.':status.pending?'미저장 진행을 먼저 저장하세요.':'타순9명과 선발 투수를 선택하세요. 구단 입단 방식은 이 화면에서 바꾸지 않습니다.';el.append(info);
-  if(message){const p=document.createElement('p');p.setAttribute('role','status');p.textContent=message;el.append(p);}
-  const form=document.createElement('form'),selects=[];
-  const picker=(label,value,pos)=>{const row=document.createElement('label');row.textContent=label;const select=document.createElement('select');select.disabled=locked;select.setAttribute('aria-label',label);const blank=document.createElement('option');blank.value='';blank.textContent='미편성';select.append(blank);for(const p of club.roster.filter(p=>p.pos===pos)){const option=document.createElement('option');option.value=p.id;option.textContent=p.name+(p.source==='graduate'?' · 육성':' · 기본');select.append(option);}select.value=value||'';row.append(select);form.append(row);return select;};
-  for(let i=0;i<9;i++)selects.push(picker(`${i+1}번 타자`,club.lineup[i],'bat'));const starter=picker('선발 투수',club.starter,'pit');
-  const button=document.createElement('button');button.type='submit';button.className='btn';button.textContent='편성 저장';button.disabled=locked;form.append(button);el.append(form);
+  add('p',club.pending?'진행 중인 경기를 마친 뒤 편성을 바꿀 수 있습니다.':status.conflict?'저장 충돌을 먼저 확인하세요.':status.pending?'미저장 진행을 먼저 저장하세요.':'타순 9명과 선발 투수를 선택하세요. 선택만으로는 저장되지 않습니다.');
+  if(message)add('p',message).setAttribute('role','status');
+  const draft=add('p','');draft.className='pro-roster-draft';draft.setAttribute('aria-live','polite');
+  const form=add('form',''),selects=[],previews=[];let starter;
+  const picker=(label,value,pos)=>{
+   const box=add('div','',form);box.className='pro-lineup-slot';const row=add('label',label,box),select=add('select','',row);select.disabled=locked;select.setAttribute('aria-label',label);
+   const blank=add('option','미편성',select);blank.value='';blank.textContent='미편성';for(const p of club.roster.filter(p=>p.pos===pos)){const option=add('option',p.name+(p.source==='graduate'?' · 육성':' · 기본'),select);option.value=p.id;}select.value=value||'';
+   const preview=add('p','',box);preview.className='pro-slot-preview';previews.push({select,preview,box});select.onchange=()=>updateDraft();return select;
+  };
+  for(let i=0;i<9;i++)selects.push(picker(`${i+1}번 타자`,club.lineup[i],'bat'));starter=picker('선발 투수',club.starter,'pit');
+  const button=add('button','편성 저장',form);button.type='submit';button.className='btn';button.disabled=locked;
+  const heading=add('h3','구단 선수');const rosterCards=[];
+  for(const p of club.roster){const card=add('article','');card.dataset.playerId=p.id;const badge=add('small','',card);badge.className='pro-roster-role';add('strong',`${p.name} · ${p.pos==='pit'?'투수':'타자'} · ${p.source==='graduate'?'육성 선수':'기본 선수'}`,card);add('p',keysOf(p).map(k=>`${STAT_NAME[k]} ${p.abilities[k]}`).join(' · '),card);rosterCards.push({p,badge});}
+  function updateDraft(){
+   const ids=selects.map(s=>s.value),seen=ids.filter(Boolean),duplicates=new Set(seen.filter((id,i)=>seen.indexOf(id)!==i));
+   const changed=ids.some((id,i)=>id!==(club.lineup[i]||''))||starter.value!==(club.starter||'');
+   draft.dataset.dirty=String(changed);draft.textContent=`${changed?'변경 미저장':'저장된 편성'} · 타자 ${new Set(seen).size} / 9명 · 선발 ${starter.value?'1 / 1명':'미편성'}${duplicates.size?' · 같은 선수를 두 번 편성할 수 없습니다.':''}`;
+   for(const {select,preview,box}of previews){const p=club.roster.find(p=>p.id===select.value),duplicate=duplicates.has(select.value);select.setAttribute('aria-invalid',String(duplicate));box.dataset.duplicate=String(duplicate);preview.textContent=p?keysOf(p).slice(0,3).map(k=>`${STAT_NAME[k]} ${p.abilities[k]}`).join(' · '):'선수를 선택하면 주요 능력치를 표시합니다.';}
+   heading.textContent=changed?'구단 선수 · 편집 중 선택 기준':'구단 선수 · 저장된 편성 기준';
+   for(const {p,badge}of rosterCards){const places=ids.flatMap((id,i)=>id===p.id?[`${i+1}번 타자`]:[]);badge.textContent=places.length?places.join(' · '):p.id===starter.value?'선발 투수':'대기';badge.dataset.selected=String(places.length>0||p.id===starter.value);}
+  }
+  updateDraft();
   form.onsubmit=e=>{e.preventDefault();try{const latest=store.load();if(!latest.ok||latest.data.revision!==state.data.revision)throw Error('기록이 바뀌었습니다. 새 명단을 확인하세요.');const index=latest.data.clubs.findIndex(c=>c.id===clubId);latest.data.clubs[index]=setLineup(latest.data.clubs[index],{batters:selects.map(s=>s.value||null),starter:starter.value||null});const saved=store.save(latest.data);message=saved.ok?'출전 명단을 저장했습니다.':'편성 저장 대기 중입니다. 저장 안내를 확인하세요.';}catch(e){message=e.message;}draw();};
-  const heading=document.createElement('h3');heading.textContent='구단 선수';el.append(heading);
-  for(const p of club.roster){const card=document.createElement('article');const strong=document.createElement('strong');strong.textContent=`${p.name} · ${p.pos==='pit'?'투수':'타자'} · ${p.source==='graduate'?'육성 선수':'기본 선수'}`;const stats=document.createElement('p');stats.textContent=keysOf(p).map(k=>`${STAT_NAME[k]} ${p.abilities[k]}`).join(' · ');card.append(strong,stats);el.append(card);}
  }
  const unsub=store.subscribe(draw);draw();return {element:el,refresh:draw,destroy(){removed=true;unsub();el.remove();}};
 }
