@@ -975,3 +975,6 @@
 ## Nov20 15:53 - physical-device gate excluded by user
 - User15:51:39 approved excluding actual-phone quality verification from this milestone. Browser coordinate input/viewport/save/gameprogress and critical bug fixes remain. Deviceperformance/heat/OS/audio are UNVERIFIED, notpassed.
 - Additionaldeferrals(balancefine-tuning/extraaudiovisualpolish/redundantmatrix)arePROPOSALonly,pendinguserdecision. Estimate4–6dayswithoutdevice;recommendednarrower2–4daysconditional,notdeadline/newfeaturescope. Parentownsuseranswer. Run impact tests first and group integration checks at meaningful checkpoints, never repeat completed longflows per wake.
+
+## Nov20 15:54 - recommended narrower milestone approved
+- User15:53:32 phonemsg-01M7VVPNX0B4SFAFCDY1K5DBAS accepted15:52:55 proposal: keep current features/rules, defer fine strategy/trait balance and extra audiovisual polish to next update; physicaldevice excluded; reduce duplicate test matrix, retain bothposition coreflow/save/reconnect and critical bugs. Runtime-safety/extremevalues remain. Updated FIRST_COMPLETION_GATES. Additional2–4days estimate notpromise, userdecidesfinish. No implicit new contracts/transfers/postseason/progrowth.
