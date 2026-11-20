@@ -935,3 +935,6 @@
 ## Nov20 13:05 - full career to eight-team season verification
 - ExistingcareerUIharness can now chain actual144weeks→samegraduateadmit+lineup→14normalUIproautogames/56league results→midreload→season2+archivedrecap→ending→successorinheritance. BothpositionsLOCAL+LIVEpass, actualcopiedabilities/14proappearances/schoolHoFbytesexact/noJSerror. No week/statinjection. School/proauto matches, controlledcontinuousseed,notmanualhumanphone.
 - Earlierfullschoolmixed/direct/interruptionreports verifiedalreadyexist;newtestfillsfullsystemslinkratherthanrelabelingoldwork. No livegameplay/balancechange. Addedtests/docs only.
+
+## Nov20 13:17 - requested lineup delegation
+- Explicituser13:14requestnowabilitybasedproposal/review/cancel→draftapply→explicitSAVE, withsavedlineupundo;neverquietlyoverwritessave. Major3statsrankingandlimitationsshown. Pendinglocksretained. Pure+normalUIimpacttests/readable390proposal/320–430pass. Includein13:35scopeestimate.
