@@ -966,3 +966,4 @@
 ## Nov20 15:35 - coordinate touch aiming unblocked
 - Real browser hit tests exposed school full-screen HUD and pro hub/shell intercepting canvas touches; scoped passthrough fixes while controls stay active. Earlier canvas dispatch tests bypassed this issue. Added true coordinate touch test school/pro×bat/pit via normal entry.
 - One-pointer aim/cancel/blur/hidden/captureloss reset, phaseend/dispose cleanup, mousehover kept. Four coordinate routes+trustedSWING/throw+saveunchanged;preparedproactualPA/finish bothpos;12releasechecksPASS LOCAL. ActualphoneOSstillunverified. LIVE verification next.
+-15:40 LIVE75e35cd correctJS+CSS/4trustedcoordinate routes+actualSWING/throw/readonlyPASS, LIVEaudio3modalregression+batfoullock+pitchfieldreturnlockPASS. CombinedtesttimeoutpitchrerunalonePASS. ActualLIVEschoolbat+propitimagesread/mainattached. PhysicalphoneOS/heat/audio stillopen.
