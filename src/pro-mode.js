@@ -1,3 +1,4 @@
+import {openSoundSettings} from './audio-settings-ui.js';
 import { mountProGraduates } from './pro-graduates-ui.js';
 import './pro-graduates-ui.css';
 import { clubFixtureProgress } from './pro-fixture-progress.js';
@@ -17,6 +18,7 @@ export function mountPreparedProMode(parent,storage,store,clubId,{onBack=()=>{},
  const shell=document.createElement('div'),nav=document.createElement('nav'),content=document.createElement('div');shell.className='pro-mode';nav.className='pro-mode-nav';shell.append(nav,content);parent.append(shell);let active=null,direct=false,removed=false;
  const button=(text,fn)=>{const b=document.createElement('button');b.type='button';b.textContent=text;b.onclick=()=>{if(!direct)fn();};nav.append(b);return b;};
  const gameButton=button('구단 경기',()=>showGame()),backupButton=button('프로 백업',()=>showBackups()),back=button('나가기',onBack);
+ button('소리 설정',openSoundSettings);
  button('명단 편성',()=>showRoster());button('구단 기록',()=>showRecords());
  if(getGraduates)button('졸업 선수 입단',()=>showGraduates());
  const notice=mountProSaveNotice(store,{parent:shell,onRecovered:()=>showGame()});

@@ -949,3 +949,7 @@
 ## Nov20 14:10 - new career training budget correction
 - NewcareersonlygrowthRules2fractional/no60%floor/highstatstaper/basic*.4. Equalbudgetbasicnolongertotalgain-perconditionleader;olderunmarkedcareerEXACToldrules/RNGandsavedabilitiesretain. UIshowswhichrule. Newv2576meanbasic69.6vsspecialist72.8/target8577.5/balanced71.9;allbasic99zero. Firstpickstillcommon50/96basic/95target85,NOTbalancecomplete/draftunchanged.
 - Beforeeditold5commandsfixture/RNGexact;newgainexpectation/cap/unknownversionreject,normalUInew-oldnotice/readonly/reload320–430,LOCALbothpos144→14league→inheritancePASS. Newtrainingnotrealhuman/phoneapproval. BulkJSONnotcommitted. SeePRO_MODE_PLANforinterruptedtestrecoveryandlimits.
+
+## Nov20 14:24 - sound setting and background gate
+- Effectson/off/testscreenfromtitle/schoolmenu/pronav;separatebrowserpref/explicitsavefailuremessage,mastergainmuteanddocumenthiddenoutputgate/caughtresumefailure. DoesnotpausegameorchangeRNG/playerrecords.
+- Mockgraph+normalDOMtitle/school/pro/reload/quota/read-only/320–430+390pixelsPASS. Audiblephone/OSswitchqualitystillunverified. Draft/evaluationbalanceworkremains;notrelabelingthisasbalanceprogress.

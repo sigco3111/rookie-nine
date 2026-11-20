@@ -1,3 +1,4 @@
+import {openSoundSettings} from './audio-settings-ui.js';
 import {growthPacingText} from './training-gain.js';
 import { mountSchoolCastSelection } from './school-cast-select-ui.js';
 import { castPlayer } from './school-cast.js';
@@ -51,12 +52,13 @@ function titleScreen() {
     <div class="sub">3D 야구 · 주간 훈련 · 성장 모드</div>
     ${resumable ? `<button class="btn big" id="cont">${sv.done ? '졸업 결과 다시 보기' : `이어하기 (${sv.name} · ${G.cal(sv.week).year}학년 ${G.cal(sv.week).month}월)`}</button>` : ''}
     <button class="btn big alt" id="new">새 선수 만들기</button>
-    <button class="btn alt" id="pro">프로 구단</button><button class="btn gray" id="hof">명예의 전당 (${h.length})</button><button class="btn gray" id="school-backups">원문 백업 보기</button></div>`));
+    <button class="btn alt" id="pro">프로 구단</button><button class="btn gray" id="hof">명예의 전당 (${h.length})</button><button class="btn gray" id="school-backups">원문 백업 보기</button><button class="btn gray" id="sound-settings">소리 설정</button></div>`));
   el.querySelector('#new').disabled=playerBlocked;el.querySelector('#hof').disabled=hofBlocked;
   el.querySelector('#new').onclick = createScreen;
   el.querySelector('#pro').onclick = proScreen;
   if (resumable) el.querySelector('#cont').onclick = () => { P = sv; if (P.pendingResult) { const q = P.pendingResult; resultModal(q.result, q.msgs, () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingMatch) { clear(); showHome(P.pos, P); const q = P.pendingMatch; matchPrompt(q.match, q.msgs, new Set(q.previousTraits), () => finishWeek(q.msgs, new Set(q.previousTraits))); } else if (P.pendingEvent) { clear(); showHome(P.pos, P); eventChoiceModal(P.pendingEvent); } else if (P.pendingEventResult) { clear(); showHome(P.pos, P); eventResultModal(P.pendingEventResult); } else if (P.pendingLearned) { clear(); showHome(P.pos, P); learnedModal(P.pendingLearned); } else if (P.review) { clear(); showHome(P.pos, P); yearReviewModal(P.review.msgs || []); } else homeScreen(); };
   el.querySelector('#hof').onclick = hofScreen;
+  el.querySelector('#sound-settings').onclick=openSoundSettings;
   el.querySelector('#school-backups').onclick=()=>mountSchoolBackups(document.body,localStorage);
 }
 
@@ -76,6 +78,7 @@ function hofScreen() {
   const stats=e=>(e.pos==='pit'?['구속','제구','변화구','주력','수비','체력']:['미트','파워','주력','송구','수비','체력']).map((name,i)=>`${name} ${e.stats[i]}`).join(' · ');
   const m = show($(`<div class="modal"><div class="panel"><h2>${ic('trophy')} 명예의 전당</h2><div style="max-height:65vh;overflow:auto">${h.length ? h.map((e,i) => `<div class="panel" style="margin:8px 0"><b>${e.name}</b> · ${e.pos==='pit'?'투수':'타자'} · 종합 ${e.ovr}<div style="color:#ffd23f;margin:6px 0">${e.rank ? e.rank + '순위 ' + e.team : '미지명'}</div><p style="font-size:13px;margin:6px 0">${career(e)}</p><small style="color:#b5c6dd">${stats(e)}</small><div class="chips" style="margin-top:6px">${e.traits.map((t) => `<span class="chip up">${TRAITS[t].name}</span>`).join('') || '<span class="chip">특능 없음</span>'}</div>${e.yearReviews?.length?`<button class="btn alt" data-hofyears="${i}" style="width:100%;margin-top:8px">학년별 성장 기록</button>`:'<small style="display:block;margin-top:8px;color:#b5c6dd">이전 선수: 학년별 결산 미저장</small>'}</div>`).join('') : '<p>아직 졸업한 선수가 없습니다.</p>'}</div><button class="btn" style="width:100%;margin-top:8px" id="x">닫기</button></div></div>`));
   m.querySelectorAll('[data-hofyears]').forEach(b=>b.onclick=()=>{m.remove();yearHistoryModal(false,h[+b.dataset.hofyears].yearReviews);});
+  m.querySelector('#menu-sound').onclick=openSoundSettings;
   m.querySelector('#x').onclick = () => m.remove();
 }
 
@@ -182,6 +185,7 @@ function detailModal() {
   m.querySelector('#matches').onclick = () => { m.remove(); matchHistoryModal(); };
   m.querySelector('#evhistory').onclick = () => { m.remove(); eventHistoryModal(); };
   m.querySelector('#goals').onclick = () => { m.remove(); goalsModal(); };
+  m.querySelector('#menu-sound').onclick=openSoundSettings;
   m.querySelector('#x').onclick = () => m.remove();
 }
 function commandHistoryModal() {
@@ -275,7 +279,8 @@ function schoolCastModal(){
  const note=document.createElement('small');note.textContent='입학할 때 고른 사본입니다. 고교 원본과 프로 명단은 그대로 두며 이 회차에서 역할을 바꾸지 않습니다.';body.append(note);modal.querySelector('button').onclick=()=>modal.remove();
 }
 function menuModal() {
-  const m = show($(`<div class="modal"><div class="panel"><h2>메뉴</h2><div style="display:grid;gap:8px"><button class="btn" id="x">계속하기</button><button class="btn alt" id="cast-info">다회차 선수</button><button class="btn alt" id="t">타이틀로</button><button class="btn warn" id="r">이 선수 포기하고 초기화</button></div></div></div>`));
+  const m = show($(`<div class="modal"><div class="panel"><h2>메뉴</h2><div style="display:grid;gap:8px"><button class="btn alt" id="menu-sound">소리 설정</button><button class="btn" id="x">계속하기</button><button class="btn alt" id="cast-info">다회차 선수</button><button class="btn alt" id="t">타이틀로</button><button class="btn warn" id="r">이 선수 포기하고 초기화</button></div></div></div>`));
+  m.querySelector('#menu-sound').onclick=openSoundSettings;
   m.querySelector('#x').onclick = () => m.remove();
   m.querySelector('#cast-info').onclick=()=>{m.remove();schoolCastModal();};
   m.querySelector('#t').onclick = () => { G.save(P); titleScreen(); };
@@ -298,7 +303,8 @@ function shopModal() {
   const draw = (note) => {
     const m = show($(`<div class="modal"><div class="panel"><h2> 쇼핑 (${ic('coin')} ${P.money})</h2>${note ? `<div class="log" style="color:#ffd23f">${note}</div>${purchaseReportHtml()}` : ''}<div style="display:grid;gap:6px;max-height:56vh;overflow:auto">${itemsFor(P).map((i) => `<button class="btn alt" data-i="${i.id}" style="text-align:left;display:flex;justify-content:space-between"><span>${i.name}<br><small>${itemDescription(P, i)}</small>${purchasePreviewHtml(i.id)}</span><span>${i.price}</span></button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn gray" id="x">그만 사기</button><button class="btn" id="end" style="font-size:14px">${P.injury ? '쇼핑 끝 · 한 주 치료' : '쇼핑 끝 (한 주 소비)'}</button></div></div></div>`));
     m.querySelectorAll('[data-i]').forEach((b) => b.onclick = () => { const r = G.buy(P, b.dataset.i); G.save(P); m.remove(); draw(r); });
-    m.querySelector('#x').onclick = () => { m.remove(); G.save(P); homeScreen(); };
+    m.querySelector('#menu-sound').onclick=openSoundSettings;
+  m.querySelector('#x').onclick = () => { m.remove(); G.save(P); homeScreen(); };
     m.querySelector('#end').onclick = () => { m.remove(); runWeek('shop'); };
   }; draw();
 }
