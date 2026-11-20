@@ -883,3 +883,8 @@
 - Sharedread-onlycontributioncards useactualledger/selectedseason,battersortroster/hits/rbi/hr(stableties),AVGhits/ABandERAer*27/outs;0denominator/missingexplicitdash. Nooverallcontributionscore/awards/ratequalificationclaim. Existinggames/rawstatsretained,IPoutsnotation.
 - Completedgame shows sameplayerrecords beforeconfirmation andafteronce-onlyapply. Pendingresultreload retainsreview; no newpersistenceformat. Normalresultreload→apply1→records/actualsortedorder/seasonfilter/readonly/sourceexact/320-430PASS;zeros/missing/formula/ties/copytestPASS.
 - Existing sessionquota/retry/recordsUI/normalentry6+1/seasonquota/retry/shared3Dmode regressionsPASS. Actual390comparison/resultpixelsread. Build/diffpass. Notphonefeel/balancefix/fullleague.
+
+## Nov20 09:36 - graduation→pro visible bridge
+- Ending adds explicit '이 선수 프로 입단 확인' navigation into existingprohub. School/archive retained; no autocreate/admit/lineup. Ending scrollsportrait. Alreadydone homeScreen now goes straightreadonlyending,doesnotrecompute/write lastSelection.
+- NewbridgeUItest actualfinalweekcommand/endWeek/archivewriter atcontrolled143→endingbutton→explicitcreate/admitrealgraduate/lineup→progame/result/individual1game→returnending+onearchive/rawexact bothposPASS. Notall144UIweeks/phonefeel/directPArepeat.
+- Existingendingfourroutes(bothposwith/withoutlastweektrait)/reloadtwice/newcareer andselectionnoticeonce testsPASS.390endingpixelsread;320-430containmentpass.Build/diffpass. Teamnamecandidatesstillundecided;noidentitychange.

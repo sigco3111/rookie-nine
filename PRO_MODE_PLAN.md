@@ -237,3 +237,8 @@
 - Records: actual saved player counts, sortable batters by hits/RBI/HR with roster-order ties, selectedseason/cumulative scopes. AVG and9inningERAderivedonlywhen denominator>0/fullfields; missingorzero explicitlynotarate. Noqualifiedleaderboard/MVP/WARclaim.
 - Endedpendinggame review and just-confirmed result show same actual10playerrows. Resultrepeat/reload preserves once-onlyledgerexistingguards. No storage schema change or reward/balance change.
 - Pure rates/ties/missing/copy plus normalUIzero→finish→reviewreloadrawexact→confirmonce→recordsorting/filter/sourceexact/320-430 pass; existingnormal6+1/seasonquota,sessionquota,recordsUI,real3Dmode regression pass. Actual390pixelsread.
+
+## Nov20 09:36 - visible graduation to admission route
+- Ending button opens normal prohub and explains sourcepreservation/explicitadmission+lineup. Doesnotautomaticallycreateclub/register/selectlineup. Existingcompletedschoolsave remainsavailable fromtitle.
+- Found endingreload homeScreen recomputedlastSelection andsavedunnecessarily;doneplayers now go directlyreadonlyending. No ability/statloss observed.
+- Actual lastweek engine graduate/archive→normalending→create/admit/copiedabilities/lineup→automaticprogame/ledger→endingreturn,school+archiveexact andnoduplicate bothpositions passed. Boundary143controlled,not144manualweeks. Existingfourending/trait/reload/newcareer+selectionnotice regressionspassed. Portrait320-430 andactual390pixelschecked.

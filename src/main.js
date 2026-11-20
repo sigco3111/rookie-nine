@@ -124,9 +124,9 @@ function commandReportHtml() {
   return `<div class="command-report"><small>${P.commandReport.year}학년 ${P.commandReport.month}월 ${P.commandReport.wk}주 명령 직후<br>능력 옆 증감도 같은 시점 · 주말 회복/경기/이벤트 제외</small><div class="chips">${fx.map(([k,v]) => `<span class="chip ${v>0?'up':'dn'}">${names[k]} ${v>0?'+':''}${v}</span>`).join('')}</div></div>`;
 }
 function homeScreen(msgs) {
+  if(P.done)return endingScreen();
   const selectionNotice = G.selectionChange(P);
   clear(); showHome(typeof P !== 'undefined' && P ? P.pos : 'bat', typeof P !== 'undefined' ? P : null); G.save(P);
-  if (P.done) return endingScreen();
   const m = G.matchOfWeek(P);
   const c = G.cal(P.week);
   const el = show($(`<div class="screen">${topHtml()}
@@ -467,9 +467,10 @@ function resultModal(r, msgs, cont) {
 function endingScreen() {
   clear(); showHome(typeof P !== 'undefined' && P ? P.pos : 'bat', typeof P !== 'undefined' ? P : null);
   const r = P.result;
-  const el = show($(`<div class="screen"><div class="title" style="font-size:28px">졸업 · 드래프트</div><div class="panel" style="text-align:center"><div class="ending-result">${r.text}</div>${r.rank ? `<div>${r.team}</div>` : ''}<div style="margin-top:8px">종합 ${r.ovr} · 평가점수 ${r.score}</div><div>${P.wins}승 ${P.losses}패 · ${P.pos === 'pit' ? `${P.ab}이닝 · ${P.so || 0}탈삼진` : `홈런 ${P.hr}`}</div></div>
+  const el = show($(`<div class="screen ending-screen"><div class="title" style="font-size:28px">졸업 · 드래프트</div><div class="panel" style="text-align:center"><div class="ending-result">${r.text}</div>${r.rank ? `<div>${r.team}</div>` : ''}<div style="margin-top:8px">종합 ${r.ovr} · 평가점수 ${r.score}</div><div>${P.wins}승 ${P.losses}패 · ${P.pos === 'pit' ? `${P.ab}이닝 · ${P.so || 0}탈삼진` : `홈런 ${P.hr}`}</div></div>
     <div class="panel">${statsHtml()}<div class="ev" style="margin-top:6px">${P.traits.filter((t) => TRAITS[t].good).map((t) => `<span class="tr">${TRAITS[t].name}</span>`).join('')}</div></div>
-    <div class="spacer"></div><div class="panel log" id="hof-save-note">${G.storageStatus().pending.includes('명예의 전당')?'명예의 전당 저장 대기 중입니다. 위의 저장 안내를 확인하세요.':'선수는 명예의 전당에 저장되었습니다.'}</div><button class="btn alt" id="finalyears">학년별 성장 돌아보기</button><button class="btn big" id="again">새 선수로 다시 시작</button><button class="btn gray" id="hof">명예의 전당</button></div>`));
+    <div class="spacer"></div><div class="panel log" id="hof-save-note">${G.storageStatus().pending.includes('명예의 전당')?'명예의 전당 저장 대기 중입니다. 위의 저장 안내를 확인하세요.':'선수는 명예의 전당에 저장되었습니다.'}</div><button class="btn alt" id="finalyears">학년별 성장 돌아보기</button><button class="btn big" id="ending-pro">이 선수 프로 입단 확인</button><small style="font-size:12px;color:#b5c6dd;text-align:center">고교 기록을 남긴 채 프로 구단으로 갑니다.<br>입단과 출전 편성은 따로 확인합니다.</small><button class="btn big" id="again">새 선수로 다시 시작</button><button class="btn gray" id="hof">명예의 전당</button></div>`));
+  el.querySelector('#ending-pro').onclick=proScreen;
   el.querySelector('#finalyears').onclick = () => yearHistoryModal(true);
   el.querySelector('#again').onclick = () => { G.clearSave(); createScreen(); };
   el.querySelector('#hof').onclick = hofScreen;
