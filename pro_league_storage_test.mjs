@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {newClub} from './src/pro.js';
 import {fillClubRoster} from './src/pro-teammates.js';
 import {LEAGUE_IDENTITIES} from './src/pro-league-identities.js';
-import {validateClubLeague} from './src/pro-league.js';
+import {leagueClubForSeason,validateClubLeague} from './src/pro-league.js';
 import {createProStore,PRO_KEY,validateProSave,emptyProSave} from './src/pro-storage.js';
 import {createProController} from './src/pro-controller.js';
 import {prepareNextClubFixture} from './src/pro-fixtures.js';
@@ -35,6 +35,7 @@ for(const mutate of [c=>c.league.results.pop(),c=>c.league.teams.reverse(),c=>c.
 const corruptedAI=store.load().data;const ai=corruptedAI.clubs[0].league.results.find(r=>r.home!=='incheon'&&r.away!=='incheon');ai.homeScore+=100;assert.throws(()=>validateProSave(corruptedAI));
 enter('incheon');assert.equal(club().season,2);assert.equal(club().league.results.length,0);assert.equal(club().schedule.startGame,14);assert.equal(JSON.stringify(club().history),oldLedger);assert.equal(JSON.stringify(club().roster),oldRoster);assert.equal(JSON.stringify(club().leagueHistory[0].league),oldLeague);
 const next=club();prepareNextClubFixture(store,next.id,next.schedule.fixtures);const ctl=createProController(store,next.id);ctl.auto(2000);ctl.finish();assert.equal(club().record.games,15);assert.equal(club().league.results.length,4);assert.deepEqual(club().history.slice(0,14),seasonOne.history);assert.deepEqual(club().scheduleHistory[0],seasonOne.schedule);
+const sourceForView=JSON.stringify(club());const seasonOneView=leagueClubForSeason(club(),1);assert.equal(validateClubLeague(seasonOneView).completedGames,56);assert.equal(JSON.stringify(seasonOneView.league),oldLeague);assert.equal(JSON.stringify(club()),sourceForView);assert.equal(leagueClubForSeason(club(),99),null);
 const badArchive=store.load().data;badArchive.clubs[0].leagueHistory[0].league.results=[];assert.throws(()=>store.save(badArchive));
 // Existing six-game schedules/pending/history are not converted in place.
 disk.delete(PRO_KEY);store=createProStore(io);createOwnClub(store);const legacyStart=JSON.stringify(club());assert.throws(()=>enter('busan'));assert.equal(JSON.stringify(club()),legacyStart);

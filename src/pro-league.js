@@ -76,3 +76,12 @@ export function completeLeagueRound(before,after){
  }
  next.league=league;validateClubLeague(next);return next;
 }
+
+// Build a read-only season view. Missing legacy league data remains missing, never reconstructed.
+export function leagueClubForSeason(club,season){
+ if(season===club.season&&club.league)return copy(club);
+ const archive=club.leagueHistory?.find(item=>item.season===season),schedule=club.scheduleHistory?.find(item=>item.season===season);
+ if(!archive||!schedule)return null;
+ const view={...copy(club),season,name:leagueIdentity(archive.league.managedTeamId)?.name,league:copy(archive.league),schedule:copy(schedule),history:copy(club.history.slice(0,archive.endGame)),pending:null};
+ validateClubLeague(view);return view;
+}
