@@ -1,4 +1,6 @@
 import { validateClubSchedule, validateScheduleHistory } from './pro-schedule.js';
+import { createClubLeague, validateClubLeague, completeLeagueRound } from './pro-league.js';
+import { leagueIdentity } from './pro-league-identities.js';
 // Preparation only. One root write holds all clubs, snapshots and result ledgers.
 import { PRO_SCHEMA, applyClubResult, setLineup } from './pro.js';
 import { keysOf } from './data.js';
@@ -36,6 +38,17 @@ export function validateClub(club){
   }
   if(club.schedule!=null)validateClubSchedule(club);
   validateScheduleHistory(club);
+  validateClubLeague(club);
+  if(club.leagueHistory!==undefined){
+    if(!Array.isArray(club.leagueHistory))fail();let previousSeason=null;
+    for(const old of club.leagueHistory){
+      if(!old||!Number.isInteger(old.season)||old.season>=club.season||(previousSeason!==null&&old.season!==previousSeason+1)||!Number.isSafeInteger(old.endGame)||old.endGame>club.record.games)fail();
+      const schedule=club.scheduleHistory?.find(s=>s.season===old.season);if(!schedule||old.endGame!==schedule.startGame+14)fail();
+      const archived={...club,season:old.season,schedule,history:club.history.slice(0,old.endGame),league:old.league,name:leagueIdentity(old.league?.managedTeamId)?.name,pending:null};
+      if(!validateClubLeague(archived)?.done)fail();previousSeason=old.season;
+    }
+    if(club.leagueHistory.length&&(!club.league||previousSeason!==club.season-1))fail();
+  }
   return clone(club);
 }
 export function emptyProSave(){return {schema:PRO_SCHEMA,revision:0,clubs:[],selected:null};}
@@ -54,17 +67,30 @@ export function createProStore(storage){
     catch{return {ok:false,data:null,pending:hasPending,error:'프로 기록을 읽을 수 없습니다. 원본을 보존했습니다.'};}
   }
   function flush(){try{if(storage.getItem(PRO_KEY)!==baseRaw){conflict=true;return false;}storage.setItem(PRO_KEY,pending);hasPending=false;conflict=false;return true;}catch{return false;}}
-  function save(data,transitionClubId=null){const current=load();if(!current.ok||data.revision!==current.data.revision)fail();for(const club of current.data.clubs){const next=data.clubs?.find(c=>c.id===club.id);if(club.id!==transitionClubId&&(club.season!==next?.season||JSON.stringify(club.scheduleHistory??[])!==JSON.stringify(next?.scheduleHistory??[])||(club.schedule&&JSON.stringify(next?.schedule)!==JSON.stringify(club.schedule))))fail();}const valid=validateProSave(data);valid.revision++;if(!hasPending)baseRaw=storage.getItem(PRO_KEY);pending=JSON.stringify(valid);hasPending=true;const ok=flush();notice();return {ok,data:load().data};}
+  function save(data,transitionClubId=null,leagueResultClubId=null){const current=load();if(!current.ok||data.revision!==current.data.revision)fail();for(const club of current.data.clubs){const next=data.clubs?.find(c=>c.id===club.id);if(club.id!==transitionClubId&&(club.season!==next?.season||JSON.stringify(club.scheduleHistory??[])!==JSON.stringify(next?.scheduleHistory??[])||(club.schedule&&JSON.stringify(next?.schedule)!==JSON.stringify(club.schedule))))fail();
+    if(club.id!==transitionClubId){if(JSON.stringify(club.leagueHistory??[])!==JSON.stringify(next?.leagueHistory??[]))fail();if(club.id!==leagueResultClubId&&JSON.stringify(club.league??null)!==JSON.stringify(next?.league??null))fail();}
+   }const valid=validateProSave(data);valid.revision++;if(!hasPending)baseRaw=storage.getItem(PRO_KEY);pending=JSON.stringify(valid);hasPending=true;const ok=flush();notice();return {ok,data:load().data};}
   function rollover(clubId,schedule,{expectedRoot,confirmed=false}={}){
     const state=load();if(!state.ok||hasPending||statusPendingConflict()||!confirmed||JSON.stringify(state.data)!==expectedRoot)throw Error('시즌 전환 내용을 다시 확인하세요.');
     const index=state.data.clubs.findIndex(c=>c.id===clubId),club=state.data.clubs[index];
-    if(!club||club.pending||!club.schedule||!club.schedule.fixtures.length||!validateClubSchedule(club).done)throw Error('저장된 일정을 먼저 마치세요.');
+    if(!club||club.league||club.pending||!club.schedule||!club.schedule.fixtures.length||!validateClubSchedule(club).done)throw Error('저장된 일정을 먼저 마치세요.');
     const next={...club,season:club.season+1,scheduleHistory:[...(club.scheduleHistory??[]),clone(club.schedule)],schedule:clone(schedule)};
     if(next.schedule?.season!==next.season||next.schedule?.startGame!==club.record.games||!next.schedule?.fixtures?.length||validateClubSchedule(next).completed!==0)fail();
     state.data.clubs[index]=next;return save(state.data,clubId);
   }
+  function enterLeague(clubId,managedTeamId,{expectedRoot,confirmed=false}={}){
+    const state=load();if(!state.ok||hasPending||statusPendingConflict()||!confirmed||JSON.stringify(state.data)!==expectedRoot)throw Error('8팀 리그 참가 내용을 다시 확인하세요.');
+    const index=state.data.clubs.findIndex(c=>c.id===clubId),club=state.data.clubs[index];if(!club||club.pending)throw Error('진행 중 경기를 먼저 마치세요.');
+    if(club.schedule&&(!club.schedule.fixtures.length||!validateClubSchedule(club).done))throw Error('현재 시즌 일정을 먼저 마치세요.');
+    const next=clone(club);
+    if(club.schedule){next.season++;next.scheduleHistory=[...(club.scheduleHistory??[]),clone(club.schedule)];}
+    if(club.league){if(!validateClubLeague(club).done)fail();next.leagueHistory=[...(club.leagueHistory??[]),{season:club.season,endGame:club.record.games,league:clone(club.league)}];}
+    delete next.league;delete next.schedule;
+    Object.assign(next,createClubLeague(next,managedTeamId));state.data.clubs[index]=next;
+    return save(state.data,clubId);
+  }
   function statusPendingConflict(){if(hasPending){try{if(storage.getItem(PRO_KEY)!==baseRaw)conflict=true;}catch{}}return conflict;}
-  function result(clubId,outcome){const state=load();if(!state.ok)fail();const index=state.data.clubs.findIndex(c=>c.id===clubId);if(index<0)fail();const applied=applyClubResult(state.data.clubs[index],outcome);if(!applied.applied)return {ok:!hasPending,applied:false,data:state.data};state.data.clubs[index]=applied.club;return {...save(state.data),applied:true};}
+  function result(clubId,outcome){const state=load();if(!state.ok)fail();const index=state.data.clubs.findIndex(c=>c.id===clubId);if(index<0)fail();const applied=applyClubResult(state.data.clubs[index],outcome);if(!applied.applied)return {ok:!hasPending,applied:false,data:state.data};state.data.clubs[index]=state.data.clubs[index].league?completeLeagueRound(state.data.clubs[index],applied.club):applied.club;return {...save(state.data,null,clubId),applied:true};}
   function recoveryOptions(){
     if(!hasPending||!conflict)return null;
     const summarize=r=>({revision:r.revision,clubs:r.clubs.map(c=>({name:c.name,games:c.record.games,wins:c.record.wins,losses:c.record.losses,pending:!!c.pending}))});
@@ -91,5 +117,5 @@ export function createProStore(storage){
       hasPending=false;pending=undefined;conflict=false;notice();return {ok:true,backupKey,data:selected};
     }catch(error){notice();return {ok:false,backupKey,error:'복구를 마치지 못했습니다. 두 기록을 덮어쓰지 말고 다시 확인하세요.'};}
   }
-  return {load,save:data=>save(data),rollover,result,recover,recoveryOptions,retry(){const ok=!hasPending||flush();notice();return ok;},subscribe(fn){listeners.add(fn);return ()=>listeners.delete(fn);},status(){if(hasPending){try{if(storage.getItem(PRO_KEY)!==baseRaw)conflict=true;}catch{}}return {pending:hasPending,conflict};}};
+  return {load,save:data=>save(data),rollover,enterLeague,result,recover,recoveryOptions,retry(){const ok=!hasPending||flush();notice();return ok;},subscribe(fn){listeners.add(fn);return ()=>listeners.delete(fn);},status(){if(hasPending){try{if(storage.getItem(PRO_KEY)!==baseRaw)conflict=true;}catch{}}return {pending:hasPending,conflict};}};
 }
