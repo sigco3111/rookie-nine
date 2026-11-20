@@ -961,3 +961,4 @@
 ## Nov20 15:08 - first pick requires actual A-grade ability in new careers
 - New draftRules2: first requires score82+ AND OVR80+, otherwise score82+ stays upper. Existing score weights/minimumdraft/upper bands untouched. No regrading existing careers/archived graduates; previous growthRules2 without draftRules also keeps legacydraft.
 - Prefrozen8legacyfinish/archive/RNG exact;new79/80 and200lowband/score preservation cases;normalUI syntheticboundaries+readonly/oldreload/320–430;actualbothposition144UI→admit→14pro56→nextseason/archive→inheritance PASS LOCAL. Need LIVE check. Not overallbalance/realphone completion.
+-15:10 LIVE new/legacy draft+modal regressions and bothposition normal144school→14league→inheritance PASS. Actual576 rerun preserved all abilities/scores/drafted outcomes, firstgate counts match. Live screenshot to main explicitly synthetic79 demonstration, not naturalcareer. Completebalance/realdevice still open.

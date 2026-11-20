@@ -57,7 +57,7 @@ function run({pos,seed,cast,policy,eventMode='first'}){
  for(const k of keys)assert.equal(stages.reduce((n,s)=>n+deltas[s][k],initial[k]),final[k],`attribution ${k}`);
  const savedArchive=disk.get('rookie9.hof.v1');G.save(p);G.load();assert.equal(disk.get('rookie9.hof.v1'),savedArchive);
  if(!cast)assert.equal(assists,0);
- return {pos,seed,cast,policy,eventMode,initial,years,final,overall:G.ovr(p),rank:p.result.rank,draftScore:p.result.score,draftParts:G.draftStatus(p).parts,milestones,commands,matches,assists,injuredWeeks,banWeeks,events,deltas};
+ return {pos,seed,cast,policy,eventMode,initial,years,final,overall:G.ovr(p),draftRules:p.draftRules??1,rank:p.result.rank,draftScore:p.result.score,draftParts:G.draftStatus(p).parts,milestones,commands,matches,assists,injuredWeeks,banWeeks,events,deltas};
 }
 const originalRandom=Math.random,rows=[];
 const seeds=[1,7,19,31,77,101,311,509,1024,2026,4093,9991];
