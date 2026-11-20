@@ -78,7 +78,6 @@ function hofScreen() {
   const stats=e=>(e.pos==='pit'?['구속','제구','변화구','주력','수비','체력']:['미트','파워','주력','송구','수비','체력']).map((name,i)=>`${name} ${e.stats[i]}`).join(' · ');
   const m = show($(`<div class="modal"><div class="panel"><h2>${ic('trophy')} 명예의 전당</h2><div style="max-height:65vh;overflow:auto">${h.length ? h.map((e,i) => `<div class="panel" style="margin:8px 0"><b>${e.name}</b> · ${e.pos==='pit'?'투수':'타자'} · 종합 ${e.ovr}<div style="color:#ffd23f;margin:6px 0">${e.rank ? e.rank + '순위 ' + e.team : '미지명'}</div><p style="font-size:13px;margin:6px 0">${career(e)}</p><small style="color:#b5c6dd">${stats(e)}</small><div class="chips" style="margin-top:6px">${e.traits.map((t) => `<span class="chip up">${TRAITS[t].name}</span>`).join('') || '<span class="chip">특능 없음</span>'}</div>${e.yearReviews?.length?`<button class="btn alt" data-hofyears="${i}" style="width:100%;margin-top:8px">학년별 성장 기록</button>`:'<small style="display:block;margin-top:8px;color:#b5c6dd">이전 선수: 학년별 결산 미저장</small>'}</div>`).join('') : '<p>아직 졸업한 선수가 없습니다.</p>'}</div><button class="btn" style="width:100%;margin-top:8px" id="x">닫기</button></div></div>`));
   m.querySelectorAll('[data-hofyears]').forEach(b=>b.onclick=()=>{m.remove();yearHistoryModal(false,h[+b.dataset.hofyears].yearReviews);});
-  m.querySelector('#menu-sound').onclick=openSoundSettings;
   m.querySelector('#x').onclick = () => m.remove();
 }
 
@@ -185,7 +184,6 @@ function detailModal() {
   m.querySelector('#matches').onclick = () => { m.remove(); matchHistoryModal(); };
   m.querySelector('#evhistory').onclick = () => { m.remove(); eventHistoryModal(); };
   m.querySelector('#goals').onclick = () => { m.remove(); goalsModal(); };
-  m.querySelector('#menu-sound').onclick=openSoundSettings;
   m.querySelector('#x').onclick = () => m.remove();
 }
 function commandHistoryModal() {
@@ -303,8 +301,7 @@ function shopModal() {
   const draw = (note) => {
     const m = show($(`<div class="modal"><div class="panel"><h2> 쇼핑 (${ic('coin')} ${P.money})</h2>${note ? `<div class="log" style="color:#ffd23f">${note}</div>${purchaseReportHtml()}` : ''}<div style="display:grid;gap:6px;max-height:56vh;overflow:auto">${itemsFor(P).map((i) => `<button class="btn alt" data-i="${i.id}" style="text-align:left;display:flex;justify-content:space-between"><span>${i.name}<br><small>${itemDescription(P, i)}</small>${purchasePreviewHtml(i.id)}</span><span>${i.price}</span></button>`).join('')}</div><div class="row" style="margin-top:8px"><button class="btn gray" id="x">그만 사기</button><button class="btn" id="end" style="font-size:14px">${P.injury ? '쇼핑 끝 · 한 주 치료' : '쇼핑 끝 (한 주 소비)'}</button></div></div></div>`));
     m.querySelectorAll('[data-i]').forEach((b) => b.onclick = () => { const r = G.buy(P, b.dataset.i); G.save(P); m.remove(); draw(r); });
-    m.querySelector('#menu-sound').onclick=openSoundSettings;
-  m.querySelector('#x').onclick = () => { m.remove(); G.save(P); homeScreen(); };
+    m.querySelector('#x').onclick = () => { m.remove(); G.save(P); homeScreen(); };
     m.querySelector('#end').onclick = () => { m.remove(); runWeek('shop'); };
   }; draw();
 }
