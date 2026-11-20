@@ -4,7 +4,7 @@ try{browser=await puppeteer.launch({executablePath:'/usr/bin/google-chrome',head
  await page.goto(live||'http://localhost:8123/');await page.waitForSelector('#pro');
  if(!live)await page.evaluate(async()=>{const S=await import('/src/pro-storage.js'),E=await import('/src/pro-league-entry.js'),P=await import('/src/pro.js');const store=S.createProStore(localStorage);E.createLeagueClub(store,'seoul');const root=store.load().data;root.clubs[0]=P.admitGraduate(root.clubs[0],{id:'preview-graduate',name:'육성 타자',pos:'bat',stats:[81,75,62,55,60,70],traits:[]}).club;store.save(root);localStorage.setItem('rookie9.hof.v1','unchanged-marker');});
  const click=async text=>page.evaluate(t=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent===t&&!b.closest('[hidden]'));if(!b)throw Error('missing button '+t);b.click();},text);
- await page.click('#pro');if(live){await click('서울 곰돌이 선택');await click('이 팀으로 시작');}
+ await page.click('#pro');if(live){await page.click('button[data-team=seoul]');await click('선택 구단 참가 내용 확인');await click('이 구단으로 리그 참가 확정');}
  await click('서울 곰돌이 들어가기').catch(async e=>{if(!await page.$('.pro-mode-nav'))throw e;});await click('명단 편성');
  const original=await page.evaluate(()=>localStorage.getItem('rookie9.pro.v1'));const ids=await page.$$eval('select[aria-label="1번 타자"] option',a=>a.map(o=>o.value).filter(Boolean));const chosen=live?ids[1]:'preview-graduate';await page.select('select[aria-label="1번 타자"]',chosen);
  assert.equal(await page.$eval('.pro-roster-draft',e=>e.dataset.dirty),'true');assert.equal(await page.evaluate(()=>localStorage.getItem('rookie9.pro.v1')),original);assert.equal(await page.$eval('.pro-slot-preview',e=>e.textContent.includes('미트')),true);

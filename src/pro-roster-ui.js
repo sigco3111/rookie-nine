@@ -11,6 +11,7 @@ export function mountProRoster(parent,store,clubId){
   if(message)add('p',message).setAttribute('role','status');
   const draft=add('p','');draft.className='pro-roster-draft';draft.setAttribute('aria-live','polite');
   const form=add('form',''),selects=[],previews=[];let starter;
+  const quickSave=add('button','편성 저장',form);quickSave.type='submit';quickSave.className='btn';quickSave.disabled=locked;
   const picker=(label,value,pos)=>{
    const box=add('div','',form);box.className='pro-lineup-slot';const row=add('label',label,box),select=add('select','',row);select.disabled=locked;select.setAttribute('aria-label',label);
    const blank=add('option','미편성',select);blank.value='';blank.textContent='미편성';for(const p of club.roster.filter(p=>p.pos===pos)){const option=add('option',p.name+(p.source==='graduate'?' · 육성':' · 기본'),select);option.value=p.id;}select.value=value||'';
