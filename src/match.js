@@ -1,7 +1,7 @@
 import { baseRunStep, walkAdvance, forceTarget } from './bases.js';
 import { defensePaths, defenseStep, defenseLookYaw, groundOutPlan, groundOutPhase, airOutPlan, airOutStep, hitRunStep, groundRace, foulBallStep, runThroughStep } from './defense.js';
 import { TRAITS } from './data.js';
-import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, OPP_COLORS } from './scene.js';
+import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, setClubUniform, OPP_COLORS } from './scene.js';
 import { cal, battingWindow, oppStrength, rivalForMatch, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
 import { sfx } from './audio.js';
@@ -284,6 +284,7 @@ export async function playMatch(p, m, hud, appearance = null) {
   if(appearance&&(!Number.isInteger(appearance.inning)||appearance.inning<1||!Number.isInteger(appearance.bases)||appearance.bases<0||appearance.bases>7||!Number.isFinite(appearance.strength)||!appearance.opponent||!Array.isArray(appearance.scores)||appearance.scores.length!==2||appearance.scores.some(n=>!Number.isSafeInteger(n)||n<0)))throw Error('타석 정보를 확인하세요.');
   const o = ensureG();showBaseRunners(o,appearance?.bases||0); const y = cal(p.week).year; setUniform(o.batter, y); applyEquipment(o.batter, p.gear); if (o.runner) { setUniform(o.runner, y); applyEquipment(o.runner, p.gear); } applyEquipment(o.pitcher); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.5, 0, 0.2); o.batter.rotation.y = Math.PI / 2 - 1.4; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
   const opp = appearance?.opponent || (!appearance&&rivalForMatch(p)?rivalForMatch(p).name+'의 팀':null) || TEAMS[Math.floor(Math.random() * TEAMS.length)]; { const oc = OPP_COLORS[Math.max(0,TEAMS.indexOf(opp)) % OPP_COLORS.length]; setShirt(o.pitcher, oc); o.fielders.forEach((f) => setShirt(f, oc)); }
+  if(appearance?.ownTeamId){for(const player of [o.batter,o.runner,...o.baseRunners])setClubUniform(player,appearance.ownTeamId);for(const player of [o.pitcher,...o.fielders])setClubUniform(player,appearance.opponentTeamId);}
   const regular = isRegular(p);
   const strength = appearance ? appearance.strength : oppStrength(p);
   const traits = p.traits;

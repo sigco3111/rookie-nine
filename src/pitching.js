@@ -1,6 +1,6 @@
 import { hitRunStep, defenseLookYaw } from './defense.js';
 import { advanceBases, forceTarget, forceResult } from './bases.js';
-import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, OPP_COLORS } from './scene.js';
+import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, setClubUniform, OPP_COLORS } from './scene.js';
 import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut, airOutSequence, runHomeRun, showBaseRunners, showForcedRunners, runWalk, runFoul } from './match.js';
 import { oppStrength, rivalForMatch, teamStrength, isRegular, cal, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
@@ -38,6 +38,7 @@ export async function playPitching(p, m, hud, appearance = null) {
   if (!o.catcher) { o.catcher = makeChibi({ shirt: 0x333a44, pants: 0x333a44, cap: 0x222222, glove: true }); o.catcher.rotation.y = Math.PI; o.catcher.position.set(0, 0, 1.6); o.catcher.scale.set(1.0, 0.8, 1.0); o.catcher.userData.armL.rotation.set(-1.4, 0, 0.2); o.g.add(o.catcher);
     o.ump = makeChibi({ shirt: 0x111111, pants: 0x555555, cap: 0x111111 }); o.ump.rotation.y = Math.PI; o.ump.position.set(0.7, 0, 3.0); o.ump.scale.setScalar(1.0); o.g.add(o.ump); }
   setUniform(o.catcher, year); applyEquipment(o.catcher);
+  if(appearance?.ownTeamId){for(const player of [o.pitcher,o.catcher,...o.fielders])setClubUniform(player,appearance.ownTeamId);for(const player of [o.batter,o.runner,...o.baseRunners])setClubUniform(player,appearance.opponentTeamId);}
   o.catcher.visible = true; o.ump.visible = true; o.pitcher.userData.armL.rotation.set(-1.2, 0, 0.3);
   const cam = () => { camera.position.set(0.1, 3.1, -24.8); camera.fov = 46; camera.updateProjectionMatrix(); camera.lookAt(-0.05, 0.95, 0); { const n = scene.getObjectByName('net'); if (n) n.visible = false; } };
   cam();

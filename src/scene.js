@@ -1,3 +1,4 @@
+import {clubStyle} from './pro-club-style.js';
 import * as THREE from 'three';
 import { UNIFORMS } from './data.js';
 export { UNIFORMS } from './data.js';
@@ -388,3 +389,10 @@ export function setShirt(ch, c) {
   } });
 }
 export const OPP_COLORS = [0xc53030, 0x7b3fa0, 0x9aa3ad, 0x2f2f38, 0x3a8f3a, 0xb5486a, 0x8a5a2b, 0x2a9fb5];
+
+// Color-only pro uniform, shared by both model types; no changes to abilities or save data.
+export function setClubUniform(character,teamId){
+ const style=clubStyle(teamId);if(!style)return false;setShirt(character,style.shirt);
+ character.traverse(object=>{if(object.isMesh)for(const material of (Array.isArray(object.material)?object.material:[object.material]))if(material?.color&&material.userData?.isCap)material.color.set(style.cap);});
+ character.userData.clubUniform=teamId;return true;
+}
