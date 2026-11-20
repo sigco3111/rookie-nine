@@ -1,10 +1,11 @@
+import { DEFAULT_OPPONENT_REGIONS } from './pro-regions.js';
 // Initial own-club defaults. All opponents are newly generated fictional players.
 import { newClub, beginClubGame } from './pro.js';
 import { fillClubRoster } from './pro-teammates.js';
 import { validateClubSchedule } from './pro-schedule.js';
 export function defaultClubSchedule(club){
  if(club.pending||club.schedule)throw Error('진행 중 경기나 기존 일정은 덮어쓰지 않습니다.');
- const names=['새벽 구단','노을 구단','바람 구단'];
+ const names=DEFAULT_OPPONENT_REGIONS;
  const fixtures=Array.from({length:6},(_,i)=>{
   const n=i%3,id=`${club.id}:season:${club.season}:game:${i+1}`;
   let away=fillClubRoster(newClub({id:`fictional:${n+1}`,name:names[n]}));

@@ -872,3 +872,9 @@
 - Added read-only opponent projection by stored opponent name, actual result totals perseason/allseasons, current pending excluded from completed counts; previous unscheduled results retained/labeled. No synthetic league table or otherclubs-v-otherclubs claims.
 - Normal club schedule shows opponent cards and expandable full list with actualscore/completed vs upcoming state. Records shares same projection and existing seasonfilter. Readonly UI no new storage schema or permission.
 - Pureempty/pending/completed/reconcile/reload/twoseasons/legacy passed. Normal3games UI/currentuncompletednotcounted/list3done3scheduled/reload/seasonfilter/no writes/sourceexact/320-430 passed. Existing normalentry6+1/seasonquota and seasonprojection regressions passed. Actual390pixelsread readable.
+
+## Nov20 09:08 - approved regional club naming
+- User09:01suggestedKBOfranchisecities;09:02Ok to regionalnames/originaluniform-emblem,not league expansion. Verifiedcities from KBOofficial https://www.koreabaseball.com/Kbo/League/TeamInfo.aspx onNov20.
+- New3opponents Seoul/Busan/Gwangju;6gamecount/strengths/IDs unchanged. Newdraftdestinations keep6regionsbutremovebrand-likenicknames. Myclub remainsgeneric내구단,notchoosinguserhomearea. Noactualclubl ogos/assets/colorscopied;simpleownCSSregioninitialbadges;existingfictionaluniformsretainednotnewregionaljerseydesign.
+- Existingimmutable fixtures/results/pending/checkpoints/HoF notmigrated. Explicitdisplayalias 새벽→서울/노을→부산/바람→광주 withpreviousname preservedonrecords andschedule/sessionlabel;newseasoncitiescombinebyaliaswithoutrewritingpastdata. Unknownnamesuntouched. Olddraftrecordsoriginalnamesremain.
+- Purelegacy pending→6games→newcityseason/oldhistory+scheduleexact/cumulativealiasreconciliation passed. Normalnew+LEGACY UI3games/pending/reload/filter/sourceexact/320-430 andnormalentry6+1/seasonquota/retry passed. Newbadgepixelsread390;legacybadgefinalUIafterdeploycheck. Build/diffpass.

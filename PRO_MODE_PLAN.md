@@ -227,3 +227,8 @@
 ## Nov20 08:55 - opponent results rather than invented standings
 - Schedule and records show our club's real saved head-to-head wins/losses/runs by opponent name, with explicit no-other-club-game/no-league-ranking note. Expandable schedule shows completed score and unplayed plan states. Existing season filter applies to shared read-only opponent projection. Does not create a full league simulation.
 - Empty/pending/record sums/reload/two-season separation/legacy/no-write and normal UI3games+pendingexclusion+list/reload/filter/source-preserve/portrait320-430 tests pass;390pixels inspected. Existing normalentry6+1/seasonrollover/quota and season-record tests pass. Build and diff check pass.
+
+## Nov20 09:08 - regional names approved
+- KBOofficialcity source: https://www.koreabaseball.com/Kbo/League/TeamInfo.aspx (checkedNov20). Useroriginal09:01phonemsg-01M7V44D8EAY5545WNSGDK5A9Y and09:02approvalphonemsg-01M7V455SRX5109EGDFHJA3WJQ via parentcontext.
+- Threefictionalopponentnames Seoul/Busan/Gwangju,remaining6games;draftsixexistingcitynamesonly. No fullleague/realclubbrand or newregionaluniformclaim. SmalloriginalCSSregionbadges;existinggameuniformsretained.
+- Legacytemporaryopponentnames mapped only in readonlydisplay/projection, previousnamesnoted, sourcefixtures/history/pending leftunchanged. Nextseason usesnewnames andaggregatealiasesjoinpast/current. Testoldpending6games→rollovernewcityresult exactpastrecords passed. Oldschooldraftarchivesunchanged.
