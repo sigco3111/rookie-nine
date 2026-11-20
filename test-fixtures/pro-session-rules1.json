@@ -1,0 +1,2164 @@
+{
+  "checkpoint": {
+    "schema": 1,
+    "gameId": "legacy-homegame",
+    "teams": [
+      {
+        "id": "legacy-homegame",
+        "opponent": "other",
+        "season": 1,
+        "number": 1,
+        "batters": [
+          {
+            "id": "generated:legacy-home:bat:1",
+            "source": "generated",
+            "name": "기본 타자 1",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [
+              "walk",
+              "avg",
+              "run",
+              "clutch",
+              "pwr",
+              "grit"
+            ],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:2",
+            "source": "generated",
+            "name": "기본 타자 2",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:3",
+            "source": "generated",
+            "name": "기본 타자 3",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:4",
+            "source": "generated",
+            "name": "기본 타자 4",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:5",
+            "source": "generated",
+            "name": "기본 타자 5",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:6",
+            "source": "generated",
+            "name": "기본 타자 6",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:7",
+            "source": "generated",
+            "name": "기본 타자 7",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:8",
+            "source": "generated",
+            "name": "기본 타자 8",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:9",
+            "source": "generated",
+            "name": "기본 타자 9",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          }
+        ],
+        "pitcher": {
+          "id": "generated:legacy-home:pit:1",
+          "source": "generated",
+          "name": "기본 투수",
+          "pos": "pit",
+          "build": null,
+          "abilities": {
+            "velo": 48,
+            "ctrl": 52,
+            "brk": 46,
+            "speed": 43,
+            "field": 50,
+            "stamina": 57
+          },
+          "traits": [
+            "fast",
+            "cmd",
+            "aura",
+            "bender"
+          ],
+          "gear": {},
+          "draft": {
+            "rank": null,
+            "team": null
+          },
+          "school": {},
+          "pro": {
+            "games": 0,
+            "ab": 0,
+            "hits": 0,
+            "hr": 0,
+            "rbi": 0,
+            "outs": 0,
+            "so": 0,
+            "hitsAllowed": 0,
+            "er": 0
+          },
+          "role": "starter"
+        }
+      },
+      {
+        "id": "legacy-awaygame",
+        "opponent": "other",
+        "season": 1,
+        "number": 1,
+        "batters": [
+          {
+            "id": "generated:legacy-away:bat:1",
+            "source": "generated",
+            "name": "기본 타자 1",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [
+              "avg",
+              "pwr"
+            ],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:2",
+            "source": "generated",
+            "name": "기본 타자 2",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:3",
+            "source": "generated",
+            "name": "기본 타자 3",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:4",
+            "source": "generated",
+            "name": "기본 타자 4",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:5",
+            "source": "generated",
+            "name": "기본 타자 5",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:6",
+            "source": "generated",
+            "name": "기본 타자 6",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:7",
+            "source": "generated",
+            "name": "기본 타자 7",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:8",
+            "source": "generated",
+            "name": "기본 타자 8",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:9",
+            "source": "generated",
+            "name": "기본 타자 9",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          }
+        ],
+        "pitcher": {
+          "id": "generated:legacy-away:pit:1",
+          "source": "generated",
+          "name": "기본 투수",
+          "pos": "pit",
+          "build": null,
+          "abilities": {
+            "velo": 48,
+            "ctrl": 52,
+            "brk": 46,
+            "speed": 43,
+            "field": 50,
+            "stamina": 57
+          },
+          "traits": [],
+          "gear": {},
+          "draft": {
+            "rank": null,
+            "team": null
+          },
+          "school": {},
+          "pro": {
+            "games": 0,
+            "ab": 0,
+            "hits": 0,
+            "hr": 0,
+            "rbi": 0,
+            "outs": 0,
+            "so": 0,
+            "hitsAllowed": 0,
+            "er": 0
+          },
+          "role": "starter"
+        }
+      }
+    ],
+    "innings": 3,
+    "seed": 714,
+    "state": 2375547611,
+    "inning": 2,
+    "side": 1,
+    "outs": 0,
+    "bases": 0,
+    "scores": [
+      0,
+      0
+    ],
+    "order": [
+      9,
+      4
+    ],
+    "players": [
+      {
+        "generated:legacy-home:bat:1": {
+          "ab": 0,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:2": {
+          "ab": 1,
+          "hits": 1,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:3": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:4": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:5": {
+          "ab": 1,
+          "hits": 1,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:6": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:7": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:8": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:9": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:pit:1": {
+          "outs": 3,
+          "so": 0,
+          "hitsAllowed": 1,
+          "er": 0
+        }
+      },
+      {
+        "generated:legacy-away:bat:1": {
+          "ab": 1,
+          "hits": 1,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:2": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:3": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:4": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:5": {
+          "ab": 0,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:6": {
+          "ab": 0,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:7": {
+          "ab": 0,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:8": {
+          "ab": 0,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:9": {
+          "ab": 0,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:pit:1": {
+          "outs": 6,
+          "so": 4,
+          "hitsAllowed": 2,
+          "er": 0
+        }
+      }
+    ],
+    "events": [
+      {
+        "inning": 1,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:1",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "walk",
+        "rolled": true,
+        "runs": 0,
+        "outs": 0,
+        "bases": 1
+      },
+      {
+        "inning": 1,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:2",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": 1,
+        "rolled": true,
+        "runs": 0,
+        "outs": 0,
+        "bases": 3
+      },
+      {
+        "inning": 1,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:3",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "k",
+        "rolled": true,
+        "runs": 0,
+        "outs": 1,
+        "bases": 3
+      },
+      {
+        "inning": 1,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:4",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 2,
+        "bases": 3
+      },
+      {
+        "inning": 1,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:5",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": 1,
+        "rolled": true,
+        "runs": 0,
+        "outs": 2,
+        "bases": 7
+      },
+      {
+        "inning": 1,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:6",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "k",
+        "rolled": true,
+        "runs": 0,
+        "outs": 3,
+        "bases": 7
+      },
+      {
+        "inning": 1,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:1",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": 1,
+        "rolled": true,
+        "runs": 0,
+        "outs": 0,
+        "bases": 1
+      },
+      {
+        "inning": 1,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:2",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 1,
+        "bases": 1
+      },
+      {
+        "inning": 1,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:3",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 2,
+        "bases": 1
+      },
+      {
+        "inning": 1,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:4",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 3,
+        "bases": 1
+      },
+      {
+        "inning": 2,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:7",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "k",
+        "rolled": true,
+        "runs": 0,
+        "outs": 1,
+        "bases": 0
+      },
+      {
+        "inning": 2,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:8",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "k",
+        "rolled": true,
+        "runs": 0,
+        "outs": 2,
+        "bases": 0
+      },
+      {
+        "inning": 2,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:9",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 3,
+        "bases": 0
+      }
+    ],
+    "done": false
+  },
+  "final": {
+    "schema": 1,
+    "gameId": "legacy-homegame",
+    "teams": [
+      {
+        "id": "legacy-homegame",
+        "opponent": "other",
+        "season": 1,
+        "number": 1,
+        "batters": [
+          {
+            "id": "generated:legacy-home:bat:1",
+            "source": "generated",
+            "name": "기본 타자 1",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [
+              "walk",
+              "avg",
+              "run",
+              "clutch",
+              "pwr",
+              "grit"
+            ],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:2",
+            "source": "generated",
+            "name": "기본 타자 2",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:3",
+            "source": "generated",
+            "name": "기본 타자 3",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:4",
+            "source": "generated",
+            "name": "기본 타자 4",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:5",
+            "source": "generated",
+            "name": "기본 타자 5",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:6",
+            "source": "generated",
+            "name": "기본 타자 6",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:7",
+            "source": "generated",
+            "name": "기본 타자 7",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:8",
+            "source": "generated",
+            "name": "기본 타자 8",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-home:bat:9",
+            "source": "generated",
+            "name": "기본 타자 9",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          }
+        ],
+        "pitcher": {
+          "id": "generated:legacy-home:pit:1",
+          "source": "generated",
+          "name": "기본 투수",
+          "pos": "pit",
+          "build": null,
+          "abilities": {
+            "velo": 48,
+            "ctrl": 52,
+            "brk": 46,
+            "speed": 43,
+            "field": 50,
+            "stamina": 57
+          },
+          "traits": [
+            "fast",
+            "cmd",
+            "aura",
+            "bender"
+          ],
+          "gear": {},
+          "draft": {
+            "rank": null,
+            "team": null
+          },
+          "school": {},
+          "pro": {
+            "games": 0,
+            "ab": 0,
+            "hits": 0,
+            "hr": 0,
+            "rbi": 0,
+            "outs": 0,
+            "so": 0,
+            "hitsAllowed": 0,
+            "er": 0
+          },
+          "role": "starter"
+        }
+      },
+      {
+        "id": "legacy-awaygame",
+        "opponent": "other",
+        "season": 1,
+        "number": 1,
+        "batters": [
+          {
+            "id": "generated:legacy-away:bat:1",
+            "source": "generated",
+            "name": "기본 타자 1",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [
+              "avg",
+              "pwr"
+            ],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:2",
+            "source": "generated",
+            "name": "기본 타자 2",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:3",
+            "source": "generated",
+            "name": "기본 타자 3",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:4",
+            "source": "generated",
+            "name": "기본 타자 4",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:5",
+            "source": "generated",
+            "name": "기본 타자 5",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:6",
+            "source": "generated",
+            "name": "기본 타자 6",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:7",
+            "source": "generated",
+            "name": "기본 타자 7",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:8",
+            "source": "generated",
+            "name": "기본 타자 8",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          },
+          {
+            "id": "generated:legacy-away:bat:9",
+            "source": "generated",
+            "name": "기본 타자 9",
+            "pos": "bat",
+            "build": null,
+            "abilities": {
+              "meet": 48,
+              "power": 45,
+              "speed": 48,
+              "arm": 47,
+              "field": 49,
+              "stamina": 53
+            },
+            "traits": [],
+            "gear": {},
+            "draft": {
+              "rank": null,
+              "team": null
+            },
+            "school": {},
+            "pro": {
+              "games": 0,
+              "ab": 0,
+              "hits": 0,
+              "hr": 0,
+              "rbi": 0,
+              "outs": 0,
+              "so": 0,
+              "hitsAllowed": 0,
+              "er": 0
+            },
+            "role": "lineup"
+          }
+        ],
+        "pitcher": {
+          "id": "generated:legacy-away:pit:1",
+          "source": "generated",
+          "name": "기본 투수",
+          "pos": "pit",
+          "build": null,
+          "abilities": {
+            "velo": 48,
+            "ctrl": 52,
+            "brk": 46,
+            "speed": 43,
+            "field": 50,
+            "stamina": 57
+          },
+          "traits": [],
+          "gear": {},
+          "draft": {
+            "rank": null,
+            "team": null
+          },
+          "school": {},
+          "pro": {
+            "games": 0,
+            "ab": 0,
+            "hits": 0,
+            "hr": 0,
+            "rbi": 0,
+            "outs": 0,
+            "so": 0,
+            "hitsAllowed": 0,
+            "er": 0
+          },
+          "role": "starter"
+        }
+      }
+    ],
+    "innings": 3,
+    "seed": 714,
+    "state": 3709369554,
+    "inning": 3,
+    "side": 1,
+    "outs": 0,
+    "bases": 0,
+    "scores": [
+      0,
+      2
+    ],
+    "order": [
+      13,
+      14
+    ],
+    "players": [
+      {
+        "generated:legacy-home:bat:1": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:2": {
+          "ab": 1,
+          "hits": 1,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:3": {
+          "ab": 2,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:4": {
+          "ab": 2,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:5": {
+          "ab": 1,
+          "hits": 1,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:6": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:7": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:8": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:bat:9": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-home:pit:1": {
+          "outs": 9,
+          "so": 2,
+          "hitsAllowed": 5,
+          "er": 2
+        }
+      },
+      {
+        "generated:legacy-away:bat:1": {
+          "ab": 2,
+          "hits": 2,
+          "hr": 0,
+          "rbi": 1
+        },
+        "generated:legacy-away:bat:2": {
+          "ab": 2,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:3": {
+          "ab": 2,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:4": {
+          "ab": 2,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:5": {
+          "ab": 2,
+          "hits": 1,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:6": {
+          "ab": 1,
+          "hits": 1,
+          "hr": 0,
+          "rbi": 1
+        },
+        "generated:legacy-away:bat:7": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:8": {
+          "ab": 1,
+          "hits": 0,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:bat:9": {
+          "ab": 1,
+          "hits": 1,
+          "hr": 0,
+          "rbi": 0
+        },
+        "generated:legacy-away:pit:1": {
+          "outs": 9,
+          "so": 5,
+          "hitsAllowed": 2,
+          "er": 0
+        }
+      }
+    ],
+    "events": [
+      {
+        "inning": 1,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:1",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "walk",
+        "rolled": true,
+        "runs": 0,
+        "outs": 0,
+        "bases": 1
+      },
+      {
+        "inning": 1,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:2",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": 1,
+        "rolled": true,
+        "runs": 0,
+        "outs": 0,
+        "bases": 3
+      },
+      {
+        "inning": 1,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:3",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "k",
+        "rolled": true,
+        "runs": 0,
+        "outs": 1,
+        "bases": 3
+      },
+      {
+        "inning": 1,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:4",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 2,
+        "bases": 3
+      },
+      {
+        "inning": 1,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:5",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": 1,
+        "rolled": true,
+        "runs": 0,
+        "outs": 2,
+        "bases": 7
+      },
+      {
+        "inning": 1,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:6",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "k",
+        "rolled": true,
+        "runs": 0,
+        "outs": 3,
+        "bases": 7
+      },
+      {
+        "inning": 1,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:1",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": 1,
+        "rolled": true,
+        "runs": 0,
+        "outs": 0,
+        "bases": 1
+      },
+      {
+        "inning": 1,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:2",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 1,
+        "bases": 1
+      },
+      {
+        "inning": 1,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:3",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 2,
+        "bases": 1
+      },
+      {
+        "inning": 1,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:4",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 3,
+        "bases": 1
+      },
+      {
+        "inning": 2,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:7",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "k",
+        "rolled": true,
+        "runs": 0,
+        "outs": 1,
+        "bases": 0
+      },
+      {
+        "inning": 2,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:8",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "k",
+        "rolled": true,
+        "runs": 0,
+        "outs": 2,
+        "bases": 0
+      },
+      {
+        "inning": 2,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:9",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 3,
+        "bases": 0
+      },
+      {
+        "inning": 2,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:5",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": 2,
+        "rolled": true,
+        "runs": 0,
+        "outs": 0,
+        "bases": 2
+      },
+      {
+        "inning": 2,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:6",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": 2,
+        "rolled": true,
+        "runs": 1,
+        "outs": 0,
+        "bases": 2
+      },
+      {
+        "inning": 2,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:7",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": "k",
+        "rolled": true,
+        "runs": 0,
+        "outs": 1,
+        "bases": 2
+      },
+      {
+        "inning": 2,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:8",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 2,
+        "bases": 2
+      },
+      {
+        "inning": 2,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:9",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": 1,
+        "rolled": true,
+        "runs": 0,
+        "outs": 2,
+        "bases": 5
+      },
+      {
+        "inning": 2,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:1",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": 1,
+        "rolled": true,
+        "runs": 1,
+        "outs": 2,
+        "bases": 3
+      },
+      {
+        "inning": 2,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:2",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 3,
+        "bases": 3
+      },
+      {
+        "inning": 3,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:1",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "k",
+        "rolled": true,
+        "runs": 0,
+        "outs": 1,
+        "bases": 0
+      },
+      {
+        "inning": 3,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:2",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "walk",
+        "rolled": true,
+        "runs": 0,
+        "outs": 1,
+        "bases": 1
+      },
+      {
+        "inning": 3,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:3",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 2,
+        "bases": 1
+      },
+      {
+        "inning": 3,
+        "side": 0,
+        "batter": "generated:legacy-home:bat:4",
+        "pitcher": "generated:legacy-away:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 3,
+        "bases": 1
+      },
+      {
+        "inning": 3,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:3",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 1,
+        "bases": 0
+      },
+      {
+        "inning": 3,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:4",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": "k",
+        "rolled": true,
+        "runs": 0,
+        "outs": 2,
+        "bases": 0
+      },
+      {
+        "inning": 3,
+        "side": 1,
+        "batter": "generated:legacy-away:bat:5",
+        "pitcher": "generated:legacy-home:pit:1",
+        "kind": "out",
+        "rolled": true,
+        "runs": 0,
+        "outs": 3,
+        "bases": 0
+      }
+    ],
+    "done": true
+  }
+}

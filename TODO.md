@@ -941,3 +941,7 @@
 
 ## Nov20 13:21 - show actual pro trait scope
 - Perplayerexpandabledirect/auto/school-onlytraitdescriptionsnowvisibleinroster;sessionnoticepointsusers there. Existingrulesonly,nobonusinvented/noengineoroldcheckpointchange. Purecurrenteffectcorrespondence+normalUIreadonly/320–430+roster/sessionregressionpass;390pixelsread. Doesnotmarkeffectparity/balancefinished.
+
+## Nov20 13:45 - preserve old games while adding new auto trait effects
+- New8teammanagedgamesonlyrules2addsmodestautomaticrun/clutch/grit/fast/cmd/benderbonuses;schooldirectfeelunchanged. Pendingunmarkedoldgames+legacy6+fixedAI-vs-AIretain1. Updatedscopepermode/version,neverchangesoldstats/results.
+- Prefrozenold13PA/finalfixtureexact,90newgames/replay,actualChromiumrules1+2tenreloadcheckpoints,oldpending→nextversiontransition,normal14UI56+rollover,old6UIandquotaregressionpass. Numericalbalanceandactualphoneareseparategates. Latestestimateunchanged65–70%5–8days.

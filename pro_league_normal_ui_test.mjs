@@ -10,7 +10,7 @@ try{
  assert.equal(await page.$$eval('.pro-team-choices [aria-pressed=true]',e=>e.length),0);await page.click('[data-team=suwon]');await click('선택 구단 참가 내용 확인');assert.equal(await page.evaluate(()=>localStorage.getItem('rookie9.pro.v1')),null);await click('참가 취소');assert.equal(await page.evaluate(()=>localStorage.getItem('rookie9.pro.v1')),null);await containment();await page.screenshot({path:'/downloads/rookie9_eightteam_choice.png'});
  await click('선택 구단 참가 내용 확인');await click('이 구단으로 리그 참가 확정');await page.waitForSelector('.pro-league-table');assert.equal(await page.$$eval('.pro-league-table tbody tr',r=>r.length),8);assert.equal(await page.$$eval('.pro-league-table tbody tr[data-owned=true]',r=>r[0].textContent.includes('수원 몬스터')),true);
  for(let round=0;round<14;round++){
-  await click('다음 경기 준비');await click('남은 경기 자동 진행');await click('결과 확인·기록 반영');
+  await click('다음 경기 준비');assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('rookie9.pro.v1')).clubs[0].pending.session.rules),2);await click('남은 경기 자동 진행');await click('결과 확인·기록 반영');
   const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('rookie9.pro.v1')).clubs[0]);assert.equal(saved.record.games,round+1);assert.equal(saved.league.results.length,(round+1)*4);
   await click('구단 경기');await page.waitForSelector('.pro-league-table');
   if(round===0){await containment();await page.screenshot({path:'/downloads/rookie9_eightteam_standings.png'});}

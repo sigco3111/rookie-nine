@@ -15,7 +15,7 @@ const automaticScores=new Map();
 function automaticScore(fixture,teams){
  const key=JSON.stringify(fixture);if(automaticScores.has(key))return [...automaticScores.get(key)];
  const home=teams.find(t=>t.id===fixture.home).snapshot,away=teams.find(t=>t.id===fixture.away).snapshot;
- const session=createClubSession({...copy(home),id:fixture.id},{opponent:copy(away),innings:fixture.innings,seed:fixture.seed});
+ const session=createClubSession({...copy(home),id:fixture.id},{opponent:copy(away),innings:fixture.innings,seed:fixture.seed,rules:1});
  const done=runClubAuto(session);if(!done.done)throw Error('다른 구단의 경기가 종료되지 않아 라운드를 저장하지 않았습니다.');
  const scores=[...done.scores];if(automaticScores.size>=256)automaticScores.delete(automaticScores.keys().next().value);automaticScores.set(key,scores);return [...scores];
 }

@@ -5,7 +5,7 @@ export function prepareClubFixture(store,clubId,fixture){
  const state=store.load();if(!state.ok)throw Error(state.error);const status=store.status();if(status.pending||status.conflict)throw Error('현재 기록 저장을 먼저 마치세요.');
  const index=state.data.clubs.findIndex(c=>c.id===clubId);if(index<0)throw Error('구단을 확인하세요.');const club=state.data.clubs[index];
  if(club.pending){if(club.pending.id!==fixture.id)throw Error('진행 중인 경기를 먼저 마치세요.');return {ok:true,resumed:true,data:state.data};}
- const next=beginClubGame(club,{id:fixture.id,opponent:fixture.name});next.pending.session=createClubSession(next.pending,{opponent:fixture.opponent,innings:fixture.innings,seed:fixture.seed});state.data.clubs[index]=next;
+ const next=beginClubGame(club,{id:fixture.id,opponent:fixture.name});next.pending.session=createClubSession(next.pending,{opponent:fixture.opponent,innings:fixture.innings,seed:fixture.seed,rules:club.league?2:1});state.data.clubs[index]=next;
  return {...store.save(state.data),resumed:false};
 }
 export function mountProGameSetup(parent,store,clubId,{fixture,onStart=()=>{}}={}){

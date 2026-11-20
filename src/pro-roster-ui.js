@@ -25,7 +25,7 @@ export function mountProRoster(parent,store,clubId){
   for(let i=0;i<9;i++)selects.push(picker(`${i+1}번 타자`,club.lineup[i],'bat'));starter=picker('선발 투수',club.starter,'pit');
   const button=add('button','편성 저장',form);button.type='submit';button.className='btn';button.disabled=locked;
   const heading=add('h3','구단 선수');const rosterCards=[];
-  for(const p of club.roster){const card=add('article','');card.dataset.playerId=p.id;const badge=add('small','',card);badge.className='pro-roster-role';add('strong',`${p.name} · ${p.pos==='pit'?'투수':'타자'} · ${p.source==='graduate'?'육성 선수':'기본 선수'}`,card);add('p',keysOf(p).map(k=>`${STAT_NAME[k]} ${p.abilities[k]}`).join(' · '),card);appendProTraits(card,p);rosterCards.push({p,badge});}
+  for(const p of club.roster){const card=add('article','');card.dataset.playerId=p.id;const badge=add('small','',card);badge.className='pro-roster-role';add('strong',`${p.name} · ${p.pos==='pit'?'투수':'타자'} · ${p.source==='graduate'?'육성 선수':'기본 선수'}`,card);add('p',keysOf(p).map(k=>`${STAT_NAME[k]} ${p.abilities[k]}`).join(' · '),card);appendProTraits(card,p,{rules:club.league?(club.pending?(club.pending.session?.rules??1):2):1});rosterCards.push({p,badge});}
   function updateDraft(){
    const ids=selects.map(s=>s.value),seen=ids.filter(Boolean),duplicates=new Set(seen.filter((id,i)=>seen.indexOf(id)!==i));
    const changed=ids.some((id,i)=>id!==(club.lineup[i]||''))||starter.value!==(club.starter||'');

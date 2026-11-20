@@ -18,6 +18,7 @@ export function mountProSession(parent,store,clubId,{playDirect,onBack=()=>{},on
   if(state.done){text('p','경기가 끝났습니다. 결과를 확인해 구단 기록에 반영하세요.');button('결과 확인·기록 반영',()=>act(()=>{lastResult={my:state.scores[0],opp:state.scores[1],rows:gameContributionRows(state)};const result=ctl.finish();onResult(result);}),blocked);showProContributions(el,gameContributionRows(state),{title:'이번 경기 선수 기록 · 반영 전'});}
   else {
    button(busy?'직접 플레이 진행 중':state.side===0?'이번 타석 직접 타격':'이번 타석 직접 투구',async()=>{if(busy||!playDirect)return;busy=true;draw();try{await ctl.direct(context=>playDirect(context));}catch(e){error=e.message;}finally{busy=false;draw();}},blocked||!playDirect);
+   if(state.rules!==2)text('small','이 경기는 시작 당시의 이전 자동 판정을 유지합니다. 새 특능 보정은 다음 새 경기부터 적용됩니다.');
    text('small','직접·자동은 판정 방식과 일부 특능 효과가 다릅니다. 명단 편성의 선수 카드에서 프로 적용 범위를 확인할 수 있습니다.');
    button('한 타석 자동 진행',()=>act(()=>ctl.auto(1)),blocked);button('남은 경기 자동 진행',()=>act(()=>ctl.auto(2000)),blocked);
   }
