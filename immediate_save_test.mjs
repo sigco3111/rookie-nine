@@ -17,5 +17,5 @@ await p.evaluate(() => { Math.random = window.__r; });
 const before=await p.evaluate(()=>window.__game.P.eventHistory);
 await p.reload();await new Promise(r=>setTimeout(r,1800));await p.evaluate(()=>document.querySelector('#cont').click());await new Promise(r=>setTimeout(r,500));
 const after=await p.evaluate(()=>window.__game.P.eventHistory);if(JSON.stringify(before)!==JSON.stringify(after)||!after.length)throw Error('history lost');
-await p.evaluate(()=>document.querySelector('#stat').click());await p.evaluate(()=>document.querySelector('#evhistory').click());await new Promise(r=>setTimeout(r,300));
+await p.waitForSelector('#okev');await p.click('#okev');await p.waitForSelector('#stat');await p.click('#stat');await p.evaluate(()=>document.querySelector('#evhistory').click());await new Promise(r=>setTimeout(r,300));
 await p.screenshot({path:'/downloads/rookie9_history_unconfirmed_reload.png'});console.log('PERSISTED',JSON.stringify(after));console.log(errs.join('|')||'no runtime errors');await b.close();
