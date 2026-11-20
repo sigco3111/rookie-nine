@@ -978,3 +978,8 @@
 
 ## Nov20 15:54 - recommended narrower milestone approved
 - User15:53:32 phonemsg-01M7VVPNX0B4SFAFCDY1K5DBAS accepted15:52:55 proposal: keep current features/rules, defer fine strategy/trait balance and extra audiovisual polish to next update; physicaldevice excluded; reduce duplicate test matrix, retain bothposition coreflow/save/reconnect and critical bugs. Runtime-safety/extremevalues remain. Updated FIRST_COMPLETION_GATES. Additional2–4days estimate notpromise, userdecidesfinish. No implicit new contracts/transfers/postseason/progrowth.
+
+## Nov20 16:10 - core stability checkpoint after touch/camera fixes
+- Extremeability/trait16games andtrainingthresholdcapsPASS, quota/retry/replay/immutable/sourcechecks. No numeric tuning/runtimechange.
+- LatestLIVE bothpos actual144UI→admit→14pro56→reload→season2/archive→ending/inheritancePASS. Invalidsave/restore/proatomic/leaguelegacy6/oldpendingrules guardsPASS. Combinedtimeoutpit wasrerunstandalonePASS,notcountedinitially.
+- Approveddeviceexclusion/finebalance+polishdeferralkept;noactualdeviceclaims/userfinishstilldecides.
