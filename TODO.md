@@ -983,3 +983,8 @@
 - Extremeability/trait16games andtrainingthresholdcapsPASS, quota/retry/replay/immutable/sourcechecks. No numeric tuning/runtimechange.
 - LatestLIVE bothpos actual144UI→admit→14pro56→reload→season2/archive→ending/inheritancePASS. Invalidsave/restore/proatomic/leaguelegacy6/oldpendingrules guardsPASS. Combinedtimeoutpit wasrerunstandalonePASS,notcountedinitially.
 - Approveddeviceexclusion/finebalance+polishdeferralkept;noactualdeviceclaims/userfinishstilldecides.
+
+## 2026-11-20 16:12 마무리 자료 점검
+- 핵심 연결·입력·극단값·저장 영향 검사 통과 후 알려진 필수 수정 없음. 추가 2~4일 추정은 철회하고 사용자 검토 준비 단계로 전환. 새 게임 기능이나 통과한 장기 검사 재실행으로 작업을 늘리지 않음.
+- 한국어 README와 현재 배포 화면 4장을 추가. 조작·저장·입단 후 능력 성장 미구현·실기기 미검증·다음 업데이트 보류 항목을 명시.
+- 최종 완료 판단은 사용자에게 남김.
