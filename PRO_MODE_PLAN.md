@@ -288,3 +288,7 @@
 ## Nov20 13:17 delegated lineup suggestion
 - User13:14phonemsg-01M7VJJV3HGT38F7ACFR9J3PNR originalverifiedphoneuser/iMessage/+821072897509requestslineupdelegation. Addedabilitybasedproposalwithreview/cancel→draftapply→explicitexistingSAVE. Preview/applydonotwriteorquietlyreplacepersistedlineup. Restore-saved buttonundoesdraft. Pendinggame/save/conflictlocksdelegation.
 - Transparentheuristic:battersrankedmeet+power+speedtop9/samebattingorder;startervelo+ctrl+brk;tiesrosterorder. No sourcefavoritism/optimalstrategy/traitorrecencyclaim. Understrengthgraduatecanremainreserve. Puretop9/tie/readonly/pending/insufficient/badstats andnormalmenuLOCALpreview/cancel/apply/undo/no-write→save/reload/320–430PASS. Actual390proposalpixelsread. Noformulaorstatsmigration.
+
+## Nov20 13:21 pro trait effect scope disclosure
+- Rostergraduatecardsnowexpandcurrentdirect-vs-auto-effectscopeforeachknowntrait,includingoffposition/no-effectandschool-onlyevaluation/conditiontraits. Sessionautocontrolslinkwordsto rostercards. Thisisdisclosureofexistingbehaviornotparityfix/newbonus. Noenginechange/checkpointmigration/oldscorechange;replayremainsunchanged.
+- Purealltraits/rolefallback/readonlyandactualautochance+batassistcorrespondencepass;normalmenutrainedgraduate6traitscardread-only/320–430pass;session+rosterregressionpass. Actual390pixelsread. Direct投球sourceinspectedfast/cmd/aura/bender;notrerun3Dforpresentation-onlychange. Latertraitparitydecisionsstillneedversionedcompatibilityconsideration.

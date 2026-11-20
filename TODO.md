@@ -938,3 +938,6 @@
 
 ## Nov20 13:17 - requested lineup delegation
 - Explicituser13:14requestnowabilitybasedproposal/review/cancel→draftapply→explicitSAVE, withsavedlineupundo;neverquietlyoverwritessave. Major3statsrankingandlimitationsshown. Pendinglocksretained. Pure+normalUIimpacttests/readable390proposal/320–430pass. Includein13:35scopeestimate.
+
+## Nov20 13:21 - show actual pro trait scope
+- Perplayerexpandabledirect/auto/school-onlytraitdescriptionsnowvisibleinroster;sessionnoticepointsusers there. Existingrulesonly,nobonusinvented/noengineoroldcheckpointchange. Purecurrenteffectcorrespondence+normalUIreadonly/320–430+roster/sessionregressionpass;390pixelsread. Doesnotmarkeffectparity/balancefinished.
