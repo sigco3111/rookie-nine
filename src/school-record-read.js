@@ -20,6 +20,7 @@ function pendingError(p){
  return null;
 }
 function playerError(p){
+ if(p?.draftRules!==undefined&&p.draftRules!==2)return '지명 판정 버전';
  if(p?.growthRules!==undefined&&p.growthRules!==2)return '성장 판정 버전';
  if(p?.schoolCast!=null){try{validateSchoolCast(p.schoolCast);}catch{return '다회차 선수 사본';}}
  if(p?.schoolCastTrainingWeek!=null&&(!Number.isInteger(p.schoolCastTrainingWeek)||p.schoolCastTrainingWeek<48||p.schoolCastTrainingWeek>p.week||!p.schoolCast?.junior))return '후배 합동훈련 기록';

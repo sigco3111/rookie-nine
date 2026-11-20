@@ -10,7 +10,7 @@ try{
  const replacement="candidateTrainingGain({base:pr.gain[k],multiplier:mul,current:p[k],basic:id==='basic',roll:Math.random()})";
  let experiment=original.replace(old,replacement);
  // Historical candidate replay explicitly selects the unmarked branch, never current growthRules2.
- experiment=experiment.replace('return { growthRules:2, name, build, pos, so: 0,','return { name, build, pos, so: 0,');
+ experiment=experiment.replace('return { growthRules:2, draftRules:2, name, build, pos, so: 0,','return { name, build, pos, so: 0,');
  if(process.env.EVALUATION_TAPER==='1'){
   const oldEvaluation='function addEv(p, k, v) { p.ev[k] = clamp(p.ev[k] + v, 0, 100); }';
   const newEvaluation='function addEv(p,k,v){if(v>0){const expected=v*(p.ev[k]>=80?.15:p.ev[k]>=60?.35:1),whole=Math.floor(expected);v=whole+(Math.random()<expected-whole?1:0);}p.ev[k]=clamp(p.ev[k]+v,0,100);}';

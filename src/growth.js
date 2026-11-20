@@ -11,7 +11,7 @@ export function newPlayer(name, build, pos = 'bat') {
   const base = pos === 'pit' ? { velo: 30, ctrl: 30, brk: 30, speed: 30, field: 30, stamina: 30 } : { meet: 30, power: 30, speed: 30, arm: 30, field: 30, stamina: 30 };
   const bonus = (pos === 'pit' ? { power: { velo: 12, stamina: 4 }, contact: { ctrl: 12, brk: 4 }, runner: { brk: 12, ctrl: 4 }, allround: { velo: 5, ctrl: 5, brk: 5, stamina: 5 } } : { contact: { meet: 12, speed: 4 }, slugger: { power: 12, arm: 4 }, runner: { speed: 12, field: 4 }, allround: { meet: 5, power: 5, speed: 5, field: 5, arm: 3 } })[build];
   for (const k in bonus) base[k] += bonus[k];
-  return { growthRules:2, name, build, pos, so: 0, ...base, cond: 70, will: 30, tough: 20, money: 50, study: 40, week: 0, traits: [],
+  return { growthRules:2, draftRules:2, name, build, pos, so: 0, ...base, cond: 70, will: 30, tough: 20, money: 50, study: 40, week: 0, traits: [],
     ev: { coach: 30, captain: 30, team: 30, scout: 15 }, cnt: {}, injury: null, banWeeks: 0, insured: false,
     wins: 0, losses: 0, hits: 0, ab: 0, hr: 0, rbi: 0, tour: [], log: ['입학했다. 3년 뒤 프로 지명을 목표로!'], pendingMatch: null, done: false, result: null };
 }
@@ -358,18 +358,20 @@ export function finishMatch(p, m, s) {
 }
 
 export function draftStatus(p) {
+  if(p.draftRules!==undefined&&p.draftRules!==2)throw Error('지명 판정 버전을 확인하세요.');
   const parts = [['종합 능력', ovr(p) * .7], ['스카우트 평가', p.ev.scout * .2], ['감독 평가', p.ev.coach * .1], ['좋은 특수능력', p.traits.filter(t=>TRAITS[t].good).length * 1.2], ['팀 승리', Math.min(8,p.wins*.3)], ['홈런',p.hr*.4]];
   const score = ovr(p) * 0.7 + p.ev.scout * 0.2 + p.ev.coach * 0.1 + p.traits.filter((t) => TRAITS[t].good).length * 1.2 + Math.min(8, p.wins * 0.3) + p.hr * 0.4;
-  const band=score>=82?'1순위':score>=74?'상위 지명':score>=64?'지명':score>=54?'하위 라운드':'지명 기준 미달';
-  return {parts,score,band,need:54,shortfall:Math.max(0,54-score)};
+  const firstEligible=p.draftRules!==2||ovr(p)>=80;
+  const band=score>=82&&firstEligible?'1순위':score>=74?'상위 지명':score>=64?'지명':score>=54?'하위 라운드':'지명 기준 미달';
+  return {parts,score,band,need:54,shortfall:Math.max(0,54-score),...(p.draftRules===2?{rules:2,overall:ovr(p),firstOverallNeed:80,firstEligible}: {})};
 }
 
 function finish(p) {
   p.finalYearReview = currentYearGrowth(p);
   p.done = true;
-  const { score } = draftStatus(p);
+  const { score, band } = draftStatus(p);
   let rank, team, text;
-  if (score >= 82) { rank = 1; text = '1순위 지명! 전국이 주목하는 슈퍼 루키'; }
+  if (band === '1순위') { rank = 1; text = '1순위 지명! 전국이 주목하는 슈퍼 루키'; }
   else if (score >= 74) { rank = 2 + Math.floor(Math.random() * 3); text = `${rank}순위 상위 지명`; }
   else if (score >= 64) { rank = 6 + Math.floor(Math.random() * 10); text = `${rank}순위 지명`; }
   else if (score >= 54) { rank = 17 + Math.floor(Math.random() * 20); text = `하위 라운드 ${rank}순위 지명`; }

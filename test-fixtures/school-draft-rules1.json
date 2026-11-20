@@ -1,0 +1,1966 @@
+[
+  {
+    "before": {
+      "name": "이전 규칙 검증",
+      "build": "contact",
+      "pos": "bat",
+      "so": 0,
+      "meet": 65,
+      "power": 65,
+      "speed": 65,
+      "arm": 65,
+      "field": 65,
+      "stamina": 65,
+      "cond": 70,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 143,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 8,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": false,
+      "result": null
+    },
+    "status": {
+      "parts": [
+        [
+          "종합 능력",
+          45.5
+        ],
+        [
+          "스카우트 평가",
+          20
+        ],
+        [
+          "감독 평가",
+          10
+        ],
+        [
+          "좋은 특수능력",
+          0
+        ],
+        [
+          "팀 승리",
+          6
+        ],
+        [
+          "홈런",
+          3.2
+        ]
+      ],
+      "score": 84.7,
+      "band": "1순위",
+      "need": 54,
+      "shortfall": 0
+    },
+    "after": {
+      "name": "이전 규칙 검증",
+      "build": "contact",
+      "pos": "bat",
+      "so": 0,
+      "meet": 65,
+      "power": 65,
+      "speed": 65,
+      "arm": 65,
+      "field": 65,
+      "stamina": 65,
+      "cond": 73,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 144,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 8,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": true,
+      "result": {
+        "rank": 1,
+        "team": "인천",
+        "text": "1순위 지명! 전국이 주목하는 슈퍼 루키",
+        "score": 85,
+        "ovr": 65
+      },
+      "snap": {
+        "meet": 65,
+        "power": 65,
+        "speed": 65,
+        "arm": 65,
+        "field": 65,
+        "stamina": 65,
+        "will": 30,
+        "tough": 20
+      },
+      "snapOvr": 65,
+      "finalYearReview": {
+        "year": 3,
+        "ovr": 65,
+        "prevOvr": 65,
+        "diffs": [
+          [
+            "meet",
+            0
+          ],
+          [
+            "power",
+            0
+          ],
+          [
+            "speed",
+            0
+          ],
+          [
+            "arm",
+            0
+          ],
+          [
+            "field",
+            0
+          ],
+          [
+            "stamina",
+            0
+          ],
+          [
+            "will",
+            0
+          ],
+          [
+            "tough",
+            0
+          ]
+        ]
+      }
+    },
+    "hof": [
+      {
+        "yearReviews": [
+          {
+            "year": 3,
+            "ovr": 65,
+            "prevOvr": 65,
+            "diffs": [
+              [
+                "meet",
+                0
+              ],
+              [
+                "power",
+                0
+              ],
+              [
+                "speed",
+                0
+              ],
+              [
+                "arm",
+                0
+              ],
+              [
+                "field",
+                0
+              ],
+              [
+                "stamina",
+                0
+              ],
+              [
+                "will",
+                0
+              ],
+              [
+                "tough",
+                0
+              ]
+            ]
+          }
+        ],
+        "name": "이전 규칙 검증",
+        "build": "contact",
+        "ovr": 65,
+        "rank": 1,
+        "team": "인천",
+        "pos": "bat",
+        "stats": [
+          65,
+          65,
+          65,
+          65,
+          65,
+          65
+        ],
+        "traits": [],
+        "hr": 8,
+        "wins": 20,
+        "career": {
+          "ab": 0,
+          "hits": 0,
+          "hr": 8,
+          "rbi": 0,
+          "wins": 20,
+          "losses": 0
+        },
+        "date": 0
+      }
+    ],
+    "rng": 3539251108
+  },
+  {
+    "before": {
+      "name": "이전 규칙 검증",
+      "build": "contact",
+      "pos": "bat",
+      "so": 0,
+      "meet": 79,
+      "power": 79,
+      "speed": 79,
+      "arm": 79,
+      "field": 79,
+      "stamina": 79,
+      "cond": 70,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 143,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 8,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": false,
+      "result": null
+    },
+    "status": {
+      "parts": [
+        [
+          "종합 능력",
+          55.3
+        ],
+        [
+          "스카우트 평가",
+          20
+        ],
+        [
+          "감독 평가",
+          10
+        ],
+        [
+          "좋은 특수능력",
+          0
+        ],
+        [
+          "팀 승리",
+          6
+        ],
+        [
+          "홈런",
+          3.2
+        ]
+      ],
+      "score": 94.5,
+      "band": "1순위",
+      "need": 54,
+      "shortfall": 0
+    },
+    "after": {
+      "name": "이전 규칙 검증",
+      "build": "contact",
+      "pos": "bat",
+      "so": 0,
+      "meet": 79,
+      "power": 79,
+      "speed": 79,
+      "arm": 79,
+      "field": 79,
+      "stamina": 79,
+      "cond": 73,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 144,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 8,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": true,
+      "result": {
+        "rank": 1,
+        "team": "인천",
+        "text": "1순위 지명! 전국이 주목하는 슈퍼 루키",
+        "score": 95,
+        "ovr": 79
+      },
+      "snap": {
+        "meet": 79,
+        "power": 79,
+        "speed": 79,
+        "arm": 79,
+        "field": 79,
+        "stamina": 79,
+        "will": 30,
+        "tough": 20
+      },
+      "snapOvr": 79,
+      "finalYearReview": {
+        "year": 3,
+        "ovr": 79,
+        "prevOvr": 79,
+        "diffs": [
+          [
+            "meet",
+            0
+          ],
+          [
+            "power",
+            0
+          ],
+          [
+            "speed",
+            0
+          ],
+          [
+            "arm",
+            0
+          ],
+          [
+            "field",
+            0
+          ],
+          [
+            "stamina",
+            0
+          ],
+          [
+            "will",
+            0
+          ],
+          [
+            "tough",
+            0
+          ]
+        ]
+      }
+    },
+    "hof": [
+      {
+        "yearReviews": [
+          {
+            "year": 3,
+            "ovr": 79,
+            "prevOvr": 79,
+            "diffs": [
+              [
+                "meet",
+                0
+              ],
+              [
+                "power",
+                0
+              ],
+              [
+                "speed",
+                0
+              ],
+              [
+                "arm",
+                0
+              ],
+              [
+                "field",
+                0
+              ],
+              [
+                "stamina",
+                0
+              ],
+              [
+                "will",
+                0
+              ],
+              [
+                "tough",
+                0
+              ]
+            ]
+          }
+        ],
+        "name": "이전 규칙 검증",
+        "build": "contact",
+        "ovr": 79,
+        "rank": 1,
+        "team": "인천",
+        "pos": "bat",
+        "stats": [
+          79,
+          79,
+          79,
+          79,
+          79,
+          79
+        ],
+        "traits": [],
+        "hr": 8,
+        "wins": 20,
+        "career": {
+          "ab": 0,
+          "hits": 0,
+          "hr": 8,
+          "rbi": 0,
+          "wins": 20,
+          "losses": 0
+        },
+        "date": 0
+      }
+    ],
+    "rng": 3539251108
+  },
+  {
+    "before": {
+      "name": "이전 규칙 검증",
+      "build": "contact",
+      "pos": "bat",
+      "so": 0,
+      "meet": 80,
+      "power": 80,
+      "speed": 80,
+      "arm": 80,
+      "field": 80,
+      "stamina": 80,
+      "cond": 70,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 143,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 8,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": false,
+      "result": null
+    },
+    "status": {
+      "parts": [
+        [
+          "종합 능력",
+          56
+        ],
+        [
+          "스카우트 평가",
+          20
+        ],
+        [
+          "감독 평가",
+          10
+        ],
+        [
+          "좋은 특수능력",
+          0
+        ],
+        [
+          "팀 승리",
+          6
+        ],
+        [
+          "홈런",
+          3.2
+        ]
+      ],
+      "score": 95.2,
+      "band": "1순위",
+      "need": 54,
+      "shortfall": 0
+    },
+    "after": {
+      "name": "이전 규칙 검증",
+      "build": "contact",
+      "pos": "bat",
+      "so": 0,
+      "meet": 80,
+      "power": 80,
+      "speed": 80,
+      "arm": 80,
+      "field": 80,
+      "stamina": 80,
+      "cond": 73,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 144,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 8,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": true,
+      "result": {
+        "rank": 1,
+        "team": "인천",
+        "text": "1순위 지명! 전국이 주목하는 슈퍼 루키",
+        "score": 95,
+        "ovr": 80
+      },
+      "snap": {
+        "meet": 80,
+        "power": 80,
+        "speed": 80,
+        "arm": 80,
+        "field": 80,
+        "stamina": 80,
+        "will": 30,
+        "tough": 20
+      },
+      "snapOvr": 80,
+      "finalYearReview": {
+        "year": 3,
+        "ovr": 80,
+        "prevOvr": 80,
+        "diffs": [
+          [
+            "meet",
+            0
+          ],
+          [
+            "power",
+            0
+          ],
+          [
+            "speed",
+            0
+          ],
+          [
+            "arm",
+            0
+          ],
+          [
+            "field",
+            0
+          ],
+          [
+            "stamina",
+            0
+          ],
+          [
+            "will",
+            0
+          ],
+          [
+            "tough",
+            0
+          ]
+        ]
+      }
+    },
+    "hof": [
+      {
+        "yearReviews": [
+          {
+            "year": 3,
+            "ovr": 80,
+            "prevOvr": 80,
+            "diffs": [
+              [
+                "meet",
+                0
+              ],
+              [
+                "power",
+                0
+              ],
+              [
+                "speed",
+                0
+              ],
+              [
+                "arm",
+                0
+              ],
+              [
+                "field",
+                0
+              ],
+              [
+                "stamina",
+                0
+              ],
+              [
+                "will",
+                0
+              ],
+              [
+                "tough",
+                0
+              ]
+            ]
+          }
+        ],
+        "name": "이전 규칙 검증",
+        "build": "contact",
+        "ovr": 80,
+        "rank": 1,
+        "team": "인천",
+        "pos": "bat",
+        "stats": [
+          80,
+          80,
+          80,
+          80,
+          80,
+          80
+        ],
+        "traits": [],
+        "hr": 8,
+        "wins": 20,
+        "career": {
+          "ab": 0,
+          "hits": 0,
+          "hr": 8,
+          "rbi": 0,
+          "wins": 20,
+          "losses": 0
+        },
+        "date": 0
+      }
+    ],
+    "rng": 3539251108
+  },
+  {
+    "before": {
+      "name": "이전 규칙 검증",
+      "build": "contact",
+      "pos": "bat",
+      "so": 0,
+      "meet": 90,
+      "power": 90,
+      "speed": 90,
+      "arm": 90,
+      "field": 90,
+      "stamina": 90,
+      "cond": 70,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 143,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 8,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": false,
+      "result": null
+    },
+    "status": {
+      "parts": [
+        [
+          "종합 능력",
+          62.99999999999999
+        ],
+        [
+          "스카우트 평가",
+          20
+        ],
+        [
+          "감독 평가",
+          10
+        ],
+        [
+          "좋은 특수능력",
+          0
+        ],
+        [
+          "팀 승리",
+          6
+        ],
+        [
+          "홈런",
+          3.2
+        ]
+      ],
+      "score": 102.2,
+      "band": "1순위",
+      "need": 54,
+      "shortfall": 0
+    },
+    "after": {
+      "name": "이전 규칙 검증",
+      "build": "contact",
+      "pos": "bat",
+      "so": 0,
+      "meet": 90,
+      "power": 90,
+      "speed": 90,
+      "arm": 90,
+      "field": 90,
+      "stamina": 90,
+      "cond": 73,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 144,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 8,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": true,
+      "result": {
+        "rank": 1,
+        "team": "인천",
+        "text": "1순위 지명! 전국이 주목하는 슈퍼 루키",
+        "score": 102,
+        "ovr": 90
+      },
+      "snap": {
+        "meet": 90,
+        "power": 90,
+        "speed": 90,
+        "arm": 90,
+        "field": 90,
+        "stamina": 90,
+        "will": 30,
+        "tough": 20
+      },
+      "snapOvr": 90,
+      "finalYearReview": {
+        "year": 3,
+        "ovr": 90,
+        "prevOvr": 90,
+        "diffs": [
+          [
+            "meet",
+            0
+          ],
+          [
+            "power",
+            0
+          ],
+          [
+            "speed",
+            0
+          ],
+          [
+            "arm",
+            0
+          ],
+          [
+            "field",
+            0
+          ],
+          [
+            "stamina",
+            0
+          ],
+          [
+            "will",
+            0
+          ],
+          [
+            "tough",
+            0
+          ]
+        ]
+      }
+    },
+    "hof": [
+      {
+        "yearReviews": [
+          {
+            "year": 3,
+            "ovr": 90,
+            "prevOvr": 90,
+            "diffs": [
+              [
+                "meet",
+                0
+              ],
+              [
+                "power",
+                0
+              ],
+              [
+                "speed",
+                0
+              ],
+              [
+                "arm",
+                0
+              ],
+              [
+                "field",
+                0
+              ],
+              [
+                "stamina",
+                0
+              ],
+              [
+                "will",
+                0
+              ],
+              [
+                "tough",
+                0
+              ]
+            ]
+          }
+        ],
+        "name": "이전 규칙 검증",
+        "build": "contact",
+        "ovr": 90,
+        "rank": 1,
+        "team": "인천",
+        "pos": "bat",
+        "stats": [
+          90,
+          90,
+          90,
+          90,
+          90,
+          90
+        ],
+        "traits": [],
+        "hr": 8,
+        "wins": 20,
+        "career": {
+          "ab": 0,
+          "hits": 0,
+          "hr": 8,
+          "rbi": 0,
+          "wins": 20,
+          "losses": 0
+        },
+        "date": 0
+      }
+    ],
+    "rng": 3539251108
+  },
+  {
+    "before": {
+      "name": "이전 규칙 검증",
+      "build": "power",
+      "pos": "pit",
+      "so": 0,
+      "velo": 65,
+      "ctrl": 65,
+      "brk": 65,
+      "speed": 65,
+      "field": 65,
+      "stamina": 65,
+      "cond": 70,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 143,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 0,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": false,
+      "result": null
+    },
+    "status": {
+      "parts": [
+        [
+          "종합 능력",
+          45.5
+        ],
+        [
+          "스카우트 평가",
+          20
+        ],
+        [
+          "감독 평가",
+          10
+        ],
+        [
+          "좋은 특수능력",
+          0
+        ],
+        [
+          "팀 승리",
+          6
+        ],
+        [
+          "홈런",
+          0
+        ]
+      ],
+      "score": 81.5,
+      "band": "상위 지명",
+      "need": 54,
+      "shortfall": 0
+    },
+    "after": {
+      "name": "이전 규칙 검증",
+      "build": "power",
+      "pos": "pit",
+      "so": 0,
+      "velo": 65,
+      "ctrl": 65,
+      "brk": 65,
+      "speed": 65,
+      "field": 65,
+      "stamina": 65,
+      "cond": 73,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 144,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 0,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": true,
+      "result": {
+        "rank": 4,
+        "team": "광주",
+        "text": "4순위 상위 지명",
+        "score": 82,
+        "ovr": 65
+      },
+      "snap": {
+        "velo": 65,
+        "ctrl": 65,
+        "brk": 65,
+        "speed": 65,
+        "field": 65,
+        "stamina": 65,
+        "will": 30,
+        "tough": 20
+      },
+      "snapOvr": 65,
+      "finalYearReview": {
+        "year": 3,
+        "ovr": 65,
+        "prevOvr": 65,
+        "diffs": [
+          [
+            "velo",
+            0
+          ],
+          [
+            "ctrl",
+            0
+          ],
+          [
+            "brk",
+            0
+          ],
+          [
+            "speed",
+            0
+          ],
+          [
+            "field",
+            0
+          ],
+          [
+            "stamina",
+            0
+          ],
+          [
+            "will",
+            0
+          ],
+          [
+            "tough",
+            0
+          ]
+        ]
+      }
+    },
+    "hof": [
+      {
+        "yearReviews": [
+          {
+            "year": 3,
+            "ovr": 65,
+            "prevOvr": 65,
+            "diffs": [
+              [
+                "velo",
+                0
+              ],
+              [
+                "ctrl",
+                0
+              ],
+              [
+                "brk",
+                0
+              ],
+              [
+                "speed",
+                0
+              ],
+              [
+                "field",
+                0
+              ],
+              [
+                "stamina",
+                0
+              ],
+              [
+                "will",
+                0
+              ],
+              [
+                "tough",
+                0
+              ]
+            ]
+          }
+        ],
+        "name": "이전 규칙 검증",
+        "build": "power",
+        "ovr": 65,
+        "rank": 4,
+        "team": "광주",
+        "pos": "pit",
+        "stats": [
+          65,
+          65,
+          65,
+          65,
+          65,
+          65
+        ],
+        "traits": [],
+        "hr": 0,
+        "wins": 20,
+        "career": {
+          "ip": 0,
+          "so": 0,
+          "hitsAllowed": 0,
+          "wins": 20,
+          "losses": 0
+        },
+        "date": 0
+      }
+    ],
+    "rng": 2547726003
+  },
+  {
+    "before": {
+      "name": "이전 규칙 검증",
+      "build": "power",
+      "pos": "pit",
+      "so": 0,
+      "velo": 79,
+      "ctrl": 79,
+      "brk": 79,
+      "speed": 79,
+      "field": 79,
+      "stamina": 79,
+      "cond": 70,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 143,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 0,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": false,
+      "result": null
+    },
+    "status": {
+      "parts": [
+        [
+          "종합 능력",
+          55.3
+        ],
+        [
+          "스카우트 평가",
+          20
+        ],
+        [
+          "감독 평가",
+          10
+        ],
+        [
+          "좋은 특수능력",
+          0
+        ],
+        [
+          "팀 승리",
+          6
+        ],
+        [
+          "홈런",
+          0
+        ]
+      ],
+      "score": 91.3,
+      "band": "1순위",
+      "need": 54,
+      "shortfall": 0
+    },
+    "after": {
+      "name": "이전 규칙 검증",
+      "build": "power",
+      "pos": "pit",
+      "so": 0,
+      "velo": 79,
+      "ctrl": 79,
+      "brk": 79,
+      "speed": 79,
+      "field": 79,
+      "stamina": 79,
+      "cond": 73,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 144,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 0,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": true,
+      "result": {
+        "rank": 1,
+        "team": "인천",
+        "text": "1순위 지명! 전국이 주목하는 슈퍼 루키",
+        "score": 91,
+        "ovr": 79
+      },
+      "snap": {
+        "velo": 79,
+        "ctrl": 79,
+        "brk": 79,
+        "speed": 79,
+        "field": 79,
+        "stamina": 79,
+        "will": 30,
+        "tough": 20
+      },
+      "snapOvr": 79,
+      "finalYearReview": {
+        "year": 3,
+        "ovr": 79,
+        "prevOvr": 79,
+        "diffs": [
+          [
+            "velo",
+            0
+          ],
+          [
+            "ctrl",
+            0
+          ],
+          [
+            "brk",
+            0
+          ],
+          [
+            "speed",
+            0
+          ],
+          [
+            "field",
+            0
+          ],
+          [
+            "stamina",
+            0
+          ],
+          [
+            "will",
+            0
+          ],
+          [
+            "tough",
+            0
+          ]
+        ]
+      }
+    },
+    "hof": [
+      {
+        "yearReviews": [
+          {
+            "year": 3,
+            "ovr": 79,
+            "prevOvr": 79,
+            "diffs": [
+              [
+                "velo",
+                0
+              ],
+              [
+                "ctrl",
+                0
+              ],
+              [
+                "brk",
+                0
+              ],
+              [
+                "speed",
+                0
+              ],
+              [
+                "field",
+                0
+              ],
+              [
+                "stamina",
+                0
+              ],
+              [
+                "will",
+                0
+              ],
+              [
+                "tough",
+                0
+              ]
+            ]
+          }
+        ],
+        "name": "이전 규칙 검증",
+        "build": "power",
+        "ovr": 79,
+        "rank": 1,
+        "team": "인천",
+        "pos": "pit",
+        "stats": [
+          79,
+          79,
+          79,
+          79,
+          79,
+          79
+        ],
+        "traits": [],
+        "hr": 0,
+        "wins": 20,
+        "career": {
+          "ip": 0,
+          "so": 0,
+          "hitsAllowed": 0,
+          "wins": 20,
+          "losses": 0
+        },
+        "date": 0
+      }
+    ],
+    "rng": 3539251108
+  },
+  {
+    "before": {
+      "name": "이전 규칙 검증",
+      "build": "power",
+      "pos": "pit",
+      "so": 0,
+      "velo": 80,
+      "ctrl": 80,
+      "brk": 80,
+      "speed": 80,
+      "field": 80,
+      "stamina": 80,
+      "cond": 70,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 143,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 0,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": false,
+      "result": null
+    },
+    "status": {
+      "parts": [
+        [
+          "종합 능력",
+          56
+        ],
+        [
+          "스카우트 평가",
+          20
+        ],
+        [
+          "감독 평가",
+          10
+        ],
+        [
+          "좋은 특수능력",
+          0
+        ],
+        [
+          "팀 승리",
+          6
+        ],
+        [
+          "홈런",
+          0
+        ]
+      ],
+      "score": 92,
+      "band": "1순위",
+      "need": 54,
+      "shortfall": 0
+    },
+    "after": {
+      "name": "이전 규칙 검증",
+      "build": "power",
+      "pos": "pit",
+      "so": 0,
+      "velo": 80,
+      "ctrl": 80,
+      "brk": 80,
+      "speed": 80,
+      "field": 80,
+      "stamina": 80,
+      "cond": 73,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 144,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 0,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": true,
+      "result": {
+        "rank": 1,
+        "team": "인천",
+        "text": "1순위 지명! 전국이 주목하는 슈퍼 루키",
+        "score": 92,
+        "ovr": 80
+      },
+      "snap": {
+        "velo": 80,
+        "ctrl": 80,
+        "brk": 80,
+        "speed": 80,
+        "field": 80,
+        "stamina": 80,
+        "will": 30,
+        "tough": 20
+      },
+      "snapOvr": 80,
+      "finalYearReview": {
+        "year": 3,
+        "ovr": 80,
+        "prevOvr": 80,
+        "diffs": [
+          [
+            "velo",
+            0
+          ],
+          [
+            "ctrl",
+            0
+          ],
+          [
+            "brk",
+            0
+          ],
+          [
+            "speed",
+            0
+          ],
+          [
+            "field",
+            0
+          ],
+          [
+            "stamina",
+            0
+          ],
+          [
+            "will",
+            0
+          ],
+          [
+            "tough",
+            0
+          ]
+        ]
+      }
+    },
+    "hof": [
+      {
+        "yearReviews": [
+          {
+            "year": 3,
+            "ovr": 80,
+            "prevOvr": 80,
+            "diffs": [
+              [
+                "velo",
+                0
+              ],
+              [
+                "ctrl",
+                0
+              ],
+              [
+                "brk",
+                0
+              ],
+              [
+                "speed",
+                0
+              ],
+              [
+                "field",
+                0
+              ],
+              [
+                "stamina",
+                0
+              ],
+              [
+                "will",
+                0
+              ],
+              [
+                "tough",
+                0
+              ]
+            ]
+          }
+        ],
+        "name": "이전 규칙 검증",
+        "build": "power",
+        "ovr": 80,
+        "rank": 1,
+        "team": "인천",
+        "pos": "pit",
+        "stats": [
+          80,
+          80,
+          80,
+          80,
+          80,
+          80
+        ],
+        "traits": [],
+        "hr": 0,
+        "wins": 20,
+        "career": {
+          "ip": 0,
+          "so": 0,
+          "hitsAllowed": 0,
+          "wins": 20,
+          "losses": 0
+        },
+        "date": 0
+      }
+    ],
+    "rng": 3539251108
+  },
+  {
+    "before": {
+      "name": "이전 규칙 검증",
+      "build": "power",
+      "pos": "pit",
+      "so": 0,
+      "velo": 90,
+      "ctrl": 90,
+      "brk": 90,
+      "speed": 90,
+      "field": 90,
+      "stamina": 90,
+      "cond": 70,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 143,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 0,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": false,
+      "result": null
+    },
+    "status": {
+      "parts": [
+        [
+          "종합 능력",
+          62.99999999999999
+        ],
+        [
+          "스카우트 평가",
+          20
+        ],
+        [
+          "감독 평가",
+          10
+        ],
+        [
+          "좋은 특수능력",
+          0
+        ],
+        [
+          "팀 승리",
+          6
+        ],
+        [
+          "홈런",
+          0
+        ]
+      ],
+      "score": 99,
+      "band": "1순위",
+      "need": 54,
+      "shortfall": 0
+    },
+    "after": {
+      "name": "이전 규칙 검증",
+      "build": "power",
+      "pos": "pit",
+      "so": 0,
+      "velo": 90,
+      "ctrl": 90,
+      "brk": 90,
+      "speed": 90,
+      "field": 90,
+      "stamina": 90,
+      "cond": 73,
+      "will": 30,
+      "tough": 20,
+      "money": 50,
+      "study": 40,
+      "week": 144,
+      "traits": [],
+      "ev": {
+        "coach": 100,
+        "captain": 30,
+        "team": 30,
+        "scout": 100
+      },
+      "cnt": {},
+      "injury": null,
+      "banWeeks": 0,
+      "insured": false,
+      "wins": 20,
+      "losses": 0,
+      "hits": 0,
+      "ab": 0,
+      "hr": 0,
+      "rbi": 0,
+      "tour": [],
+      "log": [
+        "입학했다. 3년 뒤 프로 지명을 목표로!"
+      ],
+      "pendingMatch": null,
+      "done": true,
+      "result": {
+        "rank": 1,
+        "team": "인천",
+        "text": "1순위 지명! 전국이 주목하는 슈퍼 루키",
+        "score": 99,
+        "ovr": 90
+      },
+      "snap": {
+        "velo": 90,
+        "ctrl": 90,
+        "brk": 90,
+        "speed": 90,
+        "field": 90,
+        "stamina": 90,
+        "will": 30,
+        "tough": 20
+      },
+      "snapOvr": 90,
+      "finalYearReview": {
+        "year": 3,
+        "ovr": 90,
+        "prevOvr": 90,
+        "diffs": [
+          [
+            "velo",
+            0
+          ],
+          [
+            "ctrl",
+            0
+          ],
+          [
+            "brk",
+            0
+          ],
+          [
+            "speed",
+            0
+          ],
+          [
+            "field",
+            0
+          ],
+          [
+            "stamina",
+            0
+          ],
+          [
+            "will",
+            0
+          ],
+          [
+            "tough",
+            0
+          ]
+        ]
+      }
+    },
+    "hof": [
+      {
+        "yearReviews": [
+          {
+            "year": 3,
+            "ovr": 90,
+            "prevOvr": 90,
+            "diffs": [
+              [
+                "velo",
+                0
+              ],
+              [
+                "ctrl",
+                0
+              ],
+              [
+                "brk",
+                0
+              ],
+              [
+                "speed",
+                0
+              ],
+              [
+                "field",
+                0
+              ],
+              [
+                "stamina",
+                0
+              ],
+              [
+                "will",
+                0
+              ],
+              [
+                "tough",
+                0
+              ]
+            ]
+          }
+        ],
+        "name": "이전 규칙 검증",
+        "build": "power",
+        "ovr": 90,
+        "rank": 1,
+        "team": "인천",
+        "pos": "pit",
+        "stats": [
+          90,
+          90,
+          90,
+          90,
+          90,
+          90
+        ],
+        "traits": [],
+        "hr": 0,
+        "wins": 20,
+        "career": {
+          "ip": 0,
+          "so": 0,
+          "hitsAllowed": 0,
+          "wins": 20,
+          "losses": 0
+        },
+        "date": 0
+      }
+    ],
+    "rng": 3539251108
+  }
+]
