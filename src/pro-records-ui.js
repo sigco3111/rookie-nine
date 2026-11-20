@@ -1,3 +1,4 @@
+import {showLeagueRecap} from './pro-league-recap.js';
 import {leagueClubForSeason} from './pro-league.js';
 import {showLeagueTable} from './pro-league-ui.js';
 import { showProContributions } from './pro-contributions-ui.js';
@@ -21,7 +22,7 @@ export function mountProRecords(parent,store,clubId){
   const filter=add('label','표시 기록'),select=add('select','',filter);select.setAttribute('aria-label','기록 시즌');const all=add('option','전체 누적',select);all.value='all';for(const s of seasons){const o=add('option',`${s.season}시즌${s.current?' · 진행 중':''}`,select);o.value=String(s.season);}select.value=selected;select.onchange=()=>{selected=select.value;draw();};
   add('h3','시즌별 성적');for(const s of seasons){const card=add('article','');card.className='pro-season-record';add('strong',`${s.season}시즌${s.current?' · 현재 시즌':' · 이전 시즌'}`,card);add('p',`${s.record.games}경기 · ${s.record.wins}승 ${s.record.losses}패 · 득점 ${s.record.runsFor} · 실점 ${s.record.runsAgainst}`,card);add('small',s.scheduled===null?'이전 기록: 저장된 일정 없음':`저장 일정 ${s.completed} / ${s.scheduled}경기 반영`,card);}
   const chosen=seasons.find(s=>String(s.season)===selected),shown=chosen?club.history.filter(g=>g.season===chosen.season):club.history;
-  if(chosen){const leagueView=leagueClubForSeason(club,chosen.season);if(leagueView){add('h3',`${chosen.season}시즌 리그 순위와 결과`);showLeagueTable(el,leagueView);}else add('small','이 시즌은 8팀 리그 전체 기록이 없습니다. 내 구단의 저장된 경기만 표시합니다.');}
+  if(chosen){const leagueView=leagueClubForSeason(club,chosen.season);if(leagueView){showLeagueRecap(el,club,chosen.season);add('h3',`${chosen.season}시즌 리그 순위와 결과`);showLeagueTable(el,leagueView);}else add('small','이 시즌은 8팀 리그 전체 기록이 없습니다. 내 구단의 저장된 경기만 표시합니다.');}
   showProOpponents(el,club,{season:chosen?.season??null});
   showProContributions(el,club.roster.map(p=>({id:p.id,name:p.name,pos:p.pos,source:p.source,stats:chosen?chosen.players.find(r=>r.id===p.id):p.pro})),{title:chosen?`${chosen.season}시즌 선수 기록`:'선수 누적 기록',sort:playerSort,onSort:key=>{playerSort=key;draw();}});
   add('h3',chosen?`${chosen.season}시즌 경기 이력`:'경기 이력');if(!shown.length)add('p','아직 반영한 경기가 없습니다.');

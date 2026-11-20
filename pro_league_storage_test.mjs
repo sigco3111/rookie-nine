@@ -1,3 +1,4 @@
+import {leagueSeasonRecap} from './src/pro-league-recap.js';
 import assert from 'node:assert/strict';
 import {newClub} from './src/pro.js';
 import {fillClubRoster} from './src/pro-teammates.js';
@@ -19,7 +20,7 @@ start();assert.throws(()=>enter('unknown'));assert.equal(club().name,'明示 구
 assert.throws(()=>store.enterLeague('owned','seoul',{expectedRoot:JSON.stringify(store.load().data)}));
 const stale=JSON.stringify(store.load().data);store.save(store.load().data);assert.throws(()=>store.enterLeague('owned','seoul',{expectedRoot:stale,confirmed:true}));
 quota=true;const beforeEnter=disk.get(PRO_KEY);assert.equal(enter('incheon').ok,false);assert.equal(disk.get(PRO_KEY),beforeEnter);assert.equal(club().name,'인천 불독');quota=false;assert.equal(store.retry(),true);store=createProStore(io);
-assert.equal(club().schedule.fixtures.length,14);assert.equal(club().league.results.length,0);assert.equal(club().league.teams.length,8);assert.ok(!club().schedule.fixtures.some(f=>f.name==='인천 불독'));
+assert.equal(leagueSeasonRecap(club()),null);assert.equal(club().schedule.fixtures.length,14);assert.equal(club().league.results.length,0);assert.equal(club().league.teams.length,8);assert.ok(!club().schedule.fixtures.some(f=>f.name==='인천 불독'));
 for(let round=0;round<14;round++){
  const c=club();prepareNextClubFixture(store,c.id,c.schedule.fixtures);const ctl=createProController(store,c.id);ctl.auto(2000);
  const old=disk.get(PRO_KEY),beforeWrites=writes;quota=round===3;const doneSession=ctl.current(),saved=ctl.finish();assert.equal(writes,beforeWrites+1);
@@ -29,13 +30,13 @@ for(let round=0;round<14;round++){
  store=createProStore(io);assert.equal(store.load().ok,true);assert.equal(club().record.games,round+1);
  const raw=disk.get(PRO_KEY);validateProSave(JSON.parse(raw));assert.equal(disk.get(PRO_KEY),raw);
 }
-const seasonOne=structuredClone(club()),oldLedger=JSON.stringify(seasonOne.history),oldLeague=JSON.stringify(seasonOne.league),oldRoster=JSON.stringify(seasonOne.roster);
+assert.ok(leagueSeasonRecap(club()).record.games===14);const seasonOne=structuredClone(club()),oldLedger=JSON.stringify(seasonOne.history),oldLeague=JSON.stringify(seasonOne.league),oldRoster=JSON.stringify(seasonOne.roster);
 assert.equal(validateClubLeague(seasonOne).done,true);assert.equal(seasonOne.league.results.length,56);
 for(const mutate of [c=>c.league.results.pop(),c=>c.league.teams.reverse(),c=>c.league.schedule.rounds[0].games[0].seed++,c=>c.league.results[0].homeScore++]){const bad=store.load().data;mutate(bad.clubs[0]);assert.throws(()=>store.save(bad));}
 const corruptedAI=store.load().data;const ai=corruptedAI.clubs[0].league.results.find(r=>r.home!=='incheon'&&r.away!=='incheon');ai.homeScore+=100;assert.throws(()=>validateProSave(corruptedAI));
 enter('incheon');assert.equal(club().season,2);assert.equal(club().league.results.length,0);assert.equal(club().schedule.startGame,14);assert.equal(JSON.stringify(club().history),oldLedger);assert.equal(JSON.stringify(club().roster),oldRoster);assert.equal(JSON.stringify(club().leagueHistory[0].league),oldLeague);
 const next=club();prepareNextClubFixture(store,next.id,next.schedule.fixtures);const ctl=createProController(store,next.id);ctl.auto(2000);ctl.finish();assert.equal(club().record.games,15);assert.equal(club().league.results.length,4);assert.deepEqual(club().history.slice(0,14),seasonOne.history);assert.deepEqual(club().scheduleHistory[0],seasonOne.schedule);
-const sourceForView=JSON.stringify(club());const seasonOneView=leagueClubForSeason(club(),1);assert.equal(validateClubLeague(seasonOneView).completedGames,56);assert.equal(JSON.stringify(seasonOneView.league),oldLeague);assert.equal(JSON.stringify(club()),sourceForView);assert.equal(leagueClubForSeason(club(),99),null);
+const sourceForView=JSON.stringify(club());assert.deepEqual(leagueSeasonRecap(club(),1),leagueSeasonRecap(seasonOne));const seasonOneView=leagueClubForSeason(club(),1);assert.equal(validateClubLeague(seasonOneView).completedGames,56);assert.equal(JSON.stringify(seasonOneView.league),oldLeague);assert.equal(JSON.stringify(club()),sourceForView);assert.equal(leagueClubForSeason(club(),99),null);
 const badArchive=store.load().data;badArchive.clubs[0].leagueHistory[0].league.results=[];assert.throws(()=>store.save(badArchive));
 // Existing six-game schedules/pending/history are not converted in place.
 disk.delete(PRO_KEY);store=createProStore(io);createOwnClub(store);const legacyStart=JSON.stringify(club());assert.throws(()=>enter('busan'));assert.equal(JSON.stringify(club()),legacyStart);
