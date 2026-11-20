@@ -18,7 +18,9 @@ const M = (c, o = {}) => new THREE.MeshLambertMaterial({ color: c, ...o });
 scene.add(new THREE.HemisphereLight(0xffffff, 0x6aa84f, 1.0));
 const sun = new THREE.DirectionalLight(0xffffff, 1.2); sun.position.set(-20, 40, 25); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048); { const c = sun.shadow.camera; c.left = -45; c.right = 45; c.top = 45; c.bottom = -45; c.near = 1; c.far = 120; } sun.target.position.set(0, 0, -20); scene.add(sun.target); scene.add(sun);
 
-function resize() { const w = window.innerWidth, h = window.innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.fov = w / h < 0.8 ? 62 : 50; camera.updateProjectionMatrix(); }
+let matchLensActive=false;
+export function setMatchLens(active){matchLensActive=!!active;if(!matchLensActive){camera.fov=window.innerWidth/window.innerHeight<.8?62:50;camera.updateProjectionMatrix();}}
+function resize() { const w = window.innerWidth, h = window.innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; if(!matchLensActive)camera.fov = w / h < 0.8 ? 62 : 50; camera.updateProjectionMatrix(); }
 window.addEventListener('resize', resize); resize();
 
 // ---- 구장 ----

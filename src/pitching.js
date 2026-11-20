@@ -1,7 +1,7 @@
 import {bindPointerAim} from './pointer-aim.js';
 import { hitRunStep, defenseLookYaw } from './defense.js';
 import { advanceBases, forceTarget, forceResult } from './bases.js';
-import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, setClubUniform, OPP_COLORS } from './scene.js';
+import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, setClubUniform, setMatchLens, OPP_COLORS } from './scene.js';
 import { internals, applyEquipment, defensivePursuit, resetDefense, completeGroundOut, airOutSequence, runHomeRun, showBaseRunners, showForcedRunners, runWalk, runFoul } from './match.js';
 import { oppStrength, rivalForMatch, teamStrength, isRegular, cal, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
@@ -18,6 +18,7 @@ const avail = (p) => PT.filter((x) => x.id === 'fast' || (x.id === 'curve' && p.
 
 export async function playPitching(p, m, hud, appearance = null) {
   if(appearance&&(!Number.isInteger(appearance.inning)||appearance.inning<1||!Number.isInteger(appearance.bases)||appearance.bases<0||appearance.bases>7||!Number.isInteger(appearance.outs)||appearance.outs<0||appearance.outs>2||!Number.isFinite(appearance.strength)||!Array.isArray(appearance.scores)||appearance.scores.length!==2))throw Error('투구 출전 정보를 확인하세요.');
+  setMatchLens(true);
   const { o, tickers, delTicker, wait } = internals();
   tickers.clear(); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; o.ball.visible = false;
   const opp = appearance?.opponent || (!appearance&&rivalForMatch(p)?rivalForMatch(p).name+'의 팀':null) || TEAMS[Math.floor(Math.random() * TEAMS.length)]; const regular = isRegular(p);
@@ -140,7 +141,7 @@ export async function playPitching(p, m, hud, appearance = null) {
       }
       throw Error('타석 진행 한도를 넘었습니다. 이전 기록에서 다시 시도하세요.');
     }finally{
-      aimInput.dispose();hud.removePicker();hud.setPitchingActive?.(false,true);window.dispatchEvent(new Event('resize'));
+      aimInput.dispose();setMatchLens(false);hud.removePicker();hud.setPitchingActive?.(false,true);window.dispatchEvent(new Event('resize'));
     }
   }
   for (let inn = 1; inn <= innings; inn++) {
@@ -176,7 +177,7 @@ export async function playPitching(p, m, hud, appearance = null) {
     hud.setPitch(`우리 팀 자동 공격 · ${add}점`);hud.banner(`${inn}회말 자동 공격 · ${add}점`, 900); hud.setScore(inn, my, S.er); await wait(1000);
   }
   showBaseRunners(o,0);
-  aimInput.dispose(); hud.removePicker(); window.dispatchEvent(new Event('resize'));
+  aimInput.dispose();setMatchLens(false); hud.removePicker(); window.dispatchEvent(new Event('resize'));
   const playedScore={my,opp:S.er};const automaticTiebreak=my===S.er;
   let win = my > S.er; if (my === S.er) { win = chance(50 + p.ev.team * 0.1); if (win) my++; else S.er++; }
   const r = { automaticTiebreak,playedScore,ip: innings, so: S.so, er: S.er, hitsAllowed: S.ha, my, opp: S.er, win, kind: m.kind, title: displayName + ' vs ' + opp, ab: 0, hits: 0, hr: 0, rbi: 0 };

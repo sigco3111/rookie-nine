@@ -967,3 +967,7 @@
 - Real browser hit tests exposed school full-screen HUD and pro hub/shell intercepting canvas touches; scoped passthrough fixes while controls stay active. Earlier canvas dispatch tests bypassed this issue. Added true coordinate touch test school/pro×bat/pit via normal entry.
 - One-pointer aim/cancel/blur/hidden/captureloss reset, phaseend/dispose cleanup, mousehover kept. Four coordinate routes+trustedSWING/throw+saveunchanged;preparedproactualPA/finish bothpos;12releasechecksPASS LOCAL. ActualphoneOSstillunverified. LIVE verification next.
 -15:40 LIVE75e35cd correctJS+CSS/4trustedcoordinate routes+actualSWING/throw/readonlyPASS, LIVEaudio3modalregression+batfoullock+pitchfieldreturnlockPASS. CombinedtesttimeoutpitchrerunalonePASS. ActualLIVEschoolbat+propitimagesread/mainattached. PhysicalphoneOS/heat/audio stillopen.
+
+## Nov20 15:49 - keep camera stable when viewport changes
+- Common resize no longer overwritesactivepitch/othermatchsceneFOV;aspect+renderersizeupdate,home/cleanuprestoresresponsive lens. Regressionreproduced46→62beforefixafterwaitingactualresize,notjustviewporttoolreturn.
+- Four normal entry routes×320/390/430coordinates+viewportresize/restore+saveunchangedPASS LOCAL;actualpreparedPAhomeFOVreturnbothposPASS;pixels320pit/430batread. LIVE next. No pause/phone verification claim.

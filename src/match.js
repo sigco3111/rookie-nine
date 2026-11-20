@@ -2,7 +2,7 @@ import {bindPointerAim} from './pointer-aim.js';
 import { baseRunStep, walkAdvance, forceTarget } from './bases.js';
 import { defensePaths, defenseStep, defenseLookYaw, groundOutPlan, groundOutPhase, airOutPlan, airOutStep, hitRunStep, groundRace, foulBallStep, runThroughStep } from './defense.js';
 import { TRAITS } from './data.js';
-import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, setClubUniform, OPP_COLORS } from './scene.js';
+import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, addShadow, setUniform, setShirt, setClubUniform, setMatchLens, OPP_COLORS } from './scene.js';
 import { cal, battingWindow, oppStrength, rivalForMatch, teamStrength, isRegular, rnd, chance, applyMatchResult } from './growth.js';
 import { TEAMS } from './data.js';
 import { sfx } from './audio.js';
@@ -245,7 +245,7 @@ export function applyEquipment(a, gr = {}) {
   if (u.glove) { u.glove.material.color.set(gr.glove ? 0xf2c94c : 0x7b4a1e); u.glove.scale.set(gr.glove ? 1.2 : 1, gr.glove ? 1.3 : 1.1, 0.55); }
   for (const s of u.shoes) s.material.color.set(gr.shoes ? 0xe53935 : 0x222222);
 }
-export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배경: 선수가 대기/훈련 모션
+export function showHome(pos, pl) { setMatchLens(false);const pit = pos === 'pit'; // 홈 화면 배경: 선수가 대기/훈련 모션
   const o = ensureG();showBaseRunners(o,0); o.g.visible = true; o.ret.visible = false; o.zone.visible = false; o.ball.visible = false;
   o.batter.position.set(-0.6, 0, 0.3); o.batter.rotation.y = Math.PI / 2 - 0.5; o.batter.scale.setScalar(0.44);
   resetDefense(o.fielders);
@@ -283,6 +283,7 @@ export function showHome(pos, pl) { const pit = pos === 'pit'; // 홈 화면 배
 
 export async function playMatch(p, m, hud, appearance = null) {
   if(appearance&&(!Number.isInteger(appearance.inning)||appearance.inning<1||!Number.isInteger(appearance.bases)||appearance.bases<0||appearance.bases>7||!Number.isFinite(appearance.strength)||!appearance.opponent||!Array.isArray(appearance.scores)||appearance.scores.length!==2||appearance.scores.some(n=>!Number.isSafeInteger(n)||n<0)))throw Error('타석 정보를 확인하세요.');
+  setMatchLens(true);
   const o = ensureG();showBaseRunners(o,appearance?.bases||0); const y = cal(p.week).year; setUniform(o.batter, y); applyEquipment(o.batter, p.gear); if (o.runner) { setUniform(o.runner, y); applyEquipment(o.runner, p.gear); } applyEquipment(o.pitcher); o.g.visible = true; o.zone.visible = true; o.ret.visible = true; tickers.clear(); { const n = scene.getObjectByName('net'); if (n) n.visible = true; } o.pitcher.visible = true; o.pitcher.position.set(0, 0.35, -18.44); o.pitcher.rotation.y = 0; o.pitcher.scale.setScalar(1.3); if (o.catcher) { o.catcher.visible = false; o.ump.visible = false; } o.batter.visible = true; o.batter.position.set(-0.5, 0, 0.2); o.batter.rotation.y = Math.PI / 2 - 1.4; o.batter.scale.setScalar(0.72); o.batter.userData.head.rotation.x = 0;
   const opp = appearance?.opponent || (!appearance&&rivalForMatch(p)?rivalForMatch(p).name+'의 팀':null) || TEAMS[Math.floor(Math.random() * TEAMS.length)]; { const oc = OPP_COLORS[Math.max(0,TEAMS.indexOf(opp)) % OPP_COLORS.length]; setShirt(o.pitcher, oc); o.fielders.forEach((f) => setShirt(f, oc)); }
   if(appearance?.ownTeamId){for(const player of [o.batter,o.runner,...o.baseRunners])setClubUniform(player,appearance.ownTeamId);for(const player of [o.pitcher,...o.fielders])setClubUniform(player,appearance.opponentTeamId);}
@@ -447,7 +448,7 @@ export async function playMatch(p, m, hud, appearance = null) {
       const result=await plateAppearance(appearance.inning,appearance.bases);
       return result;
     }finally{
-      aimInput.dispose();window.removeEventListener('keydown',key);hud.offSwing();hud.setBattingActive?.(false);hud.setBattingContext?.(null);
+      aimInput.dispose();setMatchLens(false);window.removeEventListener('keydown',key);hud.offSwing();hud.setBattingActive?.(false);hud.setBattingContext?.(null);
     }
   }
   let runner = 0;
@@ -475,7 +476,7 @@ export async function playMatch(p, m, hud, appearance = null) {
     hud.setPitch(`상대 자동 공격 · ${oa}점`);hud.banner(`${inn}회 상대 ${oa}점`, 900); hud.setScore(inn, my, oppRuns); await wait(950);
   }
   // 정리
-  aimInput.dispose(); window.removeEventListener('keydown', key);
+  aimInput.dispose();setMatchLens(false); window.removeEventListener('keydown', key);
   hud.offSwing();
   const playedScore={my,opp:oppRuns},automaticTiebreak=my===oppRuns;
   let win = my > oppRuns; if (my === oppRuns) { win = chance(50 + p.ev.team * 0.1); if (win) my++; else oppRuns++; hud.setPitch('동점 자동 결정 · ' + (win ? '승리' : '패배'));hud.banner('동점 자동 결정 · ' + (win ? '승리' : '패배'), 1400); await wait(1500); }
