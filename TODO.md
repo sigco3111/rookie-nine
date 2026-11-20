@@ -931,3 +931,7 @@
 ## Nov20 12:40 - roster choice feedback
 - Normalpro roster now shows actualprimaryabilities under each choice, saved/unsavedstate and distinctselectedbattercount/starter, immediate duplicatewarning plus rosteractive/reservebadges. Explicit save remains; no autoselect/swap/inventedrating or statmigration.
 - Component + normalmenu impacttests preview/no-write/save/reject/reload/pendinglock/sourcebytes/320–430 pass;actual390pixelsread. Firstcompletion estimate stillpending13:35scopeandquality review; do not change percent for this UI alone.
+
+## Nov20 13:05 - full career to eight-team season verification
+- ExistingcareerUIharness can now chain actual144weeks→samegraduateadmit+lineup→14normalUIproautogames/56league results→midreload→season2+archivedrecap→ending→successorinheritance. BothpositionsLOCAL+LIVEpass, actualcopiedabilities/14proappearances/schoolHoFbytesexact/noJSerror. No week/statinjection. School/proauto matches, controlledcontinuousseed,notmanualhumanphone.
+- Earlierfullschoolmixed/direct/interruptionreports verifiedalreadyexist;newtestfillsfullsystemslinkratherthanrelabelingoldwork. No livegameplay/balancechange. Addedtests/docs only.
