@@ -232,3 +232,8 @@
 - KBOofficialcity source: https://www.koreabaseball.com/Kbo/League/TeamInfo.aspx (checkedNov20). Useroriginal09:01phonemsg-01M7V44D8EAY5545WNSGDK5A9Y and09:02approvalphonemsg-01M7V455SRX5109EGDFHJA3WJQ via parentcontext.
 - Threefictionalopponentnames Seoul/Busan/Gwangju,remaining6games;draftsixexistingcitynamesonly. No fullleague/realclubbrand or newregionaluniformclaim. SmalloriginalCSSregionbadges;existinggameuniformsretained.
 - Legacytemporaryopponentnames mapped only in readonlydisplay/projection, previousnamesnoted, sourcefixtures/history/pending leftunchanged. Nextseason usesnewnames andaggregatealiasesjoinpast/current. Testoldpending6games→rollovernewcityresult exactpastrecords passed. Oldschooldraftarchivesunchanged.
+
+## Nov20 09:16 - player contribution display without invented ratings
+- Records: actual saved player counts, sortable batters by hits/RBI/HR with roster-order ties, selectedseason/cumulative scopes. AVG and9inningERAderivedonlywhen denominator>0/fullfields; missingorzero explicitlynotarate. Noqualifiedleaderboard/MVP/WARclaim.
+- Endedpendinggame review and just-confirmed result show same actual10playerrows. Resultrepeat/reload preserves once-onlyledgerexistingguards. No storage schema change or reward/balance change.
+- Pure rates/ties/missing/copy plus normalUIzero→finish→reviewreloadrawexact→confirmonce→recordsorting/filter/sourceexact/320-430 pass; existingnormal6+1/seasonquota,sessionquota,recordsUI,real3Dmode regression pass. Actual390pixelsread.

@@ -878,3 +878,8 @@
 - New3opponents Seoul/Busan/Gwangju;6gamecount/strengths/IDs unchanged. Newdraftdestinations keep6regionsbutremovebrand-likenicknames. Myclub remainsgeneric내구단,notchoosinguserhomearea. Noactualclubl ogos/assets/colorscopied;simpleownCSSregioninitialbadges;existingfictionaluniformsretainednotnewregionaljerseydesign.
 - Existingimmutable fixtures/results/pending/checkpoints/HoF notmigrated. Explicitdisplayalias 새벽→서울/노을→부산/바람→광주 withpreviousname preservedonrecords andschedule/sessionlabel;newseasoncitiescombinebyaliaswithoutrewritingpastdata. Unknownnamesuntouched. Olddraftrecordsoriginalnamesremain.
 - Purelegacy pending→6games→newcityseason/oldhistory+scheduleexact/cumulativealiasreconciliation passed. Normalnew+LEGACY UI3games/pending/reload/filter/sourceexact/320-430 andnormalentry6+1/seasonquota/retry passed. Newbadgepixelsread390;legacybadgefinalUIafterdeploycheck. Build/diffpass.
+
+## Nov20 09:16 - player comparison and result review
+- Sharedread-onlycontributioncards useactualledger/selectedseason,battersortroster/hits/rbi/hr(stableties),AVGhits/ABandERAer*27/outs;0denominator/missingexplicitdash. Nooverallcontributionscore/awards/ratequalificationclaim. Existinggames/rawstatsretained,IPoutsnotation.
+- Completedgame shows sameplayerrecords beforeconfirmation andafteronce-onlyapply. Pendingresultreload retainsreview; no newpersistenceformat. Normalresultreload→apply1→records/actualsortedorder/seasonfilter/readonly/sourceexact/320-430PASS;zeros/missing/formula/ties/copytestPASS.
+- Existing sessionquota/retry/recordsUI/normalentry6+1/seasonquota/retry/shared3Dmode regressionsPASS. Actual390comparison/resultpixelsread. Build/diffpass. Notphonefeel/balancefix/fullleague.

@@ -1,9 +1,10 @@
+import { showProContributions } from './pro-contributions-ui.js';
 import {regionalClubLabel} from './pro-regions.js';
 import { showProOpponents } from './pro-opponents-ui.js';
 import { clubSeasonRecords } from './pro-season-records.js';
 // Read-only club ledger. No schedule, admission or next-season policy is chosen here.
 export function mountProRecords(parent,store,clubId){
- const el=document.createElement('section');el.className='pro-records';parent.append(el);let removed=false,selected='all';
+ const el=document.createElement('section');el.className='pro-records';parent.append(el);let removed=false,selected='all',playerSort='roster';
  const add=(tag,value,target=el)=>{const e=document.createElement(tag);e.textContent=value;target.append(e);return e;};
  const innings=n=>`${Math.floor(n/3)}.${n%3}`;
  const stat=(row,key)=>Number.isSafeInteger(row[key])?row[key]:'미기록';
@@ -19,8 +20,7 @@ export function mountProRecords(parent,store,clubId){
   add('h3','시즌별 성적');for(const s of seasons){const card=add('article','');card.className='pro-season-record';add('strong',`${s.season}시즌${s.current?' · 현재 시즌':' · 이전 시즌'}`,card);add('p',`${s.record.games}경기 · ${s.record.wins}승 ${s.record.losses}패 · 득점 ${s.record.runsFor} · 실점 ${s.record.runsAgainst}`,card);add('small',s.scheduled===null?'이전 기록: 저장된 일정 없음':`저장 일정 ${s.completed} / ${s.scheduled}경기 반영`,card);}
   const chosen=seasons.find(s=>String(s.season)===selected),shown=chosen?club.history.filter(g=>g.season===chosen.season):club.history;
   showProOpponents(el,club,{season:chosen?.season??null});
-  add('h3',chosen?`${chosen.season}시즌 선수 기록`:'선수 누적 기록');add('small','프로 기록만 표시합니다. 이닝의 소수 자리는 아웃 수입니다.');
-  for(const p of club.roster){const row=chosen?chosen.players.find(r=>r.id===p.id):p.pro,card=add('article','');add('strong',`${p.name}${p.source==='graduate'?' · 육성':''}`,card);add('p',p.pos==='bat'?`${row.games}경기 · ${stat(row,'ab')}타수 ${stat(row,'hits')}안타 ${stat(row,'hr')}홈런 ${stat(row,'rbi')}타점`:`${row.games}경기 · ${ip(row)}이닝 ${stat(row,'so')}탈삼진 · ${stat(row,'hitsAllowed')}피안타 ${stat(row,'er')}자책`,card);}
+  showProContributions(el,club.roster.map(p=>({id:p.id,name:p.name,pos:p.pos,source:p.source,stats:chosen?chosen.players.find(r=>r.id===p.id):p.pro})),{title:chosen?`${chosen.season}시즌 선수 기록`:'선수 누적 기록',sort:playerSort,onSort:key=>{playerSort=key;draw();}});
   add('h3',chosen?`${chosen.season}시즌 경기 이력`:'경기 이력');if(!shown.length)add('p','아직 반영한 경기가 없습니다.');
   for(const g of [...shown].reverse()){
    const card=add('details',''),summary=add('summary',`${g.number}번째 · ${g.my>g.opp?'승':'패'} ${g.my} : ${g.opp} · ${regionalClubLabel(g.opponent)}`,card);
