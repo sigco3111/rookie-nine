@@ -82,3 +82,9 @@ table.mini{width:100%;border-collapse:collapse;font-size:13px}table.mini td{padd
 
 .create-screen{overflow-y:auto;pointer-events:auto}.create-screen>*{flex-shrink:0}.create-screen .spacer{min-height:0}.school-cast-select summary{font-size:14px;font-weight:700;cursor:pointer}.school-cast-select label{display:block;margin-top:12px;font-size:13px}.school-cast-select p,#create-error{font-size:12px;line-height:1.5}.school-cast-select [role=alert],#create-error{color:#ffb5bf}.school-cast-select p:empty,#create-error:empty{display:none}
 .ending-screen{overflow-y:auto;touch-action:pan-y;pointer-events:auto;padding-bottom:calc(18px + env(safe-area-inset-bottom))}.ending-screen>*{flex-shrink:0}.ending-screen .spacer{min-height:0}
+
+/* Match text overlays must not intercept canvas aiming. Actual controls are siblings. */
+#ui>.match-hud,#ui>.match-hud>*{pointer-events:none}
+#ui>.pro-hub-open{pointer-events:none}
+.pro-hub-open>.pro-mode{pointer-events:auto}
+#ui .pro-mode[data-pro-direct=active]{pointer-events:none}

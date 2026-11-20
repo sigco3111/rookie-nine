@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "test:release": "node smoke_release.mjs"
+    "test:release": "node smoke_release.mjs",
+    "test:touch": "node pointer_aim_browser_test.mjs"
   },
   "keywords": [],
   "author": "",

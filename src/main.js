@@ -393,7 +393,7 @@ function matchPrompt(m, msgs, previousTraits, cont) {
 
 async function startMatch(m) {
   clear();
-  const hud = $(`<div class="screen" style="padding:6px 10px"><div class="scoreb"><span id="t" style="font-size:13px"></span><span id="sc">0 : 0</span></div><div class="top"><div class="dots" id="cnt"></div><div class="chip" id="pi"></div></div></div>`);
+  const hud = $(`<div class="screen match-hud" style="padding:6px 10px"><div class="scoreb"><span id="t" style="font-size:13px"></span><span id="sc">0 : 0</span></div><div class="top"><div class="dots" id="cnt"></div><div class="chip" id="pi"></div></div></div>`);
   show(hud); const bn = $(`<div></div>`); ui.appendChild(bn);
   const sw = $(`<button class="swing">SWING</button>`); show(sw);
   const timing = $(`<div id="timingguide" style="position:absolute;left:14px;bottom:145px;width:100px;text-align:center;pointer-events:none;display:none"><svg viewBox="0 0 100 100" style="width:86px;height:86px;overflow:visible"><circle cx="50" cy="50" r="25" fill="#102039cc" stroke="#ffffff66" stroke-width="3"/><circle id="timingring" cx="50" cy="50" r="43" fill="none" stroke="#ffd23f" stroke-width="5"/><text id="timingword" x="50" y="55" text-anchor="middle" fill="white" font-size="15" font-weight="900">준비</text></svg><div style="color:white;font-size:12px;font-weight:900;text-shadow:0 2px 2px #000">원이 겹칠 때 SWING</div></div>`); show(timing);

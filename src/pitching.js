@@ -1,3 +1,4 @@
+import {bindPointerAim} from './pointer-aim.js';
 import { hitRunStep, defenseLookYaw } from './defense.js';
 import { advanceBases, forceTarget, forceResult } from './bases.js';
 import { THREEX as THREE, scene, camera, renderer, makeChibi, setBatterPose, setPitcherPose, setUniform, setShirt, setClubUniform, OPP_COLORS } from './scene.js';
@@ -47,8 +48,8 @@ export async function playPitching(p, m, hud, appearance = null) {
   let cx = 0, cy = ZY; const ray = new THREE.Raycaster(); const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
   const setRet = (x, y) => { cx = Math.max(-0.8, Math.min(0.8, x)); cy = Math.max(0.2, Math.min(1.6, y)); o.ret.position.set(cx, cy, -0.05); };
   const pt = (e) => { const r = renderer.domElement.getBoundingClientRect(); const v = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1 + 0.1); ray.setFromCamera(v, camera); const h = new THREE.Vector3(); if (ray.ray.intersectPlane(plane, h)) setRet(h.x, h.y); };
-  let down = false, aimActive = false; const onD = (e) => { if(!aimActive)return;down = true; pt(e); }, onM = (e) => { if (aimActive && (down || e.pointerType === 'mouse')) pt(e); }, onU = () => { down = false; };
-  const cv = renderer.domElement; cv.addEventListener('pointerdown', onD); cv.addEventListener('pointermove', onM); window.addEventListener('pointerup', onU); setRet(0, ZY);
+  let aimActive=false;
+  const cv=renderer.domElement,aimInput=bindPointerAim(cv,{active:()=>aimActive,point:pt});setRet(0,ZY);
   let selPitch = PT[0]; let throwNow = null;
   const types = avail(p);
   hud.pitchPicker(types.map((t) => ({ id: t.id, n: t.n })), (id) => { if(!aimActive)return;selPitch = types.find((x) => x.id === id)||selPitch;hud.setPitch(`${selPitch.n}  목표를 정하고 던지기!`); }, () => { if (throwNow) throwNow(); });
@@ -57,7 +58,7 @@ export async function playPitching(p, m, hud, appearance = null) {
 
   const throwBall = (count) => new Promise(async (res) => {
     aimActive=true;o.zone.visible=true;o.ret.visible=true;setRet(cx,cy);hud.setPitch(`${selPitch.n}  목표를 정하고 던지기!`);
-    await new Promise((r) => { throwNow = () => { throwNow = null;aimActive=false;down=false;o.zone.visible=false;o.ret.visible=false;hud.setPitchingActive?.(false); r(); }; hud.setPitchingActive?.(true); });
+    await new Promise((r) => { throwNow = () => { throwNow = null;aimActive=false;aimInput.reset();o.zone.visible=false;o.ret.visible=false;hud.setPitchingActive?.(false); r(); }; hud.setPitchingActive?.(true); });
     const pit=selPitch;
     // 실제 위치: 목표 + 제구 흔들림
     const wob = Math.max(0.03, 0.34 - p.ctrl * 0.0032 - (traits.includes('cmd') ? 0.04 : 0) + (pit.brk ? 0.05 * (1 - p.brk * 0.006) : 0));
@@ -139,7 +140,7 @@ export async function playPitching(p, m, hud, appearance = null) {
       }
       throw Error('타석 진행 한도를 넘었습니다. 이전 기록에서 다시 시도하세요.');
     }finally{
-      cv.removeEventListener('pointerdown',onD);cv.removeEventListener('pointermove',onM);window.removeEventListener('pointerup',onU);hud.removePicker();hud.setPitchingActive?.(false,true);window.dispatchEvent(new Event('resize'));
+      aimInput.dispose();hud.removePicker();hud.setPitchingActive?.(false,true);window.dispatchEvent(new Event('resize'));
     }
   }
   for (let inn = 1; inn <= innings; inn++) {
@@ -175,7 +176,7 @@ export async function playPitching(p, m, hud, appearance = null) {
     hud.setPitch(`우리 팀 자동 공격 · ${add}점`);hud.banner(`${inn}회말 자동 공격 · ${add}점`, 900); hud.setScore(inn, my, S.er); await wait(1000);
   }
   showBaseRunners(o,0);
-  cv.removeEventListener('pointerdown', onD); cv.removeEventListener('pointermove', onM); window.removeEventListener('pointerup', onU); hud.removePicker(); window.dispatchEvent(new Event('resize'));
+  aimInput.dispose(); hud.removePicker(); window.dispatchEvent(new Event('resize'));
   const playedScore={my,opp:S.er};const automaticTiebreak=my===S.er;
   let win = my > S.er; if (my === S.er) { win = chance(50 + p.ev.team * 0.1); if (win) my++; else S.er++; }
   const r = { automaticTiebreak,playedScore,ip: innings, so: S.so, er: S.er, hitsAllowed: S.ha, my, opp: S.er, win, kind: m.kind, title: displayName + ' vs ' + opp, ab: 0, hits: 0, hr: 0, rbi: 0 };

@@ -1,3 +1,4 @@
+import {bindPointerAim} from './pointer-aim.js';
 import { baseRunStep, walkAdvance, forceTarget } from './bases.js';
 import { defensePaths, defenseStep, defenseLookYaw, groundOutPlan, groundOutPhase, airOutPlan, airOutStep, hitRunStep, groundRace, foulBallStep, runThroughStep } from './defense.js';
 import { TRAITS } from './data.js';
@@ -302,9 +303,8 @@ export async function playMatch(p, m, hud, appearance = null) {
   const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
   const setRet = (x, y) => { cx = Math.max(-0.95, Math.min(0.95, x)); cy = Math.max(0.1, Math.min(1.7, y)); ret.position.set(cx, cy, 0.05); };
   const pt = (e) => { const r = renderer.domElement.getBoundingClientRect(); const v = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1 + 0.12); ray.setFromCamera(v, camera); const hit = new THREE.Vector3(); ray.ray.intersectPlane(plane, hit); if (hit) setRet(hit.x, hit.y); };
-  let down = false, aimActive=false;
-  const onD = (e) => { if(!aimActive)return;down = true; pt(e); }, onM = (e) => { if (aimActive && (down || e.pointerType === 'mouse')) pt(e); }, onU = () => { down = false; };
-  const cv = renderer.domElement; cv.addEventListener('pointerdown', onD); cv.addEventListener('pointermove', onM); window.addEventListener('pointerup', onU);
+  let aimActive=false;
+  const cv=renderer.domElement,aimInput=bindPointerAim(cv,{active:()=>aimActive,point:pt});
   setRet(0, ZY);hud.setBattingActive?.(false);o.zone.visible=false;o.ret.visible=false;
   let swingReq = null; // 투구 시작 후 스윙 시각
   let pitching = null; const sbOp = (a) => { const b = document.querySelector('.swing'); if (b) { b.style.opacity = a; b.style.transition = 'opacity .2s'; } };
@@ -351,7 +351,7 @@ export async function playMatch(p, m, hud, appearance = null) {
       if (st.t >= T + 0.2) { done = true; delTicker(f); finalize(); }
     };
     const finalize = () => {
-      aimActive=false;down=false;hud.setBattingActive?.(false);o.zone.visible=false;o.ret.visible=false;hud.setTiming?.(null);
+      aimActive=false;aimInput.reset();hud.setBattingActive?.(false);o.zone.visible=false;o.ret.visible=false;hud.setTiming?.(null);
       pitching = null; sbOp(0.25); o.ball.visible = false; setBatterPose(o.batter, st.swingT != null ? 1 : 0);
       if (st.swingT == null) { sfx.mitt(); res({ kind: inZone ? 'strike' : 'ball', looking: true }); return; }
       const FRC = window.__force; const err = FRC ? 0 : st.swingT + 0.075 - T; // 0.075s = 스윙 시작~배트 컨택트 프레임(모캡 85번) 지연
@@ -447,7 +447,7 @@ export async function playMatch(p, m, hud, appearance = null) {
       const result=await plateAppearance(appearance.inning,appearance.bases);
       return result;
     }finally{
-      cv.removeEventListener('pointerdown',onD);cv.removeEventListener('pointermove',onM);window.removeEventListener('pointerup',onU);window.removeEventListener('keydown',key);hud.offSwing();hud.setBattingActive?.(false);hud.setBattingContext?.(null);
+      aimInput.dispose();window.removeEventListener('keydown',key);hud.offSwing();hud.setBattingActive?.(false);hud.setBattingContext?.(null);
     }
   }
   let runner = 0;
@@ -475,7 +475,7 @@ export async function playMatch(p, m, hud, appearance = null) {
     hud.setPitch(`상대 자동 공격 · ${oa}점`);hud.banner(`${inn}회 상대 ${oa}점`, 900); hud.setScore(inn, my, oppRuns); await wait(950);
   }
   // 정리
-  cv.removeEventListener('pointerdown', onD); cv.removeEventListener('pointermove', onM); window.removeEventListener('pointerup', onU); window.removeEventListener('keydown', key);
+  aimInput.dispose(); window.removeEventListener('keydown', key);
   hud.offSwing();
   const playedScore={my,opp:oppRuns},automaticTiebreak=my===oppRuns;
   let win = my > oppRuns; if (my === oppRuns) { win = chance(50 + p.ev.team * 0.1); if (win) my++; else oppRuns++; hud.setPitch('동점 자동 결정 · ' + (win ? '승리' : '패배'));hud.banner('동점 자동 결정 · ' + (win ? '승리' : '패배'), 1400); await wait(1500); }
