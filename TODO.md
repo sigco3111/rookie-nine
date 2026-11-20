@@ -953,3 +953,7 @@
 ## Nov20 14:24 - sound setting and background gate
 - Effectson/off/testscreenfromtitle/schoolmenu/pronav;separatebrowserpref/explicitsavefailuremessage,mastergainmuteanddocumenthiddenoutputgate/caughtresumefailure. DoesnotpausegameorchangeRNG/playerrecords.
 - Mockgraph+normalDOMtitle/school/pro/reload/quota/read-only/320–430+390pixelsPASS. Audiblephone/OSswitchqualitystillunverified. Draft/evaluationbalanceworkremains;notrelabelingthisasbalanceprogress.
+
+## Nov20 14:44 - regression closure and draft-component exactness
+- Documentedtemporarysoundbindingregression/fixandfinalLIVE3modalpathsPASS,nevercallinitialbaddeployclean. NewsmokegatewillincludeUIpathscausebroadtextreplacementrisk.
+- OfflineonlydraftcomponentcandidatecomparisonnowusesUNROUNDEDsum/assertactualrankmatch. Candidatebasicfirst2/96butrestdraft0/96,notaccepted/shipped. Do notalterliveevaluations/draftoroldoutcomesfromthisanalysisalone.
