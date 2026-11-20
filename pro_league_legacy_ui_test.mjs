@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';import puppeteer from 'puppeteer-core';import {spawn}from 'node:child_process';
+const server=spawn(process.execPath,['node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','8123'],{stdio:'pipe'});let browser;
+try{
+ browser=await puppeteer.launch({executablePath:'/usr/bin/google-chrome',headless:'new',args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});const page=await browser.newPage();await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://localhost:8123/');await page.waitForSelector('#pro');
+ await page.evaluate(async()=>{const S=await import('/src/pro-storage.js'),B=await import('/src/pro-bootstrap.js'),F=await import('/src/pro-fixtures.js');const store=S.createProStore(localStorage);B.createOwnClub(store);const club=store.load().data.clubs[0];F.prepareNextClubFixture(store,club.id,club.schedule.fixtures);});
+ const pending=await page.evaluate(()=>localStorage.getItem('rookie9.pro.v1'));await page.click('#pro');
+ const click=async text=>page.evaluate(t=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent===t&&!b.closest('[hidden]'));if(!b)throw Error(t);b.click();},text);
+ await click('내 구단 들어가기');assert.equal(await page.$('.pro-team-choices'),null);assert.equal(await page.evaluate(()=>localStorage.getItem('rookie9.pro.v1')),pending);
+ for(let i=0;i<6;i++){if(i)await click('다음 경기 준비');await click('남은 경기 자동 진행');await click('결과 확인·기록 반영');await click('구단 경기');}
+ const legacy=await page.evaluate(()=>JSON.parse(localStorage.getItem('rookie9.pro.v1')).clubs[0]);await page.waitForSelector('[data-team=busan]');await page.click('[data-team=busan]');await click('선택 구단 참가 내용 확인');await click('참가 취소');assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('rookie9.pro.v1')).clubs[0]),legacy);
+ await click('선택 구단 참가 내용 확인');await click('이 구단으로 리그 참가 확정');await page.waitForSelector('.pro-league-table');const next=await page.evaluate(()=>JSON.parse(localStorage.getItem('rookie9.pro.v1')).clubs[0]);assert.equal(next.name,'부산 갈매기');assert.equal(next.season,2);assert.equal(next.schedule.fixtures.length,14);assert.deepEqual(next.history,legacy.history);assert.deepEqual(next.scheduleHistory[0],legacy.schedule);assert.deepEqual(next.roster,legacy.roster);
+ await page.reload();await page.waitForSelector('#pro');await page.click('#pro');await click('부산 갈매기 들어가기');await page.waitForSelector('.pro-league-table');assert.equal(await page.$$eval('.pro-league-table tbody tr',r=>r.length),8);assert.deepEqual(errors,[]);
+ console.log('normalUIlegacy pendingcontinue6games→8teamchoice/cancel/confirm→season2/rawoldhistory-roster-scheduleexact→reload8standings passed');
+}finally{await browser?.close();server.kill('SIGTERM');await new Promise(r=>server.exitCode!==null?r():server.once('exit',r));}

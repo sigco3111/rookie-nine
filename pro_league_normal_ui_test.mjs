@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';import puppeteer from 'puppeteer-core';import fs from 'node:fs';import {spawn}from 'node:child_process';
+const server=process.env.LIVE?null:spawn(process.execPath,['node_modules/vite/bin/vite.js','--host','127.0.0.1','--port','8123'],{stdio:'pipe'});let browser;
+try{
+ browser=await puppeteer.launch({executablePath:'/usr/bin/google-chrome',headless:'new',args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});const page=await browser.newPage();await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const font=fs.readFileSync('node_modules/@fontsource/noto-sans-kr/files/noto-sans-kr-korean-700-normal.woff2').toString('base64');await page.evaluateOnNewDocument(font=>document.addEventListener('DOMContentLoaded',()=>{const style=document.createElement('style');style.textContent=`@font-face{font-family:QA;src:url(data:font/woff2;base64,${font})}*{font-family:QA,sans-serif!important}`;document.head.append(style);}),font);
+ const click=async text=>page.evaluate(t=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent===t&&!b.closest('[hidden]'));if(!b)throw Error('button '+t);b.click();},text);
+ const open=async()=>{await page.waitForSelector('#pro');await page.click('#pro');};
+ const containment=async()=>{for(const width of [320,390,430]){await page.setViewport({width,height:844,isMobile:true,hasTouch:true});assert.equal(await page.$eval('.pro-mode',e=>e.scrollWidth<=e.clientWidth),true);}await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true});};
+ await page.goto(process.env.LIVE||'http://localhost:8123/');await open();await page.waitForSelector('[data-team=suwon]');assert.equal(await page.$$eval('.pro-team-choices button',e=>e.length),8);
+ assert.equal(await page.$$eval('.pro-team-choices [aria-pressed=true]',e=>e.length),0);await page.click('[data-team=suwon]');await click('선택 구단 참가 내용 확인');assert.equal(await page.evaluate(()=>localStorage.getItem('rookie9.pro.v1')),null);await click('참가 취소');assert.equal(await page.evaluate(()=>localStorage.getItem('rookie9.pro.v1')),null);await containment();await page.screenshot({path:'/downloads/rookie9_eightteam_choice.png'});
+ await click('선택 구단 참가 내용 확인');await click('이 구단으로 리그 참가 확정');await page.waitForSelector('.pro-league-table');assert.equal(await page.$$eval('.pro-league-table tbody tr',r=>r.length),8);assert.equal(await page.$$eval('.pro-league-table tbody tr[data-owned=true]',r=>r[0].textContent.includes('수원 몬스터')),true);
+ for(let round=0;round<14;round++){
+  await click('다음 경기 준비');await click('남은 경기 자동 진행');await click('결과 확인·기록 반영');
+  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('rookie9.pro.v1')).clubs[0]);assert.equal(saved.record.games,round+1);assert.equal(saved.league.results.length,(round+1)*4);
+  await click('구단 경기');await page.waitForSelector('.pro-league-table');
+  if(round===0){await containment();await page.screenshot({path:'/downloads/rookie9_eightteam_standings.png'});}
+  if(round===6){await page.reload();await open();await click('수원 몬스터 들어가기');await page.waitForSelector('.pro-league-table');}
+ }
+ const prior=await page.evaluate(()=>JSON.parse(localStorage.getItem('rookie9.pro.v1')).clubs[0]);await click('다음 리그 시즌 내용 확인');await click('참가 취소');assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('rookie9.pro.v1')).clubs[0].season),1);
+ await click('다음 리그 시즌 내용 확인');await click('다음 리그 시즌 시작 확정');await page.waitForSelector('.pro-league-table');const next=await page.evaluate(()=>JSON.parse(localStorage.getItem('rookie9.pro.v1')).clubs[0]);assert.equal(next.season,2);assert.equal(next.league.results.length,0);assert.deepEqual(next.history,prior.history);assert.deepEqual(next.leagueHistory[0].league,prior.league);assert.deepEqual(next.roster,prior.roster);
+ await containment();await page.screenshot({path:'/downloads/rookie9_eightteam_nextseason.png'});assert.deepEqual(errors,[]);console.log('normalmenu explicit8teamselection/cancel/14actualUIgames56results/midseasonreload/8rowstandings/nextseasonarchiveexact/portrait320-430 passed');
+}finally{await browser?.close();if(server){server.kill('SIGTERM');await new Promise(r=>server.exitCode!==null?r():server.once('exit',r));}}
